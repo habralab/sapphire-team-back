@@ -1,0 +1,31 @@
+[tool.poetry]
+name = "sapphire"
+version = "0.0.0"
+description = "Backend for developer collaboration service"
+authors = ["Oleg Yurchik <oleg@yurchik.space>"]
+readme = "README.md"
+include = [
+  "sapphire",
+]
+
+[tool.poetry.dependencies]
+# main
+python = "^3.11"
+typer = "^0.9.0"
+facet = "^0.9.1"
+uvicorn = "^0.23.2"
+fastapi = "^0.103.1"
+pydantic = "^2.3.0"
+pydantic-settings = "^2.0.3"
+sqlalchemy = "^2.0.21"
+alembic = "^1.12.0"
+
+# extras
+aiosqlite = { version = "^0.19.0", optional = true }
+
+[tool.poetry.extras]
+sqlite = ["aiosqlite"]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
