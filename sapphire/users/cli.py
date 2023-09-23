@@ -14,7 +14,7 @@ def settings_callback(ctx: typer.Context):
 def serve(ctx: typer.Context):
     settings = ctx.obj["settings"]
 
-    database_service = get_database_service(settings=settings.database)
+    database_service = get_database_service(settings=settings)
     users_service = get_service(database=database_service, settings=settings)
 
     asyncio.run(users_service.run())

@@ -1,19 +1,21 @@
 import fastapi
-import uvicorn
 from facet import ServiceMixin
 
-from sapphire.utils.uvicorn_server import UvicornServer
+from sapphire.common.api.service import APIService
+from sapphire.users import __version__
+from . import api
 from .database.service import UsersDatabaseService
 from .settings import UsersSettings
 
 
-class UsersService(ServiceMixin):
-    def __init__(self, database: UsersDatabaseService, port: int = 8000):
+class UsersService(APIService):
+    def __init__(self, database: UsersDatabaseService, version: str = "0.0.0", port: int = 8000):
         self._database = database
-        self._port = port
 
-    def get_app(self) -> fastapi.FastAPI:
-        return fastapi.FastAPI()
+        super().__init__(title="Users", version=version, port=port)
+
+    def setup_app(self, app: fastapi.FastAPI):
+        app.include_router(api.router, prefix="/api")
 
     @property
     def dependencies(self) -> list[ServiceMixin]:
@@ -21,12 +23,6 @@ class UsersService(ServiceMixin):
             self._database,
         ]
 
-    async def start(self):
-        config = uvicorn.Config(app=self.get_app(), port=self._port)
-        server = UvicornServer(config)
-
-        self.add_task(server.serve())
-
 
 def get_service(database: UsersDatabaseService, settings: UsersSettings) -> UsersService:
-    return UsersService(database=database, port=settings.port)
+    return UsersService(database=database, version=__version__, port=settings.port)

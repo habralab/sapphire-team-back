@@ -5,8 +5,6 @@ from alembic.config import Config as AlembicConfig
 from facet import ServiceMixin
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 
-from .settings import DatabaseSettings
-
 
 class DatabaseService(ServiceMixin):
     def __init__(self, dsn: str):
@@ -31,7 +29,3 @@ class DatabaseService(ServiceMixin):
 
     def create_migration(self, message: str | None = None):
         alembic_command.revision(self.get_alembic_config(), message=message, autogenerate=True)
-
-
-def get_service(settings: DatabaseSettings) -> DatabaseService:
-    return DatabaseService(dsn=str(settings.dsn))
