@@ -2,10 +2,10 @@ import fastapi
 from facet import ServiceMixin
 
 from sapphire.common.api.service import APIService
-from sapphire.users import __version__
 from . import api
 from .database.service import UsersDatabaseService
 from .settings import UsersSettings
+from .__version__ import __version__
 
 
 class UsersService(APIService):
