@@ -12,6 +12,12 @@ class ParticipantStatusEnum(Enum):
 
 Base = declarative_base()
 
+class User(Base):
+    __tablename__ = "user"
+
+    id = Column(UUID, primary_key=True)
+
+
 class Project(Base):
     __tablename__ = "projects"
 
@@ -28,7 +34,7 @@ class History(Base):
 
     id = Column(UUID, primary_key=True)
     project_id = Column(UUID, ForeignKey("projects.id"))
-    status = Column(ProjectStatusEnum, nullable=False)
+    status = Column(ProjectStatusEnum('ProjectStatusEnum'), nullable=False)
     created_at = Column(DateTime, nullable=False)
 
 class Position(Base):
@@ -45,5 +51,5 @@ class Participant(Base):
     id = Column(UUID, primary_key=True)
     position_id = Column(UUID, ForeignKey("project_positions.id"))
     user_id = Column(UUID, ForeignKey("users.id"))
-    status = Column(ParticipantStatusEnum, nullable=False)
-    created_at = Column(DateTime, nullable=False)
+    status = Column(ParticipantStatusEnum('ParticipantStatusEnum'), nullable=False)
+    created_at = Column(DateTime, nullable=False)   
