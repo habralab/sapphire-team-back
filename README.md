@@ -1,3 +1,3 @@
 # Sapphire Backend
 
-Backend for junior developer collaboration service
+Backend for developer collaboration service
