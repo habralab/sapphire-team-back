@@ -1,5 +1,6 @@
 from pydantic import AnyUrl, conint
 from pydantic_settings import BaseSettings
+from fastapi import FastAPI
 
 
 class UsersSettings(BaseSettings):
@@ -10,3 +11,25 @@ class UsersSettings(BaseSettings):
 
 def get_settings() -> UsersSettings:
     return UsersSettings()
+
+
+app = FastAPI()
+
+
+class BaseConfig(BaseSettings):
+    my_id: str
+    my_secret: str
+
+
+class Config:
+    case_sensitive = False
+    secrets_dir = "/run/secrets"
+    # id_dir =
+
+
+APP_SETTING = BaseConfig()
+
+
+@app.get("/")
+async def root():
+    return {"data": APP_SETTING}

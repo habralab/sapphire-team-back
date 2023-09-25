@@ -22,6 +22,10 @@ alembic = "^1.12.0"
 
 # extras
 aiosqlite = { version = "^0.19.0", optional = true }
+oauthlib = "^3.2.2"
+aiohttp = "^3.8.5"
+schemas = "^0.7.1"
+django = "^4.2.5"
 
 [tool.poetry.extras]
 sqlite = ["aiosqlite"]
