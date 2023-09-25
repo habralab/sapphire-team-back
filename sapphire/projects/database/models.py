@@ -13,7 +13,7 @@ class ParticipantStatusEnum(Enum):
 Base = declarative_base()
 
 class User(Base):
-    __tablename__ = "user"
+    __tablename__ = "users"
 
     id = Column(UUID, primary_key=True)
 
