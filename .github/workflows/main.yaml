@@ -1,0 +1,12 @@
+name: Main
+on: [push]
+jobs:
+  lint:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Build
+        run: docker build -t sapphire:lint-${{ github.sha }} --target lint .
+      - name: lint
+        run: docker run sapphire:lint-${{ github.sha }}

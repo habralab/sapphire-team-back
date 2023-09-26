@@ -9,6 +9,7 @@ from . import (
     users,
 )
 
+
 def get_cli() -> typer.Typer:
     cli = typer.Typer()
 
