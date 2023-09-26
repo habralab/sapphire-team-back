@@ -1,61 +1,60 @@
-import uuid
-from datetime import datetime
+import datetime
+from uuid import uuid4
+from sqlalchemy import Column, ForeignKey, DateTime, String, Text, UUID
+from sqlalchemy.orm import relationship
+from sqlalchemy.ext.declarative import declarative_base
 
-from sqlalchemy import ForeignKey, Text
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
-
-class Base(DeclarativeBase):
-    pass
+Base = declarative_base()
 
 
 class User(Base):
     __tablename__ = "users"
 
-    id: Mapped[uuid.UUID] = mapped_column(default=uuid.uuid4, primary_key=True)
-    email: Mapped[str] = mapped_column(unique=True)
-    first_name: Mapped[str | None]
-    last_name: Mapped[str | None]
-    avatar: Mapped[str | None] = mapped_column(unique=True)
-    created_at: Mapped[datetime] = mapped_column(default=datetime.now)
-    updated_at: Mapped[datetime] = mapped_column(default=datetime.now, onupdate=datetime.now)
+    id = Column(UUID, primary_key=True, default=uuid4)
+    email = Column(String, unique=True)
+    first_name = Column(String, nullable=True)
+    second_name = Column(String, nullable=True)
+    avatar = Column(String, unique=True, nullable=True)
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
 
-    profile: Mapped["Profile"] = relationship("Profile", back_populates="user")
-    skills: Mapped[list["UserSkill"]] = relationship("UserSkill", back_populates="user")
-    habr_sessions: Mapped[list["HabrSession"]] = relationship("HabrSession", back_populates="user")
+    profile = relationship("Profile", back_populates="user")
+    skills = relationship("UserSkill", back_populates="user")
+    habr_sessions = relationship("HabrSession", back_populates="user")
 
 
 class Profile(Base):
     __tablename__ = "profiles"
 
-    user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"), primary_key=True)
-    about: Mapped[str] = mapped_column(Text, deferred=True)
-    main_specialization_id: Mapped[uuid.UUID] = mapped_column(default=uuid.uuid4)
-    secondary_specialization_id: Mapped[uuid.UUID] = mapped_column(default=uuid.uuid4)
-    created_at: Mapped[datetime] = mapped_column(default=datetime.now)
-    updated_at: Mapped[datetime] = mapped_column(default=datetime.now, onupdate=datetime.now)
+    user_id = Column(UUID, ForeignKey("users.id"), primary_key=True, default=uuid4)
+    about = Column(Text, nullable=True)
+    main_specialization_id = Column(UUID, default=uuid4)
+    secondary_specialization_id = Column(UUID, default=uuid4)
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
 
-    user: Mapped[User] = relationship(User, back_populates="profile")
+    user = relationship("User", back_populates="profile")
 
 
 class UserSkill(Base):
     __tablename__ = "user_skills"
 
-    user_id: Mapped[str] = mapped_column(ForeignKey("users.id"), primary_key=True)
-    skill_id: Mapped[str] = mapped_column(default=uuid.uuid4, primary_key=True)
-    created_at: Mapped[datetime] = mapped_column(default=datetime.now)
-    updated_at: Mapped[datetime] = mapped_column(default=datetime.now, onupdate=datetime.now)
+    user_id = Column(UUID, ForeignKey("users.id"), primary_key=True, default=uuid4)
+    skill_id = Column(UUID, primary_key=True, default=uuid4)
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
 
-    user: Mapped[User] = relationship(User, back_populates="skills")
+    user = relationship("User", back_populates="skills")
 
 
 class HabrSession(Base):
     __tablename__ = "habr_sessions"
 
-    user_id: Mapped[str] = mapped_column(ForeignKey("users.id"), primary_key=True)
-    access_token: Mapped[str]
-    expire_at: Mapped[str]
-    created_at: Mapped[datetime] = mapped_column(default=datetime.now)
-    updated_at: Mapped[datetime] = mapped_column(default=datetime.now, onupdate=datetime.now)
+    user_id = Column(UUID, ForeignKey("users.id"), primary_key=True)
+    access_token = Column(String)
+    expire_at = Column(String)
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
 
-    user: Mapped[User] = relationship(User, back_populates="habr_sessions")
+    user = relationship("User", back_populates="habr_sessions")
