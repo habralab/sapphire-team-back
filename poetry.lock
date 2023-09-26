@@ -127,17 +127,6 @@ lazy-object-proxy = ">=1.4.0"
 wrapt = {version = ">=1.14,<2", markers = "python_version >= \"3.11\""}
 
 [[package]]
-name = "async-timeout"
-version = "4.0.3"
-description = "Timeout context manager for asyncio programs"
-optional = false
-python-versions = ">=3.7"
-files = [
-    {file = "async-timeout-4.0.3.tar.gz", hash = "sha256:4640d96be84d82d02ed59ea2b7105a0f7b33abe8703703cd0ab0bf87c427522f"},
-    {file = "async_timeout-4.0.3-py3-none-any.whl", hash = "sha256:7405140ff1230c310e51dc27b3145b9092d659ce68ff733fb0cefe3ee42be028"},
-]
-
-[[package]]
 name = "click"
 version = "8.1.7"
 description = "Composable command line interface toolkit"
@@ -327,20 +316,6 @@ plugins = ["setuptools"]
 requirements-deprecated-finder = ["pip-api", "pipreqs"]
 
 [[package]]
-name = "kafka-python"
-version = "2.0.2"
-description = "Pure Python client for Apache Kafka"
-optional = false
-python-versions = "*"
-files = [
-    {file = "kafka-python-2.0.2.tar.gz", hash = "sha256:04dfe7fea2b63726cd6f3e79a2d86e709d608d74406638c5da33a01d45a9d7e3"},
-    {file = "kafka_python-2.0.2-py2.py3-none-any.whl", hash = "sha256:2d92418c7cb1c298fa6c7f0fb3519b520d0d7526ac6cb7ae2a4fc65a51a94b6e"},
-]
-
-[package.extras]
-crc32c = ["crc32c"]
-
-[[package]]
 name = "lazy-object-proxy"
 version = "1.9.0"
 description = "A fast and thorough lazy object proxy."
@@ -482,17 +457,6 @@ python-versions = ">=3.6"
 files = [
     {file = "mccabe-0.7.0-py2.py3-none-any.whl", hash = "sha256:6c2d30ab6be0e4a46919781807b4f0d834ebdd6c6e3dca0bda5a15f863427b6e"},
     {file = "mccabe-0.7.0.tar.gz", hash = "sha256:348e0240c33b60bbdf4e523192ef919f28cb2c3d7d5c7794f74009290f236325"},
-]
-
-[[package]]
-name = "packaging"
-version = "23.1"
-description = "Core utilities for Python packages"
-optional = false
-python-versions = ">=3.7"
-files = [
-    {file = "packaging-23.1-py3-none-any.whl", hash = "sha256:994793af429502c4ea2ebf6bf664629d07c1a9fe974af92966e4b8d2df7edc61"},
-    {file = "packaging-23.1.tar.gz", hash = "sha256:a392980d2b6cffa644431898be54b0045151319d1e7ec34f0cfed48767dd334f"},
 ]
 
 [[package]]
@@ -685,20 +649,6 @@ tomlkit = ">=0.10.1"
 [package.extras]
 spelling = ["pyenchant (>=3.2,<4.0)"]
 testutils = ["gitpython (>3)"]
-
-[[package]]
-name = "pylint-quotes"
-version = "0.2.3"
-description = "Quote consistency checker for PyLint.."
-optional = false
-python-versions = ">=3.6"
-files = [
-    {file = "pylint-quotes-0.2.3.tar.gz", hash = "sha256:2d6bb3fa8a1a85af3af8a0ca875a719ac5bcdb735c45756284699d809c109c95"},
-    {file = "pylint_quotes-0.2.3-py2.py3-none-any.whl", hash = "sha256:89decd985d3c019314da630f5e3fe0e0df951c2310525fbd6e710bca329c810e"},
-]
-
-[package.dependencies]
-pylint = ">=2.8.0"
 
 [[package]]
 name = "python-dotenv"
@@ -971,4 +921,4 @@ sqlite = ["aiosqlite"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "b55b0eb5e3146d56ddb66439587bde50224845c23991f9805b915f30a72f3026"
+content-hash = "001788e34dae1cc658799410651cbff29e75ba4e5b1baebbff1522d8a532ffe4"

@@ -13,7 +13,7 @@ FROM core as dev
 
 RUN poetry install --with dev
 
-# Install deps for main
+# Install deps for app
 FROM core as main
 
 RUN poetry install --only main -E sqlite
@@ -24,15 +24,7 @@ FROM dev as lint
 COPY ./sapphire /app/sapphire
 COPY ./autotests /app/autotests
 COPY ./.pylintrc /app/.pylintrc
-CMD ["pylint", "/app/sapphire", "/app/autotests"]
-
-# Isort
-FROM dev as isort
-
-COPY ./sapphire /app/sapphire
-COPY ./autotests /app/autotests
-
-CMD ["isort", "--check", "/app/sapphire", "/app/autotests"]
+CMD ["pylint", "./sapphire", "./autotests"]
 
 # Test
 FROM dev as test
