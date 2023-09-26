@@ -14,7 +14,7 @@ class User(Base):
     id: Mapped[uuid.UUID] = mapped_column(default=uuid.uuid4, primary_key=True)
     email: Mapped[str] = mapped_column(unique=True)
     first_name: Mapped[str | None]
-    second_name: Mapped[str | None]
+    last_name: Mapped[str | None]
     avatar: Mapped[str | None] = mapped_column(unique=True)
     created_at: Mapped[datetime.datetime] = mapped_column(insert_default=func.now())
     updated_at: Mapped[datetime.datetime] = mapped_column(insert_default=func.now(), onupdate=func.now())
