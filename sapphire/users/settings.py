@@ -7,8 +7,8 @@ class UsersSettings(BaseSettings):
 
     db_dsn: AnyUrl = AnyUrl("sqlite+aiosqlite:///users.sqlite3")
     
-    habr_oauth_client_id: str
-    habr_oauth_client_secret: str
+    habr_oauth2_client_id: str
+    habr_oauth2_client_secret: str
 
     class Config:
         case_sensitive = False

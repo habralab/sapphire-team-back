@@ -8,11 +8,9 @@ router = fastapi.APIRouter()
 
 @router.get("/authorize", response_class=RedirectResponse)
 async def authorize(request: fastapi.Request):
-    service = request.app.service
-    callback_url = yarl.URL(str(request.url)).parent / "callback"
+    redirect_url = yarl.URL(str(request.url)).parent / "callback"
 
-    service
-
+    # Get OAuth2 backend from request.app.habr_oauth2
 
 @router.get("/callback")
 async def callback():
