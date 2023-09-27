@@ -1,0 +1,10 @@
+name: Cleanup
+on:
+  schedule:
+    - cron: "25 2 * * *"
+jobs:
+  cleanup:
+    runs-on: self-hosted
+    steps:
+      - name: Cleanup
+        run: docker system prune

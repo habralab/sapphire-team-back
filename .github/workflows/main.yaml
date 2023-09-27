@@ -19,3 +19,12 @@ jobs:
         run: docker build -t sapphire:isort-${{ github.sha }} --target isort .
       - name: Isort
         run: docker run sapphire:isort-${{ github.sha }}
+  test:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Build
+        run: docker build -t sapphire:test-${{ github.sha }} --target test .
+      - name: Test
+        run: docker run sapphire:test-${{ github.sha }}
