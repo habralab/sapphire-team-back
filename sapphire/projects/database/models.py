@@ -1,58 +1,68 @@
-from uuid import uuid4
+import uuid
+from datetime import datetime
+from typing import Literal
+from typing import get_args
+
 from sqlalchemy import Column, String, Text, DateTime, ForeignKey, Enum, UUID
-from sqlalchemy.orm import declarative_base
-from sqlalchemy.sql import func
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 
-class ProjectStatusEnum(Enum):
-    IN_PROGRESS = "in_progress"
-    COMPLETED = "completed"
+ProjectStatusEnum = Literal["activated", "deactivated"]
+ParticipantStatusEnum = Literal["active", "inactive"]
 
 
-class ParticipantStatusEnum(Enum):
-    ACTIVE = "active"
-    INACTIVE = "inactive"
-
-
-Base = declarative_base()
+class Base(DeclarativeBase):
+    pass
 
 
 class Project(Base):
     __tablename__ = "projects"
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid4())
-    name = Column(String(255), nullable=False)
-    description = Column(Text, nullable=True)
-    owner_id = Column(UUID, nullable=False)
-    deadline = Column(DateTime(timezone=True))  # not sure in format
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
-    updated_at = Column(DateTime(timezone=True), server_default=func.now())
+    id: Mapped[uuid.UUID] = mapped_column(default=uuid.uuid4, primary_key=True)
+    name: Mapped[str | None]
+    description: Mapped[str | None]
+    owner_id: Mapped[uuid.UUID]
+    deadline: Mapped[datetime | None]
+    created_at: Mapped[datetime] = mapped_column(default=datetime.now)
+    updated_at: Mapped[datetime] = mapped_column(default=datetime.now, onupdate=datetime.now)
 
 
 class History(Base):
     __tablename__ = "projects_history"
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid4())
-    project_id = Column(UUID, ForeignKey("projects.id"))
-    status = Column(ProjectStatusEnum('ProjectStatusEnum'), nullable=False)
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    id: Mapped[uuid.UUID] = mapped_column(default=uuid.uuid4, primary_key=True)
+    project_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("projects.id"), primary_key=True)
+    status: Mapped[ProjectStatusEnum] = mapped_column(
+        Enum(*get_args(ProjectStatusEnum),
+             name="ProjectStatusEnum",
+             create_constraint=True,
+             validate_strings=True,
+             )
+    )
+    created_at: Mapped[datetime] = mapped_column(default=datetime.now)
 
 
 class Position(Base):
     __tablename__ = "project_positions"
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid4())
-    name = Column(String(255), nullable=False)
-    project_id = Column(UUID, ForeignKey("projects.id"))
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
-    updated_at = Column(DateTime(timezone=True), server_default=func.now())
+    id: Mapped[uuid.UUID] = mapped_column(default=uuid.uuid4, primary_key=True, unique=True)
+    name = Mapped[str | None]
+    project_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("projects.id"), primary_key=True)
+    created_at: Mapped[datetime] = mapped_column(default=datetime.now)
+    updated_at: Mapped[datetime] = mapped_column(default=datetime.now, onupdate=datetime.now)
 
 
 class Participant(Base):
     __tablename__ = "project_participants"
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid4())
-    position_id = Column(UUID, ForeignKey("project_positions.id"))
-    user_id = Column(UUID, nullable=False)
-    status = Column(ParticipantStatusEnum('ParticipantStatusEnum'), nullable=False)
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    id: Mapped[uuid.UUID] = mapped_column(default=uuid.uuid4, primary_key=True)
+    position_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("project_positions.id"), primary_key=True)
+    user_id: Mapped[uuid.UUID]
+    status: Mapped[ParticipantStatusEnum] = mapped_column(
+        Enum(*get_args(ParticipantStatusEnum),
+             name="ParticipantStatusEnum",
+             create_constraint=True,
+             validate_strings=True,
+             )
+    )
+    created_at: Mapped[datetime] = mapped_column(default=datetime.now)
