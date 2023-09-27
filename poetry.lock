@@ -584,6 +584,20 @@ spelling = ["pyenchant (>=3.2,<4.0)"]
 testutils = ["gitpython (>3)"]
 
 [[package]]
+name = "pylint-quotes"
+version = "0.2.3"
+description = "Quote consistency checker for PyLint.."
+optional = false
+python-versions = ">=3.6"
+files = [
+    {file = "pylint-quotes-0.2.3.tar.gz", hash = "sha256:2d6bb3fa8a1a85af3af8a0ca875a719ac5bcdb735c45756284699d809c109c95"},
+    {file = "pylint_quotes-0.2.3-py2.py3-none-any.whl", hash = "sha256:89decd985d3c019314da630f5e3fe0e0df951c2310525fbd6e710bca329c810e"},
+]
+
+[package.dependencies]
+pylint = ">=2.8.0"
+
+[[package]]
 name = "python-dotenv"
 version = "1.0.0"
 description = "Read key-value pairs from a .env file and set them as environment variables"
@@ -854,4 +868,4 @@ sqlite = ["aiosqlite"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "dd1796e1f99e6d26f1d2e136d3fe0eb1a5c02dd1c3dffa7c1d9efd3e6df839d5"
+content-hash = "b55b0eb5e3146d56ddb66439587bde50224845c23991f9805b915f30a72f3026"

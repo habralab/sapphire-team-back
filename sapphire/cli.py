@@ -3,7 +3,6 @@ import typer
 from . import email, messenger, notifications, projects, storage, users
 
 
-
 def get_cli() -> typer.Typer:
     cli = typer.Typer()
 
