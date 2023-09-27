@@ -29,7 +29,12 @@ sqlite = ["aiosqlite"]
 
 [tool.poetry.group.dev.dependencies]
 pylint = "^2.17.6"
+isort = "^5.12.0"
+pylint-quotes = "^0.2.3"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.isort]
+profile = "hug"

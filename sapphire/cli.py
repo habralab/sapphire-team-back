@@ -1,13 +1,6 @@
 import typer
 
-from . import (
-    email,
-    messenger,
-    notifications,
-    projects,
-    storage,
-    users,
-)
+from . import email, messenger, notifications, projects, storage, users
 
 
 def get_cli() -> typer.Typer:
