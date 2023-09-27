@@ -1,7 +1,8 @@
-import datetime
 import uuid
-from sqlalchemy import ForeignKey, Text, func
-from sqlalchemy.orm import relationship, DeclarativeBase, mapped_column, Mapped
+from datetime import datetime
+
+from sqlalchemy import ForeignKey, Text
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 
 class Base(DeclarativeBase):
@@ -16,8 +17,8 @@ class User(Base):
     first_name: Mapped[str | None]
     last_name: Mapped[str | None]
     avatar: Mapped[str | None] = mapped_column(unique=True)
-    created_at: Mapped[datetime.datetime] = mapped_column(insert_default=func.now())
-    updated_at: Mapped[datetime.datetime] = mapped_column(insert_default=func.now(), onupdate=func.now())
+    created_at: Mapped[datetime] = mapped_column(default=datetime.now)
+    updated_at: Mapped[datetime] = mapped_column(default=datetime.now, onupdate=datetime.now)
 
     profile: Mapped["Profile"] = relationship("Profile", back_populates="user")
     skills: Mapped[list["UserSkill"]] = relationship("UserSkill", back_populates="user")
@@ -31,10 +32,10 @@ class Profile(Base):
     about: Mapped[str] = mapped_column(Text, deferred=True)
     main_specialization_id: Mapped[uuid.UUID] = mapped_column(default=uuid.uuid4)
     secondary_specialization_id: Mapped[uuid.UUID] = mapped_column(default=uuid.uuid4)
-    created_at: Mapped[datetime.datetime] = mapped_column(insert_default=func.now())
-    updated_at: Mapped[datetime.datetime] = mapped_column(insert_default=func.now(), onupdate=func.now())
+    created_at: Mapped[datetime] = mapped_column(default=datetime.now)
+    updated_at: Mapped[datetime] = mapped_column(default=datetime.now, onupdate=datetime.now)
 
-    user: Mapped["User"] = relationship("User", back_populates="profile")
+    user: Mapped[User] = relationship(User, back_populates="profile")
 
 
 class UserSkill(Base):
@@ -42,10 +43,10 @@ class UserSkill(Base):
 
     user_id: Mapped[str] = mapped_column(ForeignKey("users.id"), primary_key=True)
     skill_id: Mapped[str] = mapped_column(default=uuid.uuid4, primary_key=True)
-    created_at: Mapped[datetime.datetime] = mapped_column(insert_default=func.now())
-    updated_at: Mapped[datetime.datetime] = mapped_column(insert_default=func.now(), onupdate=func.now())
+    created_at: Mapped[datetime] = mapped_column(default=datetime.now)
+    updated_at: Mapped[datetime] = mapped_column(default=datetime.now, onupdate=datetime.now)
 
-    user: Mapped["User"] = relationship("User", back_populates="skills")
+    user: Mapped[User] = relationship(User, back_populates="skills")
 
 
 class HabrSession(Base):
@@ -54,7 +55,7 @@ class HabrSession(Base):
     user_id: Mapped[str] = mapped_column(ForeignKey("users.id"), primary_key=True)
     access_token: Mapped[str]
     expire_at: Mapped[str]
-    created_at: Mapped[datetime.datetime] = mapped_column(insert_default=func.now())
-    updated_at: Mapped[datetime.datetime] = mapped_column(insert_default=func.now(), onupdate=func.now())
+    created_at: Mapped[datetime] = mapped_column(default=datetime.now)
+    updated_at: Mapped[datetime] = mapped_column(default=datetime.now, onupdate=datetime.now)
 
-    user: Mapped["User"] = relationship("User", back_populates="habr_sessions")
+    user: Mapped[User] = relationship(User, back_populates="habr_sessions")

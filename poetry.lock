@@ -560,6 +560,30 @@ pydantic = ">=2.0.1"
 python-dotenv = ">=0.21.0"
 
 [[package]]
+name = "pylint"
+version = "2.17.6"
+description = "python code static checker"
+optional = false
+python-versions = ">=3.7.2"
+files = [
+    {file = "pylint-2.17.6-py3-none-any.whl", hash = "sha256:18a1412e873caf8ffb56b760ce1b5643675af23e6173a247b502406b24c716af"},
+    {file = "pylint-2.17.6.tar.gz", hash = "sha256:be928cce5c76bf9acdc65ad01447a1e0b1a7bccffc609fb7fc40f2513045bd05"},
+]
+
+[package.dependencies]
+astroid = ">=2.15.7,<=2.17.0-dev0"
+colorama = {version = ">=0.4.5", markers = "sys_platform == \"win32\""}
+dill = {version = ">=0.3.6", markers = "python_version >= \"3.11\""}
+isort = ">=4.2.5,<6"
+mccabe = ">=0.6,<0.8"
+platformdirs = ">=2.2.0"
+tomlkit = ">=0.10.1"
+
+[package.extras]
+spelling = ["pyenchant (>=3.2,<4.0)"]
+testutils = ["gitpython (>3)"]
+
+[[package]]
 name = "python-dotenv"
 version = "1.0.0"
 description = "Read key-value pairs from a .env file and set them as environment variables"
@@ -830,4 +854,4 @@ sqlite = ["aiosqlite"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "dd1796e1f99e6d26f1d2e136d3fe0eb1a5c02dd1c3dffa7c1d9efd3e6df839d5"
+content-hash = "adc4a7b8a0993482dce95d17dad11dbf2948e41b3941e50f29d37014670ef3c2"
