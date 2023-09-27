@@ -2,6 +2,8 @@ import fastapi
 from facet import ServiceMixin
 
 from sapphire.common.api.service import APIService
+from sapphire.users.__version__ import __version__
+
 from . import api
 from .database.service import UsersDatabaseService
 from .settings import UsersSettings
@@ -24,4 +26,4 @@ class UsersService(APIService):
 
 
 def get_service(database: UsersDatabaseService, settings: UsersSettings) -> UsersService:
-    return UsersService(database=database, port=settings.port)
+    return UsersService(database=database, version=__version__, port=settings.port)
