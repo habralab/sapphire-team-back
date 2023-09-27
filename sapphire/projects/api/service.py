@@ -1,8 +1,9 @@
 import fastapi
 
 from sapphire.common.api.service import APIService
-from sapphire.projects.settings import ProjectsSettings
 from sapphire.projects.__version__ import __version__
+from sapphire.projects.settings import ProjectsSettings
+
 from .router import router
 
 

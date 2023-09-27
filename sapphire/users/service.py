@@ -3,6 +3,7 @@ from facet import ServiceMixin
 
 from sapphire.common.api.service import APIService
 from sapphire.users.__version__ import __version__
+
 from . import api
 from .database.service import UsersDatabaseService
 from .settings import UsersSettings
