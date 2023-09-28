@@ -26,4 +26,4 @@ class UsersService(APIService):
 
 
 def get_service(database: UsersDatabaseService, settings: UsersSettings) -> UsersService:
-    return UsersService(database=database, version=__version__, port=settings.port)
+    return UsersService(database=database, port=settings.port)
