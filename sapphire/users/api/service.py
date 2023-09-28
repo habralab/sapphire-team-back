@@ -1,12 +1,10 @@
 import fastapi
 from facet import ServiceMixin
-
 from sapphire.common.api.service import APIService
 from sapphire.users.__version__ import __version__
 from sapphire.users.database.service import UsersDatabaseService
 from sapphire.users.oauth2.habr import OAuth2HabrBackend
 from sapphire.users.settings import UsersSettings
-
 from .router import router
 
 
@@ -14,7 +12,7 @@ class UsersAPIService(APIService):
     def __init__(
             self,
             database: UsersDatabaseService,
-            habr_oauth2: OAuth2HabrBackend, 
+            habr_oauth2: OAuth2HabrBackend,
             version: str = "0.0.0",
             port: int = 8000,
     ):

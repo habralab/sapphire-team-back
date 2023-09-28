@@ -4,9 +4,7 @@ from pydantic_settings import BaseSettings
 
 class UsersSettings(BaseSettings):
     port: conint(ge=1, le=65535) = 8000
-
     db_dsn: AnyUrl = AnyUrl("sqlite+aiosqlite:///users.sqlite3")
-    
     habr_oauth2_client_id: str
     habr_oauth2_client_secret: str
 

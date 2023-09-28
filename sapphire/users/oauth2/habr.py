@@ -1,8 +1,6 @@
 import aiohttp
 import pydantic
-
 from sapphire.users.settings import UsersSettings
-
 from .base import OAuth2BaseBackend
 
 
@@ -32,6 +30,7 @@ class OAuth2HabrBackend(OAuth2BaseBackend):
             is_active=(data["is_active"] == "1"),
             is_email_confirmed=(data["is_email_confirmed"] == "1"),
         )
+
 
 def get_oauth2_backend(settings: UsersSettings) -> OAuth2HabrBackend:
     return OAuth2HabrBackend(
