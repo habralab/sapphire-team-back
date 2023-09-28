@@ -2,8 +2,8 @@ import uuid
 from datetime import datetime
 from typing import Literal, get_args
 
-from sqlalchemy import UUID, Column, DateTime, Enum, ForeignKey, String, Text
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+from sqlalchemy import Enum, ForeignKey
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 ProjectStatusEnum = Literal["activated", "deactivated"]
 ParticipantStatusEnum = Literal["active", "inactive"]

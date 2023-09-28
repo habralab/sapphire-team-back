@@ -1,6 +1,5 @@
 import fastapi
 from facet import ServiceMixin
-
 from sapphire.common.api.service import APIService
 from sapphire.users.__version__ import __version__
 
