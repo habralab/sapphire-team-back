@@ -1,10 +1,12 @@
 import fastapi
 from facet import ServiceMixin
+
 from sapphire.common.api.service import APIService
 from sapphire.users.__version__ import __version__
 from sapphire.users.database.service import UsersDatabaseService
 from sapphire.users.oauth2.habr import OAuth2HabrBackend
 from sapphire.users.settings import UsersSettings
+
 from .router import router
 
 
