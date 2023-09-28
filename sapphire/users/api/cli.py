@@ -1,8 +1,10 @@
 import asyncio
+
 import typer
 
 from sapphire.users import database
 from sapphire.users.oauth2 import habr
+
 from .service import get_service
 
 

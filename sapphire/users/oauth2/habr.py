@@ -2,6 +2,7 @@ import aiohttp
 import pydantic
 
 from sapphire.users.settings import UsersSettings
+
 from .base import OAuth2BaseBackend
 
 

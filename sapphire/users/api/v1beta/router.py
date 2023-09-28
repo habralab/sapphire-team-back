@@ -1,10 +1,6 @@
 import fastapi
 
-from . import (
-    health,
-    oauth2,
-)
-
+from . import health, oauth2
 
 router = fastapi.APIRouter()
 

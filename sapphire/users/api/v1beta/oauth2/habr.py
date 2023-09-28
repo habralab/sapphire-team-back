@@ -2,7 +2,6 @@ import fastapi
 import yarl
 from fastapi.responses import RedirectResponse
 
-
 router = fastapi.APIRouter()
 
 
