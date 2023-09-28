@@ -1,6 +1,5 @@
 import uuid
 from datetime import datetime
-from typing import Literal, get_args
 
 from sqlalchemy import Enum, False_, ForeignKey, Null
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
