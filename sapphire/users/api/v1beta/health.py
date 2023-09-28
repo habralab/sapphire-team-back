@@ -2,7 +2,7 @@ import os
 import pathlib
 import tomllib
 
-from sapphire.common.api.schemas import HealthResponse, ResponseStatus, ServiceName
+from sapphire.common.api.schemas import HealthResponse, ResponseStatus
 
 
 async def health() -> HealthResponse:
@@ -12,6 +12,6 @@ async def health() -> HealthResponse:
 
     return HealthResponse(
         status=ResponseStatus.OK,
-        version=pyproject_data.get("tool").get("poetry").get("version"),
-        name=ServiceName.USERS,
+        version=pyproject_data["tool"]["poetry"]["version"],
+        name="users",
     )

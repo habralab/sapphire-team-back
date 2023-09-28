@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-from .enums import ResponseStatus, ServiceName
+from .enums import ResponseStatus
 
 
 class BaseResponse(BaseModel):
@@ -13,4 +13,4 @@ class OKResponse(BaseModel):
 
 class HealthResponse(BaseResponse):
     version: str
-    name: ServiceName
+    name: str

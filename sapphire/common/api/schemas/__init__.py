@@ -1,9 +1,8 @@
 from .base import BaseResponse, HealthResponse, OKResponse
-from .enums import ResponseStatus, ServiceName
+from .enums import ResponseStatus
 
 __all__ = [
     "ResponseStatus",
-    "ServiceName",
     "OKResponse",
     "BaseResponse",
     "HealthResponse",
