@@ -1,17 +1,9 @@
 import os
 import pathlib
 import tomllib
-from functools import reduce
 
 from sapphire.common.api.schemas import HealthResponse, ResponseStatus
-
-
-def get_nested(storage: dict, *keys):
-    return reduce(
-        lambda value, key: value.get(key, {}) if isinstance(value, dict) else None,
-        keys,
-        storage,
-    )
+from sapphire.common.functions import get_nested
 
 
 async def health() -> HealthResponse:
