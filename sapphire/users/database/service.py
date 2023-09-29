@@ -5,7 +5,7 @@ from sapphire.users.settings import UsersSettings
 
 
 class UsersDatabaseService(BaseDatabaseService):
-    def base_get_alembic_config_path(self) -> pathlib.Path:
+    def get_alembic_config_path(self) -> pathlib.Path:
         return pathlib.Path(__file__).parent / "migrations"
 
 

@@ -11,18 +11,18 @@ class BaseAPIService(ServiceMixin):
         self._version = version
         self._port = port
 
-    def base_get_app(self) -> fastapi.FastAPI:
+    def get_app(self) -> fastapi.FastAPI:
         app = fastapi.FastAPI(title=self._title, version=self._version)
         app.service = self
-        self.base_setup_app(app=app)
+        self.setup_app(app=app)
 
         return app
 
-    def base_setup_app(self, app: fastapi.FastAPI):
+    def setup_app(self, app: fastapi.FastAPI):
         pass
 
     async def start(self):
-        config = uvicorn.Config(app=self.base_get_app(), port=self._port)
+        config = uvicorn.Config(app=self.get_app(), port=self._port)
         server = UvicornServer(config)
 
         self.add_task(server.serve())

@@ -12,11 +12,11 @@ class BaseDatabaseService(ServiceMixin):
         self._engine = create_async_engine(self._dsn)
         self._sessionmaker = async_sessionmaker(self._engine, expire_on_commit=False)
 
-    def base_get_alembic_config_path(self) -> pathlib.Path:
+    def get_alembic_config_path(self) -> pathlib.Path:
         raise NotImplementedError
 
-    def base_get_alembic_config(self) -> AlembicConfig:
-        migrations_path = self.base_get_alembic_config_path()
+    def get_alembic_config(self) -> AlembicConfig:
+        migrations_path = self.get_alembic_config_path()
         
         config = AlembicConfig()
         config.set_main_option("script_location", str(migrations_path))
@@ -24,8 +24,8 @@ class BaseDatabaseService(ServiceMixin):
 
         return config
 
-    def bae_migrate(self):
-        alembic_command.upgrade(self.base_get_alembic_config(), "head")
+    def migrate(self):
+        alembic_command.upgrade(self.get_alembic_config(), "head")
 
-    def base_create_migration(self, message: str | None = None):
-        alembic_command.revision(self.base_get_alembic_config(), message=message, autogenerate=True)
+    def create_migration(self, message: str | None = None):
+        alembic_command.revision(self.get_alembic_config(), message=message, autogenerate=True)

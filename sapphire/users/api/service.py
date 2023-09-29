@@ -23,7 +23,7 @@ class UsersAPIService(BaseAPIService):
 
         super().__init__(title="Users", version=version, port=port)
 
-    def base_setup_app(self, app: fastapi.FastAPI):
+    def setup_app(self, app: fastapi.FastAPI):
         app.include_router(router, prefix="/api")
 
     @property
