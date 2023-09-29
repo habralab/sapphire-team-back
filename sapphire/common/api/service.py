@@ -13,6 +13,7 @@ class APIService(ServiceMixin):
 
     def get_app(self) -> fastapi.FastAPI:
         app = fastapi.FastAPI(title=self._title, version=self._version)
+        app.service = self
         self.setup_app(app=app)
 
         return app

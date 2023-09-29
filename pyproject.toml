@@ -18,11 +18,13 @@ typer = "^0.9.0"
 facet = "^0.9.1"
 uvicorn = "^0.23.2"
 fastapi = "^0.103.1"
-pydantic = "^2.3.0"
+aiohttp = "^3.8.5"
 pydantic-settings = "^2.0.3"
 sqlalchemy = "^2.0.21"
 alembic = "^1.12.0"
 aiokafka = "^0.8.1"
+yarl = "^1.9.2"
+pydantic = {version = "^2.4.0", extras = ["email"]}
 
 [tool.poetry.extras]
 sqlite = ["aiosqlite"]

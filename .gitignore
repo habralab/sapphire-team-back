@@ -1,4 +1,6 @@
 *.pyc
+.idea
 .pytest_cache
+.venv
 __pycache__
 pyrightconfig.json
