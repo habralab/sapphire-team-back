@@ -6,7 +6,7 @@ from facet import ServiceMixin
 from .handler import BaseBrokerHandler
 
 
-class BrokerService(ServiceMixin):
+class BaseBrokerService(ServiceMixin):
     def __init__(
             self,
             servers: Iterable[str],

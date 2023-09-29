@@ -5,7 +5,7 @@ from facet import ServiceMixin
 from .uvicorn_server import UvicornServer
 
 
-class APIService(ServiceMixin):
+class BaseAPIService(ServiceMixin):
     def __init__(self, title: str, version: str, port: int = 8000):
         self._title = title
         self._version = version

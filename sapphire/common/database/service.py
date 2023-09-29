@@ -6,7 +6,7 @@ from facet import ServiceMixin
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 
 
-class DatabaseService(ServiceMixin):
+class BaseDatabaseService(ServiceMixin):
     def __init__(self, dsn: str):
         self._dsn = dsn
         self._engine = create_async_engine(self._dsn)
@@ -24,7 +24,7 @@ class DatabaseService(ServiceMixin):
 
         return config
 
-    def migrate(self): 
+    def migrate(self):
         alembic_command.upgrade(self.get_alembic_config(), "head")
 
     def create_migration(self, message: str | None = None):
