@@ -9,8 +9,3 @@ class BaseResponse(BaseModel):
 
 class OKResponse(BaseModel):
     status: ResponseStatus = ResponseStatus.OK
-
-
-class HealthResponse(BaseResponse):
-    version: str
-    name: str
