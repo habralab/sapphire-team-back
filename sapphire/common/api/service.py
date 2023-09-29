@@ -22,7 +22,7 @@ class APIService(ServiceMixin):
         pass
 
     async def start(self):
-        config = uvicorn.Config(app=self.get_app(), port=self._port)
+        config = uvicorn.Config(app=self.get_app(), host="0.0.0.0", port=self._port)
         server = UvicornServer(config)
 
         self.add_task(server.serve())

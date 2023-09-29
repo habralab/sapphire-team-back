@@ -1,0 +1,26 @@
+name: Deploy Stage
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Build
+        run: docker build -t sapphire:${{ github.sha }} --target app .
+  deploy:
+    needs: [build]
+    runs-on: self-hosted
+    steps:
+      - name: Deploy
+        env:
+          DATABASE_DIR: "/sapphire/stage/database_data"
+          REDIS_DIR: "/sapphire/stage/redis_data"
+          BROKER_DIR: "/sapphire/stage/broker_dir"
+          SAPPHIRE_IMAGE: sapphire:{{ github.sha }}
+          USERS_PORT: "2000"
+          PROJECTS_PORT: "2020"
+        run: docker stack deploy -c docker-compose.yaml sapphire-stage
