@@ -1,8 +1,17 @@
 import os
 import pathlib
 import tomllib
+from functools import reduce
 
 from sapphire.common.api.schemas import HealthResponse, ResponseStatus
+
+
+def get_nested(storage: dict, *keys):
+    return reduce(
+        lambda value, key: value.get(key, {}) if isinstance(value, dict) else None,
+        keys,
+        storage,
+    )
 
 
 async def health() -> HealthResponse:
@@ -12,6 +21,6 @@ async def health() -> HealthResponse:
 
     return HealthResponse(
         status=ResponseStatus.OK,
-        version=pyproject_data["tool"]["poetry"]["version"],
+        version=get_nested(pyproject_data, "tool", "poetry", "version"),
         name="users",
     )
