@@ -1,7 +1,7 @@
 import fastapi
 from facet import ServiceMixin
 
-from sapphire.common.api.service import APIService
+from sapphire.common.api.service import BaseAPIService
 from sapphire.users.__version__ import __version__
 from sapphire.users.database.service import UsersDatabaseService
 from sapphire.users.oauth2.habr import OAuth2HabrBackend
@@ -10,7 +10,7 @@ from sapphire.users.settings import UsersSettings
 from .router import router
 
 
-class UsersAPIService(APIService):
+class UsersAPIService(BaseAPIService):
     def __init__(
             self,
             database: UsersDatabaseService,
@@ -23,7 +23,7 @@ class UsersAPIService(APIService):
 
         super().__init__(title="Users", version=version, port=port)
 
-    def setup_app(self, app: fastapi.FastAPI):
+    def base_setup_app(self, app: fastapi.FastAPI):
         app.include_router(router, prefix="/api")
 
     @property
