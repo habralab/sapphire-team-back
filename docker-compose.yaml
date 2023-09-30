@@ -50,6 +50,8 @@ services:
       - redis
       - database
       - kafka
+    environment:
+      DB_DSN: ${USERS_DB_DSN:-sqlite+aiosqlite:///users.db}
     secrets:
       - habr_oauth2_client_id
       - habr_oauth2_client_secret
@@ -63,6 +65,8 @@ services:
 
   projects:
     image: ${SAPPHIRE_IMAGE:-sapphire}
+    environment:
+      DB_DSN: ${PROJECTS_DB_DSN:-sqlite+aiosqlite:///projects.db}
     depends_on:
       - redis
       - database
@@ -78,7 +82,10 @@ services:
 secrets:
   habr_oauth2_client_id:
     external: true
+    name: ${HABR_OAUTH2_CLIENT_ID_NAME:-habr_oauth2_client_id}
   habr_oauth2_client_secret:
     external: true
+    name: ${HABR_OAUTH2_CLIENT_SECRET_NAME:-habr_oauth2_client_secret}
   postgresql_password:
     external: true
+    name: ${POSTGRESQL_PASSWORD_NAME:-postgresql_password}

@@ -1,4 +1,5 @@
 *.pyc
+.env
 .idea
 .pytest_cache
 .venv

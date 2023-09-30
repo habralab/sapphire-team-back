@@ -24,5 +24,7 @@ jobs:
           BROKER_DIR: "/sapphire/production/broker_dir"
           SAPPHIRE_IMAGE: sapphire:{{ github.ref_name }}
           USERS_PORT: "3000"
+          USERS_DB_DSN: ${USERS_DB_DSN_PRODUCTION}
           PROJECTS_PORT: "3020"
+          PROJECTS_DB_DSN: ${PROJECTS_DB_DSN_PRODUCTION}
         run: docker stack deploy -c docker-compose.yaml sapphire-stage
