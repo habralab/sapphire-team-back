@@ -8,10 +8,10 @@ from .handler import BaseBrokerHandler
 
 class BaseBrokerService(ServiceMixin):
     def __init__(
-            self,
-            servers: Iterable[str],
-            topics: Iterable[str],
-            handlers: Iterable[BaseBrokerHandler],
+        self,
+        servers: Iterable[str],
+        topics: Iterable[str],
+        handlers: Iterable[BaseBrokerHandler],
     ):
         self._handlers = handlers
 
