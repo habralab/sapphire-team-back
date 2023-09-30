@@ -17,7 +17,8 @@ docker swarm init
 ### Requirements: Python
 
 For running or testing all services you can use `Python` environment. You can install Python on
-your local machine directly (see [here]()) or use any wrappers (`venv`, `pyenv`, `pipenv`, etc.).
+your local machine directly (see [here](https://www.python.org/downloads/)) or use any wrappers
+(`venv`, `pyenv`, `pipenv`, etc.).
 
 **Python version: `3.11` or higher**
 

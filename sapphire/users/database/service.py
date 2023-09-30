@@ -1,10 +1,10 @@
 import pathlib
 
-from sapphire.common.database.service import DatabaseService
+from sapphire.common.database.service import BaseDatabaseService
 from sapphire.users.settings import UsersSettings
 
 
-class UsersDatabaseService(DatabaseService):
+class UsersDatabaseService(BaseDatabaseService):
     def get_alembic_config_path(self) -> pathlib.Path:
         return pathlib.Path(__file__).parent / "migrations"
 
