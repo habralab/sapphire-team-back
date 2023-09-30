@@ -1,3 +1,5 @@
+import datetime
+
 import fastapi
 import jwt
 from pydantic import BaseModel
@@ -12,22 +14,24 @@ class JWTDecodePayload(BaseModel):
 
 
 class JWTMethods:
+    __access_token_expires: datetime.timedelta = datetime.timedelta(minutes=5)
+    __refresh_token_expires: datetime.timedelta = datetime.timedelta(days=30)
+
     def __init__(
         self,
         access_token_public_key,
         access_token_private_key,
         refresh_token_public_key,
         refresh_token_private_key,
-        access_token_expires,
-        refresh_token_expires,
     ):
         self.access_token_public_key = access_token_public_key
         self.access_token_private_key = access_token_private_key
         self.refresh_token_public_key = refresh_token_public_key
         self.refresh_token_private_key = refresh_token_private_key
+
+    def set_expires_for_token(self, access_token_expires, refresh_token_expires):
         self.__access_token_expires = access_token_expires
         self.__refresh_token_expires = refresh_token_expires
-
 
     def issue_access_token(self, user_id: str):
         return jwt.encode(
@@ -47,8 +51,10 @@ class JWTMethods:
                     options={"require": ["user_id"]},
                 ),
             )
-        except jwt.PyJWTError as e:
-            return JWTDecodePayload(success_decode=False, error=e.__class__.__name__)
+        except jwt.PyJWTError as jwt_error:
+            return JWTDecodePayload(
+                success_decode=False, error=jwt_error.__class__.__name__
+            )
 
     def issue_refresh_token(self, user_id: str):
         return jwt.encode(
@@ -68,8 +74,10 @@ class JWTMethods:
                     options={"require": ["user_id"]},
                 ),
             )
-        except jwt.PyJWTError as e:
-            return JWTDecodePayload(success_decode=False, error=e.__class__.__name__)
+        except jwt.PyJWTError as jwt_error:
+            return JWTDecodePayload(
+                success_decode=False, error=jwt_error.__class__.__name__
+            )
 
     @property
     def access_token_expires(self):
@@ -81,14 +89,17 @@ class JWTMethods:
 
 
 def get_jwt_methods(settings: UsersSettings):
-    return JWTMethods(
+    jwt_methods = JWTMethods(
         access_token_private_key=settings.jwt_access_token_private_key,
         access_token_public_key=settings.jwt_access_token_public_key,
         refresh_token_private_key=settings.jwt_refresh_token_private_key,
         refresh_token_public_key=settings.jwt_refresh_token_public_key,
+    )
+    jwt_methods.set_expires_for_token(
         access_token_expires=settings.jwt_access_token_expires,
         refresh_token_expires=settings.jwt_access_token_expires,
     )
+    return jwt_methods
 
 
 # For FastApi Depends

@@ -2,7 +2,6 @@ import fastapi
 
 from sapphire.common.api.schemas import ErrorResponse, ResponseStatus
 from sapphire.users.api.schemas import JWTTokensResponse
-
 from sapphire.users.jwt import JWTMethods
 
 router = fastapi.APIRouter()
