@@ -1,3 +1,6 @@
+from typing import Iterable
+import datetime
+
 from pydantic import AnyUrl, conint
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -13,6 +16,12 @@ class UsersSettings(BaseSettings):
 
     habr_oauth2_client_id: str = ""
     habr_oauth2_client_secret: str = ""
+    jwt_access_token_private_key: str
+    jwt_access_token_public_key: str
+    jwt_refresh_token_private_key: str
+    jwt_refresh_token_public_key: str
+    jwt_access_token_expires: datetime.timedelta = datetime.timedelta(minutes=5)
+    jwt_refresh_token_expires: datetime.timedelta = datetime.timedelta(days=30)
 
 
 def get_settings() -> UsersSettings:
