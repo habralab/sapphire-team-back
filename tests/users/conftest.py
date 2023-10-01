@@ -6,7 +6,8 @@ from cryptography.hazmat.primitives.asymmetric import rsa
 from sapphire.users.settings import UsersSettings
 
 
-def generate_rsa_keys():
+@pytest.fixture()
+def rsa_keys():
     access_token_common_key = rsa.generate_private_key(
         backend=crypto_default_backend(), public_exponent=65537, key_size=2048
     )
@@ -43,8 +44,7 @@ def generate_rsa_keys():
 
 
 @pytest.fixture()
-def settings() -> UsersSettings:
-    rsa_keys = generate_rsa_keys()
+def settings(rsa_keys) -> UsersSettings:
     return UsersSettings(
         habr_oauth2_client_id="habr_oauth2_client_id",
         habr_oauth2_client_secret="habr_oauth2_client_secret",
