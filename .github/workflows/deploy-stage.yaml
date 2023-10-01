@@ -17,6 +17,11 @@ jobs:
     steps:
       - name: Deploy
         env:
+          # Secrets names
+          HABR_OAUTH2_CLIENT_ID_NAME: "habr_oauth2_client_id_stage"
+          HABR_OAUTH2_CLIENT_SECRET_NAME: "habr_oauth2_client_secret_stage"
+          POSTGRESQL_PASSWORD_NAME: "postgresql_password_stage"
+
           DATABASE_DIR: "/sapphire/stage/database_data"
           REDIS_DIR: "/sapphire/stage/redis_data"
           BROKER_DIR: "/sapphire/stage/broker_dir"
