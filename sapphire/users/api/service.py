@@ -2,7 +2,7 @@ import fastapi
 from facet import ServiceMixin
 
 from sapphire.common.api.service import BaseAPIService
-from sapphire.users.__version__ import __version__
+from sapphire.common.package import get_version
 from sapphire.users.database.service import UsersDatabaseService
 from sapphire.users.oauth2.habr import OAuth2HabrBackend
 from sapphire.users.settings import UsersSettings
@@ -49,6 +49,6 @@ def get_service(
     return UsersAPIService(
         database=database,
         habr_oauth2=habr_oauth2,
-        version=__version__,
+        version=get_version() or "0.0.0",
         port=settings.port,
     )

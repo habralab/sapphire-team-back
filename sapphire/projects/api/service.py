@@ -1,14 +1,14 @@
 import fastapi
 
 from sapphire.common.api.service import BaseAPIService
-from sapphire.projects.__version__ import __version__
+from sapphire.common.package import get_version
 from sapphire.projects.settings import ProjectsSettings
 
 from .router import router
 
 
 class ProjectsAPIService(BaseAPIService):
-    def __init__(self, version: str, port: int = 8000):
+    def __init__(self, version: str = "0.0.0.0", port: int = 8000):
         super().__init__(title="Projects", version=version, port=port)
 
     def setup_app(self, app: fastapi.FastAPI):
@@ -16,7 +16,4 @@ class ProjectsAPIService(BaseAPIService):
 
 
 def get_service(settings: ProjectsSettings) -> ProjectsAPIService:
-    return ProjectsAPIService(
-        version=__version__,
-        port=settings.port,
-    )
+    return ProjectsAPIService(version=get_version() or "0.0.0", port=settings.port)
