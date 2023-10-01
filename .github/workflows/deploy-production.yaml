@@ -15,19 +15,22 @@ jobs:
     needs: [build]
     runs-on: self-hosted
     steps:
+      - name: Set environment variables
+        run: |
+          echo "
+            # Secrets names
+            HABR_OAUTH2_CLIENT_ID_NAME=habr_oauth2_client_id_production
+            HABR_OAUTH2_CLIENT_SECRET_NAME=habr_oauth2_client_secret_production
+            POSTGRESQL_PASSWORD_NAME=postgresql_password_production
+            
+            DATABASE_DIR=/sapphire/production/database_data
+            REDIS_DIR=/sapphire/production/redis_data
+            BROKER_DIR=/sapphire/production/broker_dir
+            SAPPHIRE_IMAGE=sapphire:${GITHUB_REF_NAME}
+            USERS_PORT=2000
+            USERS_DB_DSN=${USERS_DB_DSN_PRODUCTION}
+            PROJECTS_PORT=2020
+            PROJECTS_DB_DSN=${PROJECTS_DB_DSN_PRODUCTION}
+          " >> $GITHUB_ENV
       - name: Deploy
-        env:
-          # Secrets names
-          HABR_OAUTH2_CLIENT_ID_NAME: "habr_oauth2_client_id_production"
-          HABR_OAUTH2_CLIENT_SECRET_NAME: "habr_oauth2_client_secret_production"
-          POSTGRESQL_PASSWORD_NAME: "postgresql_password_production"
-
-          DATABASE_DIR: "/sapphire/production/database_data"
-          REDIS_DIR: "/sapphire/production/redis_data"
-          BROKER_DIR: "/sapphire/production/broker_dir"
-          SAPPHIRE_IMAGE: sapphire:${{ github.ref_name }}
-          USERS_PORT: "3000"
-          USERS_DB_DSN: ${USERS_DB_DSN_PRODUCTION}
-          PROJECTS_PORT: "3020"
-          PROJECTS_DB_DSN: ${PROJECTS_DB_DSN_PRODUCTION}
         run: docker stack deploy -c docker-compose.yaml sapphire-stage

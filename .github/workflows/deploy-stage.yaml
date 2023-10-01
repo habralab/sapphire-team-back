@@ -15,19 +15,22 @@ jobs:
     needs: [build]
     runs-on: self-hosted
     steps:
+      - name: Set environment variables
+        run: |
+          echo "
+            # Secrets names
+            HABR_OAUTH2_CLIENT_ID_NAME=habr_oauth2_client_id_stage
+            HABR_OAUTH2_CLIENT_SECRET_NAME=habr_oauth2_client_secret_stage
+            POSTGRESQL_PASSWORD_NAME=postgresql_password_stage
+            
+            DATABASE_DIR=/sapphire/stage/database_data
+            REDIS_DIR=/sapphire/stage/redis_data
+            BROKER_DIR=/sapphire/stage/broker_dir
+            SAPPHIRE_IMAGE=sapphire:${GITHUB_SHA}
+            USERS_PORT=3000
+            USERS_DB_DSN=${USERS_DB_DSN_STAGE}
+            PROJECTS_PORT=3020
+            PROJECTS_DB_DSN=${PROJECTS_DB_DSN_STAGE}
+          " >> $GITHUB_ENV
       - name: Deploy
-        env:
-          # Secrets names
-          HABR_OAUTH2_CLIENT_ID_NAME: "habr_oauth2_client_id_stage"
-          HABR_OAUTH2_CLIENT_SECRET_NAME: "habr_oauth2_client_secret_stage"
-          POSTGRESQL_PASSWORD_NAME: "postgresql_password_stage"
-
-          DATABASE_DIR: "/sapphire/stage/database_data"
-          REDIS_DIR: "/sapphire/stage/redis_data"
-          BROKER_DIR: "/sapphire/stage/broker_dir"
-          SAPPHIRE_IMAGE: sapphire:${{ github.sha }}
-          USERS_PORT: "2000"
-          USERS_DB_DSN: ${USERS_DB_DSN_STAGE}
-          PROJECTS_PORT: "2020"
-          PROJECTS_DB_DSN: ${PROJECTS_DB_DSN_STAGE}
         run: docker stack deploy -c docker-compose.yaml sapphire-stage

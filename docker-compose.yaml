@@ -57,7 +57,7 @@ services:
       - habr_oauth2_client_secret
     ports:
       - target: 8000
-        published: ${USERS_PORT:-2000}
+        published: ${USERS_PORT:-3000}
         mode: host
     command: ["users", "api", "serve"]
     deploy:
@@ -73,7 +73,7 @@ services:
       - kafka
     ports:
       - target: 8000
-        published: ${PROJECTS_PORT:-2020}
+        published: ${PROJECTS_PORT:-3020}
         mode: host
     command: ["projects", "api", "serve"]
     deploy:
