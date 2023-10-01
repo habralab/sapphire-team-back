@@ -26,10 +26,10 @@ jobs:
             DATABASE_DIR=/sapphire/stage/database_data
             REDIS_DIR=/sapphire/stage/redis_data
             BROKER_DIR=/sapphire/stage/broker_dir
-            SAPPHIRE_IMAGE=sapphire:${GITHUB_REF_NAME}
-            USERS_PORT=2000
+            SAPPHIRE_IMAGE=sapphire:${GITHUB_SHA}
+            USERS_PORT=3000
             USERS_DB_DSN=${USERS_DB_DSN_STAGE}
-            PROJECTS_PORT=2020
+            PROJECTS_PORT=3020
             PROJECTS_DB_DSN=${PROJECTS_DB_DSN_STAGE}
           " >> $GITHUB_ENV
       - name: Deploy
