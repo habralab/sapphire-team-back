@@ -16,12 +16,13 @@ class UsersAPIService(BaseAPIService):
             database: UsersDatabaseService,
             habr_oauth2: OAuth2HabrBackend,
             version: str = "0.0.0",
+            docs_url: str = "/docs",
             port: int = 8000,
     ):
         self._database = database
         self._habr_oauth2 = habr_oauth2
 
-        super().__init__(title="Users", version=version, port=port)
+        super().__init__(title="Users", version=version, docs_url=docs_url, port=port)
 
     def setup_app(self, app: fastapi.FastAPI):
         app.include_router(router, prefix="/api")
@@ -50,5 +51,6 @@ def get_service(
         database=database,
         habr_oauth2=habr_oauth2,
         version=get_version() or "0.0.0",
+        docs_url=settings.docs_url,
         port=settings.port,
     )

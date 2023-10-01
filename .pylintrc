@@ -22,6 +22,7 @@ docstring-quote=double
 disable=missing-class-docstring,
         missing-module-docstring,
         missing-function-docstring,
+        too-many-arguments,
 
         redefined-outer-name,
         too-few-public-methods,
