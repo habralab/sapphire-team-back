@@ -11,7 +11,7 @@ class UsersSettings(BaseSettings):
     habr_oauth2_client_id: str
     habr_oauth2_client_secret: str
 
-    class Config:
+    class ConfigDict:
         case_sensitive = False
         secrets_dir = "/run/secrets"
 
