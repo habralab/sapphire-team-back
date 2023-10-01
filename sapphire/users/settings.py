@@ -1,8 +1,10 @@
 from pydantic import AnyUrl, conint
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class UsersSettings(BaseSettings):
+    model_config = SettingsConfigDict(secrets_dir="/run/secrets")
+
     port: conint(ge=1, le=65535) = 8000
     root_path: str = ""
 
@@ -10,10 +12,6 @@ class UsersSettings(BaseSettings):
 
     habr_oauth2_client_id: str
     habr_oauth2_client_secret: str
-
-    class ConfigDict:
-        case_sensitive = False
-        secrets_dir = "/run/secrets"
 
 
 def get_settings() -> UsersSettings:
