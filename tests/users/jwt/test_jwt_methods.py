@@ -46,5 +46,5 @@ def test_not_user_id_refresh_token(settings: UsersSettings, jwt_methods: JWTMeth
         settings.jwt_access_token_private_key,
         algorithm="RS256",
     )
-    decoded_user_id = jwt_methods.decode_access_token(fake_refresh_token)
+    decoded_user_id = jwt_methods.decode_refresh_token(fake_refresh_token)
     assert decoded_user_id is None

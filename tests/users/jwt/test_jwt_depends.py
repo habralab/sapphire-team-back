@@ -51,9 +51,7 @@ def test_verify_jwt_tokens_without_access_token(
     assert verify_result is None
 
 
-def test_verify_jwt_tokens_without_tokens(
-    mocked_request, mocked_response, jwt_methods: JWTMethods
-):
+def test_verify_jwt_tokens_without_tokens(mocked_request, mocked_response):
     received_http_exception = False
     try:
         verify_jwt_tokens(mocked_response, mocked_request)
