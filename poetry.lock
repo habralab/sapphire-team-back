@@ -1707,12 +1707,4 @@ sqlite = ["aiosqlite"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-<<<<<<< HEAD
-<<<<<<< HEAD
-content-hash = "c5a845294273ba4ef3bc506a463e0b34621096d7ccc6b541fcd80d78aefb77b4"
-=======
-content-hash = "c9ad186b063cd11711b7bd933378e0e7bb8c4b03882719c052fe405b7c007147"
->>>>>>> task/28 edit poetry
-=======
-content-hash = "54e2a655755693855c5daa4ae8f2c2a31b8e4a541dc96b88156fe0e201326608"
->>>>>>> task/28: updated tests, moved issue tokens, updated payload for jwt tokens
+content-hash = "beb1cab50940e417914ecdab1028ea5d074a8b97fa9a96cac56ba39ec67eb845"
