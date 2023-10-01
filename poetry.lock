@@ -263,7 +263,7 @@ files = [
 name = "asyncpg"
 version = "0.28.0"
 description = "An asyncio PostgreSQL driver"
-optional = false
+optional = true
 python-versions = ">=3.7.0"
 files = [
     {file = "asyncpg-0.28.0-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:0a6d1b954d2b296292ddff4e0060f494bb4270d87fb3655dd23c5c6096d16d83"},
@@ -1554,9 +1554,10 @@ idna = ">=2.0"
 multidict = ">=4.0"
 
 [extras]
+postgres = ["asyncpg"]
 sqlite = ["aiosqlite"]
 
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "c9bc512b923fc49d394b7d3be31e5157e2af43e365e03eeb3a9498a13b4386b8"
+content-hash = "c5a845294273ba4ef3bc506a463e0b34621096d7ccc6b541fcd80d78aefb77b4"

@@ -7,7 +7,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Build
-        run: docker build -t sapphire:test-${{ github.sha }} --target test .
+        run: docker build -t sapphire:test-${{ github.sha }} --target full .
   lint:
     needs: [build]
     runs-on: self-hosted
