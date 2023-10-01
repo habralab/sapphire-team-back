@@ -54,7 +54,7 @@ services:
       - kafka
     environment:
       DB_DSN: ${USERS_DB_DSN:-sqlite+aiosqlite:///users.db}
-      DOCS_URL: ${USERS_DOCS_URL:-/docs}
+      ROOT_PATH: ${USERS_ROOT_PATH}
     secrets:
       - habr_oauth2_client_id
       - habr_oauth2_client_secret
@@ -70,7 +70,7 @@ services:
     image: ${SAPPHIRE_IMAGE:-sapphire}
     environment:
       DB_DSN: ${PROJECTS_DB_DSN:-sqlite+aiosqlite:///projects.db}
-      DOCS_URL: ${PROJECTS_DOCS_URL:-/docs}
+      ROOT_PATH: ${PROJECTS_ROOT_PATH}
     depends_on:
       - redis
       - database

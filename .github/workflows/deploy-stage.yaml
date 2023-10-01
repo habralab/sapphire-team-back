@@ -26,9 +26,9 @@ jobs:
           echo "SAPPHIRE_IMAGE=sapphire:${GITHUB_SHA}" >> $GITHUB_ENV
           echo "USERS_PORT=3000" >> $GITHUB_ENV
           echo "USERS_DB_DSN=${USERS_DB_DSN_STAGE}" >> $GITHUB_ENV
-          echo "USERS_DOCS_URL=${USERS_DOCS_URL_STAGE}" >> $GITHUB_ENV
+          echo "USERS_ROOT_PATH=${USERS_ROOT_PATH_STAGE}" >> $GITHUB_ENV
           echo "PROJECTS_PORT=3020" >> $GITHUB_ENV
           echo "PROJECTS_DB_DSN=${PROJECTS_DB_DSN_STAGE}" >> $GITHUB_ENV
-          echo "PROJECTS_DOCS_URL=${PROJECTS_DOCS_URL_STAGE}" >> $GITHUB_ENV
+          echo "PROJECTS_ROOT_PATH=${PROJECTS_ROOT_PATH_STAGE}" >> $GITHUB_ENV
       - name: Deploy
         run: docker stack deploy -c docker-compose.yaml sapphire-stage
