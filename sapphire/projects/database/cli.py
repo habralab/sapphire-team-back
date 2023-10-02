@@ -1,6 +1,7 @@
 import typer
-from sapphire.common.database.service import BaseDatabaseService
 from pydantic import AnyUrl
+
+from sapphire.common.database.service import BaseDatabaseService
 
 app = typer.Typer()
 
