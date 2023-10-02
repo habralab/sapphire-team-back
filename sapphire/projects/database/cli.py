@@ -1,44 +1,21 @@
-from typing import Optional
-
 import typer
+from sapphire.common.database.service import BaseDatabaseService
+from pydantic import AnyUrl
 
-from .service import get_service
-
-
-def migrate(ctx: typer.Context):
-    database_service = ctx.obj["database"]
-    database_service.migrate()
+app = typer.Typer()
 
 
-def create(ctx: typer.Context,
-           message: Optional[str] = typer.Option(
-               None, "-m", "--message",
-               help="Migration short message",
-           )):
-    database_service = ctx.obj["database"]
-    database_service.create_migration(message=message)
+@app.command(name='create_migration')
+def create_migration(db_dsn: AnyUrl, message: str | None = None):
+    service = BaseDatabaseService(db_dsn)
+    service.create_migration(message)
 
 
-def get_migration_cli() -> typer.Typer:
-    cli = typer.Typer()
-
-    cli.command(name="migrate")(migrate)
-    cli.command(name="create")(create)
-
-    return cli
+@app.command(name='migrate')
+def migrate(db_dsn: AnyUrl):
+    service = BaseDatabaseService(db_dsn)
+    service.migrate()
 
 
-def service_callback(ctx: typer.Context):
-    settings = ctx.obj["settings"]
-    database_service = get_service(settings=settings)
-
-    ctx.obj["database"] = database_service
-
-
-def get_cli() -> typer.Typer:
-    cli = typer.Typer()
-
-    cli.callback()(service_callback)
-    cli.add_typer(get_migration_cli(), name="migrations")
-
-    return cli
+if __name__ == '__main__':
+    app(db_dsn="sqlite+aiosqlite:///projects.sqlite3")
