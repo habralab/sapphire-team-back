@@ -55,7 +55,7 @@ services:
     environment:
       DB_DSN: ${USERS_DB_DSN:-sqlite+aiosqlite:///users.db}
       ROOT_PATH: ${USERS_ROOT_PATH}
-      ALLOWED_ORIGINS: ${USERS_ALLOWED_ORIGINS}
+      ALLOWED_ORIGINS: ${USERS_ALLOWED_ORIGINS:-["http://localhost:3050"]}
     secrets:
       - habr_oauth2_client_id
       - habr_oauth2_client_secret
@@ -76,7 +76,7 @@ services:
     environment:
       DB_DSN: ${PROJECTS_DB_DSN:-sqlite+aiosqlite:///projects.db}
       ROOT_PATH: ${PROJECTS_ROOT_PATH}
-      ALLOWED_ORIGINS: ${PROJECTS_ALLOWED_ORIGINS}
+      ALLOWED_ORIGINS: ${PROJECTS_ALLOWED_ORIGINS:-["http://localhost:3050"]}
     ports:
       - target: 8000
         published: ${PROJECTS_PORT:-3020}

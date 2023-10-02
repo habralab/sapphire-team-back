@@ -1,5 +1,3 @@
-from typing import Iterable
-
 from pydantic import AnyUrl, conint
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -9,7 +7,7 @@ class ProjectsSettings(BaseSettings):
 
     port: conint(ge=1, le=65535) = 8000
     root_path: str = ""
-    allowed_origins: Iterable[str] = ()
+    allowed_origins: list[str] = []
 
     db_dsn: AnyUrl = AnyUrl("sqlite+aiosqlite:///projects.sqlite3")
 
