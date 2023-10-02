@@ -55,6 +55,7 @@ services:
     environment:
       DB_DSN: ${USERS_DB_DSN:-sqlite+aiosqlite:///users.db}
       ROOT_PATH: ${USERS_ROOT_PATH}
+      ALLOWED_ORIGINS: ${USERS_ALLOWED_ORIGINS}
     secrets:
       - habr_oauth2_client_id
       - habr_oauth2_client_secret
@@ -68,18 +69,37 @@ services:
 
   projects:
     image: ${SAPPHIRE_IMAGE:-sapphire}
-    environment:
-      DB_DSN: ${PROJECTS_DB_DSN:-sqlite+aiosqlite:///projects.db}
-      ROOT_PATH: ${PROJECTS_ROOT_PATH}
     depends_on:
       - redis
       - database
       - kafka
+    environment:
+      DB_DSN: ${PROJECTS_DB_DSN:-sqlite+aiosqlite:///projects.db}
+      ROOT_PATH: ${PROJECTS_ROOT_PATH}
+      ALLOWED_ORIGINS: ${PROJECTS_ALLOWED_ORIGINS}
     ports:
       - target: 8000
         published: ${PROJECTS_PORT:-3020}
         mode: host
     command: ["projects", "api", "serve"]
+    deploy:
+      replicas: 1
+
+  swagger:
+    image: swaggerapi/swagger-ui
+    depends_on:
+      - projects
+      - users
+    environment:
+      URLS: >
+        [
+          {"url": "${USERS_BASE_URL:-http://localhost:3000}/openapi.json", "name": "Users"},
+          {"url": "${PROJECTS_BASE_URL:-http://localhost:3020}/openapi.json", "name": "Projects"}
+        ]
+    ports:
+      - target: 8080
+        published: ${SWAGGER_PORT:-3050}
+        mode: host
     deploy:
       replicas: 1
 

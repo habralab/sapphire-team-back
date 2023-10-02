@@ -24,6 +24,7 @@ disable=missing-class-docstring,
         missing-function-docstring,
         too-many-arguments,
 
+        duplicate-code,
         redefined-outer-name,
         too-few-public-methods,
         arguments-differ,
