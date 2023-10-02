@@ -1,8 +1,10 @@
+import uuid
+
 import fastapi
 import yarl
 from fastapi.responses import RedirectResponse
 
-from sapphire.common.api.schemas import ErrorResponse, ResponseStatus
+from sapphire.common.api.schemas import ResponseStatus
 from sapphire.users.api.schemas import JWTTokensResponse
 from sapphire.users.jwt import JWTMethods
 from sapphire.users.oauth2.habr import OAuth2HabrBackend
@@ -18,16 +20,18 @@ async def authorize(request: fastapi.Request):
     return authorization_url
 
 
-@router.get("/callback", response_model=JWTTokensResponse | ErrorResponse)
-async def callback(request: fastapi.Request, response: fastapi.Response):
+@router.get("/callback")
+async def callback(
+    request: fastapi.Request, response: fastapi.Response
+) -> JWTTokensResponse:
     habr_oauth2: OAuth2HabrBackend = request.app.service.habr_oauth2
     jwt_methods: JWTMethods = request.app.service.jwt_methods
     token = await habr_oauth2.get_token()
     if token is None:
-        return ErrorResponse(message="Client cannot receive oauth2 access token")
-    user_info = await habr_oauth2.get_user_info(token=token)
-    access_token = jwt_methods.issue_access_token(user_info.id)
-    refresh_token = jwt_methods.issue_refresh_token(user_info.id)
+        raise fastapi.HTTPException(status_code=401, detail="Not authenticated")
+    user_id = uuid.uuid4()  # temporary solution, refactor will be later
+    access_token = jwt_methods.issue_access_token(user_id)
+    refresh_token = jwt_methods.issue_refresh_token(user_id)
     add_to_cookies = [
         ("access_token", access_token, jwt_methods.access_token_expires),
         ("refresh_token", refresh_token, jwt_methods.refresh_token_expires),

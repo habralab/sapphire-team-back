@@ -1,3 +1,5 @@
+import uuid
+
 import jwt
 
 from sapphire.users.jwt import JWTMethods
@@ -5,7 +7,7 @@ from sapphire.users.settings import UsersSettings
 
 
 def test_correct_access_token(jwt_methods: JWTMethods):
-    user_id = 123
+    user_id = uuid.uuid4()
     access_token = jwt_methods.issue_access_token(user_id)
     decoded_user_id = jwt_methods.decode_access_token(access_token)
     assert decoded_user_id == user_id
@@ -28,7 +30,7 @@ def test_not_user_id_access_token(settings: UsersSettings, jwt_methods: JWTMetho
 
 
 def test_correct_refresh_token(jwt_methods: JWTMethods):
-    user_id = 123
+    user_id = uuid.uuid4()
     refresh_token = jwt_methods.issue_refresh_token(user_id)
     decoded_user_id = jwt_methods.decode_refresh_token(refresh_token)
     assert decoded_user_id == user_id
