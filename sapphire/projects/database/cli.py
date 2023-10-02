@@ -1,22 +1,34 @@
+# pylint: disable=duplicate-code
+import asyncio
+
 import typer
-from pydantic import AnyUrl
 
 from sapphire.common.database.service import BaseDatabaseService
 
-app = typer.Typer()
+
+def run_migration(settings, create_migration=False, migrate=False):
+    migration = BaseDatabaseService(dsn=settings)
+    if create_migration:
+        migration.create_migration()
+    elif migrate:
+        migration.migrate()
+    asyncio.run(migration.run())
 
 
-@app.command(name='create_migration')
-def create_migration(db_dsn: AnyUrl, message: str | None = None):
-    service = BaseDatabaseService(db_dsn)
-    service.create_migration(message)
+def migrate(ctx: typer.Context):
+    settings = ctx.obj["settings"]
+    run_migration(settings)
 
 
-@app.command(name='migrate')
-def migrate(db_dsn: AnyUrl):
-    service = BaseDatabaseService(db_dsn)
-    service.migrate()
+def create_migration(ctx: typer.Context):
+    settings = ctx.obj["settings"]
+    run_migration(settings)
 
 
-if __name__ == '__main__':
-    app(db_dsn="sqlite+aiosqlite:///projects.sqlite3")
+def get_cli() -> typer.Typer:
+    cli = typer.Typer()
+
+    cli.command(name="migrate")(migrate)
+    cli.command(name="create_migration")(create_migration)
+
+    return cli
