@@ -21,43 +21,43 @@ def refresh_token_common_key() -> rsa.RSAPrivateKey:
 
 
 @pytest.fixture()
-def access_token_private_key(access_token_common_key: rsa.RSAPrivateKey) -> bytes:
+def access_token_private_key(access_token_common_key: rsa.RSAPrivateKey) -> str:
     return access_token_common_key.private_bytes(
         crypto_serialization.Encoding.PEM,
         crypto_serialization.PrivateFormat.PKCS8,
         crypto_serialization.NoEncryption(),
-    )
+    ).decode()
 
 
 @pytest.fixture()
-def access_token_public_key(access_token_common_key: rsa.RSAPrivateKey) -> bytes:
+def access_token_public_key(access_token_common_key: rsa.RSAPrivateKey) -> str:
     return access_token_common_key.public_key().public_bytes(
         crypto_serialization.Encoding.OpenSSH, crypto_serialization.PublicFormat.OpenSSH
-    )
+    ).decode()
 
 
 @pytest.fixture()
-def refresh_token_private_key(refresh_token_common_key: rsa.RSAPrivateKey) -> bytes:
+def refresh_token_private_key(refresh_token_common_key: rsa.RSAPrivateKey) -> str:
     return refresh_token_common_key.private_bytes(
         crypto_serialization.Encoding.PEM,
         crypto_serialization.PrivateFormat.PKCS8,
         crypto_serialization.NoEncryption(),
-    )
+    ).decode()
 
 
 @pytest.fixture()
-def refresh_token_public_key(refresh_token_common_key: rsa.RSAPrivateKey) -> bytes:
+def refresh_token_public_key(refresh_token_common_key: rsa.RSAPrivateKey) -> str:
     return refresh_token_common_key.public_key().public_bytes(
         crypto_serialization.Encoding.OpenSSH, crypto_serialization.PublicFormat.OpenSSH
-    )
+    ).decode()
 
 
 @pytest.fixture()
 def settings(
-    access_token_private_key: bytes,
-    access_token_public_key: bytes,
-    refresh_token_private_key: bytes,
-    refresh_token_public_key: bytes,
+    access_token_private_key: str,
+    access_token_public_key: str,
+    refresh_token_private_key: str,
+    refresh_token_public_key: str,
 ) -> UsersSettings:
     return UsersSettings(
         habr_oauth2_client_id="habr_oauth2_client_id",

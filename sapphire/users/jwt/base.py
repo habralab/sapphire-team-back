@@ -9,17 +9,17 @@ from sapphire.users.settings import UsersSettings
 class JWTMethods:
     def __init__(
         self,
-        access_token_public_key: bytes,
-        access_token_private_key: bytes,
-        refresh_token_public_key: bytes,
-        refresh_token_private_key: bytes,
+        access_token_public_key: str,
+        access_token_private_key: str,
+        refresh_token_public_key: str,
+        refresh_token_private_key: str,
         access_token_expires: datetime.timedelta,
         refresh_token_expires: datetime.timedelta,
     ) -> None:
-        self.access_token_public_key: bytes = access_token_public_key
-        self.access_token_private_key: bytes = access_token_private_key
-        self.refresh_token_public_key: bytes = refresh_token_public_key
-        self.refresh_token_private_key: bytes = refresh_token_private_key
+        self.access_token_public_key: str = access_token_public_key
+        self.access_token_private_key: str = access_token_private_key
+        self.refresh_token_public_key: str = refresh_token_public_key
+        self.refresh_token_private_key: str = refresh_token_private_key
         self.access_token_expires: datetime.timedelta = access_token_expires
         self.refresh_token_expires: datetime.timedelta = refresh_token_expires
 
