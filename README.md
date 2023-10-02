@@ -89,7 +89,7 @@ pytest /app/autotests
 
 For running you should build app image
 ```shell
-docker build -t sapphire --target app .
+docker build -t sapphire --target slim .
 ```
 
 Create secrets
