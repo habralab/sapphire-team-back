@@ -15,14 +15,20 @@ jobs:
     needs: [build]
     runs-on: self-hosted
     steps:
+      - name: Set environment variables
+        run: |
+          echo "HABR_OAUTH2_CLIENT_ID_NAME=habr_oauth2_client_id_stage" >> $GITHUB_ENV
+          echo "HABR_OAUTH2_CLIENT_SECRET_NAME=habr_oauth2_client_secret_stage" >> $GITHUB_ENV
+          echo "POSTGRESQL_PASSWORD_NAME=postgresql_password_stage" >> $GITHUB_ENV
+          echo "DATABASE_DIR=/sapphire/stage/database_data" >> $GITHUB_ENV
+          echo "REDIS_DIR=/sapphire/stage/redis_data" >> $GITHUB_ENV
+          echo "BROKER_DIR=/sapphire/stage/broker_dir" >> $GITHUB_ENV
+          echo "SAPPHIRE_IMAGE=sapphire:${GITHUB_SHA}" >> $GITHUB_ENV
+          echo "USERS_PORT=3000" >> $GITHUB_ENV
+          echo "USERS_DB_DSN=${USERS_DB_DSN_STAGE}" >> $GITHUB_ENV
+          echo "USERS_ROOT_PATH=${USERS_ROOT_PATH_STAGE}" >> $GITHUB_ENV
+          echo "PROJECTS_PORT=3020" >> $GITHUB_ENV
+          echo "PROJECTS_DB_DSN=${PROJECTS_DB_DSN_STAGE}" >> $GITHUB_ENV
+          echo "PROJECTS_ROOT_PATH=${PROJECTS_ROOT_PATH_STAGE}" >> $GITHUB_ENV
       - name: Deploy
-        env:
-          DATABASE_DIR: "/sapphire/stage/database_data"
-          REDIS_DIR: "/sapphire/stage/redis_data"
-          BROKER_DIR: "/sapphire/stage/broker_dir"
-          SAPPHIRE_IMAGE: sapphire:{{ github.sha }}
-          USERS_PORT: "2000"
-          USERS_DB_DSN: ${USERS_DB_DSN_STAGE}
-          PROJECTS_PORT: "2020"
-          PROJECTS_DB_DSN: ${PROJECTS_DB_DSN_STAGE}
         run: docker stack deploy -c docker-compose.yaml sapphire-stage

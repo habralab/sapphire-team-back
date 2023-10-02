@@ -20,6 +20,7 @@ services:
 
   zookeeper:
     image: confluentinc/cp-zookeeper:7.5.0
+    user: 0:0
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
@@ -33,6 +34,7 @@ services:
     image: confluentinc/cp-kafka:7.5.0
     depends_on:
       - zookeeper
+    user: 0:0
     environment:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092
@@ -52,12 +54,13 @@ services:
       - kafka
     environment:
       DB_DSN: ${USERS_DB_DSN:-sqlite+aiosqlite:///users.db}
+      ROOT_PATH: ${USERS_ROOT_PATH}
     secrets:
       - habr_oauth2_client_id
       - habr_oauth2_client_secret
     ports:
       - target: 8000
-        published: ${USERS_PORT:-2000}
+        published: ${USERS_PORT:-3000}
         mode: host
     command: ["users", "api", "serve"]
     deploy:
@@ -67,13 +70,14 @@ services:
     image: ${SAPPHIRE_IMAGE:-sapphire}
     environment:
       DB_DSN: ${PROJECTS_DB_DSN:-sqlite+aiosqlite:///projects.db}
+      ROOT_PATH: ${PROJECTS_ROOT_PATH}
     depends_on:
       - redis
       - database
       - kafka
     ports:
       - target: 8000
-        published: ${PROJECTS_PORT:-2020}
+        published: ${PROJECTS_PORT:-3020}
         mode: host
     command: ["projects", "api", "serve"]
     deploy:

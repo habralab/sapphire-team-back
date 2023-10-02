@@ -6,13 +6,18 @@ from .uvicorn_server import UvicornServer
 
 
 class BaseAPIService(ServiceMixin):
-    def __init__(self, title: str, version: str, port: int = 8000):
+    def __init__(self, title: str, version: str, root_path: str = "", port: int = 8000):
         self._title = title
         self._version = version
+        self._root_path = root_path
         self._port = port
 
     def get_app(self) -> fastapi.FastAPI:
-        app = fastapi.FastAPI(title=self._title, version=self._version)
+        app = fastapi.FastAPI(
+            title=self._title,
+            version=self._version,
+            root_path=self._root_path,
+        )
         app.service = self
         self.setup_app(app=app)
 
