@@ -113,3 +113,15 @@ secrets:
   postgresql_password:
     external: true
     name: ${POSTGRESQL_PASSWORD_NAME:-postgresql_password}
+  jwt_access_token_private_key:
+    external: true
+    name: ${JWT_ACCESS_TOKEN_PRIVATE_KEY_NAME:-jwt_access_token_private_key}
+  jwt_access_token_public_key:
+    external: true
+    name: ${JWT_ACCESS_TOKEN_PUBLIC_KEY_NAME:-jwt_access_token_public_key}
+  jwt_refresh_token_private_key:
+    external: true
+    name: ${JWT_REFRESH_TOKEN_PRIVATE_KEY_NAME:-jwt_refresh_token_private_key}
+  jwt_refresh_token_public_key:
+    external: true
+    name: ${JWT_REFRESH_TOKEN_PUBLIC_KEY_NAME:-jwt_refresh_token_public_key}

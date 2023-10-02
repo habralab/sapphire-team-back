@@ -3,7 +3,7 @@ from typing import Iterable
 import fastapi
 
 from sapphire.common.api.service import BaseAPIService
-from sapphire.common.package import get_version
+from sapphire.common.utils.package import get_version
 from sapphire.projects.settings import ProjectsSettings
 
 from . import router
@@ -11,11 +11,11 @@ from . import router
 
 class ProjectsAPIService(BaseAPIService):
     def __init__(
-            self,
-            version: str = "0.0.0.0",
-            root_path: str = "",
-            allowed_origins: Iterable[str] = (),
-            port: int = 8000,
+        self,
+        version: str = "0.0.0.0",
+        root_path: str = "",
+        allowed_origins: Iterable[str] = (),
+        port: int = 8000,
     ):
         super().__init__(
             title="Projects",
