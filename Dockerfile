@@ -20,6 +20,6 @@ ENTRYPOINT ["poetry", "run"]
 # Only application
 FROM core as slim
 
-RUN poetry install --only main -E postgres
+RUN poetry install --only main -E sqlite
 COPY ./sapphire /app/sapphire
 ENTRYPOINT ["poetry", "run", "python", "-m", "sapphire"]
