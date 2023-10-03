@@ -6,7 +6,7 @@ from sapphire.common.api.service import BaseAPIService
 from sapphire.common.package import get_version
 from sapphire.projects.settings import ProjectsSettings
 
-from .router import router
+from . import router
 
 
 class ProjectsAPIService(BaseAPIService):
@@ -26,7 +26,7 @@ class ProjectsAPIService(BaseAPIService):
         )
 
     def setup_app(self, app: fastapi.FastAPI):
-        app.include_router(router, prefix="/api")
+        app.include_router(router.router, prefix="/api")
 
 
 def get_service(settings: ProjectsSettings) -> ProjectsAPIService:
