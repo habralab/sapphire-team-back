@@ -1,5 +1,4 @@
 import datetime
-from typing import Iterable
 
 from pydantic import AnyUrl, conint
 from pydantic_settings import BaseSettings, SettingsConfigDict
