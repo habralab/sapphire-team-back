@@ -2,7 +2,7 @@ from unittest.mock import mock_open, patch
 
 import pytest
 
-from sapphire.common.utils.package import get_version
+from sapphire.common.package import get_version
 
 PYPROJECT_CONTENT_TEMPLATE = """
 [tool.poetry]
