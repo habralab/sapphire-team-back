@@ -1,4 +1,3 @@
-# pylint: disable=duplicate-code
 import typer
 
 from . import api, database
