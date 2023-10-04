@@ -1,6 +1,6 @@
 import datetime
 
-from pydantic import AnyUrl, conint
+from pydantic import AnyHttpUrl, AnyUrl, conint
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from sapphire.common.utils.rsa256 import generate_rsa_keys
@@ -13,6 +13,7 @@ class UsersSettings(BaseSettings):
     model_config = SettingsConfigDict(secrets_dir="/run/secrets")
 
     port: conint(ge=1, le=65535) = 8000
+    root_url: AnyHttpUrl = AnyHttpUrl("http://localhost:8000")
     root_path: str = ""
     allowed_origins: list[str] = []
 
