@@ -4,6 +4,7 @@ import fastapi
 import uvicorn
 from facet import ServiceMixin
 from fastapi.middleware.cors import CORSMiddleware
+from loguru import logger
 
 from .uvicorn_server import UvicornServer
 
@@ -51,4 +52,8 @@ class BaseAPIService(ServiceMixin):
         config = uvicorn.Config(app=self.get_app(), host="0.0.0.0", port=self._port)
         server = UvicornServer(config)
 
+        logger.info("Start API service {name}", name=self._title)
         self.add_task(server.serve())
+
+    async def stop(self):
+        logger.info("Stop API service {name}", name=self._title)

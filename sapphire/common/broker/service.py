@@ -2,6 +2,7 @@ from typing import Iterable
 
 import aiokafka
 from facet import ServiceMixin
+from loguru import logger
 
 from .handler import BaseBrokerHandler
 
@@ -37,4 +38,9 @@ class BaseBrokerService(ServiceMixin):
             await handler.handle(message=message)
 
     async def start(self):
+        logger.info("Start Broker service")
+
         self.add_task(self.consume())
+
+    async def stop(self):
+        logger.info("Stop Broker service")
