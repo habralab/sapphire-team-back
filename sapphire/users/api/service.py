@@ -4,8 +4,9 @@ import fastapi
 from facet import ServiceMixin
 
 from sapphire.common.api.service import BaseAPIService
-from sapphire.common.package import get_version
+from sapphire.common.utils.package import get_version
 from sapphire.users.database.service import UsersDatabaseService
+from sapphire.users.jwt import JWTMethods
 from sapphire.users.oauth2.habr import OAuth2HabrBackend
 from sapphire.users.settings import UsersSettings
 
@@ -14,16 +15,18 @@ from .router import router
 
 class UsersAPIService(BaseAPIService):
     def __init__(
-            self,
-            database: UsersDatabaseService,
-            habr_oauth2: OAuth2HabrBackend,
-            version: str = "0.0.0",
-            root_path: str = "",
-            allowed_origins: Iterable[str] = (),
-            port: int = 8000,
+        self,
+        database: UsersDatabaseService,
+        habr_oauth2: OAuth2HabrBackend,
+        jwt_methods: JWTMethods,
+        version: str = "0.0.0",
+        root_path: str = "",
+        allowed_origins: Iterable[str] = (),
+        port: int = 8000,
     ):
         self._database = database
         self._habr_oauth2 = habr_oauth2
+        self._jwt_methods = jwt_methods
 
         super().__init__(
             title="Users",
@@ -50,11 +53,16 @@ class UsersAPIService(BaseAPIService):
     def habr_oauth2(self) -> OAuth2HabrBackend:
         return self._habr_oauth2
 
+    @property
+    def jwt_methods(self) -> JWTMethods:
+        return self._jwt_methods
+
 
 def get_service(
-        database: UsersDatabaseService,
-        habr_oauth2: OAuth2HabrBackend,
-        settings: UsersSettings,
+    database: UsersDatabaseService,
+    habr_oauth2: OAuth2HabrBackend,
+    jwt_methods: JWTMethods,
+    settings: UsersSettings,
 ) -> UsersAPIService:
     return UsersAPIService(
         database=database,
@@ -62,5 +70,6 @@ def get_service(
         version=get_version() or "0.0.0",
         root_path=settings.root_path,
         allowed_origins=settings.allowed_origins,
+        jwt_methods=jwt_methods,
         port=settings.port,
     )
