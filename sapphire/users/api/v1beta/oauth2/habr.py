@@ -16,9 +16,9 @@ router = fastapi.APIRouter()
 async def authorize(request: fastapi.Request):
     habr_oauth2: OAuth2HabrBackend = request.app.service.habr_oauth2
 
-    root_url = yarl.URL(request.app.extra["root_url"])
-    root_path = request.app.root_path.lstrip("/")
-    redirect_url = root_url / root_path / "callback"
+    redirect_url = yarl.URL(request.app.extra["root_url"])
+    redirect_url /= request.url.path.lstrip("/")
+    redirect_url = redirect_url.parent / "callback"
     authorization_url = habr_oauth2.get_authorization_url(
         redirect_url=str(redirect_url),
     )
@@ -26,7 +26,7 @@ async def authorize(request: fastapi.Request):
     return authorization_url
 
 
-@router.get("/callback")
+@router.get("/callback", name="callback")
 async def callback(
     state: str, code: str, request: fastapi.Request, response: fastapi.Response
 ) -> JWTTokensResponse:
