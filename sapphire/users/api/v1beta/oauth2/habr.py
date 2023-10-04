@@ -17,9 +17,7 @@ router = fastapi.APIRouter()
 async def authorize(request: fastapi.Request):
     habr_oauth2: OAuth2HabrBackend = request.app.service.habr_oauth2
 
-    redirect_url = yarl.URL(request.app.extra["root_url"])
-    redirect_url /= request.url.path.lstrip("/")
-    redirect_url = redirect_url.parent / "callback"
+    redirect_url = yarl.URL(request.app.extra["root_url"]) / request.app.root_path / "callback"
     authorization_url = habr_oauth2.get_authorization_url(
         redirect_url=str(redirect_url),
     )

@@ -8,8 +8,6 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 
 from sapphire.notifications.database import models
 
-from sapphire.notifications.database import models
-
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
