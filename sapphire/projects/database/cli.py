@@ -1,33 +1,45 @@
 import asyncio
-
+from typing import Optional
 import typer
 
 from .service import get_service
 
 
-def run_migration(settings, create=False, migrate=False):
-    migration_service = get_service(settings=settings)
-    if create:
-        migration_service.create_migration()
-    elif migrate:
-        migration_service.migrate()
-    asyncio.run(migration_service.run())
-
-
 def migrate(ctx: typer.Context):
-    settings = ctx.obj["settings"]
-    run_migration(settings)
+    migration_service = ctx.obj["settings"]
+    migration_service.migrate()
 
 
-def create(ctx: typer.Context):
+def create(ctx: typer.Context,
+           message: Optional[str] = typer.Option(
+               None, "-m", "--message",
+               help="Migration short message",
+           )):
+
+    database_service = ctx.obj["settings"]
+    database_service.create_migration(message=message)
+
+
+def get_migration_cli() -> typer.Typer:
+    cli = typer.Typer()
+
+    cli.command(name="migrate")(migrate)
+    cli.command(name="create")(create)
+
+    return cli
+
+
+def service_callback(ctx: typer.Context):
     settings = ctx.obj["settings"]
-    run_migration(settings)
+    database_service = get_service(settings=settings)
+
+    ctx.obj["database"] = database_service
 
 
 def get_cli() -> typer.Typer:
     cli = typer.Typer()
 
-    cli.command(name="migrate")(migrate)
-    cli.command(name="create_migration")(create)
+    cli.callback()(service_callback)
+    cli.add_typer(get_migration_cli(), name="migrations")
 
     return cli
