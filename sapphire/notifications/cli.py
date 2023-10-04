@@ -1,7 +1,6 @@
 import typer
 
 from . import database
-
 from .settings import get_settings
 
 
