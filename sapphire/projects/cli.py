@@ -1,6 +1,6 @@
 import typer
-from . import api
-from . import database
+
+from . import api, database
 from .settings import get_settings
 
 

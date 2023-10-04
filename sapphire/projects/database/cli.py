@@ -1,5 +1,5 @@
-import asyncio
 from typing import Optional
+
 import typer
 
 from .service import get_service
@@ -15,7 +15,6 @@ def create(ctx: typer.Context,
                None, "-m", "--message",
                help="Migration short message",
            )):
-
     database_service = ctx.obj["settings"]
     database_service.create_migration(message=message)
 
