@@ -1,5 +1,5 @@
 from sapphire.common.api.schemas import HealthResponse, ResponseStatus
-from sapphire.common.package import get_version
+from sapphire.common.utils.package import get_version
 
 
 async def health() -> HealthResponse:

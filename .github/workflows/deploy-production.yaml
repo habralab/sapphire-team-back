@@ -19,6 +19,10 @@ jobs:
         run: |
           echo "HABR_OAUTH2_CLIENT_ID_NAME=habr_oauth2_client_id_production" >> $GITHUB_ENV
           echo "HABR_OAUTH2_CLIENT_SECRET_NAME=habr_oauth2_client_secret_production" >> $GITHUB_ENV
+          echo "JWT_ACCESS_TOKEN_PRIVATE_KEY_NAME=jwt_access_token_private_key_production" >> $GITHUB_ENV
+          echo "JWT_ACCESS_TOKEN_PUBLIC_KEY_NAME=jwt_access_token_public_key_production" >> $GITHUB_ENV
+          echo "JWT_REFRESH_TOKEN_PRIVATE_KEY_NAME=jwt_refresh_token_private_key_production" >> $GITHUB_ENV
+          echo "JWT_REFRESH_TOKEN_PUBLIC_KEY_NAME=jwt_refresh_token_public_key_production" >> $GITHUB_ENV
           echo "POSTGRESQL_PASSWORD_NAME=postgresql_password_production" >> $GITHUB_ENV
           echo "DATABASE_DIR=/sapphire/production/database_data" >> $GITHUB_ENV
           echo "REDIS_DIR=/sapphire/production/redis_data" >> $GITHUB_ENV

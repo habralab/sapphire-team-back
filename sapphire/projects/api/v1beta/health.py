@@ -1,6 +1,11 @@
-import tomllib
+from sapphire.common.api.schemas import HealthResponse
+from sapphire.common.api.schemas.enums import ResponseStatus
+from sapphire.common.utils.package import get_version
 
 
-async def health():
-    with open("pyproject.toml", "rb") as pyproject_file:
-        pyproject_data = tomllib.load(pyproject_file)  # pylint: disable=unused-variable
+async def health() -> HealthResponse:
+    return HealthResponse(
+        status=ResponseStatus.OK,
+        version=get_version() or "0.0.0",
+        name="Projects",
+    )

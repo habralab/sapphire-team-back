@@ -1,8 +1,9 @@
+import pytest
 from unittest.mock import mock_open, patch
 
 import pytest
 
-from sapphire.common.package import get_version
+from sapphire.common.utils.package import get_version
 
 PYPROJECT_CONTENT_TEMPLATE = """
 [tool.poetry]
@@ -20,7 +21,7 @@ name = "any-name"
 ))
 def test_get_version(version: str):
     content = PYPROJECT_CONTENT_TEMPLATE.format(version=version).encode()
-    with patch("sapphire.common.package.open", new_callable=mock_open, read_data=content):
+    with patch("sapphire.common.utils.package.open", new_callable=mock_open, read_data=content):
         actual_version = get_version()
 
     assert actual_version == version

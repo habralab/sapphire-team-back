@@ -2,6 +2,7 @@
 
 ## Run
 
+**API**
 ```shell
 python -m projects api serve
 ```
