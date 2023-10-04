@@ -16,6 +16,7 @@ class OAuth2BaseBackend:
         query_parameters = {
             "client_id": self._client_id,
             "redirect_uri": redirect_url,
+            "response_type": "code",
             "state": state,
         }
 
