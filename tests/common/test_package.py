@@ -1,4 +1,3 @@
-import pytest
 from unittest.mock import mock_open, patch
 
 import pytest

@@ -6,7 +6,7 @@ from .service import get_service
 
 
 def migrate(ctx: typer.Context):
-    migration_service = ctx.obj["settings"]
+    migration_service = ctx.obj["database"]
     migration_service.migrate()
 
 
@@ -15,7 +15,7 @@ def create(ctx: typer.Context,
                None, "-m", "--message",
                help="Migration short message",
            )):
-    database_service = ctx.obj["settings"]
+    database_service = ctx.obj["database"]
     database_service.create_migration(message=message)
 
 
