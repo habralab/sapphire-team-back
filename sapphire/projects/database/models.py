@@ -54,7 +54,8 @@ class Participant(Base):
     __tablename__ = "project_participants"
 
     id: Mapped[uuid.UUID] = mapped_column(default=uuid.uuid4, primary_key=True)
-    position_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("project_positions.id"), primary_key=True)
+    position_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("project_positions.id"),
+                                                   primary_key=True)
     user_id: Mapped[uuid.UUID]
     status: Mapped[ParticipantStatusEnum] = mapped_column(
         Enum(*get_args(ParticipantStatusEnum),
