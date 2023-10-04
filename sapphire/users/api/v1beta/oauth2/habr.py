@@ -15,10 +15,12 @@ router = fastapi.APIRouter()
 @router.get("/authorize", response_class=RedirectResponse)
 async def authorize(request: fastapi.Request):
     habr_oauth2: OAuth2HabrBackend = request.app.service.habr_oauth2
-    redirect_url = yarl.URL(str(request.url)).parent / "callback"
+
+    redirect_url = yarl.URL(request.app.extra["root_url"]) / request.app.root_path / "callback"
     authorization_url = habr_oauth2.get_authorization_url(
-        redirect_url=str(redirect_url)
+        redirect_url=str(redirect_url),
     )
+
     return authorization_url
 
 
@@ -28,10 +30,13 @@ async def callback(
 ) -> JWTTokensResponse:
     habr_oauth2: OAuth2HabrBackend = request.app.service.habr_oauth2
     jwt_methods: JWTMethods = request.app.service.jwt_methods
+
     token = await habr_oauth2.get_token(state, code)
     if token is None:
         raise fastapi.HTTPException(status_code=401, detail="Not authenticated")
+
     user_id = uuid.uuid4()  # temporary solution, refactor will be later
+
     access_token = jwt_methods.issue_access_token(user_id)
     refresh_token = jwt_methods.issue_refresh_token(user_id)
     add_to_cookies = [

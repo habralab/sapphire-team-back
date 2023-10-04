@@ -54,6 +54,7 @@ services:
       - kafka
     environment:
       DB_DSN: ${USERS_DB_DSN:-sqlite+aiosqlite:///users.db}
+      ROOT_URL: ${USERS_ROOT_URL:-http://localhost:3000}
       ROOT_PATH: ${USERS_ROOT_PATH}
       ALLOWED_ORIGINS: ${USERS_ALLOWED_ORIGINS:-["http://localhost:3050"]}
     secrets:
@@ -75,6 +76,7 @@ services:
       - kafka
     environment:
       DB_DSN: ${PROJECTS_DB_DSN:-sqlite+aiosqlite:///projects.db}
+      ROOT_URL: ${PROJECTS_ROOT_URL:-http://localhost:3020}
       ROOT_PATH: ${PROJECTS_ROOT_PATH}
       ALLOWED_ORIGINS: ${PROJECTS_ALLOWED_ORIGINS:-["http://localhost:3050"]}
     ports:
@@ -93,8 +95,8 @@ services:
     environment:
       URLS: >
         [
-          {"url": "${USERS_BASE_URL:-http://localhost:3000}/openapi.json", "name": "Users"},
-          {"url": "${PROJECTS_BASE_URL:-http://localhost:3020}/openapi.json", "name": "Projects"}
+          {"url": "${USERS_ROOT_URL:-http://localhost:3000}${USERS_ROOT_PATH}/openapi.json", "name": "Users"},
+          {"url": "${PROJECTS_ROOT_URL:-http://localhost:3020}${PROJECTS_ROOT_PATH}/openapi.json", "name": "Projects"}
         ]
     ports:
       - target: 8080
