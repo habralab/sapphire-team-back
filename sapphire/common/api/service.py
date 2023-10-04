@@ -6,18 +6,22 @@ from facet import ServiceMixin
 from fastapi.middleware.cors import CORSMiddleware
 from loguru import logger
 
+from .jwt import get_jwt_methods
+from .jwt.settings import get_settings
 from .uvicorn_server import UvicornServer
+
+jwt_settings = get_settings()
 
 
 class BaseAPIService(ServiceMixin):
     def __init__(
-            self,
-            title: str,
-            version: str,
-            root_url: str = "http://localhost",
-            root_path: str = "",
-            allowed_origins: Iterable[str] = (),
-            port: int = 8000,
+        self,
+        title: str,
+        version: str,
+        root_url: str = "http://localhost",
+        root_path: str = "",
+        allowed_origins: Iterable[str] = (),
+        port: int = 8000,
     ):
         self._title = title
         self._version = version
@@ -25,6 +29,7 @@ class BaseAPIService(ServiceMixin):
         self._root_path = root_path
         self._allowed_origins = allowed_origins
         self._port = port
+        self._jwt_methods = get_jwt_methods(jwt_settings)
 
     def get_app(self) -> fastapi.FastAPI:
         app = fastapi.FastAPI(
@@ -57,3 +62,7 @@ class BaseAPIService(ServiceMixin):
 
     async def stop(self):
         logger.info("Stop API service {name}", name=self._title)
+
+    @property
+    def jwt_methods(self):
+        return self._jwt_methods
