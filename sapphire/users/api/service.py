@@ -20,6 +20,7 @@ class UsersAPIService(BaseAPIService):
         habr_oauth2: OAuth2HabrBackend,
         jwt_methods: JWTMethods,
         version: str = "0.0.0",
+        root_url: str = "http://localhost",
         root_path: str = "",
         allowed_origins: Iterable[str] = (),
         port: int = 8000,
@@ -31,6 +32,7 @@ class UsersAPIService(BaseAPIService):
         super().__init__(
             title="Users",
             version=version,
+            root_url=root_url,
             root_path=root_path,
             allowed_origins=allowed_origins,
             port=port,
@@ -68,6 +70,7 @@ def get_service(
         database=database,
         habr_oauth2=habr_oauth2,
         version=get_version() or "0.0.0",
+        root_url=str(settings.root_url),
         root_path=settings.root_path,
         allowed_origins=settings.allowed_origins,
         jwt_methods=jwt_methods,
