@@ -13,12 +13,14 @@ class BaseAPIService(ServiceMixin):
             self,
             title: str,
             version: str,
+            root_url: str = "http://localhost",
             root_path: str = "",
             allowed_origins: Iterable[str] = (),
             port: int = 8000,
     ):
         self._title = title
         self._version = version
+        self._root_url = root_url
         self._root_path = root_path
         self._allowed_origins = allowed_origins
         self._port = port
@@ -27,6 +29,7 @@ class BaseAPIService(ServiceMixin):
         app = fastapi.FastAPI(
             title=self._title,
             version=self._version,
+            root_url=self._root_url,
             root_path=self._root_path,
         )
         app.add_middleware(
