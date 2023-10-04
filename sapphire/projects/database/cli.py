@@ -6,8 +6,8 @@ from .service import get_service
 
 
 def migrate(ctx: typer.Context):
-    migration_service = ctx.obj["database"]
-    migration_service.migrate()
+    database_service = ctx.obj["database"]
+    database_service.migrate()
 
 
 def create(ctx: typer.Context,

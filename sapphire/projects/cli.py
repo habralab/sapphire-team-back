@@ -15,4 +15,5 @@ def get_cli() -> typer.Typer:
     cli.callback()(settings_callback)
     cli.add_typer(api.get_cli(), name="api")
     cli.add_typer(database.get_cli(), name="database")
+
     return cli
