@@ -7,16 +7,16 @@ from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 
 class ProjectStatusEnum(str, enum.Enum):
-    preparation = "preparation"
-    in_work = "in_work"
-    finished = "finished"
+    PREPARATION = "preparation"
+    IN_WORK = "in_work"
+    FINISHED = "finished"
 
 
 class ParticipantStatusEnum(str, enum.Enum):
-    request = "request"
-    declined = "declined"
-    joined = "joined"
-    left = "left"
+    REQUEST = "request"
+    DECLINED = "declined"
+    JOINED = "joined"
+    LEFT = "left"
 
 
 class Base(DeclarativeBase):

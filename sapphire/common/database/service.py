@@ -1,4 +1,5 @@
 import pathlib
+from contextlib import asynccontextmanager
 
 from alembic import command as alembic_command
 from alembic.config import Config as AlembicConfig
@@ -24,6 +25,12 @@ class BaseDatabaseService(ServiceMixin):
         config.set_main_option("sqlalchemy.url", self._dsn)
 
         return config
+
+    @asynccontextmanager
+    async def transaction(self):
+        async with self._sessionmaker() as session:
+            async with session.begin():
+                yield session
 
     def migrate(self):
         alembic_command.upgrade(self.get_alembic_config(), "head")
