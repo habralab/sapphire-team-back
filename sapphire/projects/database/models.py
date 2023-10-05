@@ -1,12 +1,22 @@
+import enum
 import uuid
 from datetime import datetime
-from typing import Literal, get_args
 
 from sqlalchemy import Enum, ForeignKey
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
-ProjectStatusEnum = Literal["activated", "deactivated"]
-ParticipantStatusEnum = Literal["active", "inactive"]
+
+class ProjectStatusEnum(str, enum.Enum):
+    preparation = "preparation"
+    in_work = "in_work"
+    finished = "finished"
+
+
+class ParticipantStatusEnum(str, enum.Enum):
+    request = "request"
+    declined = "declined"
+    joined = "joined"
+    left = "left"
 
 
 class Base(DeclarativeBase):
@@ -17,37 +27,42 @@ class Project(Base):
     __tablename__ = "projects"
 
     id: Mapped[uuid.UUID] = mapped_column(default=uuid.uuid4, primary_key=True)
-    name: Mapped[str | None]
+    name: Mapped[str]
     description: Mapped[str | None]
     owner_id: Mapped[uuid.UUID]
     deadline: Mapped[datetime | None]
     created_at: Mapped[datetime] = mapped_column(default=datetime.now)
     updated_at: Mapped[datetime] = mapped_column(default=datetime.now, onupdate=datetime.now)
 
+    history: Mapped[list["ProjectHistory"]] = relationship(back_populates="project", lazy="joined")
+    positions: Mapped[list["Position"]] = relationship(back_populates="project", lazy="joined")
 
-class History(Base):
+
+class ProjectHistory(Base):
     __tablename__ = "projects_history"
 
     id: Mapped[uuid.UUID] = mapped_column(default=uuid.uuid4, primary_key=True)
     project_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("projects.id"), primary_key=True)
-    status: Mapped[ProjectStatusEnum] = mapped_column(
-        Enum(*get_args(ProjectStatusEnum),
-             name="ProjectStatusEnum",
-             create_constraint=True,
-             validate_strings=True,
-             )
-    )
+    status: Mapped[ProjectStatusEnum] = mapped_column(Enum(ProjectStatusEnum))
     created_at: Mapped[datetime] = mapped_column(default=datetime.now)
+
+    project: Mapped[Project] = relationship(back_populates="history", lazy="joined")
 
 
 class Position(Base):
     __tablename__ = "project_positions"
 
     id: Mapped[uuid.UUID] = mapped_column(default=uuid.uuid4, primary_key=True, unique=True)
-    name = Mapped[str | None]
+    name = Mapped[str]
     project_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("projects.id"), primary_key=True)
+    participant_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("project_participants.id"), )
+    closed_at: Mapped[datetime | None]
     created_at: Mapped[datetime] = mapped_column(default=datetime.now)
     updated_at: Mapped[datetime] = mapped_column(default=datetime.now, onupdate=datetime.now)
+
+    project: Mapped[Project] = relationship(back_populates="positions", lazy="joined")
+    participants: Mapped[list["Participant"]] = relationship(back_populates="position",
+                                                             lazy="joined")
 
 
 class Participant(Base):
@@ -57,11 +72,7 @@ class Participant(Base):
     position_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("project_positions.id"),
                                                    primary_key=True)
     user_id: Mapped[uuid.UUID]
-    status: Mapped[ParticipantStatusEnum] = mapped_column(
-        Enum(*get_args(ParticipantStatusEnum),
-             name="ParticipantStatusEnum",
-             create_constraint=True,
-             validate_strings=True,
-             )
-    )
+    status: Mapped[ParticipantStatusEnum] = mapped_column(Enum(ParticipantStatusEnum))
     created_at: Mapped[datetime] = mapped_column(default=datetime.now)
+
+    position: Mapped[Position] = relationship(back_populates="participants", lazy="joined")
