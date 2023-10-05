@@ -35,7 +35,7 @@ def get_migration_cli() -> typer.Typer:
 
 def service_callback(ctx: typer.Context):
     settings = ctx.obj["settings"]
-    database_service = get_service(settings=settings.database)
+    database_service = get_service(settings=settings)
 
     ctx.obj["database"] = database_service
 
