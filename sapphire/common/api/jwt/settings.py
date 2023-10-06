@@ -17,7 +17,3 @@ class JWTSettings(BaseSettings):
     jwt_refresh_token_public_key: str = refresh_token.public_key
     jwt_access_token_expires: datetime.timedelta = datetime.timedelta(minutes=5)
     jwt_refresh_token_expires: datetime.timedelta = datetime.timedelta(days=30)
-
-
-def get_settings() -> JWTSettings:
-    return JWTSettings()

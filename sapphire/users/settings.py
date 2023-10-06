@@ -1,8 +1,10 @@
 from pydantic import AnyHttpUrl, AnyUrl, conint
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic_settings import SettingsConfigDict
+
+from sapphire.common.api.jwt.settings import JWTSettings
 
 
-class UsersSettings(BaseSettings):
+class UsersSettings(JWTSettings):
     model_config = SettingsConfigDict(secrets_dir="/run/secrets")
 
     port: conint(ge=1, le=65535) = 8000
