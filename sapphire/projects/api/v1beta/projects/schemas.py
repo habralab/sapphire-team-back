@@ -5,7 +5,6 @@ from pydantic import BaseModel, ConfigDict
 
 
 class CreateProjectRequest(BaseModel):
-    id: uuid.UUID
     name: str
     description: str | None
     owner_id: uuid.UUID

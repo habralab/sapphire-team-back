@@ -37,7 +37,7 @@ class BaseDatabaseService(ServiceMixin):
 
     def create_migration(self, message: str | None = None):
         alembic_command.revision(
-            self.get_alembic_config(), message=message, autogenerate=True
+            self.get_alembic_config(), message=message, autogenerate=True,
         )
 
     async def start(self):

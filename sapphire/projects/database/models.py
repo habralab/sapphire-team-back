@@ -2,7 +2,7 @@ import enum
 import uuid
 from datetime import datetime
 
-from sqlalchemy import Enum, ForeignKey
+from sqlalchemy import Enum, ForeignKey, desc
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 
@@ -34,8 +34,15 @@ class Project(Base):
     created_at: Mapped[datetime] = mapped_column(default=datetime.now)
     updated_at: Mapped[datetime] = mapped_column(default=datetime.now, onupdate=datetime.now)
 
-    history: Mapped[list["ProjectHistory"]] = relationship(back_populates="project", lazy="joined")
+    history: Mapped[list["ProjectHistory"]] = relationship(
+        back_populates="project",
+        order_by=desc("project_history.created_at"),
+        lazy="joined",
+    )
     positions: Mapped[list["Position"]] = relationship(back_populates="project", lazy="joined")
+
+    async def get_status(self) -> "ProjectHistory":
+        return await self.history.first()
 
 
 class ProjectHistory(Base):
@@ -55,7 +62,6 @@ class Position(Base):
     id: Mapped[uuid.UUID] = mapped_column(default=uuid.uuid4, primary_key=True, unique=True)
     name = Mapped[str]
     project_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("projects.id"), primary_key=True)
-    participant_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("project_participants.id"), )
     closed_at: Mapped[datetime | None]
     created_at: Mapped[datetime] = mapped_column(default=datetime.now)
     updated_at: Mapped[datetime] = mapped_column(default=datetime.now, onupdate=datetime.now)
@@ -74,5 +80,6 @@ class Participant(Base):
     user_id: Mapped[uuid.UUID]
     status: Mapped[ParticipantStatusEnum] = mapped_column(Enum(ParticipantStatusEnum))
     created_at: Mapped[datetime] = mapped_column(default=datetime.now)
+    updated_at: Mapped[datetime] = mapped_column(default=datetime.now, onupdate=datetime.now)
 
     position: Mapped[Position] = relationship(back_populates="participants", lazy="joined")

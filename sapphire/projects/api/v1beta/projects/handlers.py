@@ -8,7 +8,7 @@ from .schemas import CreateProjectRequest, ProjectResponse
 # TODO: Add getting user_id depends
 async def create(
     request: fastapi.Request,
-    project: CreateProjectRequest = fastapi.Body(embed=True),
+    project: CreateProjectRequest = fastapi.Body(embed=False),
 ) -> ProjectResponse:
     database_service: ProjectsDatabaseService = request.app.service.database
     # TODO: Check that owner_id and user_id the same

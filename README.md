@@ -28,7 +28,7 @@ pip install poetry==1.6.1
 ```
 And install all Python requirements:
 ```shell
-poetry install
+poetry install --all-extras
 ```
 
 ## Test
