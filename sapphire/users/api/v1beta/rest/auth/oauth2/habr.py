@@ -44,7 +44,7 @@ async def callback(
     async with database_service._sessionmaker() as session:
         user = await habr_oauth2.get_user_info(token)
         user_in_db = await session.query(User).filter(
-            HabrUser.id == user.id
+            User.id == user.id
         ).first()
 
         if not user_in_db:
