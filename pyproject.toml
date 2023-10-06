@@ -28,6 +28,7 @@ yarl = "^1.9.2"
 pydantic = {version = "^2.4.0", extras = ["email"]}
 pyjwt = "^2.8.0"
 cryptography = "^41.0.4"
+loguru = "^0.7.2"
 
 [tool.poetry.extras]
 sqlite = ["aiosqlite"]

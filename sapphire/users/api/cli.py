@@ -1,6 +1,7 @@
 import asyncio
 
 import typer
+from loguru import logger
 
 from sapphire.users import database, jwt
 from sapphire.users.oauth2 import habr
@@ -8,6 +9,7 @@ from sapphire.users.oauth2 import habr
 from .service import get_service
 
 
+@logger.catch
 def serve(ctx: typer.Context):
     settings = ctx.obj["settings"]
 

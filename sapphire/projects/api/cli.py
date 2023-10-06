@@ -1,10 +1,12 @@
 import asyncio
 
 import typer
+from loguru import logger
 
 from .service import get_service
 
 
+@logger.catch
 def serve(ctx: typer.Context):
     settings = ctx.obj["settings"]
 
