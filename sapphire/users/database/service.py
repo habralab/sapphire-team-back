@@ -14,21 +14,19 @@ class UsersDatabaseService(BaseDatabaseService):
     def get_alembic_config_path(self) -> pathlib.Path:
         return pathlib.Path(__file__).parent / "migrations"
 
-    async def get_user(self, session: AsyncSession, user_id: uuid.UUID):
-        stmt = select(User).where(User.id == user_id)
-        result = await session.execute(stmt)
-        user = result.scalar_one_or_none()
-        return user
-
-    async def update_user(self,
-                          session: AsyncSession,
-                          user: User,
-                          first_name: str,
-                          last_name: str):
-        user.first_name = first_name
-        user.last_name = last_name
-        session.add(user.first_name)
-        session.add(user.last_name)
+    async def create_user(self, user_info):
+        async with self.database_service._sessionmaker() as session:
+            user_in_db = await session.query(User).filter(
+                User.email == user_info.email
+            ).first()
+            if not user_in_db:
+                user = User(
+                    id=user_info.id,
+                    email=user_info.email,
+                    first_name=user_info.login,
+                )
+                session.add(user)
+            await session.commit()
 
 
 def get_service(settings: UsersSettings) -> UsersDatabaseService:
