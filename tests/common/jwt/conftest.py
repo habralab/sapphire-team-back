@@ -3,12 +3,12 @@ from unittest.mock import Mock
 import pytest
 
 from sapphire.common.api.jwt import JWTMethods, get_jwt_methods
-from sapphire.common.api.jwt.settings import JWTSettings, get_settings
+from sapphire.common.api.jwt.settings import JWTSettings
 
 
 @pytest.fixture()
-def settings():
-    return get_settings()
+def settings() -> JWTSettings:
+    return JWTSettings()
 
 
 @pytest.fixture()

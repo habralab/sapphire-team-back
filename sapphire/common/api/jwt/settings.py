@@ -9,8 +9,6 @@ refresh_token = generate_rsa_keys()
 
 
 class JWTSettings(BaseSettings):
-    model_config = SettingsConfigDict(secrets_dir="/run/secrets")
-
     jwt_access_token_private_key: str = access_token.private_key
     jwt_access_token_public_key: str = access_token.public_key
     jwt_refresh_token_private_key: str = refresh_token.private_key
