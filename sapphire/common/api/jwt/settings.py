@@ -1,6 +1,6 @@
 import datetime
 
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic_settings import BaseSettings
 
 from sapphire.common.utils.rsa256 import generate_rsa_keys
 
