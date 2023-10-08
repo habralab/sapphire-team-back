@@ -1,12 +1,8 @@
 import pathlib
 import uuid
 
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
-
 from sapphire.common.database.service import BaseDatabaseService
 from sapphire.users.database.models import User
-from sapphire.users.oauth2.habr import HabrUser
 from sapphire.users.settings import UsersSettings
 
 from .models import User
@@ -16,20 +12,28 @@ class UsersDatabaseService(BaseDatabaseService):
     def get_alembic_config_path(self) -> pathlib.Path:
         return pathlib.Path(__file__).parent / "migrations"
 
-    async def create_user(self, user_info: HabrUser):
-        async with self.database_service._sessionmaker() as session:
+    async def get_or_create_user(
+        user_id: uuid.UUID,
+        user_email: str,
+        user_first_name: Optional[str] = None,
+        user_last_name: Optional[str] = None,
+        user_avatar: Optional[str] = None,
+    ) -> User:
+        async with self._sessionmaker() as session:
             user_in_db = await session.query(User).filter(
-                User.email == user_info.email
+                User.email == user_email
             ).first()
             if not user_in_db:
                 user = User(
-                    id=user_info.id,
-                    email=user_info.email,
-                    first_name=user_info.login,
+                    id=user_id,
+                    email=user_email,
+                    first_name=user_first_name,
+                    last_name=user_last_name
                 )
-                session.add(user)
-            await session.commit()
-
+                await session.add(user)
+                await session.commit()
+            return user_in_db
+ 
 
 def get_service(settings: UsersSettings) -> UsersDatabaseService:
     return UsersDatabaseService(dsn=str(settings.db_dsn))
