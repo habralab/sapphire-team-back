@@ -1,16 +1,19 @@
 from typing import Optional
 
 import typer
+from loguru import logger
 
 from .service import get_service
 
 
+@logger.catch
 def migrate(ctx: typer.Context):
     database_service = ctx.obj["database"]
 
     database_service.migrate()
 
 
+@logger.catch
 def create(
     ctx: typer.Context,
     message: Optional[str] = typer.Option(
