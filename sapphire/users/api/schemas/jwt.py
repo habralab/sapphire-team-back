@@ -1,6 +1,6 @@
-from sapphire.common.api.schemas import BaseResponse
+from pydantic import BaseModel
 
 
-class JWTTokensResponse(BaseResponse):
+class JWTTokensResponse(BaseModel):
     access_token: str
     refresh_token: str

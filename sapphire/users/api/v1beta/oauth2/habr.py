@@ -5,8 +5,6 @@ import yarl
 from fastapi.responses import RedirectResponse
 
 from sapphire.common.api.jwt import JWTMethods
-from sapphire.common.api.schemas import OKResponse
-from sapphire.common.api.schemas.enums import ResponseStatus
 from sapphire.users.api.schemas import JWTTokensResponse
 from sapphire.users.oauth2.habr import OAuth2HabrBackend
 
@@ -58,14 +56,12 @@ async def callback(
         )
 
     return JWTTokensResponse(
-        status=ResponseStatus.OK,
         access_token=access_token,
         refresh_token=refresh_token,
     )
 
 
 @router.delete("/logout")
-def logout(response: fastapi.Response) -> OKResponse:
+def logout(response: fastapi.Response):
     response.delete_cookie("access_token")
     response.delete_cookie("refresh_token")
-    return OKResponse()

@@ -1,4 +1,5 @@
 import pathlib
+from contextlib import asynccontextmanager
 
 from alembic import command as alembic_command
 from alembic.config import Config as AlembicConfig
@@ -25,12 +26,18 @@ class BaseDatabaseService(ServiceMixin):
 
         return config
 
+    @asynccontextmanager
+    async def transaction(self):
+        async with self._sessionmaker() as session:
+            async with session.begin():
+                yield session
+
     def migrate(self):
         alembic_command.upgrade(self.get_alembic_config(), "head")
 
     def create_migration(self, message: str | None = None):
         alembic_command.revision(
-            self.get_alembic_config(), message=message, autogenerate=True
+            self.get_alembic_config(), message=message, autogenerate=True,
         )
 
     async def start(self):

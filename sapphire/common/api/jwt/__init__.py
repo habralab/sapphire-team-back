@@ -1,1 +1,1 @@
-from .base import JWTMethods, get_jwt_methods
+from .methods import JWTMethods, get_jwt_methods
