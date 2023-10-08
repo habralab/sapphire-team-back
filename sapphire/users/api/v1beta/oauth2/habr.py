@@ -39,11 +39,13 @@ async def callback(
     if token is None:
         raise fastapi.HTTPException(status_code=401, detail="Not authenticated")
 
-    habr_user_info: HabrUser = await habr_oauth2.get_user_info(token)
-    await database_service.create_user(habr_user_info)
+    habr_user: HabrUser = await habr_oauth2.get_user_info(token)
+    await database_service.get_or_create_user(
+        user_id=habr_user.id, user_email=habr_user.email
+    )
 
-    access_token = jwt_methods.issue_access_token(habr_user_info.id)
-    refresh_token = jwt_methods.issue_refresh_token(uhabr_user_info.id)
+    access_token = jwt_methods.issue_access_token(habr_user.id)
+    refresh_token = jwt_methods.issue_refresh_token(habr_user.id)
     add_to_cookies = [
         ("access_token", access_token, jwt_methods.access_token_expires),
         ("refresh_token", refresh_token, jwt_methods.refresh_token_expires),
