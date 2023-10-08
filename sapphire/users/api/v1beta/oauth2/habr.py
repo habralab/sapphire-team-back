@@ -1,5 +1,3 @@
-import uuid
-
 import fastapi
 import yarl
 from fastapi.responses import RedirectResponse
@@ -8,9 +6,9 @@ from sapphire.common.api.schemas import OKResponse
 from sapphire.common.api.schemas.enums import ResponseStatus
 from sapphire.users.api.schemas import JWTTokensResponse
 from sapphire.users.database.models import User
+from sapphire.users.database.service import UsersDatabaseService
 from sapphire.users.jwt import JWTMethods
 from sapphire.users.oauth2.habr import HabrUser, OAuth2HabrBackend
-from sapphire.users.database.service import UsersDatabaseService
 
 router = fastapi.APIRouter()
 
@@ -44,8 +42,8 @@ async def callback(
     habr_user_info: HabrUser = await habr_oauth2.get_user_info(token)
     await database_service.create_user(habr_user_info)
 
-    access_token = jwt_methods.issue_access_token(user_id)
-    refresh_token = jwt_methods.issue_refresh_token(user_id)
+    access_token = jwt_methods.issue_access_token(habr_user_info.id)
+    refresh_token = jwt_methods.issue_refresh_token(uhabr_user_info.id)
     add_to_cookies = [
         ("access_token", access_token, jwt_methods.access_token_expires),
         ("refresh_token", refresh_token, jwt_methods.refresh_token_expires),
