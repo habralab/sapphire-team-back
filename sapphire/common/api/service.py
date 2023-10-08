@@ -11,13 +11,13 @@ from .uvicorn_server import UvicornServer
 
 class BaseAPIService(ServiceMixin):
     def __init__(
-            self,
-            title: str,
-            version: str,
-            root_url: str = "http://localhost",
-            root_path: str = "",
-            allowed_origins: Iterable[str] = (),
-            port: int = 8000,
+        self,
+        title: str,
+        version: str,
+        root_url: str = "http://localhost",
+        root_path: str = "",
+        allowed_origins: Iterable[str] = (),
+        port: int = 8000,
     ):
         self._title = title
         self._version = version
