@@ -1,6 +1,6 @@
 import typer
 
-from . import broker, database
+from . import api, broker, database
 from .settings import get_settings
 
 
@@ -13,6 +13,7 @@ def get_cli() -> typer.Typer:
     cli = typer.Typer()
 
     cli.callback()(settings_callback)
+    cli.add_typer(api.get_cli(), name="api")
     cli.add_typer(broker.get_cli(), name="broker")
     cli.add_typer(database.get_cli(), name="database")
 
