@@ -3,8 +3,8 @@ import uuid
 import fastapi
 import pytest
 
-from sapphire.users.jwt import JWTMethods
-from sapphire.users.jwt.depends import get_user_id
+from sapphire.common.api.jwt import JWTMethods
+from sapphire.common.api.jwt.depends import get_user_id
 
 
 def test_get_user_id(jwt_methods: JWTMethods, mocked_request, mocked_response):

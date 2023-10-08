@@ -2,8 +2,8 @@ import uuid
 
 import jwt
 
-from sapphire.users.jwt import JWTMethods
-from sapphire.users.settings import UsersSettings
+from sapphire.common.api.jwt import JWTMethods
+from sapphire.common.api.jwt.settings import JWTSettings
 
 
 def test_correct_access_token(jwt_methods: JWTMethods):
@@ -19,7 +19,7 @@ def test_fake_access_token(jwt_methods: JWTMethods):
     assert decoded_user_id is None
 
 
-def test_not_user_id_access_token(settings: UsersSettings, jwt_methods: JWTMethods):
+def test_not_user_id_access_token(settings: JWTSettings, jwt_methods: JWTMethods):
     fake_access_token = jwt.encode(
         {"something": "like this"},
         settings.jwt_access_token_private_key,
@@ -42,7 +42,7 @@ def test_fake_refresh_token(jwt_methods: JWTMethods):
     assert decoded_user_id is None
 
 
-def test_not_user_id_refresh_token(settings: UsersSettings, jwt_methods: JWTMethods):
+def test_not_user_id_refresh_token(settings: JWTSettings, jwt_methods: JWTMethods):
     fake_refresh_token = jwt.encode(
         {"something": "like this"},
         settings.jwt_access_token_private_key,

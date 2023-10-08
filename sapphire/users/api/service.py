@@ -3,10 +3,10 @@ from typing import Iterable
 import fastapi
 from facet import ServiceMixin
 
+from sapphire.common.api.jwt import JWTMethods
 from sapphire.common.api.service import BaseAPIService
 from sapphire.common.utils.package import get_version
 from sapphire.users.database.service import UsersDatabaseService
-from sapphire.users.jwt import JWTMethods
 from sapphire.users.oauth2.habr import OAuth2HabrBackend
 from sapphire.users.settings import UsersSettings
 
@@ -69,10 +69,10 @@ def get_service(
     return UsersAPIService(
         database=database,
         habr_oauth2=habr_oauth2,
+        jwt_methods=jwt_methods,
         version=get_version() or "0.0.0",
         root_url=str(settings.root_url),
         root_path=settings.root_path,
         allowed_origins=settings.allowed_origins,
-        jwt_methods=jwt_methods,
         port=settings.port,
     )

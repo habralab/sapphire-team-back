@@ -4,8 +4,8 @@ import fastapi
 import yarl
 from fastapi.responses import RedirectResponse
 
+from sapphire.common.api.jwt import JWTMethods
 from sapphire.users.api.schemas import JWTTokensResponse
-from sapphire.users.jwt import JWTMethods
 from sapphire.users.oauth2.habr import OAuth2HabrBackend
 
 router = fastapi.APIRouter()
