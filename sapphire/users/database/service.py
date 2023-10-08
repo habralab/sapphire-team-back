@@ -6,6 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from sapphire.common.database.service import BaseDatabaseService
 from sapphire.users.settings import UsersSettings
+from sapphire.users.oauth2.habr import HabrUser
 
 from .models import User
 
@@ -14,7 +15,7 @@ class UsersDatabaseService(BaseDatabaseService):
     def get_alembic_config_path(self) -> pathlib.Path:
         return pathlib.Path(__file__).parent / "migrations"
 
-    async def create_user(self, user_info):
+    async def create_user(self, user_info: HabrUser):
         async with self.database_service._sessionmaker() as session:
             user_in_db = await session.query(User).filter(
                 User.email == user_info.email
