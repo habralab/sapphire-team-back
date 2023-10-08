@@ -4,5 +4,5 @@
 
 **API**
 ```shell
-python -m users api serve
+python -m users api run
 ```

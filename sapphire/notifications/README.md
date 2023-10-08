@@ -2,7 +2,7 @@
 
 ## Run
 
-**API**
+**Broker**
 ```shell
-python -m notifications api serve
+python -m notifications broker run
 ```
