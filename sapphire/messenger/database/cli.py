@@ -15,9 +15,11 @@ def migrate(ctx: typer.Context):
 @logger.catch
 def create(ctx: typer.Context,
            message: Optional[str] = typer.Option(
-               None, "-m", "--message",
+               None,
+               "-m", "--message",
                help="Migration short message",
-           )):
+           ),
+           ):
     database_service = ctx.obj["database"]
     database_service.create_migration(message=message)
 
@@ -25,17 +27,17 @@ def create(ctx: typer.Context,
 def get_migration_cli() -> typer.Typer:
     cli = typer.Typer()
 
-    cli.command(name="migrate")(migrate)
-    cli.command(name="create")(create)
+    cli.command("migrate")(migrate)
+    cli.command("create")(create)
 
     return cli
 
 
 def service_callback(ctx: typer.Context):
     settings = ctx.obj["settings"]
-    database_service = get_service(settings=settings)
 
-    ctx.obj["database"] = database_service
+    database_servise = get_service(settings=settings)
+    ctx.obj["database"] = database_servise
 
 
 def get_cli() -> typer.Typer:

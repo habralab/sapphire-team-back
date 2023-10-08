@@ -1,7 +1,6 @@
-import uuid
 from datetime import datetime
 
-from sqlalchemy import Enum, ForeignKey
+from sqlalchemy import ForeignKey
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
@@ -33,9 +32,13 @@ class SpecializationsSkills(Base):
     __tablename__ = "specializations_skills"
 
     skill_id: Mapped[str] = mapped_column(ForeignKey("skills.id"), primary_key=True)
-    specialization_id: Mapped[str] = mapped_column(ForeignKey("specializations.id"), primary_key=True)
+    specialization_id: Mapped[str] = mapped_column(
+        ForeignKey("specializations.id"), primary_key=True
+    )
     created_at: Mapped[datetime] = mapped_column(default=datetime.now)
-    updated_at: Mapped[datetime] = mapped_column(default=datetime.now, onupdate=datetime.now)
+    updated_at: Mapped[datetime] = mapped_column(
+        default=datetime.now, onupdate=datetime.now
+    )
 
 
 class SpecializationGroup(Base):
@@ -45,4 +48,3 @@ class SpecializationGroup(Base):
     name: Mapped[str | None]
     migrate_to: Mapped[str | None] = mapped_column(nullable=True)
     created_at: Mapped[datetime] = mapped_column(default=datetime.now)
-
