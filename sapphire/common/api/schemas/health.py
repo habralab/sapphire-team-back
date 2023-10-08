@@ -1,6 +1,6 @@
-from .base import BaseResponse
+from pydantic import BaseModel
 
 
-class HealthResponse(BaseResponse):
+class HealthResponse(BaseModel):
     version: str
     name: str

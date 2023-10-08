@@ -3,7 +3,7 @@ import uuid
 
 import jwt
 
-from sapphire.users.settings import UsersSettings
+from .settings import JWTSettings
 
 
 class JWTMethods:
@@ -78,7 +78,7 @@ class JWTMethods:
             return None
 
 
-def get_jwt_methods(settings: UsersSettings) -> JWTMethods:
+def get_jwt_methods(settings: JWTSettings) -> JWTMethods:
     return JWTMethods(
         access_token_private_key=settings.jwt_access_token_private_key,
         access_token_public_key=settings.jwt_access_token_public_key,

@@ -2,7 +2,7 @@ import uuid
 
 import fastapi
 
-from .base import JWTMethods
+from .methods import JWTMethods
 
 
 def get_user_id(response: fastapi.Response, request: fastapi.Request) -> uuid.UUID:
