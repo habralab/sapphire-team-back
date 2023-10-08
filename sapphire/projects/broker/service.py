@@ -1,5 +1,5 @@
-from sapphire.common.broker.service import BaseBrokerService
+from sapphire.common.broker.service import BaseBrokerProducerService
 
 
-class ProjectsBrokerService(BaseBrokerService):
+class ProjectsBrokerService(BaseBrokerProducerService):
     pass
