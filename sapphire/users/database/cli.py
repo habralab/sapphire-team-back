@@ -2,15 +2,16 @@ from typing import Optional
 
 import typer
 
-from sapphire.users.database.service import UsersDatabaseService, get_service
+from .service import UsersDatabaseService, get_service
+from loguru import logger
 
-
+@logger.catch
 def migrate(ctx: typer.Context):
     database_service: UsersDatabaseService = ctx.obj["database"]
 
     database_service.migrate()
 
-
+@logger.catch
 def create(
         ctx: typer.Context,
         message: Optional[str] = typer.Option(
