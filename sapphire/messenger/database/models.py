@@ -17,11 +17,11 @@ class Chat(Base):
     created_at: Mapped[datetime] = mapped_column(default=datetime.now)
     is_personal: Mapped[bool]
 
-    message: Mapped[list["Message"]] = relationship("Message", back_populates="chat")
-    member: Mapped[list["Member"]] = relationship("Member", back_populates="chat")
+    message: Mapped[list["Messages"]] = relationship(back_populates="chat")
+    member: Mapped[list["Member"]] = relationship(back_populates="chat")
 
 
-class Message(Base):
+class Messages(Base):
     __tablename__ = "messages"
 
     id: Mapped[uuid.UUID] = mapped_column(default=uuid.uuid4, primary_key=True)
@@ -30,7 +30,7 @@ class Message(Base):
     created_at: Mapped[datetime] = mapped_column(default=datetime.now)
     updated_at: Mapped[datetime] = mapped_column(default=datetime.now, onupdate=datetime.now)
 
-    chat: Mapped[Chat] = relationship(Chat, back_populates="message")
+    chat: Mapped[Chat] = relationship(back_populates="message")
 
 
 class Member(Base):
@@ -41,4 +41,4 @@ class Member(Base):
     leave_at: Mapped[datetime | None]
     join_at: Mapped[datetime] = mapped_column(default=datetime.now)
 
-    chat: Mapped[Chat] = relationship(Chat, back_populates="member")
+    chat: Mapped[Chat] = relationship(back_populates="member")
