@@ -1,8 +1,8 @@
 import pathlib
 
 from sapphire.common.database.service import BaseDatabaseService
-from sapphire.users.settings import UsersSettings
 from sapphire.users.oauth2.habr import HabrUser
+from sapphire.users.settings import UsersSettings
 
 
 class UsersDatabaseService(BaseDatabaseService):
