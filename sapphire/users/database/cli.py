@@ -12,6 +12,7 @@ def migrate(ctx: typer.Context):
 
     database_service.migrate()
 
+
 @logger.catch
 def create(
         ctx: typer.Context,
