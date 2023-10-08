@@ -1,9 +1,10 @@
 from typing import Optional
 
 import typer
+from loguru import logger
 
 from .service import UsersDatabaseService, get_service
-from loguru import logger
+
 
 @logger.catch
 def migrate(ctx: typer.Context):
