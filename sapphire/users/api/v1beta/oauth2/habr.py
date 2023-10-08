@@ -11,6 +11,7 @@ from sapphire.users.database.models import User
 from sapphire.users.jwt import JWTMethods
 from sapphire.users.oauth2.habr import OAuth2HabrBackend
 from sapphire.users.service import UserDatabaseService
+from sapphire.users.oauth2.habr import HabrUser
 
 router = fastapi.APIRouter()
 
@@ -41,8 +42,8 @@ async def callback(
     if token is None:
         raise fastapi.HTTPException(status_code=401, detail="Not authenticated")
 
-    user_info = await habr_oauth2.get_user_info(token)
-    await database_service.create_user(user_info)
+    habr_user_info: HabrUser = await habr_oauth2.get_user_info(token)
+    await database_service.create_user(habr_user_info)
 
     access_token = jwt_methods.issue_access_token(user_id)
     refresh_token = jwt_methods.issue_refresh_token(user_id)
