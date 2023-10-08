@@ -30,7 +30,7 @@ class Messages(Base):
     created_at: Mapped[datetime] = mapped_column(default=datetime.now)
     updated_at: Mapped[datetime] = mapped_column(default=datetime.now, onupdate=datetime.now)
 
-    chat: Mapped[Chat] = relationship(back_populates="message")
+    chat: Mapped[Chat] = relationship(Chat, back_populates="message")
 
 
 class Member(Base):
@@ -41,4 +41,4 @@ class Member(Base):
     leave_at: Mapped[datetime | None]
     join_at: Mapped[datetime] = mapped_column(default=datetime.now)
 
-    chat: Mapped[Chat] = relationship(back_populates="member")
+    chat: Mapped[Chat] = relationship(Chat, back_populates="member")
