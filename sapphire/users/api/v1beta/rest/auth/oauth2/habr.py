@@ -8,9 +8,8 @@ from sapphire.common.jwt import JWTMethods
 from sapphire.users.api.schemas import JWTTokensResponse
 from sapphire.users.database.models import User
 from sapphire.users.jwt import JWTMethods
-from sapphire.users.oauth2.habr import OAuth2HabrBackend
+from sapphire.users.oauth2.habr import HabrUser, OAuth2HabrBackend
 from sapphire.users.service import UserDatabaseService
-from sapphire.users.oauth2.habr import HabrUser
 
 router = fastapi.APIRouter()
 

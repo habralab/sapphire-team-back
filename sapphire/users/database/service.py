@@ -5,8 +5,8 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from sapphire.common.database.service import BaseDatabaseService
-from sapphire.users.settings import UsersSettings
 from sapphire.users.oauth2.habr import HabrUser
+from sapphire.users.settings import UsersSettings
 
 from .models import User
 
