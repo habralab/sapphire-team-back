@@ -1,5 +1,6 @@
 import pathlib
 import uuid
+from typing import Optional
 
 from sapphire.common.database.service import BaseDatabaseService
 from sapphire.users.database.models import User
