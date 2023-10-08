@@ -1,17 +1,25 @@
+import uuid
+
 import fastapi
 
+from sapphire.common.api.jwt.depends import get_user_id
 from sapphire.projects.database.service import ProjectsDatabaseService
 
 from .schemas import CreateProjectRequest, ProjectResponse
 
 
-# TODO: Add getting user_id depends
 async def create(
     request: fastapi.Request,
+    user_id: uuid.UUID = fastapi.Depends(get_user_id),
     project: CreateProjectRequest = fastapi.Body(embed=False),
 ) -> ProjectResponse:
     database_service: ProjectsDatabaseService = request.app.service.database
-    # TODO: Check that owner_id and user_id the same
+
+    if project.owner_id != user_id:
+        raise fastapi.HTTPException(
+            status_code=fastapi.status.HTTP_400_BAD_REQUEST,
+            detail="Field `owner_id` must be your user id",
+        )
 
     async with database_service.transaction() as session:
         project_db = await database_service.create_project(

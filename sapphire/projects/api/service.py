@@ -3,6 +3,7 @@ from typing import Iterable
 import fastapi
 from facet import ServiceMixin
 
+from sapphire.common.api.jwt import JWTMethods
 from sapphire.common.api.service import BaseAPIService
 from sapphire.common.utils.package import get_version
 from sapphire.projects.database.service import ProjectsDatabaseService
@@ -15,6 +16,7 @@ class ProjectsAPIService(BaseAPIService):
     def __init__(
         self,
         database: ProjectsDatabaseService,
+        jwt_methods: JWTMethods,
         version: str = "0.0.0.0",
         root_url: str = "http://localhost",
         root_path: str = "",
@@ -22,6 +24,7 @@ class ProjectsAPIService(BaseAPIService):
         port: int = 8000,
     ):
         self._database = database
+        self._jwt_methods = jwt_methods
 
         super().__init__(
             title="Projects",
@@ -45,13 +48,19 @@ class ProjectsAPIService(BaseAPIService):
     def database(self) -> ProjectsDatabaseService:
         return self._database
 
+    @property
+    def jwt_methods(self) -> JWTMethods:
+        return self._jwt_methods
+
 
 def get_service(
         database: ProjectsDatabaseService,
+        jwt_methods: JWTMethods,
         settings: ProjectsSettings,
 ) -> ProjectsAPIService:
     return ProjectsAPIService(
         database=database,
+        jwt_methods=jwt_methods,
         version=get_version() or "0.0.0",
         root_url=str(settings.root_url),
         root_path=settings.root_path,
