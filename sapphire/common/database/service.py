@@ -3,6 +3,7 @@ import pathlib
 from alembic import command as alembic_command
 from alembic.config import Config as AlembicConfig
 from facet import ServiceMixin
+from loguru import logger
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 
 
@@ -31,3 +32,9 @@ class BaseDatabaseService(ServiceMixin):
         alembic_command.revision(
             self.get_alembic_config(), message=message, autogenerate=True
         )
+
+    async def start(self):
+        logger.info("Start Database service")
+
+    async def stop(self):
+        logger.info("Stop Database service")
