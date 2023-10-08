@@ -17,11 +17,11 @@ class Chat(Base):
     created_at: Mapped[datetime] = mapped_column(default=datetime.now)
     is_personal: Mapped[bool]
 
-    message: Mapped[list["Messages"]] = relationship(back_populates="chat")
+    messages: Mapped[list["Message"]] = relationship(back_populates="chat")
     member: Mapped[list["Member"]] = relationship(back_populates="chat")
 
 
-class Messages(Base):
+class Message(Base):
     __tablename__ = "messages"
 
     id: Mapped[uuid.UUID] = mapped_column(default=uuid.uuid4, primary_key=True)
