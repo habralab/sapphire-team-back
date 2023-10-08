@@ -30,7 +30,7 @@ class Message(Base):
     created_at: Mapped[datetime] = mapped_column(default=datetime.now)
     updated_at: Mapped[datetime] = mapped_column(default=datetime.now, onupdate=datetime.now)
 
-    chat: Mapped[Chat] = relationship(Chat, back_populates="message")
+    chat: Mapped[Chat] = relationship(Chat, back_populates="messages")
 
 
 class Member(Base):
