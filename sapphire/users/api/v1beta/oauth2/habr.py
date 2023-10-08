@@ -5,7 +5,6 @@ from fastapi.responses import RedirectResponse
 from sapphire.common.api.schemas import OKResponse
 from sapphire.common.api.schemas.enums import ResponseStatus
 from sapphire.users.api.schemas import JWTTokensResponse
-from sapphire.users.database.models import User
 from sapphire.users.database.service import UsersDatabaseService
 from sapphire.users.jwt import JWTMethods
 from sapphire.users.oauth2.habr import HabrUser, OAuth2HabrBackend
@@ -33,7 +32,7 @@ async def callback(
 ) -> JWTTokensResponse:
     habr_oauth2: OAuth2HabrBackend = request.app.service.habr_oauth2
     jwt_methods: JWTMethods = request.app.service.jwt_methods
-    database_service: UserDatabaseService = request.app.service.database
+    database_service: UsersDatabaseService = request.app.service.database
 
     token = await habr_oauth2.get_token(state, code)
     if token is None:

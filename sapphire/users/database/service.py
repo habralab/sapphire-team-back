@@ -12,6 +12,7 @@ class UsersDatabaseService(BaseDatabaseService):
         return pathlib.Path(__file__).parent / "migrations"
 
     async def get_or_create_user(
+        self,
         user_id: uuid.UUID,
         user_email: str,
         user_first_name: Optional[str] = None,
@@ -32,7 +33,7 @@ class UsersDatabaseService(BaseDatabaseService):
                 await session.add(user)
                 await session.commit()
             return user_in_db
- 
+
 
 def get_service(settings: UsersSettings) -> UsersDatabaseService:
     return UsersDatabaseService(dsn=str(settings.db_dsn))
