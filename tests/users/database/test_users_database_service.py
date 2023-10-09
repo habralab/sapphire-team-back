@@ -13,3 +13,7 @@ def test_get_alembic_config_path(database_service: UsersDatabaseService):
 
     assert isinstance(path, pathlib.Path)
     assert path == expected_path
+
+
+def test_get_or_create_user(database_service: UsersDatabaseService):
+    ...
