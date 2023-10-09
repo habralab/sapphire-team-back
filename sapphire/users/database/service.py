@@ -36,7 +36,7 @@ class UsersDatabaseService(BaseDatabaseService):
             id=user_id, email=email, first_name=first_name, last_name=last_name, avatar=avatar
         )
         session.add(user)
-        
+
         return user
 
     async def get_or_create_user(
