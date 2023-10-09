@@ -23,7 +23,7 @@ class UsersDatabaseService(BaseDatabaseService):
 
         return user
 
-    async def _create_user(
+    async def create_user(
         self,
         session: AsyncSession,
         user_id: uuid.UUID,
@@ -48,12 +48,12 @@ class UsersDatabaseService(BaseDatabaseService):
         last_name: str | None = None,
         avatar: str | None = None,
     ) -> User | None:
-        user = self.get_user(
+        user = await self.get_user(
             session=session,
             email=email
         )
         if not user:
-            self._create_user(
+            await self.create_user(
                 session=session,
                 user_id=user_id, email=email
             )
