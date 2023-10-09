@@ -10,23 +10,23 @@ from .service import get_service
 
 
 @logger.catch
-def serve(ctx: typer.Context):
+def run(ctx: typer.Context):
     settings = ctx.obj["settings"]
 
     database_service = get_database_service(settings=settings)
     jwt_methods = get_jwt_methods(settings=settings)
-    users_service = get_service(
+    api_service = get_service(
         database=database_service,
         jwt_methods=jwt_methods,
         settings=settings,
     )
 
-    asyncio.run(users_service.run())
+    asyncio.run(api_service.run())
 
 
 def get_cli() -> typer.Typer:
     cli = typer.Typer()
 
-    cli.command(name="serve")(serve)
+    cli.command(name="run")(run)
 
     return cli

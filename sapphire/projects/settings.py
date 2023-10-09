@@ -1,16 +1,13 @@
-from pydantic import AnyHttpUrl, AnyUrl, conint
+from pydantic import AnyUrl
 from pydantic_settings import SettingsConfigDict
 
 from sapphire.common.api.jwt.settings import JWTSettings
+from sapphire.common.api.settings import BaseAPISettings
+from sapphire.common.database.settings import BaseDatabaseSettings
 
 
-class ProjectsSettings(JWTSettings):
+class ProjectsSettings(BaseAPISettings, BaseDatabaseSettings, JWTSettings):
     model_config = SettingsConfigDict()
-
-    port: conint(ge=1, le=65535) = 8000
-    root_url: AnyHttpUrl = AnyHttpUrl("http://localhost:8000")
-    root_path: str = ""
-    allowed_origins: list[str] = []
 
     db_dsn: AnyUrl = AnyUrl("sqlite+aiosqlite:///projects.sqlite3")
 

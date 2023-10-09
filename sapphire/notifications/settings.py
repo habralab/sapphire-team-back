@@ -1,16 +1,18 @@
-from pydantic import AnyHttpUrl, AnyUrl, conint
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic import AnyUrl
+from pydantic_settings import SettingsConfigDict
+
+from sapphire.common.api.settings import BaseAPISettings
+from sapphire.common.broker.settings import BaseBrokerConsumerSettings
+from sapphire.common.database.settings import BaseDatabaseSettings
 
 
-class NotificationsSettings(BaseSettings):
+class NotificationsSettings(BaseAPISettings, BaseBrokerConsumerSettings, BaseDatabaseSettings):
     model_config = SettingsConfigDict(secrets_dir="/run/secrets")
 
-    port: conint(ge=1, le=65535) = 8000
-    root_url: AnyHttpUrl = AnyHttpUrl("http://localhost:8000")
-    root_path: str = ""
-    allowed_origins: list[str] = []
-
     db_dsn: AnyUrl = AnyUrl("sqlite+aiosqlite:///notifications.sqlite3")
+
+    consumer_servers: list[str] = ["localhost:9091"]
+    topics: list[str] = ["notifications"]
 
 
 def get_settings() -> NotificationsSettings:

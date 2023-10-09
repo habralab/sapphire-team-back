@@ -64,7 +64,7 @@ services:
       - target: 8000
         published: ${USERS_PORT:-3000}
         mode: host
-    command: ["users", "api", "serve"]
+    command: ["users", "api", "run"]
     deploy:
       replicas: 1
 
@@ -83,7 +83,7 @@ services:
       - target: 8000
         published: ${PROJECTS_PORT:-3020}
         mode: host
-    command: ["projects", "api", "serve"]
+    command: ["projects", "api", "run"]
     deploy:
       replicas: 1
 

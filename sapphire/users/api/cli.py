@@ -11,25 +11,25 @@ from .service import get_service
 
 
 @logger.catch
-def serve(ctx: typer.Context):
+def run(ctx: typer.Context):
     settings = ctx.obj["settings"]
 
     habr_oauth2 = habr.get_oauth2_backend(settings=settings)
     jwt_methods = jwt.get_jwt_methods(settings=settings)
     database_service = database.get_service(settings=settings)
-    users_service = get_service(
+    api_service = get_service(
         database=database_service,
         habr_oauth2=habr_oauth2,
         jwt_methods=jwt_methods,
         settings=settings,
     )
 
-    asyncio.run(users_service.run())
+    asyncio.run(api_service.run())
 
 
 def get_cli() -> typer.Typer:
     cli = typer.Typer()
 
-    cli.command(name="serve")(serve)
+    cli.command(name="run")(run)
 
     return cli
