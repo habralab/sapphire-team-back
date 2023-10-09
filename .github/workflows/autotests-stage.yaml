@@ -17,7 +17,7 @@ jobs:
     runs-on: self-hosted
     steps:
       - name: Autotests
-        run: |
+        run: >
           docker run --rm
             -e "MESSENGER_BASE_URL=${MESSENGER_ROOT_URL_STAGE}${MESSENGER_ROOT_PATH_STAGE}"
             -e "NOTIFICATIONS_BASE_URL=${NOTIFICATIONS_ROOT_URL_STAGE}${NOTIFICATIONS_ROOT_PATH_STAGE}"
