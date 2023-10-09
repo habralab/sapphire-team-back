@@ -1,13 +1,12 @@
 import os
 import pathlib
 import uuid
-
-from unittest.mock import MagicMock, AsyncMock
+from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from sapphire.users.database.service import UsersDatabaseService
 from sapphire.users.database.models import User
+from sapphire.users.database.service import UsersDatabaseService
 
 AsyncSession = []
 
