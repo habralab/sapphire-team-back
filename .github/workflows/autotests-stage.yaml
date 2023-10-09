@@ -16,6 +16,13 @@ jobs:
   test:
     runs-on: self-hosted
     steps:
+      - name: Check environment
+        run: |
+          echo "MESSENGER_BASE_URL=${MESSENGER_ROOT_URL_STAGE}${MESSENGER_ROOT_PATH_STAGE}"
+          echo "NOTIFICATIONS_BASE_URL=${NOTIFICATIONS_ROOT_URL_STAGE}${NOTIFICATIONS_ROOT_PATH_STAGE}"
+          echo "PROJECTS_BASE_URL=${PROJECTS_ROOT_URL_STAGE}${PROJECTS_ROOT_PATH_STAGE}"
+          echo "STORAGE_BASE_URL=${STORAGE_ROOT_URL_STAGE}${STORAGE_ROOT_PATH_STAGE}"
+          echo "USERS_BASE_URL=${USERS_ROOT_URL_STAGE}${USERS_ROOT_PATH_STAGE}"
       - name: Autotests
         run: >
           docker run --rm
