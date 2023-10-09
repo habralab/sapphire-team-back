@@ -3,7 +3,7 @@ import asyncio
 import typer
 from loguru import logger
 
-from sapphire.common.api import jwt
+from sapphire.common import jwt
 from sapphire.users import database
 from sapphire.users.oauth2 import habr
 
