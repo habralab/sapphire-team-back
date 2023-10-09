@@ -17,9 +17,9 @@ class UsersDatabaseService(BaseDatabaseService):
     async def get_user(
         self,
         session: AsyncSession,
-        email: str
+        email: str,
     ) -> User | None:
-        user = await session.query(User).where(User.email == email).get_first()
+        user = session().query(User).filter(User.email == email).first()
 
         return user
 
@@ -30,7 +30,7 @@ class UsersDatabaseService(BaseDatabaseService):
         email: str,
         first_name: str | None = None,
         last_name: str | None = None,
-        avatar: str | None = None
+        avatar: str | None = None,
     ) -> User:
         user = User(
             id=user_id, email=email, first_name=first_name, last_name=last_name, avatar=avatar
