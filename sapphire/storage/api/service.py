@@ -11,7 +11,7 @@ from sapphire.storage.settings import StorageSettings
 from . import router
 
 
-class StorageAPIService(BaseAPIService):
+class ProjectsAPIService(BaseAPIService):
     def __init__(
         self,
         database: StorageDatabaseService,
@@ -49,8 +49,8 @@ class StorageAPIService(BaseAPIService):
 def get_service(
         database: StorageDatabaseService,
         settings: StorageSettings,
-) -> StorageAPIService:
-    return StorageAPIService(
+) -> ProjectsAPIService:
+    return ProjectsAPIService(
         database=database,
         version=get_version() or "0.0.0",
         root_url=str(settings.root_url),
