@@ -1,7 +1,7 @@
 import fastapi
 
-from sapphire.common.api.websocket.connection_storage.dependencies import store_connection
 from sapphire.common.api.websocket.connection_storage.storage import WebsocketConnectionStorage
+from sapphire.common.api.websocket.connection_storage.dependencies import store_connection
 
 
 async def notifications(
