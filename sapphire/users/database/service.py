@@ -1,6 +1,7 @@
 import pathlib
 import uuid
-from typing import Optional
+
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from sapphire.common.database.service import BaseDatabaseService
 from sapphire.users.database.models import User
@@ -13,28 +14,50 @@ class UsersDatabaseService(BaseDatabaseService):
     def get_alembic_config_path(self) -> pathlib.Path:
         return pathlib.Path(__file__).parent / "migrations"
 
+    async def _get_user(
+        self,
+        session: AsyncSession,
+        email: str
+    ) -> User | None:
+        user = await session.query(User).where(User.email == email).get_first()
+
+        return user
+
+    async def _create_user(
+        self,
+        session: AsyncSession,
+        id: uuid.UUID,
+        email: str,
+        first_name: str | None = None,
+        last_name: str | None = None,
+        avatar: str | None = None
+    ) -> None:
+        user = User(
+            id=id, email=email, first_name=first_name, last_name=last_name, avatar=avatar
+        )
+        session.add(user)
+
     async def get_or_create_user(
         self,
-        user_id: uuid.UUID,
-        user_email: str,
-        user_first_name: Optional[str] = None,
-        user_last_name: Optional[str] = None,
-        user_avatar: Optional[str] = None,
-    ) -> User:
-        async with self._sessionmaker() as session:
-            user_in_db = await session.query(User).filter(
-                User.email == user_email
-            ).first()
-            if not user_in_db:
-                user = User(
-                    id=user_id,
-                    email=user_email,
-                    first_name=user_first_name,
-                    last_name=user_last_name
-                )
-                await session.add(user)
-                await session.commit()
-            return user_in_db
+        session: AsyncSession,
+        id: uuid.UUID,
+        email: str,
+        first_name: str | None = None,
+        last_name: str | None = None,
+        avatar: str | None = None,
+    ) -> User | None:
+        user = self._get_user(
+            session=session,
+            email=email
+        )
+        if not user:
+            self._create_user(
+                session=session,
+                id=id, email=email
+            )
+            return None
+
+        return user
 
 
 def get_service(settings: UsersSettings) -> UsersDatabaseService:
