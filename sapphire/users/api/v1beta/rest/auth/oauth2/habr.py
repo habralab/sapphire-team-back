@@ -38,7 +38,7 @@ async def callback(
 
     habr_user: HabrUser = await habr_oauth2.get_user_info(token)
     async with database_service.transaction() as session:
-        user = await database_service.get_or_create_user(
+        await database_service.get_or_create_user(
             session=session,
             id=habr_user.id, email=habr_user.email
         )

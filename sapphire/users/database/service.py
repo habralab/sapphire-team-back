@@ -14,7 +14,7 @@ class UsersDatabaseService(BaseDatabaseService):
     def get_alembic_config_path(self) -> pathlib.Path:
         return pathlib.Path(__file__).parent / "migrations"
 
-    async def _get_user(
+    async def get_user(
         self,
         session: AsyncSession,
         email: str
@@ -26,36 +26,38 @@ class UsersDatabaseService(BaseDatabaseService):
     async def _create_user(
         self,
         session: AsyncSession,
-        id: uuid.UUID,
+        user_id: uuid.UUID,
         email: str,
         first_name: str | None = None,
         last_name: str | None = None,
         avatar: str | None = None
-    ) -> None:
+    ) -> User:
         user = User(
-            id=id, email=email, first_name=first_name, last_name=last_name, avatar=avatar
+            id=user_id, email=email, first_name=first_name, last_name=last_name, avatar=avatar
         )
         session.add(user)
+        
+        return user
 
     async def get_or_create_user(
         self,
         session: AsyncSession,
-        id: uuid.UUID,
+        user_id: uuid.UUID,
         email: str,
         first_name: str | None = None,
         last_name: str | None = None,
         avatar: str | None = None,
     ) -> User | None:
-        user = self._get_user(
+        user = self.get_user(
             session=session,
             email=email
         )
         if not user:
             self._create_user(
                 session=session,
-                id=id, email=email
+                user_id=user_id, email=email
             )
-            return None
+            return user
 
         return user
 
