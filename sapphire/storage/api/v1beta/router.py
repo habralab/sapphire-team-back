@@ -1,7 +1,7 @@
 import fastapi
 
-from . import specialization
+from . import health
 
 router = fastapi.APIRouter()
 
-router.include_router(specialization.router, prefix="/specializations")
+router.add_api_route(path="/health", endpoint=health.health)

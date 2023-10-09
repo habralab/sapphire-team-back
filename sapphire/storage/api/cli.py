@@ -3,7 +3,7 @@ import asyncio
 import typer
 from loguru import logger
 
-from sapphire.storage import database
+from sapphire.storage.database import get_service as get_database_service
 
 from .service import get_service
 
@@ -12,7 +12,7 @@ from .service import get_service
 def run(ctx: typer.Context):
     settings = ctx.obj["settings"]
 
-    database_service = database.get_service(settings=settings)
+    database_service = get_database_service(settings=settings)
     api_service = get_service(
         database=database_service,
         settings=settings,
