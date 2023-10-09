@@ -37,9 +37,10 @@ async def callback(
         raise fastapi.HTTPException(status_code=401, detail="Not authenticated")
 
     habr_user: HabrUser = await habr_oauth2.get_user_info(token)
-    await database_service.get_or_create_user(
-        user_id=habr_user.id, user_email=habr_user.email
-    )
+    async with database_service.transaction() as session:
+        user = await database_service.get_or_create_user(
+            id=habr_user.id, email=habr_user.email
+        )
 
     access_token = jwt_methods.issue_access_token(habr_user.id)
     refresh_token = jwt_methods.issue_refresh_token(habr_user.id)
