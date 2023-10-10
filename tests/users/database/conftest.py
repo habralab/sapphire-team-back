@@ -11,11 +11,3 @@ def database_service(settings: UsersSettings) -> UsersDatabaseService:
 @pytest.fixture()
 def settings():
     return UsersSettings()
-
-@pytest.fixture
-async def async_session():
-    session = AsyncSession()
-    try:
-        yield session
-    finally:
-        await session.close()
