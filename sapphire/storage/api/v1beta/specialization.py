@@ -24,7 +24,7 @@ async def specializations(
 
     specialization_objects = []
     for specialization in paginated_specializations.items:
-        specialization_object = jsonable_encoder(specialization)
+        specialization_object = fastapi.encoders.jsonable_encoder(specialization)
         specialization_objects.append(specialization_object)
 
     response = fastapi.Response(fastapi.encoders.jsonable_encoder({"data": specialization_objects}))
