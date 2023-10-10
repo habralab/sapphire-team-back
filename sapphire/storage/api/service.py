@@ -5,10 +5,9 @@ from facet import ServiceMixin
 
 from sapphire.common.api.service import BaseAPIService
 from sapphire.common.utils.package import get_version
+from sapphire.storage.api.router import router
 from sapphire.storage.database.service import StorageDatabaseService
 from sapphire.storage.settings import StorageSettings
-
-from sapphire.storage.api.router import router
 
 
 class StorageAPIService(BaseAPIService):
