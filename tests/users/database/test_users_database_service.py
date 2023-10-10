@@ -8,8 +8,6 @@ import pytest
 from sapphire.users.database.models import User
 from sapphire.users.database.service import UsersDatabaseService
 
-AsyncSession = []
-
 
 def test_get_alembic_config_path(database_service: UsersDatabaseService):
     expected_path = (
@@ -35,12 +33,6 @@ async def test_get_user(database_service: UsersDatabaseService):
     # Mock the session.query().filter().first() chain to return the mock User object
     session().query().filter().first.return_value = mock_user
 
-    user = await database_service.create_user(
-        session=session,
-        user_id=user_id,
-        email=email,
-    )
-
     got_user = await database_service.get_user(
         session=session,
         email=email,
@@ -63,6 +55,10 @@ async def test_create_user(database_service: UsersDatabaseService):
 
     assert user.id == user_id
     assert user.email == email
+
+    session.add.assert_called_once()
+    assert len(session.add.call_args[0]) == 1
+    assert isinstance(session.add.call_args[0][0], User) 
 
 
 @pytest.mark.asyncio
