@@ -2,7 +2,6 @@
 
 ## Run
 
-**API**
 ```shell
-python -m users api run
+python -m users run
 ```

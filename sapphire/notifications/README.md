@@ -2,7 +2,6 @@
 
 ## Run
 
-**Broker**
 ```shell
-python -m notifications broker run
+python -m notifications run
 ```
