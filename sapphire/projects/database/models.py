@@ -80,3 +80,15 @@ class Participant(Base):
     updated_at: Mapped[datetime] = mapped_column(default=datetime.now, onupdate=datetime.now)
 
     position: Mapped[Position] = relationship(back_populates="participants", lazy="joined")
+
+    def status_is_request(self):
+        return self.status == ParticipantStatusEnum.REQUEST
+
+    def status_is_joined(self):
+        return self.status == ParticipantStatusEnum.JOINED
+
+    def status_is_left(self):
+        return self.status == ParticipantStatusEnum.LEFT
+
+    def status_is_declined(self):
+        return self.status == ParticipantStatusEnum.DECLINED

@@ -6,13 +6,20 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from sapphire.projects.database.models import Project
+from sapphire.projects.database.models import (
+    Participant,
+    Project,
+)
 from sapphire.projects.database.service import ProjectsDatabaseService
 
 
 def test_get_alembic_config_path(database_service: ProjectsDatabaseService):
     expected_path = (
-        pathlib.Path(os.curdir).absolute() / "sapphire" / "projects" / "database" / "migrations"
+        pathlib.Path(os.curdir).absolute()
+        / "sapphire"
+        / "projects"
+        / "database"
+        / "migrations"
     )
 
     path = database_service.get_alembic_config_path()
@@ -44,9 +51,9 @@ async def test_create_project(database_service: ProjectsDatabaseService):
 
     session.add_all.assert_called_once()
     assert len(session.add_all.call_args[0]) == 1
-    assert isinstance(session.add_all.call_args[0][0], list) 
+    assert isinstance(session.add_all.call_args[0][0], list)
     assert len(session.add_all.call_args[0][0]) == 2
- 
+
     session_project, session_history = session.add_all.call_args[0][0]
     assert session_project is project
     assert session_history.project is project
@@ -86,3 +93,67 @@ async def test_create_project_position(database_service: ProjectsDatabaseService
     session.add.assert_called_once_with(result_position)
     assert result_position.name == name
     assert result_position.project is project
+
+
+@pytest.mark.asyncio
+async def test_get_participant(database_service: ProjectsDatabaseService):
+    session = AsyncMock()
+    position_id = uuid.uuid4()
+    user_id = uuid.uuid4()
+    mock_participant = MagicMock()
+    mock_participant.first.return_value = Participant(
+        position_id=position_id, user_id=user_id
+    )
+
+    session.execute = AsyncMock(return_value=mock_participant)
+
+    participant = await database_service.get_participant(
+        session=session,
+        position_id=position_id,
+        user_id=user_id,
+    )
+
+    session.execute.assert_called_once()
+
+    assert participant.position_id == position_id
+    assert participant.user_id == user_id
+
+
+@pytest.mark.asyncio
+async def test_create_request_participant(database_service: ProjectsDatabaseService):
+    session = AsyncMock()
+    position_id = uuid.uuid4()
+    user_id = uuid.uuid4()
+
+    participant = await database_service.create_request_participant(
+        session=session,
+        position_id=position_id,
+        user_id=user_id,
+    )
+
+    session.add.assert_called_once()
+
+    assert participant.position_id == position_id
+    assert participant.user_id == user_id
+    assert participant.status_is_request()
+    assert not participant.status_is_declined()
+    assert not participant.status_is_joined()
+    assert not participant.status_is_left()
+
+
+@pytest.mark.asyncio
+async def test_remove_request_participant(database_service: ProjectsDatabaseService):
+    session = AsyncMock()
+    position_id = uuid.uuid4()
+    user_id = uuid.uuid4()
+    participant = Participant(position_id=position_id, user_id=user_id)
+
+    participant = await database_service.remove_request_participant(
+        session=session,
+        participant=participant,
+    )
+
+    session.delete.assert_called_once()
+
+    assert participant.position_id == position_id
+    assert participant.user_id == user_id
