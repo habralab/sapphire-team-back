@@ -1,7 +1,9 @@
+import asyncio
 import json
 from typing import Any, Iterable
 
 import aiokafka
+import backoff
 from facet import ServiceMixin
 from loguru import logger
 
@@ -11,14 +13,20 @@ from .handler import BaseBrokerHandler
 class BaseBrokerConsumerService(ServiceMixin):
     def __init__(
         self,
+        loop: asyncio.AbstractEventLoop,
         servers: Iterable[str],
         topics: Iterable[str],
         handlers: Iterable[BaseBrokerHandler] = (),
     ):
         self._handlers = handlers
 
-        self._consumer = aiokafka.AIOKafkaConsumer(*topics, bootstrap_servers=",".join(servers))
+        self._consumer = aiokafka.AIOKafkaConsumer(
+            *topics,
+            loop=loop,
+            bootstrap_servers=",".join(servers),
+        )
 
+    @backoff.on_exception(backoff.expo, Exception, logger=logger)
     async def consume(self):
         await self._consumer.start()
         try:
@@ -47,8 +55,8 @@ class BaseBrokerConsumerService(ServiceMixin):
 
 
 class BaseBrokerProducerService(ServiceMixin):
-    def __init__(self, servers: Iterable[str]):
-        self._producer = aiokafka.AIOKafkaProducer(bootstrap_servers=",".join(servers))
+    def __init__(self, loop: asyncio.AbstractEventLoop, servers: Iterable[str]):
+        self._producer = aiokafka.AIOKafkaProducer(loop=loop, bootstrap_servers=",".join(servers))
 
     async def send(self, topic: str, message: dict[str, Any]):
         payload = json.dumps(message).encode()
