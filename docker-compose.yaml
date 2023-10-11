@@ -109,6 +109,27 @@ services:
     deploy:
       replicas: 1
 
+  notifications:
+    image: ${SAPPHIRE_IMAGE:-sapphire}
+    depends_on:
+      - redis
+      - database
+      - kafka
+    environment:
+      DB_DSN: ${NOTIFICATIONS_DB_DSN:-sqlite+aiosqlite:///notifications.db}
+      ROOT_URL: ${NOTIFICATIONS_ROOT_URL:-http://localhost:3030}
+      ROOT_PATH: ${NOTIFICATIONS_ROOT_PATH}
+      ALLOWED_ORIGINS: ${NOTIFICATIONS_ALLOWED_ORIGINS:-["http://localhost:3050"]}
+      CONSUMER_SERVERS: ${NOTIFICATIONS_CONSUMER_SERVERS:-["kafka:9091"]}
+      TOPICS: ${NOTIFICATIONS_TOPICS:-["notifications"]}
+    ports:
+      - target: 8000
+        published: ${NOTIFICATIONS_PORT:-3030}
+        mode: host
+    command: ["notifications", "run"]
+    deploy:
+      replicas: 1
+
   swagger:
     image: swaggerapi/swagger-ui
     depends_on:

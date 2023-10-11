@@ -30,6 +30,7 @@ pyjwt = "^2.8.0"
 cryptography = "^41.0.4"
 loguru = "^0.7.2"
 websockets = "^11.0.3"
+backoff = "^2.2.1"
 
 [tool.poetry.extras]
 sqlite = ["aiosqlite"]
