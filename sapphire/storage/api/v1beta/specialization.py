@@ -27,7 +27,7 @@ async def specializations(
 
     response.body = fastapi.encoders.jsonable_encoder({
         "data": specialization_objects,
-        "page": page, "per_page": per_page
+        "page_number": page_number, "per_page": per_page
         })
     response.headers["X-Total-Pages"] = str(paginated_specializations.total_pages)
     response.headers["X-Total-Count"] = str(paginated_specializations.total)
