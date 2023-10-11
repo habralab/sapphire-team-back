@@ -17,7 +17,7 @@ async def validate_project_data_and_get_participant(
     async with database_service.transaction() as session:
         project_db = await database_service.get_project(
             session=session,
-            id=project_id,
+            project_id=project_id,
         )
         position_db = await database_service.get_position(
             session=session,
