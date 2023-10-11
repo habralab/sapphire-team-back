@@ -13,7 +13,7 @@ from sapphire.notifications.settings import NotificationsSettings
 from .router import router
 
 
-class UsersAPIService(BaseAPIService):
+class NotificationsAPIService(BaseAPIService):
     def __init__(
         self,
         database: NotificationsDatabaseService,
@@ -65,8 +65,8 @@ def get_service(
     jwt_methods: JWTMethods,
     websocket_connection_storage: WebsocketConnectionStorage,
     settings: NotificationsSettings,
-) -> UsersAPIService:
-    return UsersAPIService(
+) -> NotificationsAPIService:
+    return NotificationsAPIService(
         database=database,
         jwt_methods=jwt_methods,
         websocket_connection_storage=websocket_connection_storage,
