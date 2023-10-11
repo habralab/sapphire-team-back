@@ -51,7 +51,7 @@ class UsersDatabaseService(BaseDatabaseService):
             email=email
         )
         if not user:
-            await self.create_user(
+            user = await self.create_user(
                 session=session,
                 user_id=user_id, email=email
             )

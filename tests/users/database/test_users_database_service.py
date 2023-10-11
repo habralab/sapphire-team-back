@@ -67,9 +67,23 @@ async def test_get_or_create_user(database_service: UsersDatabaseService):
     user_id = uuid.uuid4()
     email = "test@gmail.com"
 
+    # case no user in db
     created_user = User(id=user_id, email=email)
-    database_service.get_user = AsyncMock(return_value=created_user)
+    database_service.get_user = AsyncMock(return_value=None)
     database_service.create_user = AsyncMock(return_value=created_user)
+
+    user = await database_service.get_or_create_user(
+        session=session,
+        user_id=user_id,
+        email=email,
+    )
+
+    assert user.id is user_id
+    assert user.email == email
+
+    # case user in db
+    database_service.get_user = AsyncMock(return_value=created_user)
+    database_service.create_user = AsyncMock(return_value='Should not be called now')
 
     user = await database_service.get_or_create_user(
         session=session,
