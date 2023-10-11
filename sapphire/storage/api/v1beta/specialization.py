@@ -2,7 +2,6 @@ from typing import Optional
 
 import fastapi
 
-from sapphire.storage.database.models import Specialization
 from sapphire.storage.database.service import StorageDatabaseService
 
 router = fastapi.APIRouter()
@@ -12,13 +11,13 @@ router = fastapi.APIRouter()
 async def specializations(
     request: fastapi.Request,
     response: fastapi.Response,
-    page: Optional[int] = fastapi.Query(1, ge=1), per_page: Optional[int] = fastapi.Query(10, ge=1),
+    page_number: Optional[int] = fastapi.Query(1, ge=1), per_page: Optional[int] = fastapi.Query(10, ge=1),
     ) -> fastapi.Response:
     database_service: StorageDatabaseService = request.app.service.database
 
     async with database_service.transaction() as session:
         paginated_specializations = await database_service.get_specializations_paginated(
-            session=session, page=page, per_page=per_page,
+            session=session, page_number=page_number, per_page=per_page,
         )
 
     specialization_objects = []
