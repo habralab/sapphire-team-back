@@ -26,7 +26,7 @@ class BaseBrokerConsumerService(ServiceMixin):
             bootstrap_servers=",".join(servers),
         )
 
-    @backoff.on_exception(backoff.expo, Exception, logger=logger)
+    @backoff.on_exception(backoff.expo, Exception)
     async def consume(self):
         await self._consumer.start()
         try:
