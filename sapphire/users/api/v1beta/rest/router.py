@@ -1,7 +1,9 @@
 import fastapi
 
-from . import handlers
+from . import auth, health, users
 
 router = fastapi.APIRouter()
 
-router.add_api_route(path="/users", methods=["POST"], endpoint=handlers.update)
+router.add_api_route(path="/health", endpoint=health.health)
+router.include_router(auth.router, prefix="/auth")
+router.include_router(users.router, prefix="/users")

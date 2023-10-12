@@ -20,15 +20,16 @@ class UsersDatabaseService(BaseDatabaseService):
         user = result.scalar_one_or_none()
         return user
 
-    async def update_user(self,
-                          session: AsyncSession,
-                          user: User,
-                          first_name: str,
-                          last_name: str):
+    async def update_user(
+            self,
+            session: AsyncSession,
+            user: User,
+            first_name: str,
+            last_name: str,
+    ):
         user.first_name = first_name
         user.last_name = last_name
-        session.add(user.first_name)
-        session.add(user.last_name)
+        session.add(user)
 
 
 def get_service(settings: UsersSettings) -> UsersDatabaseService:
