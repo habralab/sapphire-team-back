@@ -5,7 +5,7 @@ from .models import HealthResponse
 
 class UsersRestClient(BaseRestClient):
     def get_health(self) -> HealthResponse:
-        path = "/api/v1beta/health"
+        path = "/api/v1beta/rest/health"
 
         response = self.get(path=path)
 
