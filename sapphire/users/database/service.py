@@ -1,6 +1,7 @@
 import pathlib
 import uuid
 
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from sapphire.common.database.service import BaseDatabaseService
@@ -19,7 +20,9 @@ class UsersDatabaseService(BaseDatabaseService):
         session: AsyncSession,
         email: str,
     ) -> User | None:
-        user = session().query(User).filter(User.email == email).first()
+        user = session().execute(
+            select(User).where(User.email == email)
+        ).first()
 
         return user
 
