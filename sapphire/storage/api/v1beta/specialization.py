@@ -11,7 +11,8 @@ router = fastapi.APIRouter()
 async def specializations(
     request: fastapi.Request,
     response: fastapi.Response,
-    page_number: Optional[int] = fastapi.Query(1, ge=1), per_page: Optional[int] = fastapi.Query(10, ge=1),
+    page_number: Optional[int] = fastapi.Query(1, ge=1),
+    per_page: Optional[int] = fastapi.Query(10, ge=1),
     ) -> fastapi.Response:
     database_service: StorageDatabaseService = request.app.service.database
 
@@ -29,7 +30,5 @@ async def specializations(
         "data": specialization_objects,
         "page_number": page_number, "per_page": per_page
         })
-    response.headers["X-Total-Pages"] = str(paginated_specializations.total_pages)
-    response.headers["X-Total-Count"] = str(paginated_specializations.total)
 
     return response
