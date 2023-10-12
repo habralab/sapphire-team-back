@@ -95,7 +95,7 @@ async def test_create_project_position(database_service: ProjectsDatabaseService
 async def test_get_participant_by_position_and_user_ids(
     database_service: ProjectsDatabaseService,
 ):
-    session = AsyncMock()
+    session = MagicMock()
     position_id = uuid.uuid4()
     user_id = uuid.uuid4()
     mock_participant = MagicMock()
@@ -119,7 +119,7 @@ async def test_get_participant_by_position_and_user_ids(
 
 @pytest.mark.asyncio
 async def test_create_participant(database_service: ProjectsDatabaseService):
-    session = AsyncMock()
+    session = MagicMock()
     position_id = uuid.uuid4()
     user_id = uuid.uuid4()
 
@@ -138,7 +138,7 @@ async def test_create_participant(database_service: ProjectsDatabaseService):
 
 @pytest.mark.asyncio
 async def test_remove_participant(database_service: ProjectsDatabaseService):
-    session = AsyncMock()
+    session = MagicMock()
     position_id = uuid.uuid4()
     user_id = uuid.uuid4()
     participant = Participant(position_id=position_id, user_id=user_id)

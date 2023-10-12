@@ -2,7 +2,7 @@ import uuid
 
 import fastapi
 
-from sapphire.common.api.jwt.depends import get_user_id
+from sapphire.common.jwt.dependencies.websocket import get_user_id
 from sapphire.projects.database.models import ParticipantStatusEnum
 from sapphire.projects.database.service import ProjectsDatabaseService
 
