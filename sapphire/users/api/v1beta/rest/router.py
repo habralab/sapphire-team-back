@@ -4,4 +4,4 @@ from . import handlers
 
 router = fastapi.APIRouter()
 
-router.add_api_route(path="/", methods=["POST"], endpoint=handlers.update)
+router.add_api_route(path="/users", methods=["POST"], endpoint=handlers.update)
