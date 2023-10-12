@@ -14,10 +14,10 @@ from sapphire.projects.settings import ProjectsSettings
 from .models import (
     Participant,
     ParticipantStatusEnum,
-    Position,
     Project,
     ProjectHistory,
     ProjectStatusEnum,
+    Position,
 )
 
 
@@ -67,7 +67,7 @@ class ProjectsDatabaseService(BaseDatabaseService):
 
         return position
 
-    async def get_participant(
+    async def get_participant_by_position_and_user_ids(
         self,
         session: AsyncSession,
         position_id: uuid.UUID,
@@ -77,9 +77,9 @@ class ProjectsDatabaseService(BaseDatabaseService):
             Participant.user_id == user_id, Participant.position_id == position_id
         )
         result = await session.execute(stmt)
-        return result.first()
+        return result.scalar_one_or_none()
 
-    async def create_request_participant(
+    async def create_participant(
         self,
         session: AsyncSession,
         position_id: uuid.UUID,
@@ -94,7 +94,7 @@ class ProjectsDatabaseService(BaseDatabaseService):
 
         return participant
 
-    async def remove_request_participant(
+    async def remove_participant(
         self,
         session: AsyncSession,
         participant: Participant,

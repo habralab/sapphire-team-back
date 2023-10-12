@@ -6,7 +6,7 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from sapphire.projects.database.models import Participant, Position, Project
+from sapphire.projects.database.models import Participant, ParticipantStatusEnum, Project
 from sapphire.projects.database.service import ProjectsDatabaseService
 
 
@@ -92,19 +92,20 @@ async def test_create_project_position(database_service: ProjectsDatabaseService
     assert result_position.project is project
 
 
-@pytest.mark.asyncio
-async def test_get_participant(database_service: ProjectsDatabaseService):
+async def test_get_participant_by_position_and_user_ids(
+    database_service: ProjectsDatabaseService,
+):
     session = AsyncMock()
     position_id = uuid.uuid4()
     user_id = uuid.uuid4()
     mock_participant = MagicMock()
-    mock_participant.first.return_value = Participant(
+    mock_participant.scalar_one_or_none.return_value = Participant(
         position_id=position_id, user_id=user_id
     )
 
     session.execute = AsyncMock(return_value=mock_participant)
 
-    participant = await database_service.get_participant(
+    participant = await database_service.get_participant_by_position_and_user_ids(
         session=session,
         position_id=position_id,
         user_id=user_id,
@@ -117,12 +118,12 @@ async def test_get_participant(database_service: ProjectsDatabaseService):
 
 
 @pytest.mark.asyncio
-async def test_create_request_participant(database_service: ProjectsDatabaseService):
+async def test_create_participant(database_service: ProjectsDatabaseService):
     session = AsyncMock()
     position_id = uuid.uuid4()
     user_id = uuid.uuid4()
 
-    participant = await database_service.create_request_participant(
+    participant = await database_service.create_participant(
         session=session,
         position_id=position_id,
         user_id=user_id,
@@ -132,20 +133,17 @@ async def test_create_request_participant(database_service: ProjectsDatabaseServ
 
     assert participant.position_id == position_id
     assert participant.user_id == user_id
-    assert participant.status_is_request()
-    assert not participant.status_is_declined()
-    assert not participant.status_is_joined()
-    assert not participant.status_is_left()
+    assert participant.status == ParticipantStatusEnum.REQUEST
 
 
 @pytest.mark.asyncio
-async def test_remove_request_participant(database_service: ProjectsDatabaseService):
+async def test_remove_participant(database_service: ProjectsDatabaseService):
     session = AsyncMock()
     position_id = uuid.uuid4()
     user_id = uuid.uuid4()
     participant = Participant(position_id=position_id, user_id=user_id)
 
-    participant = await database_service.remove_request_participant(
+    participant = await database_service.remove_participant(
         session=session,
         participant=participant,
     )
