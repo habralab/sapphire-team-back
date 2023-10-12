@@ -37,7 +37,7 @@ services:
     user: 0:0
     environment:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9091
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
@@ -49,10 +49,6 @@ services:
   users:
     image: ${SAPPHIRE_IMAGE:-sapphire}
     depends_on:
-      - redis
-      - database
-      - kafka
-    links:
       - redis
       - database
       - kafka
@@ -78,10 +74,6 @@ services:
       - redis
       - database
       - kafka
-    links:
-      - refis
-      - database
-      - kafka
     environment:
       DB_DSN: ${PROJECTS_DB_DSN:-sqlite+aiosqlite:///projects.db}
       ROOT_URL: ${PROJECTS_ROOT_URL:-http://localhost:3020}
@@ -92,17 +84,13 @@ services:
       - target: 8000
         published: ${PROJECTS_PORT:-3020}
         mode: host
-    command: ["projects", "api", "run"]
+    command: ["projects", "run"]
     deploy:
       replicas: 1
 
   notifications:
     image: ${SAPPHIRE_IMAGE:-sapphire}
     depends_on:
-      - redis
-      - database
-      - kafka
-    links:
       - redis
       - database
       - kafka
