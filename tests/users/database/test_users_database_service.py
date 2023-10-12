@@ -31,7 +31,10 @@ async def test_get_user(database_service: UsersDatabaseService):
     mock_user.email = email
 
     # Mock the session.query().filter().first() chain to return the mock User object
-    session().query().filter().first.return_value = mock_user
+    session.return_value.execute.return_value.first.return_value = User(
+        id=user_id,
+        email=email,
+    )
 
     got_user = await database_service.get_user(
         session=session,
