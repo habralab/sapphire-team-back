@@ -17,7 +17,7 @@ class StorageDatabaseService(BaseDatabaseService):
         page_number: int,
         per_page: int,
     ):
-        specializations = await session.query(
+        specializations = await session().query(
             Specialization
                 ).filter(Specialization.migrate_to is None
                     ).order_by(
