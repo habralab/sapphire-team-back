@@ -92,7 +92,7 @@ services:
       - target: 8000
         published: ${PROJECTS_PORT:-3020}
         mode: host
-    command: ["projects", "run"]
+    command: ["projects", "api", "run"]
     deploy:
       replicas: 1
 
