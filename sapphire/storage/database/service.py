@@ -18,13 +18,7 @@ class StorageDatabaseService(BaseDatabaseService):
         page_number: int,
         per_page: int,
     ):
-        # specializations = await session().execute(
-        #     Specialization
-        #         ).filter(Specialization.migrate_to is None
-        #             ).order_by(
-        #                 Specialization.created_at.desc()
-        #             )
-        specializations = await session().execute(
+        specializations = session().execute(
             select(Specialization
                 ).order_by(Specialization.created_at) # desc()
         )
