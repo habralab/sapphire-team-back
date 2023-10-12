@@ -52,10 +52,6 @@ services:
       - redis
       - database
       - kafka
-    links:
-      - redis
-      - database
-      - kafka
     environment:
       DB_DSN: ${USERS_DB_DSN:-sqlite+aiosqlite:///users.db}
       ROOT_URL: ${USERS_ROOT_URL:-http://localhost:3000}
@@ -78,10 +74,6 @@ services:
       - redis
       - database
       - kafka
-    links:
-      - refis
-      - database
-      - kafka
     environment:
       DB_DSN: ${PROJECTS_DB_DSN:-sqlite+aiosqlite:///projects.db}
       ROOT_URL: ${PROJECTS_ROOT_URL:-http://localhost:3020}
@@ -92,17 +84,13 @@ services:
       - target: 8000
         published: ${PROJECTS_PORT:-3020}
         mode: host
-    command: ["projects", "api", "run"]
+    command: ["projects", "run"]
     deploy:
       replicas: 1
 
   notifications:
     image: ${SAPPHIRE_IMAGE:-sapphire}
     depends_on:
-      - redis
-      - database
-      - kafka
-    links:
       - redis
       - database
       - kafka
