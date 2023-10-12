@@ -14,7 +14,7 @@ async def test_get_specializations_paginated(database_service:StorageDatabaseSer
 
     mock_specializations = AsyncMock(return_value=[specialization1, specialization2])
 
-    session().query().filter().order_by = mock_specializations
+    session.return_value.execute.return_value = mock_specializations
 
     paginated_specializations = await database_service.get_specializations_paginated(
         session=session, page_number=2, per_page=1
