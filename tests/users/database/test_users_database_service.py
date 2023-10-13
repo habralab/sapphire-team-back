@@ -26,15 +26,17 @@ async def test_get_user(database_service: UsersDatabaseService):
     user_id = uuid.uuid4()
     email = "test@gmail.com"
 
-    # Create a mock User object
-    mock_user = MagicMock()
-    mock_user.email = email
+    async def execute_query():
+        class MockQuery():
+            def __init__(self):
+                self.id = user_id,
+                self.email = email
+            def first(self):
+                return User(id=self.id, email=self.email)
+        return MockQuery()
 
-    # Mock the session.query().filter().first() chain to return the mock User object
-    session.return_value.execute.return_value.first.return_value = User(
-        id=user_id,
-        email=email,
-    )
+    session.execute.return_value = execute_query()
+
 
     got_user = await database_service.get_user(
         session=session,
@@ -49,6 +51,8 @@ async def test_create_user(database_service: UsersDatabaseService):
     session = MagicMock()
     user_id = uuid.uuid4()
     email = "test@gmail.com"
+
+    database_service.create_profile = AsyncMock(return_value='')
 
     user = await database_service.create_user(
         session=session,
@@ -65,7 +69,7 @@ async def test_create_user(database_service: UsersDatabaseService):
 
 
 @pytest.mark.asyncio
-async def test_get_or_create_user(database_service: UsersDatabaseService):
+async def test_get_or_create_user_no_user(database_service: UsersDatabaseService):
     session = MagicMock()
     user_id = uuid.uuid4()
     email = "test@gmail.com"
@@ -84,6 +88,15 @@ async def test_get_or_create_user(database_service: UsersDatabaseService):
     assert user.id is user_id
     assert user.email == email
 
+
+@pytest.mark.asyncio
+async def test_get_or_create_user_user_exists(database_service: UsersDatabaseService):
+    session = MagicMock()
+    user_id = uuid.uuid4()
+    email = "test@gmail.com"
+
+    created_user = User(id=user_id, email=email)
+
     # case user in db
     database_service.get_user = AsyncMock(return_value=created_user)
     database_service.create_user = AsyncMock(return_value='Should not be called now')
@@ -96,3 +109,8 @@ async def test_get_or_create_user(database_service: UsersDatabaseService):
 
     assert user.id is user_id
     assert user.email == email
+
+
+@pytest.mark.asyncio
+async def test_create_profile(database_service: UsersDatabaseService):
+    ...
