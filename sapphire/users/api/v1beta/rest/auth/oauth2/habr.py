@@ -33,11 +33,9 @@ async def callback(
 
     database_service: UsersDatabaseService = request.app.service.database
 
-
     token = await habr_oauth2.get_token(state, code)
     if token is None:
         raise fastapi.HTTPException(status_code=401, detail="Not authenticated")
-
 
     habr_user: HabrUser = await habr_oauth2.get_user_info(token)
     async with database_service.transaction() as session:

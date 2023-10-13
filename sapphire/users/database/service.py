@@ -36,8 +36,11 @@ class UsersDatabaseService(BaseDatabaseService):
         user = User(
             id=user_id, email=email, first_name=first_name, last_name=last_name, avatar=avatar
         )
-        session.add(user)
-        await self.create_profile(session=session, user=user, about=None)
+        profile = Profile(
+            user_id=user.id, about=None,
+            )
+        user.profile = profile
+        session.add_all([user, profile])
 
         return user
 
@@ -61,20 +64,6 @@ class UsersDatabaseService(BaseDatabaseService):
             )
 
         return user
-
-    async def create_profile(
-        self,
-        session: AsyncSession,
-        user: User,
-        about: str | None,
-    ) -> Profile:
-        profile = Profile(
-            user_id=user.id,
-            about=about
-            )
-        session.add(profile)
-
-        return profile
 
 
 def get_service(settings: UsersSettings) -> UsersDatabaseService:
