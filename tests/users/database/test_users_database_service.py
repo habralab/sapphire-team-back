@@ -110,7 +110,3 @@ async def test_get_or_create_user_user_exists(database_service: UsersDatabaseSer
     assert user.id is user_id
     assert user.email == email
 
-
-@pytest.mark.asyncio
-async def test_create_profile(database_service: UsersDatabaseService):
-    ...
