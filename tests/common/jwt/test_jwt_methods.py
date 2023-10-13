@@ -2,8 +2,8 @@ import uuid
 
 import jwt
 
-from sapphire.common.api.jwt import JWTMethods
-from sapphire.common.api.jwt.settings import JWTSettings
+from sapphire.common.jwt import JWTMethods
+from sapphire.common.jwt.settings import JWTSettings
 
 
 def test_correct_access_token(jwt_methods: JWTMethods):

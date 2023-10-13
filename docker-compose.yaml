@@ -37,7 +37,7 @@ services:
     user: 0:0
     environment:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9091
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
@@ -64,7 +64,7 @@ services:
       - target: 8000
         published: ${USERS_PORT:-3000}
         mode: host
-    command: ["users", "api", "run"]
+    command: ["users", "run"]
     deploy:
       replicas: 1
 
@@ -79,11 +79,33 @@ services:
       ROOT_URL: ${PROJECTS_ROOT_URL:-http://localhost:3020}
       ROOT_PATH: ${PROJECTS_ROOT_PATH}
       ALLOWED_ORIGINS: ${PROJECTS_ALLOWED_ORIGINS:-["http://localhost:3050"]}
+      PRODUCER_SERVERS: '["kafka:9091"]'
     ports:
       - target: 8000
         published: ${PROJECTS_PORT:-3020}
         mode: host
-    command: ["projects", "api", "run"]
+    command: ["projects", "run"]
+    deploy:
+      replicas: 1
+
+  notifications:
+    image: ${SAPPHIRE_IMAGE:-sapphire}
+    depends_on:
+      - redis
+      - database
+      - kafka
+    environment:
+      DB_DSN: ${NOTIFICATIONS_DB_DSN:-sqlite+aiosqlite:///notifications.db}
+      ROOT_URL: ${NOTIFICATIONS_ROOT_URL:-http://localhost:3030}
+      ROOT_PATH: ${NOTIFICATIONS_ROOT_PATH}
+      ALLOWED_ORIGINS: ${NOTIFICATIONS_ALLOWED_ORIGINS:-["http://localhost:3050"]}
+      CONSUMER_SERVERS: '["kafka:9091"]'
+      TOPICS: '["notifications"]'
+    ports:
+      - target: 8000
+        published: ${NOTIFICATIONS_PORT:-3030}
+        mode: host
+    command: ["notifications", "run"]
     deploy:
       replicas: 1
 
@@ -92,11 +114,13 @@ services:
     depends_on:
       - projects
       - users
+      - notifications
     environment:
       URLS: >
         [
           {"url": "${USERS_ROOT_URL:-http://localhost:3000}${USERS_ROOT_PATH}/openapi.json", "name": "Users"},
-          {"url": "${PROJECTS_ROOT_URL:-http://localhost:3020}${PROJECTS_ROOT_PATH}/openapi.json", "name": "Projects"}
+          {"url": "${PROJECTS_ROOT_URL:-http://localhost:3020}${PROJECTS_ROOT_PATH}/openapi.json", "name": "Projects"},
+          {"url": "${NOTIFICATIONS_ROOT_URL:-http://localhost:3030}${NOTIFICATIONS_ROOT_PATH}/openapi.json", "name": "Notifications"}
         ]
     ports:
       - target: 8080

@@ -3,8 +3,8 @@ from typing import Iterable
 import fastapi
 from facet import ServiceMixin
 
-from sapphire.common.api.jwt import JWTMethods
 from sapphire.common.api.service import BaseAPIService
+from sapphire.common.jwt import JWTMethods
 from sapphire.common.utils.package import get_version
 from sapphire.users.database.service import UsersDatabaseService
 from sapphire.users.oauth2.habr import OAuth2HabrBackend

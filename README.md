@@ -1,5 +1,7 @@
 # Sapphire Backend
 
+![Stage Autotests Status](https://github.com/habralab/sapphire-team-back/actions/workflows/autotests-stage.yaml/badge.svg)
+
 Backend for developer collaboration service
 
 ## Requirements
