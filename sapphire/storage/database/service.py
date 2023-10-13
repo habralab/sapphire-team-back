@@ -1,6 +1,7 @@
 import pathlib
+from typing import List
 
-from sqlalchemy import select
+from sqlalchemy import select, desc
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from sapphire.common.database.service import BaseDatabaseService
@@ -15,17 +16,20 @@ class StorageDatabaseService(BaseDatabaseService):
     async def get_specializations_paginated(
         self,
         session: AsyncSession,
-        page_number: int,
+        page: int,
         per_page: int,
-    ):
-        specializations = session().execute(
+    ) -> List[Specialization]:
+
+        offset = (page - 1) * per_page
+
+        specializations_pagged = await session.execute(
             select(Specialization
-                ).order_by(Specialization.created_at) # desc()
+                ).order_by(desc(Specialization.created_at)
+                    ).limit(per_page
+                        ).offset(offset)
         )
 
-        paginated_specializations = specializations.paginate(page_number, per_page, error_out=False)
-
-        return paginated_specializations
+        return [spec._asdict()["Specialization"] for spec in specializations_pagged]
 
 
 def get_service(settings: StorageSettings) -> StorageDatabaseService:
