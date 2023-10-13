@@ -92,29 +92,47 @@ async def test_create_project_position(database_service: ProjectsDatabaseService
     assert result_position.project is project
 
 
-async def test_get_participant_by_position_and_user_ids(
+async def test_get_participant(
     database_service: ProjectsDatabaseService,
 ):
     session = MagicMock()
+    participant_id = uuid.uuid4()
     position_id = uuid.uuid4()
     user_id = uuid.uuid4()
     mock_participant = MagicMock()
     mock_participant.scalar_one_or_none.return_value = Participant(
-        position_id=position_id, user_id=user_id
+        id=participant_id, position_id=position_id, user_id=user_id
     )
 
     session.execute = AsyncMock(return_value=mock_participant)
 
-    participant = await database_service.get_participant_by_position_and_user_ids(
+    # Get participant with participant_id
+    participant = await database_service.get_participant(
+        session=session,
+        participant_id=participant_id,
+    )
+
+    assert participant.id == participant_id
+
+    # Get participant with position_id and user_id
+    participant = await database_service.get_participant(
         session=session,
         position_id=position_id,
         user_id=user_id,
     )
 
-    session.execute.assert_called_once()
-
     assert participant.position_id == position_id
     assert participant.user_id == user_id
+
+    # Get participant without data
+    participant = await database_service.get_participant(session=session)
+
+    assert participant is None
+
+    # Get participant with not full filled data
+    participant = await database_service.get_participant(session=session, user_id=user_id)
+
+    assert participant is None
 
 
 @pytest.mark.asyncio

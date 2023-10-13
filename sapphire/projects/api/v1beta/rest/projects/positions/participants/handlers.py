@@ -18,7 +18,7 @@ async def create_request_participate(
     database_service: ProjectsDatabaseService = request.app.service.database
 
     async with database_service.transaction() as session:
-        participant_db = await database_service.get_participant_by_position_and_user_ids(
+        participant_db = await database_service.get_participant(
             session=session,
             position_id=position_id,
             user_id=user_id,
@@ -49,7 +49,7 @@ async def remove_request_participate(
     database_service: ProjectsDatabaseService = request.app.service.database
 
     async with database_service.transaction() as session:
-        participant_db = await database_service.get_participant_by_position_and_user_ids(
+        participant_db = await database_service.get_participant(
             session=session,
             position_id=position_id,
             user_id=user_id,

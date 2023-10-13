@@ -67,15 +67,21 @@ class ProjectsDatabaseService(BaseDatabaseService):
 
         return position
 
-    async def get_participant_by_position_and_user_ids(
+    async def get_participant(
         self,
         session: AsyncSession,
-        position_id: uuid.UUID,
-        user_id: uuid.UUID,
+        participant_id: uuid.UUID | None = None,
+        position_id: uuid.UUID | None = None,
+        user_id: uuid.UUID | None = None,
     ) -> Participant:
-        stmt = select(Participant).where(
-            Participant.user_id == user_id, Participant.position_id == position_id
-        )
+        if participant_id is None and (position_id is None or user_id is None):
+            return None
+        if participant_id is None:
+            stmt = select(Participant).where(
+                Participant.user_id == user_id, Participant.position_id == position_id
+            )
+        else:
+            stmt = select(Participant).where(Participant.id == participant_id)
         result = await session.execute(stmt)
         return result.scalar_one_or_none()
 
