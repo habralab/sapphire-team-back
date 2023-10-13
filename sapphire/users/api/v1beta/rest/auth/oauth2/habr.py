@@ -46,9 +46,6 @@ async def callback(
     access_token = jwt_methods.issue_access_token(habr_user.id)
     refresh_token = jwt_methods.issue_refresh_token(habr_user.id)
 
-    access_token = jwt_methods.issue_access_token(user_id)
-    refresh_token = jwt_methods.issue_refresh_token(user_id)
-
     add_to_cookies = [
         ("access_token", access_token, jwt_methods.access_token_expires),
         ("refresh_token", refresh_token, jwt_methods.refresh_token_expires),
