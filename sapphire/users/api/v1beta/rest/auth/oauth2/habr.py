@@ -1,6 +1,3 @@
-
-import uuid
-
 import fastapi
 import yarl
 from fastapi.responses import RedirectResponse
@@ -53,8 +50,6 @@ async def callback(
 
     access_token = jwt_methods.issue_access_token(habr_user.id)
     refresh_token = jwt_methods.issue_refresh_token(habr_user.id)
-
-    user_id = uuid.uuid4()  # temporary solution, refactor will be later
 
     access_token = jwt_methods.issue_access_token(user_id)
     refresh_token = jwt_methods.issue_refresh_token(user_id)
