@@ -39,7 +39,7 @@ class UsersDatabaseService(BaseDatabaseService):
             id=user_id, email=email, first_name=first_name, last_name=last_name, avatar=avatar
         )
         session.add(user)
-        self.create_profile(session=session, user=user, about=None)
+        await self.create_profile(session=session, user=user, about=None)
 
         return user
 
