@@ -1,7 +1,6 @@
 import fastapi
 import yarl
 from fastapi.responses import RedirectResponse
-import uuid
 
 from sapphire.common.jwt import JWTMethods
 from sapphire.users.api.schemas import JWTTokensResponse
