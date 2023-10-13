@@ -63,10 +63,10 @@ async def test_create_user(database_service: UsersDatabaseService):
     assert user.id == user_id
     assert user.email == email
 
-    session.add.assert_called_once()
-    assert len(session.add.call_args[0]) == 1
-    assert isinstance(session.add.call_args[0][0], User) 
-
+    session.add_all.assert_called_once()
+    assert len(session.add_all.call_args[0]) == 1
+    assert isinstance(session.add_all.call_args[0][0], list) 
+    assert len(session.add_all.call_args[0][0]) == 2
 
 @pytest.mark.asyncio
 async def test_get_or_create_user_no_user(database_service: UsersDatabaseService):
