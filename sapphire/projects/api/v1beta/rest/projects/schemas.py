@@ -19,7 +19,7 @@ class ProjectHistoryResponse(BaseModel):
     id: uuid.UUID
     project_id: uuid.UUID
     status: ProjectStatusEnum
-    created_at: str
+    created_at: datetime
 
 
 class ProjectHistoryListResponse(BaseModel):
