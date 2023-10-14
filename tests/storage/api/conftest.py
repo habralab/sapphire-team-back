@@ -1,8 +1,8 @@
 import pytest
 
-from sapphire.storage.settings import StorageSettings
 from sapphire.storage.api.service import StorageAPIService
 from sapphire.storage.database.service import StorageDatabaseService
+from sapphire.storage.settings import StorageSettings
 
 
 @pytest.fixture()

@@ -2,7 +2,7 @@ from typing import Annotated, Optional
 
 import fastapi
 
-from sapphire.common.api.dependancies.pagination import pag_params
+from sapphire.common.api.dependancies.pagination import pagination
 from sapphire.storage.database.service import StorageDatabaseService
 
 router = fastapi.APIRouter()
@@ -12,7 +12,7 @@ router = fastapi.APIRouter()
 async def specializations(
     request: fastapi.Request,
     response: fastapi.Response,
-    pag_params: Annotated[dict, fastapi.Depends(pag_params)],
+    pagination: Annotated[dict, fastapi.Depends(pagination)],
     ) -> fastapi.Response:
 
     database_service: StorageDatabaseService = request.app.service.database
