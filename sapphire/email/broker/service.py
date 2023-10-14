@@ -6,6 +6,7 @@ from facet import ServiceMixin
 from sapphire.common.broker.service import BaseBrokerConsumerService
 from sapphire.email.sender.service import EmailSenderService
 from sapphire.email.settings import EmailSettings
+
 from .handlers import EmailBrokerHandler
 
 

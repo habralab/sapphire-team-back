@@ -10,3 +10,4 @@ broker_data
 database_data
 redis_data
 pyrightconfig.json
+.vscode

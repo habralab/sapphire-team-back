@@ -5,6 +5,7 @@ from loguru import logger
 
 from sapphire.email.sender import get_service as get_sender_service
 from sapphire.email.settings import EmailSettings
+
 from .service import get_service
 
 

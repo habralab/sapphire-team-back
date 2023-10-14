@@ -6,6 +6,7 @@ import backoff
 from facet import ServiceMixin
 
 from sapphire.email.settings import EmailSettings
+
 from .templates import Template
 
 

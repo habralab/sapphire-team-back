@@ -1,7 +1,7 @@
 import email.message
-from email.mime.multipart import MIMEMultipart
 import enum
 import pathlib
+from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from typing import Any, Literal
 
@@ -45,7 +45,7 @@ class Template(BaseModel):
     def __new__(cls, name: str):
         filename = f"{name}.yaml"
         filepath = pathlib.Path(__file__).parent / filename
-        with open(filepath, "rt") as template_file:
+        with open(filepath, "rt", encoding="utf-8") as template_file:
             data = yaml.safe_load(template_file)
 
         return super().__new__(**data)
