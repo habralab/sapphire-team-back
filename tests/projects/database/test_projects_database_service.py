@@ -92,45 +92,71 @@ async def test_create_project_position(database_service: ProjectsDatabaseService
     assert result_position.project is project
 
 
-async def test_get_participant(
+async def test_get_participant_with_participant_id(
     database_service: ProjectsDatabaseService,
 ):
     session = MagicMock()
     participant_id = uuid.uuid4()
     position_id = uuid.uuid4()
     user_id = uuid.uuid4()
-    mock_participant = MagicMock()
-    mock_participant.scalar_one_or_none.return_value = Participant(
+    expected_participant = Participant(
         id=participant_id, position_id=position_id, user_id=user_id
     )
+    mock_participant = MagicMock()
+    mock_participant.scalars.return_value.first.return_value = expected_participant
 
     session.execute = AsyncMock(return_value=mock_participant)
 
-    # Get participant with participant_id
     participant = await database_service.get_participant(
         session=session,
         participant_id=participant_id,
     )
 
-    assert participant.id == participant_id
+    assert participant is expected_participant
 
-    # Get participant with position_id and user_id
+
+@pytest.mark.asyncio
+async def test_get_participant_with_position_and_user_ids(
+    database_service: ProjectsDatabaseService,
+):
+    session = MagicMock()
+    participant_id = uuid.uuid4()
+    position_id = uuid.uuid4()
+    user_id = uuid.uuid4()
+    expected_participant = Participant(
+        id=participant_id, position_id=position_id, user_id=user_id
+    )
+    mock_participant = MagicMock()
+    mock_participant.scalars.return_value.first.return_value = expected_participant
+
+    session.execute = AsyncMock(return_value=mock_participant)
+
     participant = await database_service.get_participant(
         session=session,
         position_id=position_id,
         user_id=user_id,
     )
 
-    assert participant.position_id == position_id
-    assert participant.user_id == user_id
+    assert participant is expected_participant
 
-    # Get participant without data
+
+@pytest.mark.asyncio
+async def test_get_participant_without_filters(
+    database_service: ProjectsDatabaseService,
+):
+    session = MagicMock()
+    participant_id = uuid.uuid4()
+    position_id = uuid.uuid4()
+    user_id = uuid.uuid4()
+    expected_participant = Participant(
+        id=participant_id, position_id=position_id, user_id=user_id
+    )
+    mock_participant = MagicMock()
+    mock_participant.scalars.return_value.first.return_value = expected_participant
+
+    session.execute = AsyncMock(return_value=mock_participant)
+
     participant = await database_service.get_participant(session=session)
-
-    assert participant is None
-
-    # Get participant with not full filled data
-    participant = await database_service.get_participant(session=session, user_id=user_id)
 
     assert participant is None
 
@@ -147,7 +173,7 @@ async def test_create_participant(database_service: ProjectsDatabaseService):
         user_id=user_id,
     )
 
-    session.add.assert_called_once()
+    session.add.assert_called_once_with(participant)
 
     assert participant.position_id == position_id
     assert participant.user_id == user_id
@@ -155,18 +181,22 @@ async def test_create_participant(database_service: ProjectsDatabaseService):
 
 
 @pytest.mark.asyncio
-async def test_remove_participant(database_service: ProjectsDatabaseService):
+async def test_update_status(database_service: ProjectsDatabaseService):
     session = MagicMock()
     position_id = uuid.uuid4()
     user_id = uuid.uuid4()
-    participant = Participant(position_id=position_id, user_id=user_id)
-
-    participant = await database_service.remove_participant(
-        session=session,
-        participant=participant,
+    participant = Participant(
+        position_id=position_id, user_id=user_id, status=ParticipantStatusEnum.REQUEST
     )
 
-    session.delete.assert_called_once()
+    update_participant = await database_service.update_status(
+        session=session,
+        participant=participant,
+        status=ParticipantStatusEnum.DECLINED,
+    )
 
-    assert participant.position_id == position_id
-    assert participant.user_id == user_id
+    session.add.assert_called_once_with(participant)
+
+    assert update_participant.status == ParticipantStatusEnum.DECLINED
+    assert update_participant.position_id == position_id
+    assert update_participant.user_id == user_id

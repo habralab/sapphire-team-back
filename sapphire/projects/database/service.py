@@ -73,17 +73,19 @@ class ProjectsDatabaseService(BaseDatabaseService):
         participant_id: uuid.UUID | None = None,
         position_id: uuid.UUID | None = None,
         user_id: uuid.UUID | None = None,
-    ) -> Participant:
-        if participant_id is None and (position_id is None or user_id is None):
+    ) -> Participant | None:
+        filters = []
+        if participant_id is not None and (position_id is None or user_id is None):
+            filters.append(Participant.id == participant_id)
+        if position_id is not None:
+            filters.append(Participant.position_id == position_id)
+        if user_id is not None:
+            filters.append(Participant.user_id == user_id)
+        if not filters:
             return None
-        if participant_id is None:
-            stmt = select(Participant).where(
-                Participant.user_id == user_id, Participant.position_id == position_id
-            )
-        else:
-            stmt = select(Participant).where(Participant.id == participant_id)
+        stmt = select(Participant).where(*filters).order_by(Participant.created_at.desc())
         result = await session.execute(stmt)
-        return result.scalar_one_or_none()
+        return result.scalars().first()
 
     async def create_participant(
         self,
@@ -100,12 +102,14 @@ class ProjectsDatabaseService(BaseDatabaseService):
 
         return participant
 
-    async def remove_participant(
+    async def update_status(
         self,
         session: AsyncSession,
         participant: Participant,
+        status: ParticipantStatusEnum,
     ) -> Participant:
-        session.delete(participant)
+        participant.status = status
+        session.add(participant)
 
         return participant
 

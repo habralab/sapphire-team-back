@@ -11,7 +11,6 @@ from .schemas import ParticipantProjectResponse
 
 async def create_request_participate(
     request: fastapi.Request,
-    project_id: uuid.UUID,
     position_id: uuid.UUID,
     user_id: uuid.UUID = fastapi.Depends(get_user_id),
 ) -> ParticipantProjectResponse:
@@ -24,10 +23,13 @@ async def create_request_participate(
             user_id=user_id,
         )
 
-    if participant_db is not None:
+    if participant_db and participant_db.status in (
+        ParticipantStatusEnum.REQUEST,
+        ParticipantStatusEnum.JOINED,
+    ):
         raise fastapi.HTTPException(
             status_code=fastapi.status.HTTP_400_BAD_REQUEST,
-            detail="Participant already send request to project",
+            detail="Participant already send request to project or joined in project",
         )
 
     async with database_service.transaction() as session:
@@ -42,7 +44,6 @@ async def create_request_participate(
 
 async def remove_request_participate(
     request: fastapi.Request,
-    project_id: uuid.UUID,
     position_id: uuid.UUID,
     user_id: uuid.UUID = fastapi.Depends(get_user_id),
 ) -> ParticipantProjectResponse:
@@ -55,21 +56,17 @@ async def remove_request_participate(
             user_id=user_id,
         )
 
-    if participant_db is None:
+    if participant_db and participant_db.status == ParticipantStatusEnum.REQUEST:
+        async with database_service.transaction() as session:
+            declined_participant_db = await database_service.update_status(
+                session=session,
+                participant=participant_db,
+                status=ParticipantStatusEnum.DECLINED,
+            )
+    else:
         raise fastapi.HTTPException(
-            status_code=fastapi.status.HTTP_400_BAD_REQUEST,
-            detail="Participant did not send request to project",
+            status_code=fastapi.status.HTTP_404_NOT_FOUND,
+            detail="Participant did not send request to project or not request status",
         )
 
-    if participant_db.status != ParticipantStatusEnum.REQUEST:
-        raise fastapi.HTTPException(
-            status_code=fastapi.status.HTTP_400_BAD_REQUEST,
-            detail="Participant cannot remove request, because had different status",
-        )
-
-    async with database_service.transaction() as session:
-        removed_participant_db = await database_service.remove_participant(
-            session=session, participant=participant_db
-        )
-
-    return ParticipantProjectResponse.model_validate(removed_participant_db)
+    return ParticipantProjectResponse.model_validate(declined_participant_db)

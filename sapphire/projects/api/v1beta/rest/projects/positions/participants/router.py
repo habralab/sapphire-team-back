@@ -5,8 +5,8 @@ from . import handlers
 router = fastapi.APIRouter()
 
 router.add_api_route(
-    path="/request", methods=["POST"], endpoint=handlers.create_request_participate
+    path="/", methods=["POST"], endpoint=handlers.create_request_participate
 )
 router.add_api_route(
-    path="/request", methods=["DELETE"], endpoint=handlers.remove_request_participate
+    path="/", methods=["DELETE"], endpoint=handlers.remove_request_participate
 )
