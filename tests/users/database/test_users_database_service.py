@@ -23,44 +23,35 @@ def test_get_alembic_config_path(database_service: UsersDatabaseService):
 @pytest.mark.asyncio
 async def test_get_user(database_service: UsersDatabaseService):
     session = MagicMock()
+    result = MagicMock()
     user_id = uuid.uuid4()
     email = "test@gmail.com"
 
-    async def execute_query():
-        class MockQuery():
-            def __init__(self):
-                self.id = user_id,
-                self.email = email
-            def first(self):
-                return User(id=self.id, email=self.email)
-        return MockQuery()
+    result.scalar_one_or_none.return_value = User(id=user_id, email=email)
+    session.execute = AsyncMock()
+    session.execute.return_value = result
 
-    session.execute.return_value = execute_query()
-
-
-    got_user = await database_service.get_user(
+    user = await database_service.get_user(
         session=session,
         email=email,
     )
 
-    assert got_user.email == email
+    assert user is not None
+    assert user.email == email
 
 
 @pytest.mark.asyncio
 async def test_create_user(database_service: UsersDatabaseService):
     session = MagicMock()
-    user_id = uuid.uuid4()
     email = "test@gmail.com"
 
-    database_service.create_profile = AsyncMock(return_value='')
+    database_service.create_profile = AsyncMock()
 
     user = await database_service.create_user(
         session=session,
-        user_id=user_id,
         email=email,
     )
 
-    assert user.id == user_id
     assert user.email == email
 
     session.add_all.assert_called_once()
@@ -68,44 +59,37 @@ async def test_create_user(database_service: UsersDatabaseService):
     assert isinstance(session.add_all.call_args[0][0], list) 
     assert len(session.add_all.call_args[0][0]) == 2
 
+
 @pytest.mark.asyncio
 async def test_get_or_create_user_no_user(database_service: UsersDatabaseService):
     session = MagicMock()
-    user_id = uuid.uuid4()
     email = "test@gmail.com"
 
-    # case no user in db
-    created_user = User(id=user_id, email=email)
+    created_user = User(id=uuid.uuid4(), email=email)
     database_service.get_user = AsyncMock(return_value=None)
     database_service.create_user = AsyncMock(return_value=created_user)
 
     user = await database_service.get_or_create_user(
         session=session,
-        user_id=user_id,
         email=email,
     )
 
-    assert user.id is user_id
-    assert user.email == email
+    assert user is created_user
 
 
 @pytest.mark.asyncio
 async def test_get_or_create_user_user_exists(database_service: UsersDatabaseService):
     session = MagicMock()
-    user_id = uuid.uuid4()
     email = "test@gmail.com"
+    expected_user = User(id=uuid.uuid4(), email=email)
 
-    created_user = User(id=user_id, email=email)
-
-    # case user in db
-    database_service.get_user = AsyncMock(return_value=created_user)
-    database_service.create_user = AsyncMock(return_value='Should not be called now')
+    database_service.get_user = AsyncMock(return_value=expected_user)
+    database_service.create_user = AsyncMock()
 
     user = await database_service.get_or_create_user(
         session=session,
-        user_id=user_id,
         email=email,
     )
 
-    assert user.id is user_id
-    assert user.email == email
+    database_service.create_user.assert_not_awaited()
+    assert user is expected_user
