@@ -5,7 +5,7 @@ from fastapi.responses import RedirectResponse
 from sapphire.common.jwt import JWTMethods
 from sapphire.users.api.schemas import JWTTokensResponse
 from sapphire.users.database.service import UsersDatabaseService
-from sapphire.users.oauth2.habr import HabrUser, OAuth2HabrBackend
+from sapphire.users.oauth2.habr import OAuth2HabrBackend
 
 router = fastapi.APIRouter()
 
@@ -35,17 +35,20 @@ async def callback(
 
     token = await habr_oauth2.get_token(state, code)
     if token is None:
-        raise fastapi.HTTPException(status_code=401, detail="Not authenticated")
-
-    habr_user: HabrUser = await habr_oauth2.get_user_info(token)
-    async with database_service.transaction() as session:
-        await database_service.get_or_create_user(
-            session=session,
-            id=habr_user.id, email=habr_user.email
+        raise fastapi.HTTPException(
+            status_code=fastapi.status.HTTP_401_UNAUTHORIZED,
+            detail="Not authenticated.",
         )
 
-    access_token = jwt_methods.issue_access_token(habr_user.id)
-    refresh_token = jwt_methods.issue_refresh_token(habr_user.id)
+    habr_user = await habr_oauth2.get_user_info(token)
+    async with database_service.transaction() as session:
+        db_user = await database_service.get_or_create_user(
+            session=session,
+            email=habr_user.email,
+        )
+
+    access_token = jwt_methods.issue_access_token(db_user.id)
+    refresh_token = jwt_methods.issue_refresh_token(db_user.id)
 
     add_to_cookies = [
         ("access_token", access_token, jwt_methods.access_token_expires),
