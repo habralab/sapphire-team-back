@@ -12,11 +12,7 @@ from sapphire.projects.database.service import ProjectsDatabaseService
 
 def test_get_alembic_config_path(database_service: ProjectsDatabaseService):
     expected_path = (
-        pathlib.Path(os.curdir).absolute()
-        / "sapphire"
-        / "projects"
-        / "database"
-        / "migrations"
+        pathlib.Path(os.curdir).absolute() / "sapphire" / "projects" / "database" / "migrations"
     )
 
     path = database_service.get_alembic_config_path()
