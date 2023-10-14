@@ -1,1 +1,1 @@
-from .loader import load
+from .base import PartType, Template
