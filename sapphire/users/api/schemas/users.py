@@ -13,6 +13,9 @@ class UserResponse(BaseModel):
     id: uuid.UUID
     first_name: str | None
     last_name: str | None
+    about: str | None
+    main_specialization_id: uuid.UUID | None
+    secondary_specialization_id: uuid.UUID | None
     updated_at: datetime
     created_at: datetime
 

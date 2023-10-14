@@ -53,4 +53,14 @@ async def update_user(
             first_name=user.first_name,
             last_name=user.last_name,
         )
-    return UserFullResponse.model_validate(user_db)
+    return UserFullResponse(
+        id=user_db.id,
+        email=user_db.email,
+        first_name=user_db.first_name,
+        last_name=user_db.last_name,
+        about=user_db.profile.about,
+        main_specialization_id=user_db.profile.main_specialization_id,
+        secondary_specialization_id=user_db.profile.secondary_specialization_id,
+        created_at=user_db.created_at,
+        updated_at=user_db.updated_at,
+    )

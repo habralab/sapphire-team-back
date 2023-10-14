@@ -8,7 +8,7 @@ from sapphire.projects.database.service import ProjectsDatabaseService
 from .schemas import CreateProjectRequest, ProjectResponse
 
 
-async def create(
+async def create_project(
     request: fastapi.Request,
     user_id: uuid.UUID = fastapi.Depends(auth),
     project: CreateProjectRequest = fastapi.Body(embed=False),
