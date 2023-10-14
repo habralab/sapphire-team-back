@@ -93,3 +93,21 @@ async def test_get_or_create_user_user_exists(database_service: UsersDatabaseSer
 
     database_service.create_user.assert_not_awaited()
     assert user is expected_user
+
+
+@pytest.mark.asyncio
+async def test_update_user(database_service: UsersDatabaseService):
+    session = MagicMock()
+    user = User(id=uuid.uuid4(), email="test@gmail.com", first_name="Test", last_name="Testovich")
+    new_first_name = "NewTest"
+    new_last_name = "NewTestovich"
+
+    result_user = await database_service.update_user(
+        session=session,
+        user=user,
+        first_name=new_first_name,
+        last_name=new_last_name,
+    )
+
+    session.add.assert_called_once_with(user)
+    assert user is result_user

@@ -26,6 +26,7 @@ disable=missing-class-docstring,
         duplicate-code,
         redefined-outer-name,
         too-few-public-methods,
+        too-many-locals,
         arguments-differ,
         unused-argument,
         c-extension-no-member
