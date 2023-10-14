@@ -82,4 +82,4 @@ async def history(
             detail="Cannot find project history with this `project_id`",
         )
 
-    return ProjectHistoryListResponse(items=history_db)
+    return ProjectHistoryListResponse(history=history_db)

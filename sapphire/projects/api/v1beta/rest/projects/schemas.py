@@ -23,7 +23,7 @@ class ProjectHistoryResponse(BaseModel):
 
 
 class ProjectHistoryListResponse(BaseModel):
-    items: list[ProjectHistoryResponse]
+    history: list[ProjectHistoryResponse]
 
 
 class ProjectResponse(BaseModel):
