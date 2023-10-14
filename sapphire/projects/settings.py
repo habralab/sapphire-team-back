@@ -13,6 +13,8 @@ class ProjectsSettings(BaseAPISettings, BaseBrokerProducerSettings, BaseDatabase
 
     db_dsn: AnyUrl = AnyUrl("sqlite+aiosqlite:///projects.sqlite3")
 
+    producer_servers: list[str] = ["localhost:9091"]
+
 
 def get_settings() -> ProjectsSettings:
     return ProjectsSettings()
