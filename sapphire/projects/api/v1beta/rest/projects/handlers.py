@@ -2,7 +2,7 @@ import uuid
 
 import fastapi
 
-from sapphire.common.jwt.dependencies.rest import get_user_id
+from sapphire.common.jwt.dependencies.rest import auth
 from sapphire.projects.database.service import ProjectsDatabaseService
 
 from .schemas import CreateProjectRequest, ProjectResponse
@@ -10,7 +10,7 @@ from .schemas import CreateProjectRequest, ProjectResponse
 
 async def create(
     request: fastapi.Request,
-    user_id: uuid.UUID = fastapi.Depends(get_user_id),
+    user_id: uuid.UUID = fastapi.Depends(auth),
     project: CreateProjectRequest = fastapi.Body(embed=False),
 ) -> ProjectResponse:
     database_service: ProjectsDatabaseService = request.app.service.database

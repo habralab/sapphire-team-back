@@ -6,13 +6,13 @@ from sapphire.common.api.exceptions import HTTPNotAuthenticated
 from sapphire.common.jwt.methods import JWTMethods
 
 
-def get_user_id(
+async def get_user_id(
         response: fastapi.Response,
         request: fastapi.Request,
         access_token_from_cookie: str | None = fastapi.Cookie(None, alias="access_token"),
         refresh_token_from_cookie: str | None = fastapi.Cookie(None, alias="refresh_token"),
         access_token_from_header: str | None = fastapi.Header(None, alias="Authorization"),
-) -> uuid.UUID:
+) -> uuid.UUID | None:
     access_token, refresh_token = None, None
 
     if access_token_from_header is not None and access_token_from_header.startswith("Bearer "):
@@ -29,10 +29,10 @@ def get_user_id(
         user_id = jwt_methods.decode_access_token(access_token)
     if user_id is None:
         if refresh_token is None:
-            raise HTTPNotAuthenticated()
+            return None
         user_id = jwt_methods.decode_refresh_token(refresh_token)
         if user_id is None:
-            raise HTTPNotAuthenticated()
+            return None
         # Update access_token and refresh_token
         new_access_token = jwt_methods.issue_access_token(user_id)
         new_refresh_token = jwt_methods.issue_refresh_token(user_id)
@@ -54,5 +54,12 @@ def get_user_id(
             httponly=True,
             samesite="none",
         )
+
+    return user_id
+
+
+async def auth(user_id: uuid.UUID | None = fastapi.Depends(get_user_id)):
+    if user_id is None:
+        raise HTTPNotAuthenticated()
 
     return user_id

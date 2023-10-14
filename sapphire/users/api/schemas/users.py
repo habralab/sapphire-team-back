@@ -9,10 +9,13 @@ class UserUpdateRequest(BaseModel):
     last_name: str
 
 
-class UserFullResponse(BaseModel):
+class UserResponse(BaseModel):
     id: uuid.UUID
-    email: EmailStr
-    first_name: str
-    last_name: str
+    first_name: str | None
+    last_name: str | None
     updated_at: datetime
     created_at: datetime
+
+
+class UserFullResponse(UserResponse):
+    email: EmailStr
