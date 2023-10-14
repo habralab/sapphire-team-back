@@ -134,6 +134,23 @@ class ProjectsDatabaseService(BaseDatabaseService):
 
         return participant
 
+    async def get_project_history(
+            self,
+            session: AsyncSession,
+            project_id: uuid.UUID,
+            last: bool = False,
+    ) -> ProjectHistory | list[ProjectHistory]:
+        stmt = (
+            select(ProjectHistory)
+            .where(ProjectHistory.project_id == project_id)
+            .order_by(ProjectHistory.created_at.desc())
+        )
+        result = await session.execute(stmt)
+
+        if last:
+            return result.scalars().first()
+        return list(result.scalars().all())
+
 
 def get_service(settings: ProjectsSettings) -> ProjectsDatabaseService:
     return ProjectsDatabaseService(dsn=str(settings.db_dsn))

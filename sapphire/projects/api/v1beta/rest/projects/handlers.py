@@ -5,7 +5,13 @@ import fastapi
 from sapphire.common.jwt.dependencies.rest import auth_user_id
 from sapphire.projects.database.service import ProjectsDatabaseService
 
-from .schemas import CreateProjectRequest, ProjectResponse
+from .schemas import (
+    CreateProjectRequest,
+    ProjectHistoryListResponse,
+    ProjectHistoryResponse,
+    ProjectInfoResponse,
+    ProjectResponse,
+)
 
 
 async def create_project(
@@ -31,3 +37,49 @@ async def create_project(
         )
 
     return ProjectResponse.model_validate(project_db)
+
+
+async def get(
+    request: fastapi.Request,
+    project_id: uuid.UUID,
+) -> ProjectInfoResponse:
+    database_service: ProjectsDatabaseService = request.app.service.database
+
+    async with database_service.transaction() as session:
+        project_db = await database_service.get_project(
+            session=session, project_id=project_id
+        )
+        last_history_db = await database_service.get_project_history(
+            session=session, project_id=project_id, last=True
+        )
+
+    if project_db is None or last_history_db is None:
+        raise fastapi.HTTPException(
+            status_code=fastapi.status.HTTP_404_NOT_FOUND,
+            detail="Cannot find project with this `project_id`",
+        )
+
+    return ProjectInfoResponse(
+        project=ProjectResponse.model_validate(project_db),
+        last_history=ProjectHistoryResponse.model_validate(last_history_db),
+    )
+
+
+async def history(
+    request: fastapi.Request,
+    project_id: uuid.UUID,
+) -> ProjectHistoryListResponse:
+    database_service: ProjectsDatabaseService = request.app.service.database
+
+    async with database_service.transaction() as session:
+        history_db = await database_service.get_project_history(
+            session=session, project_id=project_id
+        )
+
+    if history_db is None:
+        raise fastapi.HTTPException(
+            status_code=fastapi.status.HTTP_404_NOT_FOUND,
+            detail="Cannot find project history with this `project_id`",
+        )
+
+    return ProjectHistoryListResponse(items=history_db)

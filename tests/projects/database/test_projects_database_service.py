@@ -6,7 +6,14 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from sapphire.projects.database.models import Participant, ParticipantStatusEnum, Position, Project
+from sapphire.projects.database.models import (
+    Participant,
+    ParticipantStatusEnum,
+    Position,
+    Project,
+    ProjectHistory,
+    ProjectStatusEnum,
+)
 from sapphire.projects.database.service import ProjectsDatabaseService
 
 
@@ -209,3 +216,46 @@ async def test_update_participant_status(database_service: ProjectsDatabaseServi
     assert update_participant.status == ParticipantStatusEnum.DECLINED
     assert update_participant.position_id == position_id
     assert update_participant.user_id == user_id
+
+
+@pytest.mark.asyncio
+async def test_get_project_history(database_service: ProjectsDatabaseService):
+    session = MagicMock()
+    project_id = uuid.uuid4()
+    status_history_1 = ProjectStatusEnum.IN_WORK
+    status_history_2 = ProjectStatusEnum.PREPARATION
+
+    expected_history = [
+        ProjectHistory(project_id=project_id, status=status_history_1),
+        ProjectHistory(project_id=project_id, status=status_history_2),
+    ]
+
+    mock_project_history = MagicMock()
+    mock_project_history.scalars.return_value.first.return_value = ProjectHistory(
+        project_id=project_id,
+        status=status_history_1,
+    )
+    mock_project_history.scalars.return_value.all.return_value = expected_history
+
+    session.execute = AsyncMock(return_value=mock_project_history)
+
+    # Check for get all history
+    history = await database_service.get_project_history(
+        session=session,
+        project_id=project_id,
+    )
+    assert len(history) == len(expected_history)
+    for expected_history_event in expected_history:
+        assert expected_history_event in history
+
+    for history_event in history:
+        assert history_event in expected_history
+
+    # Check for get last history
+    last_history = await database_service.get_project_history(
+        session=session,
+        project_id=project_id,
+        last=True,
+    )
+    assert last_history.project_id == project_id
+    assert last_history.status == status_history_1
