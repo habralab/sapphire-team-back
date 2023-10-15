@@ -38,6 +38,8 @@ async def update_user(
             session=session,
             first_name=data.first_name,
             last_name=data.last_name,
+            main_specialization_id=data.main_specialization_id,
+            secondary_specialization_id=data.secondary_specialization_id
         )
 
     return UserFullResponse.from_db_model(user)

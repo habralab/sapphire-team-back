@@ -10,8 +10,6 @@ from sapphire.common.database.utils import Empty
 from sapphire.users.database.models import Profile, User
 from sapphire.users.settings import UsersSettings
 
-from .models import User
-
 
 class UsersDatabaseService(BaseDatabaseService):
     def get_alembic_config_path(self) -> pathlib.Path:
@@ -41,9 +39,15 @@ class UsersDatabaseService(BaseDatabaseService):
             user: User,
             first_name: str,
             last_name: str,
+            main_specialization_id: uuid.UUID | None | Type[Empty] = Empty,
+            secondary_specialization_id: uuid.UUID | None | Type[Empty] = Empty
     ) -> User:
         user.first_name = first_name
         user.last_name = last_name
+        if main_specialization_id is not Empty:
+            user.profile.main_specialization_id = main_specialization_id
+        if secondary_specialization_id is not Empty:
+            user.profile.secondary_specialization_id = secondary_specialization_id
         session.add(user)
 
         return user
