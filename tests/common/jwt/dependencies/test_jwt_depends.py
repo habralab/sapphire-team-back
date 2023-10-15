@@ -4,11 +4,11 @@ from unittest.mock import Mock
 import pytest
 
 from sapphire.common.jwt import JWTMethods
-from sapphire.common.jwt.dependencies.rest import get_user_id
+from sapphire.common.jwt.dependencies.rest import get_request_user_id
 
 
 @pytest.mark.asyncio
-async def test_get_user_id_from_access_cookie(
+async def test_get_request_user_id_from_access_cookie(
         jwt_methods: JWTMethods,
         mocked_request: Mock,
         mocked_response: Mock,
@@ -19,7 +19,7 @@ async def test_get_user_id_from_access_cookie(
     access_token = jwt_methods.issue_access_token(user_id_1)
     refresh_token = jwt_methods.issue_refresh_token(user_id_2)
     
-    parsed_user_id = await get_user_id(
+    parsed_user_id = await get_request_user_id(
         response=mocked_response,
         request=mocked_request,
         access_token_from_cookie=access_token,
@@ -31,13 +31,13 @@ async def test_get_user_id_from_access_cookie(
 
 
 @pytest.mark.asyncio
-async def test_get_user_id_from_refresh_cookie(
+async def test_get_request_user_id_from_refresh_cookie(
     jwt_methods: JWTMethods, mocked_request: Mock, mocked_response: Mock,
 ):
     user_id = uuid.uuid4()
     refresh_token = jwt_methods.issue_refresh_token(user_id)
 
-    parsed_user_id = await get_user_id(
+    parsed_user_id = await get_request_user_id(
         response=mocked_response,
         request=mocked_request,
         access_token_from_cookie=None,
@@ -49,8 +49,8 @@ async def test_get_user_id_from_refresh_cookie(
 
 
 @pytest.mark.asyncio
-async def test_get_user_id_without_tokens(mocked_request: Mock, mocked_response: Mock):
-    result = await get_user_id(
+async def test_get_request_user_id_without_tokens(mocked_request: Mock, mocked_response: Mock):
+    result = await get_request_user_id(
         response=mocked_response,
         request=mocked_request,
         access_token_from_cookie=None,

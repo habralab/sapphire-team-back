@@ -1,3 +1,4 @@
+import pathlib
 from typing import Iterable
 
 import fastapi
@@ -19,6 +20,8 @@ class UsersAPIService(BaseAPIService):
         database: UsersDatabaseService,
         habr_oauth2: OAuth2HabrBackend,
         jwt_methods: JWTMethods,
+        media_dir_path: pathlib.Path = pathlib.Path("/media"),
+        load_file_chunk_size: int = 1024 * 1024,
         version: str = "0.0.0",
         root_url: str = "http://localhost",
         root_path: str = "",
@@ -28,6 +31,8 @@ class UsersAPIService(BaseAPIService):
         self._database = database
         self._habr_oauth2 = habr_oauth2
         self._jwt_methods = jwt_methods
+        self._media_dir_path = media_dir_path
+        self._load_file_chunk_size = load_file_chunk_size
 
         super().__init__(
             title="Users",
@@ -58,6 +63,14 @@ class UsersAPIService(BaseAPIService):
     @property
     def jwt_methods(self) -> JWTMethods:
         return self._jwt_methods
+
+    @property
+    def media_dir_path(self) -> pathlib.Path:
+        return self._media_dir_path
+
+    @property
+    def load_chunk_file_size(self) -> int:
+        return self._load_file_chunk_size
 
 
 def get_service(
