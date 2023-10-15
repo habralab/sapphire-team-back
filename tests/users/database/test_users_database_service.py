@@ -98,16 +98,22 @@ async def test_get_or_create_user_user_exists(database_service: UsersDatabaseSer
 @pytest.mark.asyncio
 async def test_update_user(database_service: UsersDatabaseService):
     session = MagicMock()
-    user = User(id=uuid.uuid4(), email="test@gmail.com", first_name="Test", last_name="Testovich")
+    user = User(id=uuid.uuid4(), email="test@gmail.com", first_name="Test", last_name="Testovich",
+                avatar="/avatar.png")
     new_first_name = "NewTest"
     new_last_name = "NewTestovich"
+    new_avatar = "/new-avatar.png"
 
     result_user = await database_service.update_user(
         session=session,
         user=user,
         first_name=new_first_name,
         last_name=new_last_name,
+        avatar=new_avatar,
     )
 
     session.add.assert_called_once_with(user)
     assert user is result_user
+    assert result_user.first_name == new_first_name
+    assert result_user.last_name == new_last_name
+    assert result_user.avatar == new_avatar

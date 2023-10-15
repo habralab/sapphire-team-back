@@ -2,7 +2,7 @@ import uuid
 
 import fastapi
 
-from sapphire.common.jwt.dependencies.rest import auth
+from sapphire.common.jwt.dependencies.rest import auth_user_id
 from sapphire.projects.database.service import ProjectsDatabaseService
 
 from .schemas import CreateProjectRequest, ProjectResponse
@@ -10,12 +10,12 @@ from .schemas import CreateProjectRequest, ProjectResponse
 
 async def create_project(
     request: fastapi.Request,
-    user_id: uuid.UUID = fastapi.Depends(auth),
+    request_user_id: uuid.UUID = fastapi.Depends(auth_user_id),
     data: CreateProjectRequest = fastapi.Body(embed=False),
 ) -> ProjectResponse:
     database_service: ProjectsDatabaseService = request.app.service.database
 
-    if data.owner_id != user_id:
+    if data.owner_id != request_user_id:
         raise fastapi.HTTPException(
             status_code=fastapi.status.HTTP_400_BAD_REQUEST,
             detail="Field `owner_id` must be your user id",

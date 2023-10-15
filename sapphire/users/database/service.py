@@ -39,11 +39,16 @@ class UsersDatabaseService(BaseDatabaseService):
             self,
             session: AsyncSession,
             user: User,
-            first_name: str,
-            last_name: str,
+            first_name: str | None | Type[Empty] = Empty,
+            last_name: str | None | Type[Empty] = Empty,
+            avatar: str | None | Type[Empty] = Empty,
     ) -> User:
-        user.first_name = first_name
-        user.last_name = last_name
+        if first_name is not Empty:
+            user.first_name = first_name
+        if last_name is not Empty:
+            user.last_name = last_name
+        if avatar is not Empty:
+            user.avatar = avatar
         session.add(user)
 
         return user
@@ -84,6 +89,16 @@ class UsersDatabaseService(BaseDatabaseService):
 
         return user
 
+    async def update_user_avatar(
+            self,
+            session: AsyncSession,
+            user: User,
+            avatar_path: pathlib.Path | str,
+    ) -> User:
+        user.avatar = str(avatar_path)
+        session.add(user)
+
+        return user
 
 def get_service(settings: UsersSettings) -> UsersDatabaseService:
     return UsersDatabaseService(dsn=str(settings.db_dsn))
