@@ -1,9 +1,12 @@
 import pathlib
+import uuid
+from typing import Type
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from sapphire.common.database.service import BaseDatabaseService
+from sapphire.common.database.utils import Empty
 from sapphire.users.database.models import Profile, User
 from sapphire.users.settings import UsersSettings
 
@@ -17,9 +20,16 @@ class UsersDatabaseService(BaseDatabaseService):
     async def get_user(
             self,
             session: AsyncSession,
-            email: str,
+            user_id: uuid.UUID | Type[Empty] = Empty,
+            email: str | Type[Empty] = Empty,
     ):
-        stmt = select(User).where(User.email == email)
+        filters = []
+        if user_id is not Empty:
+            filters.append(User.id == user_id)
+        if email is not Empty:
+            filters.append(User.email == email)
+
+        stmt = select(User).where(*filters)
         result = await session.execute(stmt)
         user = result.scalar_one_or_none()
 
