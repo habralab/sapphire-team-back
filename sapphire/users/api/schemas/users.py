@@ -9,6 +9,8 @@ from sapphire.users.database.models import User
 class UserUpdateRequest(BaseModel):
     first_name: str
     last_name: str
+    main_specialization_id: uuid.UUID
+    secondary_specialization_id: uuid.UUID
 
 
 class UserResponse(BaseModel):
@@ -33,6 +35,7 @@ class UserResponse(BaseModel):
             created_at=user.created_at,
             updated_at=user.updated_at,
         )
+
 
 class UserFullResponse(UserResponse):
     email: EmailStr
