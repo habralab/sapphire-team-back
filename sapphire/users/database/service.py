@@ -94,16 +94,6 @@ class UsersDatabaseService(BaseDatabaseService):
 
         return user
 
-    async def update_user_avatar(
-            self,
-            session: AsyncSession,
-            user: User,
-            avatar_path: pathlib.Path | str,
-    ) -> User:
-        user.avatar = str(avatar_path)
-        session.add(user)
-
-        return user
 
 def get_service(settings: UsersSettings) -> UsersDatabaseService:
     return UsersDatabaseService(dsn=str(settings.db_dsn))
