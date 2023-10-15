@@ -39,16 +39,15 @@ class UsersDatabaseService(BaseDatabaseService):
             user: User,
             first_name: str,
             last_name: str,
-            main_specialization_id: uuid.UUID,
-            secondary_specialization_id: uuid.UUID
+            main_specialization_id: uuid.UUID | None | Type[Empty] = Empty,
+            secondary_specialization_id: uuid.UUID | None | Type[Empty] = Empty
     ) -> User:
         user.first_name = first_name
         user.last_name = last_name
-        if user.profile:
-            if main_specialization_id is not None:
-                user.profile.main_specialization_id = main_specialization_id
-            if secondary_specialization_id is not None:
-                user.profile.secondary_specialization_id = secondary_specialization_id
+        if main_specialization_id is not Empty:
+            user.profile.main_specialization_id = main_specialization_id
+        if secondary_specialization_id is not Empty:
+            user.profile.secondary_specialization_id = secondary_specialization_id
         session.add(user)
 
         return user
