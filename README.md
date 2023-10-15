@@ -112,6 +112,7 @@ mkdir -p database_data
 mkdir -p broker_data/kafka/data
 mkdir -p broker_data/zookeeper/data
 mkdir -p broker_data/zookeeper/log
+mkdir -p users_data/media
 ```
 
 And run

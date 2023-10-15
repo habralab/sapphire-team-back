@@ -60,6 +60,8 @@ services:
     secrets:
       - habr_oauth2_client_id
       - habr_oauth2_client_secret
+    volumes:
+      - ${USERS_MEDIA_DIR_PATH:-./users_data/media}:/media
     ports:
       - target: 8000
         published: ${USERS_PORT:-3000}
