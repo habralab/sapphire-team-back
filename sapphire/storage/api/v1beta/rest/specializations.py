@@ -4,13 +4,11 @@ import fastapi
 
 from sapphire.common.api.dependancies.pagination import pagination
 from sapphire.common.api.schemas.paginated import PaginatedResponse, PaginationMeta
+from sapphire.storage.api.schemas.specializations import SpecializationResponse
 from sapphire.storage.database.service import StorageDatabaseService
 
-router = fastapi.APIRouter()
 
-
-@router.get("/paginated")
-async def specializations(
+async def specializations_paginated(
     request: fastapi.Request,
     response: fastapi.Response,
     pagination: Annotated[dict, fastapi.Depends(pagination)],
@@ -25,7 +23,9 @@ async def specializations(
             session=session, page=page, per_page=per_page,
         )
 
-    specializations = [fastapi.encoders.jsonable_encoder(s) for s in paginated_specializations]
+    specializations = [
+            SpecializationResponse.from_db_model(s) for s in paginated_specializations
+        ]
 
 
     return PaginatedResponse(
