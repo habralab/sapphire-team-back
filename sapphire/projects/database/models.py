@@ -41,9 +41,6 @@ class Project(Base):
     )
     positions: Mapped[list["Position"]] = relationship(back_populates="project", lazy="joined")
 
-    async def get_status(self) -> "ProjectHistory":
-        return await self.history.first()
-
 
 class ProjectHistory(Base):
     __tablename__ = "projects_history"
