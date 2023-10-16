@@ -1,5 +1,3 @@
-from typing import Annotated, Optional
-
 import fastapi
 
 from sapphire.common.api.dependancies.pagination import pagination
@@ -8,18 +6,18 @@ from sapphire.storage.api.schemas.specializations import SpecializationResponse
 from sapphire.storage.database.service import StorageDatabaseService
 
 
-async def specializations_paginated(
+async def get_specializations(
     request: fastapi.Request,
     response: fastapi.Response,
-    pagination: Annotated[dict, fastapi.Depends(pagination)],
+    pagination: dict = fastapi.Depends(pagination),
     ) -> fastapi.Response:
 
     database_service: StorageDatabaseService = request.app.service.database
-    page = pagination['page']
-    per_page = pagination['per_page']
+    page = pagination["page"]
+    per_page = pagination["per_page"]
 
     async with database_service.transaction() as session:
-        paginated_specializations = await database_service.get_specializations_paginated(
+        paginated_specializations = await database_service.get_specializations(
             session=session, page=page, per_page=per_page,
         )
 

@@ -13,25 +13,29 @@ class StorageDatabaseService(BaseDatabaseService):
     def get_alembic_config_path(self) -> pathlib.Path:
         return pathlib.Path(__file__).parent / "migrations"
 
-    async def get_specializations_paginated(
+    async def get_specializations(
         self,
         session: AsyncSession,
-        page: int,
-        per_page: int,
+        page: int | None,
+        per_page: int | None,
     ) -> List[Specialization]:
 
-        offset = (page - 1) * per_page
+        query = (
+            select(Specialization)
+            .order_by(desc(Specialization.created_at))
+            )
 
-        specializations_pagged = await session.execute(
-            (
-                select(Specialization)
-                .order_by(desc(Specialization.created_at))
+        if page is not None and per_page is not None:
+            offset = (page - 1) * per_page
+            query = (
+                query
                 .limit(per_page)
                 .offset(offset)
             )
-        )
 
-        return [spec._asdict()["Specialization"] for spec in specializations_pagged]
+        specializations = await session.execute(query)
+
+        return [spec._asdict()["Specialization"] for spec in specializations]
 
 
 def get_service(settings: StorageSettings) -> StorageDatabaseService:
