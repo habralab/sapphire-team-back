@@ -3,13 +3,13 @@ from typing import Annotated, Optional
 import fastapi
 
 from sapphire.common.api.dependancies.pagination import pagination
-from sapphire.storage.database.service import StorageDatabaseService
 from sapphire.common.api.schemas.paginated import PaginatedResponse, PaginationMeta
+from sapphire.storage.database.service import StorageDatabaseService
 
 router = fastapi.APIRouter()
 
 
-@router.get("/specs_paginated")
+@router.get("/paginated")
 async def specializations(
     request: fastapi.Request,
     response: fastapi.Response,
@@ -17,8 +17,8 @@ async def specializations(
     ) -> fastapi.Response:
 
     database_service: StorageDatabaseService = request.app.service.database
-    page = int(request.query_params.get("page"))
-    per_page = int(request.query_params.get("per_page"))
+    page = pagination['page']
+    per_page = pagination['per_page']
 
     async with database_service.transaction() as session:
         paginated_specializations = await database_service.get_specializations_paginated(
