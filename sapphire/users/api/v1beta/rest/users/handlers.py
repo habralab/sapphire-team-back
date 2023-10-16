@@ -103,18 +103,16 @@ async def delete_user_avatar(
             status_code=fastapi.status.HTTP_403_FORBIDDEN,
             detail="Forbidden.",
         )
-    if user.avatar is None:
-        return UserFullResponse.from_db_model(user=user)
+    if user.avatar is not None:
+        database_service: UsersDatabaseService = request.app.service.database
+        original_avatar_file_path = user.avatar
+        async with database_service.transaction() as session:
+            user = await database_service.update_user(
+                session=session,
+                user=user,
+                avatar=None,
+            )
 
-    database_service: UsersDatabaseService = request.app.service.database
-    original_avatar_file_path = user.avatar
-    async with database_service.transaction() as session:
-        user = await database_service.update_user(
-            session=session,
-            user=user,
-            avatar=None,
-        )
-
-    await aiofiles.os.remove(original_avatar_file_path)
+        await aiofiles.os.remove(original_avatar_file_path)
 
     return UserFullResponse.from_db_model(user=user)

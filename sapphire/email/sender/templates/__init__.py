@@ -1,1 +1,1 @@
-from .base import PartType, Template
+from .base import Template
