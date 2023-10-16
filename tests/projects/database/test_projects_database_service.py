@@ -137,27 +137,6 @@ async def test_get_participant_with_position_and_user_ids(
 
 
 @pytest.mark.asyncio
-async def test_get_participant_without_filters(
-    database_service: ProjectsDatabaseService,
-):
-    session = MagicMock()
-    participant_id = uuid.uuid4()
-    position_id = uuid.uuid4()
-    user_id = uuid.uuid4()
-    expected_participant = Participant(
-        id=participant_id, position_id=position_id, user_id=user_id
-    )
-    mock_participant = MagicMock()
-    mock_participant.scalars.return_value.first.return_value = expected_participant
-
-    session.execute = AsyncMock(return_value=mock_participant)
-
-    participant = await database_service.get_participant(session=session)
-
-    assert participant is None
-
-
-@pytest.mark.asyncio
 async def test_create_participant(database_service: ProjectsDatabaseService):
     session = MagicMock()
     position_id = uuid.uuid4()

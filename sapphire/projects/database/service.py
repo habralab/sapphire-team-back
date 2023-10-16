@@ -70,9 +70,9 @@ class ProjectsDatabaseService(BaseDatabaseService):
     async def get_participant(
         self,
         session: AsyncSession,
-        participant_id: uuid.UUID | None = None,
-        position_id: uuid.UUID | None = None,
-        user_id: uuid.UUID | None = None,
+        participant_id: uuid.UUID | Type[Empty] = Empty,
+        position_id: uuid.UUID | Type[Empty] = Empty,
+        user_id: uuid.UUID | Type[Empty] = Empty,
     ) -> Participant | None:
         filters = []
         if participant_id is not None:

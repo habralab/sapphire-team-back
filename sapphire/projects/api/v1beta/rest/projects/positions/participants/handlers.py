@@ -2,7 +2,7 @@ import uuid
 
 import fastapi
 
-from sapphire.common.jwt.dependencies.websocket import get_user_id
+from sapphire.common.jwt.dependencies.websocket import get_request_user_id
 from sapphire.projects.database.models import ParticipantStatusEnum
 from sapphire.projects.database.service import ProjectsDatabaseService
 
@@ -12,7 +12,7 @@ from .schemas import ProjectParticipantResponse
 async def create_request_participate(
     request: fastapi.Request,
     position_id: uuid.UUID,
-    user_id: uuid.UUID = fastapi.Depends(get_user_id),
+    user_id: uuid.UUID = fastapi.Depends(get_request_user_id),
 ) -> ProjectParticipantResponse:
     database_service: ProjectsDatabaseService = request.app.service.database
 
@@ -46,7 +46,7 @@ async def remove_request_participate(
     request: fastapi.Request,
     position_id: uuid.UUID,
     participant_id: uuid.UUID,
-    user_id: uuid.UUID = fastapi.Depends(get_user_id),
+    user_id: uuid.UUID = fastapi.Depends(get_request_user_id),
 ) -> ProjectParticipantResponse:
     database_service: ProjectsDatabaseService = request.app.service.database
 
