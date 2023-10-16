@@ -1,7 +1,7 @@
 import fastapi
 
 from sapphire.common.api.dependancies.pagination import pagination
-from sapphire.common.api.schemas.paginated import PaginatedResponse, PaginationMeta
+from sapphire.common.api.schemas.paginated import PaginatedResponse
 from sapphire.storage.api.schemas.specializations import SpecializationResponse
 from sapphire.storage.database.service import StorageDatabaseService
 
@@ -22,13 +22,11 @@ async def get_specializations(
         )
 
     specializations = [
-            SpecializationResponse.from_db_model(s) for s in paginated_specializations
+            SpecializationResponse.model_validate(s, from_attributes=True) for s in paginated_specializations
         ]
-
 
     return PaginatedResponse(
         data=specializations,
-        meta=PaginationMeta(
-            page=page, per_page=per_page
-        ),
+        page=page,
+        per_page=per_page,
     )
