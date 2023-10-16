@@ -1,4 +1,6 @@
-from pydantic import AnyUrl
+import pathlib
+
+from pydantic import AnyUrl, PositiveInt
 from pydantic_settings import SettingsConfigDict
 
 from sapphire.common.api.settings import BaseAPISettings
@@ -17,6 +19,9 @@ class UsersSettings(BaseAPISettings, BaseDatabaseSettings, JWTSettings):
 
     habr_oauth2_client_id: str = ""
     habr_oauth2_client_secret: str = ""
+
+    media_dir_path: pathlib.Path = pathlib.Path("/media")
+    load_file_chunk_size: PositiveInt = 1024 * 1024 # 1 Mb
 
 
 def get_settings() -> UsersSettings:

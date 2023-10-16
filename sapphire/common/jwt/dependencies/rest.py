@@ -6,7 +6,7 @@ from sapphire.common.api.exceptions import HTTPNotAuthenticated
 from sapphire.common.jwt.methods import JWTMethods
 
 
-async def get_user_id(
+async def get_request_user_id(
         response: fastapi.Response,
         request: fastapi.Request,
         access_token_from_cookie: str | None = fastapi.Cookie(None, alias="access_token"),
@@ -58,7 +58,7 @@ async def get_user_id(
     return user_id
 
 
-async def auth(user_id: uuid.UUID | None = fastapi.Depends(get_user_id)):
+async def auth_user_id(user_id: uuid.UUID | None = fastapi.Depends(get_request_user_id)):
     if user_id is None:
         raise HTTPNotAuthenticated()
 

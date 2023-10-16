@@ -37,18 +37,23 @@ class UsersDatabaseService(BaseDatabaseService):
             self,
             session: AsyncSession,
             user: User,
-            first_name: str,
-            last_name: str,
+            first_name: str | None | Type[Empty] = Empty,
+            last_name: str | None | Type[Empty] = Empty,
+            avatar: str | None | Type[Empty] = Empty,
             main_specialization_id: uuid.UUID | None | Type[Empty] = Empty,
-            secondary_specialization_id: uuid.UUID | None | Type[Empty] = Empty
+            secondary_specialization_id: uuid.UUID | None | Type[Empty] = Empty,
     ) -> User:
-        user.first_name = first_name
-        user.last_name = last_name
+        if first_name is not Empty:
+            user.first_name = first_name
+        if last_name is not Empty:
+            user.last_name = last_name
+        if avatar is not Empty:
+            user.avatar = avatar
         if main_specialization_id is not Empty:
             user.profile.main_specialization_id = main_specialization_id
         if secondary_specialization_id is not Empty:
             user.profile.secondary_specialization_id = secondary_specialization_id
-        session.add(user)
+        session.add_all([user, user.profile])
 
         return user
 

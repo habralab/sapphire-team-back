@@ -3,12 +3,12 @@ import uuid
 import fastapi
 
 from sapphire.common.api.websocket.connection_storage.storage import WebsocketConnectionStorage
-from sapphire.common.jwt.dependencies.websocket import auth
+from sapphire.common.jwt.dependencies.websocket import auth_user_id
 
 
 async def store_connection(
         websocket: fastapi.WebSocket,
-        user_id: uuid.UUID = fastapi.Depends(auth),
+        user_id: uuid.UUID = fastapi.Depends(auth_user_id),
 ):
     connection_storage: WebsocketConnectionStorage = (
         websocket.app.service.websocket_connection_storage

@@ -5,7 +5,7 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from sapphire.users.database.models import User
+from sapphire.users.database.models import Profile, User
 from sapphire.users.database.service import UsersDatabaseService
 
 
@@ -98,16 +98,31 @@ async def test_get_or_create_user_user_exists(database_service: UsersDatabaseSer
 @pytest.mark.asyncio
 async def test_update_user(database_service: UsersDatabaseService):
     session = MagicMock()
-    user = User(id=uuid.uuid4(), email="test@gmail.com", first_name="Test", last_name="Testovich")
+    user = User(id=uuid.uuid4(), email="test@gmail.com", first_name="Test", last_name="Testovich",
+                avatar="/avatar.png")
+    profile = Profile(user=user, main_specialization_id=uuid.uuid4(),
+                      secondary_specialization_id=uuid.uuid4())
+    user.profile = profile
     new_first_name = "NewTest"
     new_last_name = "NewTestovich"
+    new_avatar = "/new-avatar.png"
+    new_main_specialization_id = uuid.uuid4()
+    new_secondary_specialization_id = uuid.uuid4()
 
     result_user = await database_service.update_user(
         session=session,
         user=user,
         first_name=new_first_name,
         last_name=new_last_name,
+        avatar=new_avatar,
+        main_specialization_id=new_main_specialization_id,
+        secondary_specialization_id=new_secondary_specialization_id,
     )
 
-    session.add.assert_called_once_with(user)
+    session.add_all.assert_called_once_with([user, user.profile])
     assert user is result_user
+    assert result_user.first_name == new_first_name
+    assert result_user.last_name == new_last_name
+    assert result_user.avatar == new_avatar
+    assert result_user.profile.main_specialization_id == new_main_specialization_id
+    assert result_user.profile.secondary_specialization_id == new_secondary_specialization_id
