@@ -22,7 +22,7 @@ async def get_specializations(
         )
 
     specializations = [
-            SpecializationResponse.model_validate(s, from_attributes=True) for s in paginated_specializations
+            SpecializationResponse.model_validate(s) for s in paginated_specializations
         ]
 
     return PaginatedResponse(
