@@ -19,7 +19,7 @@ async def test_get_specializations_paginated(database_service:StorageDatabaseSer
     session.return_value.execute.return_value.paginate.return_value = mock_specializations
 
     paginated_specializations = await database_service.get_specializations_paginated(
-        session=session, page_number=2, per_page=1
+        session=session, page=1, per_page=1
         )
 
     assert mock_specializations == paginated_specializations
