@@ -23,10 +23,12 @@ class StorageDatabaseService(BaseDatabaseService):
         offset = (page - 1) * per_page
 
         specializations_pagged = await session.execute(
-            select(Specialization
-                ).order_by(desc(Specialization.created_at)
-                    ).limit(per_page
-                        ).offset(offset)
+            (
+                select(Specialization)
+                .order_by(desc(Specialization.created_at))
+                .limit(per_page)
+                .offset(offset)
+            )
         )
 
         return [spec._asdict()["Specialization"] for spec in specializations_pagged]
