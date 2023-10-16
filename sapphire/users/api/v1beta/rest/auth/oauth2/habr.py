@@ -7,7 +7,6 @@ from sapphire.users.api.schemas import JWTTokensResponse
 from sapphire.users.database.service import UsersDatabaseService
 from sapphire.users.oauth2.habr import OAuth2HabrBackend
 
-
 router = fastapi.APIRouter()
 
 
