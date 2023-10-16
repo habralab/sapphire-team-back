@@ -6,14 +6,14 @@ from sapphire.common.jwt.dependencies.websocket import get_user_id
 from sapphire.projects.database.models import ParticipantStatusEnum
 from sapphire.projects.database.service import ProjectsDatabaseService
 
-from .schemas import ParticipantProjectResponse
+from .schemas import ProjectParticipantResponse
 
 
 async def create_request_participate(
     request: fastapi.Request,
     position_id: uuid.UUID,
     user_id: uuid.UUID = fastapi.Depends(get_user_id),
-) -> ParticipantProjectResponse:
+) -> ProjectParticipantResponse:
     database_service: ProjectsDatabaseService = request.app.service.database
 
     async with database_service.transaction() as session:
@@ -39,19 +39,21 @@ async def create_request_participate(
             user_id=user_id,
         )
 
-    return ParticipantProjectResponse.model_validate(created_participant_db)
+    return ProjectParticipantResponse.model_validate(created_participant_db)
 
 
 async def remove_request_participate(
     request: fastapi.Request,
     position_id: uuid.UUID,
+    participant_id: uuid.UUID,
     user_id: uuid.UUID = fastapi.Depends(get_user_id),
-) -> ParticipantProjectResponse:
+) -> ProjectParticipantResponse:
     database_service: ProjectsDatabaseService = request.app.service.database
 
     async with database_service.transaction() as session:
         participant_db = await database_service.get_participant(
             session=session,
+            participant_id=participant_id,
             position_id=position_id,
             user_id=user_id,
         )
@@ -69,4 +71,4 @@ async def remove_request_participate(
             detail="Participant did not send request to project or not request status",
         )
 
-    return ParticipantProjectResponse.model_validate(declined_participant_db)
+    return ProjectParticipantResponse.model_validate(declined_participant_db)

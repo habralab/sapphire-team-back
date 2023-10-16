@@ -6,7 +6,7 @@ from pydantic import BaseModel, ConfigDict
 from sapphire.projects.database.models import ParticipantStatusEnum
 
 
-class ParticipantProjectResponse(BaseModel):
+class ProjectParticipantResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     id: uuid.UUID

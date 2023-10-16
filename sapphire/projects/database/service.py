@@ -75,14 +75,12 @@ class ProjectsDatabaseService(BaseDatabaseService):
         user_id: uuid.UUID | None = None,
     ) -> Participant | None:
         filters = []
-        if participant_id is not None and (position_id is None or user_id is None):
+        if participant_id is not None:
             filters.append(Participant.id == participant_id)
         if position_id is not None:
             filters.append(Participant.position_id == position_id)
         if user_id is not None:
             filters.append(Participant.user_id == user_id)
-        if not filters:
-            return None
         stmt = select(Participant).where(*filters).order_by(Participant.created_at.desc())
         result = await session.execute(stmt)
         return result.scalars().first()
