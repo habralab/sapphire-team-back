@@ -1,4 +1,3 @@
-import json
 from typing import Iterable
 
 import aiokafka
@@ -16,8 +15,7 @@ class EmailBrokerHandler(BaseBrokerHandler):
         super().__init__(topics=topics)
 
     async def handle(self, message: aiokafka.ConsumerRecord):
-        payload = json.loads(message.value)
-        email = Email(**payload)
+        email = Email.model_validate_json(json_data=message.value)
         template = self._sender.templates.get(email.type)
         if template is None:
             logger.error("Template '{}' is not exist", email.type)

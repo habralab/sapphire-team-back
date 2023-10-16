@@ -7,11 +7,11 @@ import fastapi
 from fastapi.responses import FileResponse
 
 from sapphire.common.jwt.dependencies.rest import auth_user_id, get_request_user_id
-from sapphire.users.api.schemas.users import UserFullResponse, UserResponse, UserUpdateRequest
 from sapphire.users.database.models import User
 from sapphire.users.database.service import UsersDatabaseService
 
 from .dependencies import get_path_user
+from .schemas import UserFullResponse, UserResponse, UserUpdateRequest
 
 
 async def get_user(
