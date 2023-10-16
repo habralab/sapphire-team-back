@@ -52,7 +52,7 @@ class ProjectsDatabaseService(BaseDatabaseService):
             name: str,
     ) -> Position:
         position = Position(project=project, name=name)
-        
+
         session.add(position)
 
         return position

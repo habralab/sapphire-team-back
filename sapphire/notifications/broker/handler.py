@@ -1,5 +1,4 @@
 import asyncio
-import json
 from typing import Iterable
 
 import aiokafka
@@ -24,8 +23,7 @@ class NotificationsBrokerHandler(BaseBrokerHandler):
         super().__init__(topics=topics)
 
     async def handle(self, message: aiokafka.ConsumerRecord):
-        payload = json.loads(message.value)
-        notification = Notification.model_validate(payload)
+        notification = Notification.model_validate_json(json_data=message.value)
 
         async with self._database.transaction() as session:
             db_notification = self._database.create_notification(

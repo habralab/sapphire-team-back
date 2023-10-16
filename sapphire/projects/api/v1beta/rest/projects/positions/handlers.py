@@ -1,11 +1,9 @@
-import uuid
-
 import fastapi
 
-from sapphire.common.jwt.dependencies.rest import auth_user_id
+from sapphire.projects.api.v1beta.rest.projects.dependencies import auth_path_project
 from sapphire.projects.database.models import Project
 from sapphire.projects.database.service import ProjectsDatabaseService
-from .dependencies import auth_path_project
+
 from .schemas import CreateProjectPositionRequest, ProjectPositionResponse
 
 
@@ -23,4 +21,4 @@ async def create_project_position(
             name=data.name,
         )
 
-    return ProjectPositionResponse.model_validate(db_position) 
+    return ProjectPositionResponse.model_validate(db_position)
