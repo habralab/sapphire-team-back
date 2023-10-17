@@ -2,8 +2,9 @@ import uuid
 
 import fastapi
 
-from sapphire.projects.database.models import Position
+from sapphire.projects.database.models import Position, Project
 from sapphire.projects.database.service import ProjectsDatabaseService
+from sapphire.projects.api.v1beta.rest.projects.dependencies import get_path_project
 
 
 async def get_path_position(
@@ -27,9 +28,9 @@ async def get_path_position(
 
 async def check_path_position(
     position: Position = fastapi.Depends(get_path_position),
-    project_id: uuid.UUID = fastapi.Path(),
+    project: Project = fastapi.Depends(get_path_project),
 ) -> Position:
-    if position.project_id != project_id:
+    if position.project_id != project.id:
         raise fastapi.HTTPException(
             status_code=fastapi.status.HTTP_404_NOT_FOUND,
             detail="Position not found."
