@@ -2,9 +2,9 @@ import uuid
 
 import fastapi
 
+from sapphire.projects.api.v1beta.rest.projects.positions.dependencies import check_path_position
 from sapphire.projects.database.models import Participant, Position
 from sapphire.projects.database.service import ProjectsDatabaseService
-from sapphire.projects.api.v1beta.rest.projects.positions.dependencies import check_path_position
 
 
 async def get_path_participant(

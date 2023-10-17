@@ -2,9 +2,9 @@ import uuid
 
 import fastapi
 
+from sapphire.projects.api.v1beta.rest.projects.dependencies import get_path_project
 from sapphire.projects.database.models import Position, Project
 from sapphire.projects.database.service import ProjectsDatabaseService
-from sapphire.projects.api.v1beta.rest.projects.dependencies import get_path_project
 
 
 async def get_path_position(
