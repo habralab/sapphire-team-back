@@ -32,7 +32,7 @@ async def check_path_position(
     if position.project_id != project_id:
         raise fastapi.HTTPException(
             status_code=fastapi.status.HTTP_404_NOT_FOUND,
-            detail="Position don't have retalionship with project."
+            detail="Position not found."
         )
 
     return position

@@ -32,7 +32,7 @@ async def check_path_participant(
     if participant.position_id != position_id:
         raise fastapi.HTTPException(
             status_code=fastapi.status.HTTP_404_NOT_FOUND,
-            detail="Participant don't have retalionship with position."
+            detail="Participant not found."
         )
 
     return participant
