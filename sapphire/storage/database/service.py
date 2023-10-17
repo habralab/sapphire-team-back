@@ -1,5 +1,4 @@
 import pathlib
-from typing import List
 
 from sqlalchemy import desc, select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -18,7 +17,7 @@ class StorageDatabaseService(BaseDatabaseService):
         session: AsyncSession,
         page: int | None,
         per_page: int | None,
-    ) -> List[Specialization]:
+    ) -> list[Specialization]:
 
         query = (
             select(Specialization)
@@ -35,7 +34,7 @@ class StorageDatabaseService(BaseDatabaseService):
 
         specializations = await session.execute(query)
 
-        return [spec._asdict()["Specialization"] for spec in specializations]
+        return specializations.scalars().all()
 
 
 def get_service(settings: StorageSettings) -> StorageDatabaseService:

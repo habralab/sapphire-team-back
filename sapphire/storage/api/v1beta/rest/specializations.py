@@ -10,11 +10,11 @@ async def get_specializations(
     request: fastapi.Request,
     response: fastapi.Response,
     pagination: dict = fastapi.Depends(pagination),
-    ) -> fastapi.Response:
+    ) -> PaginatedResponse:
 
     database_service: StorageDatabaseService = request.app.service.database
-    page = pagination["page"]
-    per_page = pagination["per_page"]
+    page = pagination.page
+    per_page = pagination.per_page
 
     async with database_service.transaction() as session:
         paginated_specializations = await database_service.get_specializations(

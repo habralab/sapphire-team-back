@@ -1,7 +1,7 @@
-from typing import Annotated
-
-from fastapi import Depends, Query
+from fastapi import Query
 from pydantic import conint
+
+from ..schemas.paginated import PaginationModel
 
 
 async def pagination(
@@ -9,6 +9,6 @@ async def pagination(
         page: conint(ge=1) = Query(1, description="Page number"),
         per_page: conint(ge=1) = Query(10, description="Number of items per page"),
 
-    ) -> dict:
+    ) -> PaginationModel:
 
-    return {"page": page, "per_page": per_page}
+    return PaginationModel(page=page, per_page=per_page)
