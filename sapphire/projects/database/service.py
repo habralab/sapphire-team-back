@@ -3,7 +3,6 @@ import uuid
 from datetime import datetime
 from typing import Type
 
-from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
@@ -14,10 +13,10 @@ from sapphire.projects.settings import ProjectsSettings
 from .models import (
     Participant,
     ParticipantStatusEnum,
+    Position,
     Project,
     ProjectHistory,
     ProjectStatusEnum,
-    Position,
 )
 
 
@@ -53,7 +52,7 @@ class ProjectsDatabaseService(BaseDatabaseService):
 
         statement = select(Project).where(*filters)
         result = await session.execute(statement)
-        return result.scalar_one_or_none()
+        return result.unique().scalar_one_or_none()
 
     async def create_project_position(
             self,
@@ -67,6 +66,19 @@ class ProjectsDatabaseService(BaseDatabaseService):
 
         return position
 
+    async def get_project_position(
+        self,
+        session: AsyncSession,
+        position_id: uuid.UUID | Type[Empty] = Empty,
+    ) -> Position | None:
+        filters = []
+        if position_id is not Empty:
+            filters.append(Position.id == position_id)
+
+        stmt = select(Position).where(*filters)
+        result = await session.execute(stmt)
+        return result.unique().scalar_one_or_none()
+
     async def get_participant(
         self,
         session: AsyncSession,
@@ -75,11 +87,11 @@ class ProjectsDatabaseService(BaseDatabaseService):
         user_id: uuid.UUID | Type[Empty] = Empty,
     ) -> Participant | None:
         filters = []
-        if participant_id is not None:
+        if participant_id is not Empty:
             filters.append(Participant.id == participant_id)
-        if position_id is not None:
+        if position_id is not Empty:
             filters.append(Participant.position_id == position_id)
-        if user_id is not None:
+        if user_id is not Empty:
             filters.append(Participant.user_id == user_id)
         stmt = select(Participant).where(*filters).order_by(Participant.created_at.desc())
         result = await session.execute(stmt)
@@ -100,7 +112,7 @@ class ProjectsDatabaseService(BaseDatabaseService):
 
         return participant
 
-    async def update_status(
+    async def update_participant_status(
         self,
         session: AsyncSession,
         participant: Participant,

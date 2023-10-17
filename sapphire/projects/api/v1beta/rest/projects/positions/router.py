@@ -1,7 +1,6 @@
 import fastapi
 
-from . import handlers
-from . import participants
+from . import handlers, participants
 
 router = fastapi.APIRouter()
 

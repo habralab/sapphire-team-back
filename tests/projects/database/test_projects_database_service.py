@@ -6,7 +6,7 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from sapphire.projects.database.models import Participant, ParticipantStatusEnum, Project
+from sapphire.projects.database.models import Participant, ParticipantStatusEnum, Position, Project
 from sapphire.projects.database.service import ProjectsDatabaseService
 
 
@@ -88,6 +88,25 @@ async def test_create_project_position(database_service: ProjectsDatabaseService
     assert result_position.project is project
 
 
+@pytest.mark.asyncio
+async def test_get_project_position(database_service: ProjectsDatabaseService):
+    session = MagicMock()
+    result = MagicMock()
+    position_id = uuid.uuid4()
+    position = Position(id=position_id, name="test", project_id=uuid.uuid4())
+
+    result.scalar_one_or_none.return_value = position
+    session.execute = AsyncMock()
+    session.execute.return_value = result
+
+    result_position = await database_service.get_project_position(
+        session=session,
+        position_id=position_id,
+    )
+
+    assert result_position is position
+
+
 async def test_get_participant_with_participant_id(
     database_service: ProjectsDatabaseService,
 ):
@@ -156,7 +175,7 @@ async def test_create_participant(database_service: ProjectsDatabaseService):
 
 
 @pytest.mark.asyncio
-async def test_update_status(database_service: ProjectsDatabaseService):
+async def test_update_participant_status(database_service: ProjectsDatabaseService):
     session = MagicMock()
     position_id = uuid.uuid4()
     user_id = uuid.uuid4()
@@ -164,7 +183,7 @@ async def test_update_status(database_service: ProjectsDatabaseService):
         position_id=position_id, user_id=user_id, status=ParticipantStatusEnum.REQUEST
     )
 
-    update_participant = await database_service.update_status(
+    update_participant = await database_service.update_participant_status(
         session=session,
         participant=participant,
         status=ParticipantStatusEnum.DECLINED,
