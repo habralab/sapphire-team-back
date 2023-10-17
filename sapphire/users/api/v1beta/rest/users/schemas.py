@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime
 
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, ConfigDict, EmailStr
 
 from sapphire.users.database.models import User
 
@@ -14,6 +14,8 @@ class UserUpdateRequest(BaseModel):
 
 
 class UserResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: uuid.UUID
     first_name: str | None
     last_name: str | None
@@ -38,6 +40,8 @@ class UserResponse(BaseModel):
 
 
 class UserFullResponse(UserResponse):
+    model_config = ConfigDict(from_attributes=True)
+
     email: EmailStr
 
     @classmethod
