@@ -45,6 +45,23 @@ class ProjectsDatabaseService(BaseDatabaseService):
         result = await session.execute(statement)
         return result.scalar_one_or_none()
 
+    async def get_project_position(
+            self,
+            session: AsyncSession,
+            project_id: uuid.UUID | Type[Empty] = Empty,
+            position_id: uuid.UUID | Type[Empty] = Empty,
+    ) -> Position | None:
+        filters = []
+        if project_id is not Empty:
+            filters.append(Position.project_id == project_id)
+        if position_id is not Empty:
+            filters.append(Position.id == position_id)
+
+        statement = select(Position).where(*filters)
+        result = await session.execute(statement)
+
+        return result.scalar_one_or_none()
+
     async def create_project_position(
             self,
             session: AsyncSession,
@@ -52,6 +69,13 @@ class ProjectsDatabaseService(BaseDatabaseService):
             name: str,
     ) -> Position:
         position = Position(project=project, name=name)
+
+        session.add(position)
+
+        return position
+
+    async def remove_project_position(self, session: AsyncSession, position: Position) -> Position:
+        position.is_deleted = True
 
         session.add(position)
 
