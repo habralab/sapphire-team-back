@@ -1,6 +1,6 @@
 import fastapi
 
-from . import health, specializations, skills
+from . import health, skills, specializations
 
 router = fastapi.APIRouter()
 
