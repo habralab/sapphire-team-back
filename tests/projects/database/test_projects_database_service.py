@@ -59,7 +59,7 @@ async def test_get_project(database_service: ProjectsDatabaseService):
     project_id = uuid.uuid4()
     project = Project(id=project_id, name="test", owner_id=uuid.uuid4())
 
-    result.scalar_one_or_none.return_value = project
+    result.unique.return_value.scalar_one_or_none.return_value = project
     session.execute = AsyncMock()
     session.execute.return_value = result
 
@@ -95,7 +95,7 @@ async def test_get_project_position(database_service: ProjectsDatabaseService):
     position_id = uuid.uuid4()
     position = Position(id=position_id, name="test", project_id=uuid.uuid4())
 
-    result.scalar_one_or_none.return_value = position
+    result.unique.return_value.scalar_one_or_none.return_value = position
     session.execute = AsyncMock()
     session.execute.return_value = result
 
