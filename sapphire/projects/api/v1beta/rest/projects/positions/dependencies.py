@@ -10,10 +10,10 @@ from sapphire.projects.database.service import ProjectsDatabaseService
 async def get_path_project_position(
         request: fastapi.Request,
         project: Project = fastapi.Depends(get_path_project),
-        position_id: uuid.UUID = fastapi.Path(), 
+        position_id: uuid.UUID = fastapi.Path(),
 ):
     database_service: ProjectsDatabaseService = request.app.service.database
-    
+
     async with database_service.transaction() as session:
         position = await database_service.get_project_position(
             session=session,

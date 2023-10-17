@@ -6,7 +6,7 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from sapphire.projects.database.models import Project
+from sapphire.projects.database.models import Position, Project
 from sapphire.projects.database.service import ProjectsDatabaseService
 
 
@@ -72,6 +72,24 @@ async def test_get_project(database_service: ProjectsDatabaseService):
 
 
 @pytest.mark.asyncio
+async def test_get_project_position(database_service: ProjectsDatabaseService):
+    session = MagicMock()
+    result = MagicMock()
+    position = Position(id=uuid.uuid4(), name="test", project_id=uuid.uuid4())
+
+    result.scalar_one_or_none.return_value = position
+    session.execute = AsyncMock()
+    session.execute.return_value = result
+
+    result_position = await database_service.get_project_position(
+        session=session,
+        position_id=position.id,
+    )
+
+    assert result_position is position
+
+
+@pytest.mark.asyncio
 async def test_create_project_position(database_service: ProjectsDatabaseService):
     session = MagicMock()
     name = "Position"
@@ -86,3 +104,18 @@ async def test_create_project_position(database_service: ProjectsDatabaseService
     session.add.assert_called_once_with(result_position)
     assert result_position.name == name
     assert result_position.project is project
+
+
+@pytest.mark.asyncio
+async def test_remove_project_position(database_service: ProjectsDatabaseService):
+    session = MagicMock()
+    position = Position(id=uuid.uuid4(), name="Position", project_id=uuid.uuid4())
+
+    result_position = await database_service.remove_project_position(
+        session=session,
+        position=position,
+    )
+
+    session.add.assert_called_once_with(result_position)
+    assert result_position.is_deleted is True
+    assert result_position is position
