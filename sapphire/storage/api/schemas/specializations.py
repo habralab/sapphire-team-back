@@ -15,3 +15,12 @@ class SpecializationResponse(BaseModel):
     group_id: str | None
     migrate_to: str | None
     created_at: datetime
+
+
+class SpecializationGroupResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: uuid.UUID
+    name: str | None
+    migrate_to: str | None
+    created_at: datetime
