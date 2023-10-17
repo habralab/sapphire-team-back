@@ -1,7 +1,10 @@
 from fastapi import Query
-from pydantic import conint
+from pydantic import BaseModel, conint
 
-from ..schemas.paginated import PaginationModel
+
+class PaginationModel(BaseModel):
+    page: int
+    per_page: int
 
 
 async def pagination(
