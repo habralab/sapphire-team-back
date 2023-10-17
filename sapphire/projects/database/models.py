@@ -2,7 +2,7 @@ import enum
 import uuid
 from datetime import datetime
 
-from sqlalchemy import Enum, ForeignKey, desc
+from sqlalchemy import Enum, ForeignKey
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 
@@ -36,7 +36,7 @@ class Project(Base):
 
     history: Mapped[list["ProjectHistory"]] = relationship(
         back_populates="project",
-        order_by=desc("project_history.created_at"),
+        order_by="desc(ProjectHistory.created_at)",
         lazy="joined",
     )
     positions: Mapped[list["Position"]] = relationship(back_populates="project", lazy="joined")
