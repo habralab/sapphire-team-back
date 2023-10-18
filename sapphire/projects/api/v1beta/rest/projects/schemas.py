@@ -36,8 +36,4 @@ class ProjectResponse(BaseModel):
     deadline: datetime | None
     created_at: datetime
     updated_at: datetime
-
-
-class ProjectInfoResponse(BaseModel):
-    project: ProjectResponse
-    last_history: ProjectHistoryResponse
+    status: ProjectStatusEnum

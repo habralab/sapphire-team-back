@@ -41,6 +41,10 @@ class Project(Base):
     )
     positions: Mapped[list["Position"]] = relationship(back_populates="project", lazy="joined")
 
+    @property
+    def status(self):
+        return self.history[0].status
+
 
 class ProjectHistory(Base):
     __tablename__ = "projects_history"
