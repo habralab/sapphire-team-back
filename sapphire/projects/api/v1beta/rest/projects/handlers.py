@@ -7,7 +7,12 @@ from sapphire.projects.database.models import Project
 from sapphire.projects.database.service import ProjectsDatabaseService
 
 from .dependencies import get_path_project
-from .schemas import CreateProjectRequest, ProjectHistoryListResponse, ProjectResponse
+from .schemas import (
+    CreateProjectRequest,
+    ProjectHistoryListResponse,
+    ProjectHistoryResponse,
+    ProjectResponse,
+)
 
 
 async def create_project(
@@ -44,4 +49,5 @@ async def get_project(
 async def history(
     project: Project = fastapi.Depends(get_path_project),
 ) -> ProjectHistoryListResponse:
-    return ProjectHistoryListResponse(history=project.history)
+    history = [ProjectHistoryResponse.model_validate(event) for event in project.history]
+    return ProjectHistoryListResponse(history=history)
