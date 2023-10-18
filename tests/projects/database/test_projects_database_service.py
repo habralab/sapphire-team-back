@@ -228,7 +228,7 @@ async def test_get_projects_without_pagination(database_service: ProjectsDatabas
     project_id = uuid.uuid4()
     expected_projects = [Project(id=project_id, name="test", owner_id=uuid.uuid4())]
     expected_query = select(Project).order_by(desc(Project.created_at))
-    result.scalars.return_value.all.return_value = expected_projects
+    result.unique.return_value.scalars.return_value.all.return_value = expected_projects
     session.execute = AsyncMock()
     session.execute.return_value = result
 
@@ -254,7 +254,7 @@ async def test_get_projects_with_pagination(database_service: ProjectsDatabaseSe
         .limit(pagination.per_page)
         .offset(offset)
     )
-    result.scalars.return_value.all.return_value = expected_projects
+    result.unique.return_value.scalars.return_value.all.return_value = expected_projects
     session.execute = AsyncMock()
     session.execute.return_value = result
 
