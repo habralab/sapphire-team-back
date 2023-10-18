@@ -1,4 +1,5 @@
 import uuid
+from collections import defaultdict
 
 import fastapi
 
@@ -66,9 +67,9 @@ async def update_participant(
         ParticipantStatusEnum.LEFT: ParticipantStatusEnum.JOINED,
     }
 
-    participant_status_nodes = {}
-    participant_status_nodes[project.owner_id] = {}
-    participant_status_nodes[participant.user_id] = {}
+    participant_status_nodes = defaultdict(dict)
+    participant_status_nodes[project.owner_id] = defaultdict(dict)
+    participant_status_nodes[participant.user_id] = defaultdict(dict)
     # If owner id and user id are equal, just set dict again
 
     participant_status_nodes[project.owner_id].update(project_owner_nodes)
