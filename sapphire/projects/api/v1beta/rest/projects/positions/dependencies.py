@@ -7,7 +7,7 @@ from sapphire.projects.database.models import Project
 from sapphire.projects.database.service import ProjectsDatabaseService
 
 
-async def get_path_project_position(
+async def get_path_position(
         request: fastapi.Request,
         project: Project = fastapi.Depends(get_path_project),
         position_id: uuid.UUID = fastapi.Path(),

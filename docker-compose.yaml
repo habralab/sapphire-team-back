@@ -3,7 +3,8 @@ services:
   database:
     image: postgres:16.0-bookworm
     secrets:
-      - postgresql_password
+      - source: postgresql_password
+        target: postgresql_password
     environment:
       POSTGRES_PASSWORD_FILE: /run/secrets/postgresql_password
     volumes:
@@ -58,8 +59,10 @@ services:
       ROOT_PATH: ${USERS_ROOT_PATH}
       ALLOWED_ORIGINS: ${USERS_ALLOWED_ORIGINS:-["http://localhost:3050"]}
     secrets:
-      - habr_oauth2_client_id
-      - habr_oauth2_client_secret
+      - source: habr_oauth2_client_id
+        target: habr_oauth2_client_id
+      - source: habr_oauth2_client_secret
+        target: habr_oauth2_client_secret
     volumes:
       - ${USERS_MEDIA_DIR_PATH:-./users_data/media}:/media
     ports:
@@ -67,6 +70,25 @@ services:
         published: ${USERS_PORT:-3000}
         mode: host
     command: ["users", "run"]
+    deploy:
+      replicas: 1
+
+  storage:
+    image: ${SAPPHIRE_IMAGE:-sapphire}
+    depends_on:
+      - redis
+      - database
+      - kafka
+    environment:
+      DB_DSN: ${STORAGE_DB_DSN:-sqlite+aiosqlite:///storage.db}
+      ROOT_URL: ${STORAGE_ROOT_URL:-http://localhost:3010}
+      ROOT_PATH: ${STORAGE_ROOT_PATH}
+      ALLOWED_ORIGINS: ${STORAGE_ALLOWED_ORIGINS:-["http://localhost:3050"]}
+    ports:
+      - target: 8000
+        published: ${STORAGE_PORT:-3010}
+        mode: host
+    command: ["storage", "run"]
     deploy:
       replicas: 1
 
@@ -121,6 +143,7 @@ services:
       URLS: >
         [
           {"url": "${USERS_ROOT_URL:-http://localhost:3000}${USERS_ROOT_PATH}/openapi.json", "name": "Users"},
+          {"url": "${STORAGE_ROOT_URL:-http://localhost:3010}${STORAGE_ROOT_PATH}/openapi.json", "name": "Storage"},
           {"url": "${PROJECTS_ROOT_URL:-http://localhost:3020}${PROJECTS_ROOT_PATH}/openapi.json", "name": "Projects"},
           {"url": "${NOTIFICATIONS_ROOT_URL:-http://localhost:3030}${NOTIFICATIONS_ROOT_PATH}/openapi.json", "name": "Notifications"}
         ]

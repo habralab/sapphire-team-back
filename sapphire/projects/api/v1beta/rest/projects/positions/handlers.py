@@ -4,7 +4,7 @@ from sapphire.projects.api.v1beta.rest.projects.dependencies import path_project
 from sapphire.projects.database.models import Position, Project
 from sapphire.projects.database.service import ProjectsDatabaseService
 
-from .dependencies import get_path_project_position
+from .dependencies import get_path_position
 from .schemas import CreateProjectPositionRequest, ProjectPositionResponse
 
 
@@ -28,7 +28,7 @@ async def create_project_position(
 async def remove_project_position(
         request: fastapi.Request,
         project: Project = fastapi.Depends(path_project_is_owner),
-        position: Position = fastapi.Depends(get_path_project_position),
+        position: Position = fastapi.Depends(get_path_position),
 ) -> ProjectPositionResponse:
     database_service: ProjectsDatabaseService = request.app.service.database
 
