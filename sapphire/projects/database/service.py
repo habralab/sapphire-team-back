@@ -7,7 +7,6 @@ from sqlalchemy import desc
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
-from sapphire.common.api.dependencies.pagination import PaginationModel
 from sapphire.common.database.service import BaseDatabaseService
 from sapphire.common.database.utils import Empty
 from sapphire.projects.settings import ProjectsSettings
@@ -141,13 +140,14 @@ class ProjectsDatabaseService(BaseDatabaseService):
     async def get_projects(
         self,
         session: AsyncSession,
-        pagination: PaginationModel | Type[Empty] = Empty,
+        page: int | Type[Empty] = Empty,
+        per_page: int | Type[Empty] = Empty,
     ) -> list[Project]:
         query = select(Project).order_by(desc(Project.created_at))
 
-        if pagination is not Empty:
-            offset = (pagination.page - 1) * pagination.per_page
-            query = query.limit(pagination.per_page).offset(offset)
+        if page is not Empty and per_page is not Empty:
+            offset = (page - 1) * per_page
+            query = query.limit(per_page).offset(offset)
         result = await session.execute(query)
 
         return result.unique().scalars().all()

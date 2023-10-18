@@ -4,6 +4,7 @@ import uuid
 import fastapi
 
 from sapphire.common.api.dependencies.pagination import PaginationModel, pagination
+from sapphire.common.api.schemas.paginated import PaginatedResponse
 from sapphire.common.jwt.dependencies.rest import auth_user_id
 from sapphire.projects.database.models import Project
 from sapphire.projects.database.service import ProjectsDatabaseService
@@ -78,7 +79,8 @@ async def get_projects(
     async with database_service.transaction() as session:
         projects_db = await database_service.get_projects(
             session=session,
-            pagination=pagination,
+            page=pagination.page,
+            per_page=pagination.per_page,
         )
 
     projects = [ProjectResponse.model_validate(project_db) for project_db in projects_db]

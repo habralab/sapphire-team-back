@@ -8,15 +8,7 @@ import pytest
 from sqlalchemy import desc
 from sqlalchemy.future import select
 
-from sapphire.projects.database.models import (
-    Participant,
-    ParticipantStatusEnum,
-    Position,
-    Project,
-    ProjectHistory,
-    ProjectStatusEnum,
-)
-from sapphire.common.api.dependencies.pagination import PaginationModel
+from sapphire.projects.database.models import Participant, ParticipantStatusEnum, Position, Project
 from sapphire.projects.database.service import ProjectsDatabaseService
 
 
@@ -246,19 +238,20 @@ async def test_get_projects_with_pagination(database_service: ProjectsDatabaseSe
     result = MagicMock()
     project_id = uuid.uuid4()
     expected_projects = [Project(id=project_id, name="test", owner_id=uuid.uuid4())]
-    pagination = PaginationModel(page=1, per_page=10)
-    offset = (pagination.page - 1) * pagination.per_page
+    page = 1
+    per_page = 10
+    offset = (page - 1) * per_page
     expected_query = (
         select(Project)
         .order_by(desc(Project.created_at))
-        .limit(pagination.per_page)
+        .limit(per_page)
         .offset(offset)
     )
     result.unique.return_value.scalars.return_value.all.return_value = expected_projects
     session.execute = AsyncMock()
     session.execute.return_value = result
 
-    projects = await database_service.get_projects(session=session, pagination=pagination)
+    projects = await database_service.get_projects(session=session, page=page, per_page=per_page)
 
     assert projects is expected_projects
 
