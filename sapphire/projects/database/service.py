@@ -3,9 +3,11 @@ import uuid
 from datetime import datetime
 from typing import Type
 
+from sqlalchemy import desc
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
+from sapphire.common.api.dependencies.pagination import PaginationModel
 from sapphire.common.database.service import BaseDatabaseService
 from sapphire.common.database.utils import Empty
 from sapphire.projects.settings import ProjectsSettings
@@ -135,6 +137,20 @@ class ProjectsDatabaseService(BaseDatabaseService):
         session.add(participant)
 
         return participant
+
+    async def get_projects(
+        self,
+        session: AsyncSession,
+        pagination: PaginationModel | Type[Empty] = Empty,
+    ) -> list[Project]:
+        query = select(Project).order_by(desc(Project.created_at))
+
+        if pagination is not Empty:
+            offset = (pagination.page - 1) * pagination.per_page
+            query = query.limit(pagination.per_page).offset(offset)
+        result = await session.execute(query)
+
+        return result.unique().scalars().all()
 
 
 def get_service(settings: ProjectsSettings) -> ProjectsDatabaseService:
