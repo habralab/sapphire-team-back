@@ -72,7 +72,7 @@ async def history(
 async def get_projects(
     request: fastapi.Request,
     pagination: PaginationModel = fastapi.Depends(pagination),
-) -> ProjectsResponse:
+) -> PaginatedResponse:
     database_service: ProjectsDatabaseService = request.app.service.database
 
     async with database_service.transaction() as session:
@@ -83,4 +83,4 @@ async def get_projects(
 
     projects = [ProjectResponse.model_validate(project_db) for project_db in projects_db]
 
-    return ProjectsResponse(projects=projects)
+    return PaginatedResponse(data=projects, page=pagination.page, per_page=pagination.per_page)
