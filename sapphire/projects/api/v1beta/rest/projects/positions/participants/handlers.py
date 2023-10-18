@@ -3,11 +3,11 @@ import uuid
 import fastapi
 
 from sapphire.common.jwt.dependencies.rest import auth_user_id
-from sapphire.projects.api.v1beta.rest.projects.positions.dependencies import check_path_position
+from sapphire.projects.api.v1beta.rest.projects.positions.dependencies import get_path_position
 from sapphire.projects.database.models import Participant, ParticipantStatusEnum, Position
 from sapphire.projects.database.service import ProjectsDatabaseService
 
-from .dependencies import check_path_participant
+from .dependencies import get_path_participant
 from .schemas import ProjectParticipantResponse
 
 
@@ -15,7 +15,7 @@ async def create_request_participate(
     request: fastapi.Request,
     position_id: uuid.UUID,
     user_id: uuid.UUID = fastapi.Depends(auth_user_id),
-    position: Position = fastapi.Depends(check_path_position),
+    position: Position = fastapi.Depends(get_path_position),
 ) -> ProjectParticipantResponse:
     database_service: ProjectsDatabaseService = request.app.service.database
 
@@ -47,7 +47,7 @@ async def create_request_participate(
 
 async def remove_request_participate(
     request: fastapi.Request,
-    participant: Participant = fastapi.Depends(check_path_participant),
+    participant: Participant = fastapi.Depends(get_path_participant),
 ) -> ProjectParticipantResponse:
     database_service: ProjectsDatabaseService = request.app.service.database
 

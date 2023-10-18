@@ -89,6 +89,21 @@ async def test_create_project_position(database_service: ProjectsDatabaseService
 
 
 @pytest.mark.asyncio
+async def test_remove_project_position(database_service: ProjectsDatabaseService):
+    session = MagicMock()
+    position = Position(id=uuid.uuid4(), name="Position", project_id=uuid.uuid4())
+
+    result_position = await database_service.remove_project_position(
+        session=session,
+        position=position,
+    )
+
+    session.add.assert_called_once_with(result_position)
+    assert result_position.is_deleted is True
+    assert result_position is position
+
+
+@pytest.mark.asyncio
 async def test_get_project_position(database_service: ProjectsDatabaseService):
     session = MagicMock()
     result = MagicMock()
