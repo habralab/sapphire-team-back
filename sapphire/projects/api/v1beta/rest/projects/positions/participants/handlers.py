@@ -66,9 +66,9 @@ async def update_participant(
         ParticipantStatusEnum.LEFT: ParticipantStatusEnum.JOINED,
     }
 
-    participant_status_nodes = dict()
-    participant_status_nodes[project.owner_id] = dict()
-    participant_status_nodes[participant.user_id] = dict()
+    participant_status_nodes = {}
+    participant_status_nodes[project.owner_id] = {}
+    participant_status_nodes[participant.user_id] = {}
     # If owner id and user id are equal, just set dict again
 
     participant_status_nodes[project.owner_id].update(project_owner_nodes)
