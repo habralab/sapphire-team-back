@@ -116,3 +116,25 @@ async def delete_user_avatar(
         await aiofiles.os.remove(original_avatar_file_path)
 
     return UserFullResponse.from_db_model(user=user)
+
+
+async def slills_installation(
+        request: fastapi.Request,
+        new_userskills_ids: list[uuid.UUID] = fastapi.Body(embed=False),  ##??????
+        path_user_id: uuid.UUID | None = fastapi.Depends(get_path_user),
+        request_user_id: uuid.UUID | None = fastapi.Depends(auth_user_id),
+        user: User = fastapi.Depends(get_user), ):
+    if path_user_id != request_user_id:
+        raise fastapi.HTTPException(
+            status_code=fastapi.status.HTTP_403_FORBIDDEN,
+            detail="Forbidden.",
+        )
+    database_service: UsersDatabaseService = request.app.service.database
+    async with database_service.transaction() as session:
+        skill = await database_service.update_user_skills(
+            session=session,
+            user=user,
+            new_userskills_ids=new_userskills_ids
+        )
+    return skill
+
