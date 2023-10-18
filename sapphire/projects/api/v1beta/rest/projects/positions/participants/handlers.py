@@ -55,20 +55,24 @@ async def update_participant(
 ) -> ProjectParticipantResponse:
     database_service: ProjectsDatabaseService = request.app.service.database
 
-    participant_status_nodes = {
-        # Nodes for project owner
-        project.owner_id: {
-            # New expected status : Required current status
-            ParticipantStatusEnum.DECLINED: ParticipantStatusEnum.REQUEST,
-            ParticipantStatusEnum.JOINED: ParticipantStatusEnum.REQUEST,
-        },
-        # Nodes for user
-        participant.user_id: {
-            # New expected status : Required current status
-            ParticipantStatusEnum.DECLINED: ParticipantStatusEnum.REQUEST,
-            ParticipantStatusEnum.LEFT: ParticipantStatusEnum.JOINED,
-        }
+    project_owner_nodes = {
+        # New expected status : Required current status
+        ParticipantStatusEnum.DECLINED: ParticipantStatusEnum.REQUEST,
+        ParticipantStatusEnum.JOINED: ParticipantStatusEnum.REQUEST,
     }
+    participant_nodes = {
+        # New expected status : Required current status
+        ParticipantStatusEnum.DECLINED: ParticipantStatusEnum.REQUEST,
+        ParticipantStatusEnum.LEFT: ParticipantStatusEnum.JOINED,
+    }
+
+    participant_status_nodes = dict()
+    participant_status_nodes[project.owner_id] = dict()
+    participant_status_nodes[participant.user_id] = dict()
+    # If owner id and user id are equal, just set dict again
+
+    participant_status_nodes[project.owner_id].update(project_owner_nodes)
+    participant_status_nodes[participant.user_id].update(participant_nodes)
 
     if participant_status_nodes.get(user_id, {}).get(data.status, None) == participant.status:
         async with database_service.transaction() as session:
