@@ -5,15 +5,10 @@ from datetime import datetime
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
+from sqlalchemy import desc
+from sqlalchemy.future import select
 
-from sapphire.projects.database.models import (
-    Participant,
-    ParticipantStatusEnum,
-    Position,
-    Project,
-    ProjectHistory,
-    ProjectStatusEnum,
-)
+from sapphire.projects.database.models import Participant, ParticipantStatusEnum, Position, Project
 from sapphire.projects.database.service import ProjectsDatabaseService
 
 
@@ -216,3 +211,49 @@ async def test_update_participant_status(database_service: ProjectsDatabaseServi
     assert update_participant.status == ParticipantStatusEnum.DECLINED
     assert update_participant.position_id == position_id
     assert update_participant.user_id == user_id
+
+
+@pytest.mark.asyncio
+async def test_get_projects_without_pagination(database_service: ProjectsDatabaseService):
+    session = MagicMock()
+    result = MagicMock()
+    project_id = uuid.uuid4()
+    expected_projects = [Project(id=project_id, name="test", owner_id=uuid.uuid4())]
+    expected_query = select(Project).order_by(desc(Project.created_at))
+    result.unique.return_value.scalars.return_value.all.return_value = expected_projects
+    session.execute = AsyncMock()
+    session.execute.return_value = result
+
+    projects = await database_service.get_projects(session=session)
+
+    assert projects is expected_projects
+
+    query = session.execute.call_args_list[0].args[0]
+    assert expected_query.compare(query)
+
+
+@pytest.mark.asyncio
+async def test_get_projects_with_pagination(database_service: ProjectsDatabaseService):
+    session = MagicMock()
+    result = MagicMock()
+    project_id = uuid.uuid4()
+    expected_projects = [Project(id=project_id, name="test", owner_id=uuid.uuid4())]
+    page = 1
+    per_page = 10
+    offset = (page - 1) * per_page
+    expected_query = (
+        select(Project)
+        .order_by(desc(Project.created_at))
+        .limit(per_page)
+        .offset(offset)
+    )
+    result.unique.return_value.scalars.return_value.all.return_value = expected_projects
+    session.execute = AsyncMock()
+    session.execute.return_value = result
+
+    projects = await database_service.get_projects(session=session, page=page, per_page=per_page)
+
+    assert projects is expected_projects
+
+    query = session.execute.call_args_list[0].args[0]
+    assert expected_query.compare(query)

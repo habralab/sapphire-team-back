@@ -3,6 +3,7 @@ import uuid
 from datetime import datetime
 from typing import Type
 
+from sqlalchemy import desc
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
@@ -135,6 +136,21 @@ class ProjectsDatabaseService(BaseDatabaseService):
         session.add(participant)
 
         return participant
+
+    async def get_projects(
+        self,
+        session: AsyncSession,
+        page: int | Type[Empty] = Empty,
+        per_page: int | Type[Empty] = Empty,
+    ) -> list[Project]:
+        query = select(Project).order_by(desc(Project.created_at))
+
+        if page is not Empty and per_page is not Empty:
+            offset = (page - 1) * per_page
+            query = query.limit(per_page).offset(offset)
+        result = await session.execute(query)
+
+        return result.unique().scalars().all()
 
 
 def get_service(settings: ProjectsSettings) -> ProjectsDatabaseService:

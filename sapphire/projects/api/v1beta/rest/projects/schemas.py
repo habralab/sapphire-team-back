@@ -38,3 +38,7 @@ class ProjectHistoryResponse(BaseModel):
 
 class ProjectHistoryListResponse(PaginatedResponse):
     data: list[ProjectHistoryResponse]
+
+
+class ProjectsResponse(PaginatedResponse):
+    data: list[ProjectResponse]
