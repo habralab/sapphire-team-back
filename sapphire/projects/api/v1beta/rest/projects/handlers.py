@@ -4,7 +4,6 @@ import uuid
 import fastapi
 
 from sapphire.common.api.dependencies.pagination import PaginationModel, pagination
-from sapphire.common.api.schemas.paginated import PaginatedResponse
 from sapphire.common.jwt.dependencies.rest import auth_user_id
 from sapphire.projects.database.models import Project
 from sapphire.projects.database.service import ProjectsDatabaseService
@@ -73,7 +72,7 @@ async def history(
 async def get_projects(
     request: fastapi.Request,
     pagination: PaginationModel = fastapi.Depends(pagination),
-) -> PaginatedResponse:
+) -> ProjectsResponse:
     database_service: ProjectsDatabaseService = request.app.service.database
 
     async with database_service.transaction() as session:
@@ -85,4 +84,4 @@ async def get_projects(
 
     projects = [ProjectResponse.model_validate(project_db) for project_db in projects_db]
 
-    return PaginatedResponse(data=projects, page=pagination.page, per_page=pagination.per_page)
+    return ProjectsResponse(data=projects, page=pagination.page, per_page=pagination.per_page)
