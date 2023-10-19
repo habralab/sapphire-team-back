@@ -1,17 +1,19 @@
 import uuid
+from collections import defaultdict
 
 import fastapi
 
 from sapphire.common.jwt.dependencies.rest import auth_user_id
+from sapphire.projects.api.v1beta.rest.projects.dependencies import get_path_project
 from sapphire.projects.api.v1beta.rest.projects.positions.dependencies import get_path_position
-from sapphire.projects.database.models import Participant, ParticipantStatusEnum, Position
+from sapphire.projects.database.models import Participant, ParticipantStatusEnum, Position, Project
 from sapphire.projects.database.service import ProjectsDatabaseService
 
 from .dependencies import get_path_participant
-from .schemas import ProjectParticipantResponse
+from .schemas import ChangeParticipantStatusRequest, ProjectParticipantResponse
 
 
-async def create_request_participate(
+async def create_participant(
     request: fastapi.Request,
     position_id: uuid.UUID,
     user_id: uuid.UUID = fastapi.Depends(auth_user_id),
@@ -45,23 +47,42 @@ async def create_request_participate(
     return ProjectParticipantResponse.model_validate(created_participant_db)
 
 
-async def remove_request_participate(
+async def update_participant(
     request: fastapi.Request,
+    data: ChangeParticipantStatusRequest = fastapi.Body(...),
+    user_id: uuid.UUID = fastapi.Depends(auth_user_id),
+    project: Project = fastapi.Depends(get_path_project),
     participant: Participant = fastapi.Depends(get_path_participant),
 ) -> ProjectParticipantResponse:
     database_service: ProjectsDatabaseService = request.app.service.database
 
-    if participant.status == ParticipantStatusEnum.REQUEST:
+    project_owner_nodes = {
+        # New expected status : Required current status
+        ParticipantStatusEnum.DECLINED: ParticipantStatusEnum.REQUEST,
+        ParticipantStatusEnum.JOINED: ParticipantStatusEnum.REQUEST,
+    }
+    participant_nodes = {
+        # New expected status : Required current status
+        ParticipantStatusEnum.DECLINED: ParticipantStatusEnum.REQUEST,
+        ParticipantStatusEnum.LEFT: ParticipantStatusEnum.JOINED,
+    }
+
+    participant_status_nodes = defaultdict(dict)
+
+    participant_status_nodes[project.owner_id].update(project_owner_nodes)
+    participant_status_nodes[participant.user_id].update(participant_nodes)
+
+    if participant_status_nodes.get(user_id, {}).get(data.status, None) == participant.status:
         async with database_service.transaction() as session:
-            declined_participant_db = await database_service.update_participant_status(
+            updated_participant_db = await database_service.update_participant_status(
                 session=session,
                 participant=participant,
-                status=ParticipantStatusEnum.DECLINED,
+                status=data.status,
             )
     else:
         raise fastapi.HTTPException(
-            status_code=fastapi.status.HTTP_404_NOT_FOUND,
-            detail="Participant have not `request` status",
+            status_code=fastapi.status.HTTP_403_FORBIDDEN,
+            detail="Forbidden.",
         )
 
-    return ProjectParticipantResponse.model_validate(declined_participant_db)
+    return ProjectParticipantResponse.model_validate(updated_participant_db)

@@ -130,6 +130,8 @@ class ProjectsDatabaseService(BaseDatabaseService):
         status: ParticipantStatusEnum,
     ) -> Participant:
         participant.status = status
+        if status == ParticipantStatusEnum.JOINED:
+            participant.joined_at = datetime.now()
         session.add(participant)
 
         return participant

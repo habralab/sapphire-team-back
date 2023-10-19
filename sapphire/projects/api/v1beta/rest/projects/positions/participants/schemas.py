@@ -15,3 +15,7 @@ class ProjectParticipantResponse(BaseModel):
     status: ParticipantStatusEnum
     created_at: datetime
     updated_at: datetime
+
+
+class ChangeParticipantStatusRequest(BaseModel):
+    status: ParticipantStatusEnum
