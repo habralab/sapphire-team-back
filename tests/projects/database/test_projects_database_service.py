@@ -6,7 +6,14 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from sapphire.projects.database.models import Participant, ParticipantStatusEnum, Position, Project
+from sapphire.projects.database.models import (
+    Participant,
+    ParticipantStatusEnum,
+    Position,
+    Project,
+    ProjectHistory,
+    ProjectStatusEnum,
+)
 from sapphire.projects.database.service import ProjectsDatabaseService
 
 
