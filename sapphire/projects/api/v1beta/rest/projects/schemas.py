@@ -13,19 +13,6 @@ class CreateProjectRequest(BaseModel):
     deadline: datetime | None
 
 
-class ProjectHistoryResponse(BaseModel):
-    model_config = ConfigDict(from_attributes=True)
-
-    id: uuid.UUID
-    project_id: uuid.UUID
-    status: ProjectStatusEnum
-    created_at: datetime
-
-
-class ProjectHistoryListResponse(BaseModel):
-    history: list[ProjectHistoryResponse]
-
-
 class ProjectResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 

@@ -1,18 +1,16 @@
+import math
 import uuid
 
 import fastapi
 
+from sapphire.common.api.dependancies.pagination import PaginationModel, pagination
+from sapphire.common.api.schemas.paginated import PaginatedResponse
 from sapphire.common.jwt.dependencies.rest import auth_user_id
 from sapphire.projects.database.models import Project
 from sapphire.projects.database.service import ProjectsDatabaseService
 
 from .dependencies import get_path_project
-from .schemas import (
-    CreateProjectRequest,
-    ProjectHistoryListResponse,
-    ProjectHistoryResponse,
-    ProjectResponse,
-)
+from .schemas import CreateProjectRequest, ProjectResponse
 
 
 async def create_project(
@@ -48,6 +46,15 @@ async def get_project(
 
 async def history(
     project: Project = fastapi.Depends(get_path_project),
-) -> ProjectHistoryListResponse:
-    history = [ProjectHistoryResponse.model_validate(event) for event in project.history]
-    return ProjectHistoryListResponse(history=history)
+    pagination: PaginationModel = fastapi.Depends(pagination),
+) -> PaginatedResponse:
+    offset = (pagination.page - 1) * pagination.per_page
+    total_items = len(project.history)
+    total_pages = int(math.ceil(total_items / pagination.per_page))
+    return PaginatedResponse(
+        data=project.history[offset : offset + pagination.per_page],
+        page=pagination.page,
+        per_page=pagination.per_page,
+        total_pages=total_pages,
+        total_items=total_items,
+    )
