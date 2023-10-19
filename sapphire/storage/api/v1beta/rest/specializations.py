@@ -1,6 +1,6 @@
 import fastapi
 
-from sapphire.common.api.dependancies.pagination import pagination
+from sapphire.common.api.dependencies.pagination import pagination
 from sapphire.common.api.schemas.paginated import PaginatedResponse
 from sapphire.storage.api.schemas.specializations import (
     SpecializationGroupResponse,

@@ -3,7 +3,7 @@ import uuid
 
 import fastapi
 
-from sapphire.common.api.dependancies.pagination import PaginationModel, pagination
+from sapphire.common.api.dependencies.pagination import PaginationModel, pagination
 from sapphire.common.api.schemas.paginated import PaginatedResponse
 from sapphire.common.jwt.dependencies.rest import auth_user_id
 from sapphire.projects.database.models import Project
