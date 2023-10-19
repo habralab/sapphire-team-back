@@ -3,6 +3,7 @@ from datetime import datetime
 
 from pydantic import BaseModel, ConfigDict
 
+from sapphire.common.api.schemas.paginated import PaginatedResponse
 from sapphire.projects.database.models import ProjectStatusEnum
 
 
@@ -24,3 +25,16 @@ class ProjectResponse(BaseModel):
     created_at: datetime
     updated_at: datetime
     status: ProjectStatusEnum
+
+
+class ProjectHistoryResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: uuid.UUID
+    project_id: uuid.UUID
+    status: ProjectStatusEnum
+    created_at: datetime
+
+
+class ProjectHistoryListResponse(PaginatedResponse):
+    data: list[ProjectHistoryResponse]
