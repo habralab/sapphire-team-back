@@ -1,3 +1,5 @@
+import pathlib
+
 from pydantic import AnyUrl
 from pydantic_settings import SettingsConfigDict
 
@@ -12,6 +14,8 @@ class ProjectsSettings(BaseAPISettings, BaseBrokerProducerSettings, BaseDatabase
     model_config = SettingsConfigDict()
 
     db_dsn: AnyUrl = AnyUrl("sqlite+aiosqlite:///projects.sqlite3")
+
+    media_dir_path: pathlib.Path = pathlib.Path("/media")
 
     producer_servers: list[str] = ["localhost:9091"]
 

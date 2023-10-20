@@ -3,7 +3,7 @@ import uuid
 from datetime import datetime
 from typing import Type
 
-from sqlalchemy import desc
+from sqlalchemy import desc, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
@@ -151,6 +151,22 @@ class ProjectsDatabaseService(BaseDatabaseService):
         result = await session.execute(query)
 
         return result.unique().scalars().all()
+
+    async def update_project_avatar(
+        self,
+        session: AsyncSession,
+        project: Project,
+        avatar: str | None | Type[Empty] = Empty,
+    ) -> Project:
+        query = (
+            update(Project)
+            .where(Project.id == project.id)
+            .values(avatar=avatar)
+        )
+        session.add(query)
+        session.refresh(project)
+
+        return project
 
 
 def get_service(settings: ProjectsSettings) -> ProjectsDatabaseService:

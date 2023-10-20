@@ -85,3 +85,63 @@ async def get_projects(
     projects = [ProjectResponse.model_validate(project_db) for project_db in projects_db]
 
     return ProjectsResponse(data=projects, page=pagination.page, per_page=pagination.per_page)
+
+
+async def upload_project_avatar(
+        request: fastapi.Request,
+        request_user_id: uuid.UUID = fastapi.Depends(auth_user_id),
+        project: Project = fastapi.Depends(get_path_project),
+        avatar: fastapi.UploadFile = fastapi.File(...),
+) -> ProjectResponse:
+
+    if request_user_id != user.id:
+        raise fastapi.HTTPException(
+            status_code=fastapi.status.HTTP_403_FORBIDDEN,
+            detail="Forbidden.",
+        )
+
+    database_service: ProjectsDatabaseService = request.app.service.database
+    media_dir_path: pathlib.Path = request.app.service.media_dir_path
+    load_file_chunk_size: int = request.app.service.load_file_chunk_size
+
+    avatars_dir_path: pathlib.Path = media_dir_path / "project-avatars"
+    avatar_file_path = avatars_dir_path / f"project-{project.id}"
+
+    await aiofiles.os.makedirs(avatars_dir_path, exist_ok=True)
+    async with aiofiles.open(avatar_file_path, "wb") as avatar_file:
+        while content := await avatar.read(size=load_file_chunk_size):
+            await avatar_file.write(content)
+
+    async with database_service.transaction() as session:
+        project = await database_service.update_project_avatar(
+            session=session,
+            project=project,
+            avatar=str(avatar_file_path),
+        )
+
+    return ProjectResponse.from_db_model(project=project)
+
+
+async def delete_project_avatar(
+        request: fastapi.Request,
+        request_user_id: uuid.UUID = fastapi.Depends(auth_user_id),
+        project: Project = fastapi.Depends(get_path_project),
+) -> ProjectResponse:
+    if request_user_id != user.id:
+        raise fastapi.HTTPException(
+            status_code=fastapi.status.HTTP_403_FORBIDDEN,
+            detail="Forbidden.",
+        )
+    if project.avatar is not None:
+        database_service: ProjectsDatabaseService = request.app.service.database
+        original_avatar_file_path = project.avatar
+        async with database_service.transaction() as session:
+            user = await database_service.update_project_avatar(
+                session=session,
+                project=project,
+                avatar=None,
+            )
+
+        await aiofiles.os.remove(original_avatar_file_path)
+
+    return ProjectResponse.from_db_model(project=project)
