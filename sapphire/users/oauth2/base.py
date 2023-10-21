@@ -1,8 +1,9 @@
-import aiohttp
 import yarl
 
+from sapphire.common.http_client import HTTPClient
 
-class OAuth2BaseBackend:
+
+class OAuth2BaseBackend(HTTPClient):
     authorization_url: str
     token_url: str
     grant_type: str
@@ -10,6 +11,8 @@ class OAuth2BaseBackend:
     def __init__(self, client_id: str, client_secret: str):
         self._client_id = client_id
         self._client_secret = client_secret
+
+        super().__init__()
 
     def get_authorization_url(self, redirect_url: str | None = None) -> str:
         state = "test"
@@ -38,7 +41,7 @@ class OAuth2BaseBackend:
             "client_id": self._client_id,
             "client_secret": self._client_secret,
         }
-        async with aiohttp.request(method="POST", url=self.token_url, data=payload) as response:
-            data = await response.json()
+        response = await self.post(url=self.token_url, data=payload)
+        data = response.json()
 
         return data["access_token"]

@@ -5,6 +5,7 @@ import fastapi
 from facet import ServiceMixin
 
 from sapphire.common.api.service import BaseAPIService
+from sapphire.common.habr.client import HabrClient
 from sapphire.common.jwt import JWTMethods
 from sapphire.common.utils.package import get_version
 from sapphire.users.database.service import UsersDatabaseService
@@ -19,6 +20,7 @@ class UsersAPIService(BaseAPIService):
         self,
         database: UsersDatabaseService,
         habr_oauth2: OAuth2HabrBackend,
+        habr_client: HabrClient,
         jwt_methods: JWTMethods,
         media_dir_path: pathlib.Path = pathlib.Path("/media"),
         load_file_chunk_size: int = 1024 * 1024,
@@ -30,6 +32,7 @@ class UsersAPIService(BaseAPIService):
     ):
         self._database = database
         self._habr_oauth2 = habr_oauth2
+        self._habr_client = habr_client
         self._jwt_methods = jwt_methods
         self._media_dir_path = media_dir_path
         self._load_file_chunk_size = load_file_chunk_size
@@ -50,6 +53,8 @@ class UsersAPIService(BaseAPIService):
     def dependencies(self) -> list[ServiceMixin]:
         return [
             self._database,
+            self._habr_oauth2,
+            self._habr_client,
         ]
 
     @property
@@ -59,6 +64,10 @@ class UsersAPIService(BaseAPIService):
     @property
     def habr_oauth2(self) -> OAuth2HabrBackend:
         return self._habr_oauth2
+
+    @property
+    def habr_client(self) -> HabrClient:
+        return self._habr_client
 
     @property
     def jwt_methods(self) -> JWTMethods:
@@ -76,12 +85,14 @@ class UsersAPIService(BaseAPIService):
 def get_service(
     database: UsersDatabaseService,
     habr_oauth2: OAuth2HabrBackend,
+    habr_client: HabrClient,
     jwt_methods: JWTMethods,
     settings: UsersSettings,
 ) -> UsersAPIService:
     return UsersAPIService(
         database=database,
         habr_oauth2=habr_oauth2,
+        habr_client=habr_client,
         jwt_methods=jwt_methods,
         version=get_version() or "0.0.0",
         root_url=str(settings.root_url),

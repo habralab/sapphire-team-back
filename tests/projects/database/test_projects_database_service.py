@@ -124,6 +124,7 @@ async def test_get_project_position(database_service: ProjectsDatabaseService):
     assert result_position is position
 
 
+@pytest.mark.asyncio
 async def test_get_participant_with_participant_id(
     database_service: ProjectsDatabaseService,
 ):

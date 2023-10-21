@@ -2,6 +2,7 @@ import fastapi
 import yarl
 from fastapi.responses import RedirectResponse
 
+from sapphire.common.habr.client import HabrClient
 from sapphire.common.jwt import JWTMethods
 from sapphire.users.api.v1beta.rest.auth.schemas import JWTTokensResponse
 from sapphire.users.database.service import UsersDatabaseService
@@ -29,6 +30,7 @@ async def callback(
     state: str, code: str, request: fastapi.Request, response: fastapi.Response
 ) -> JWTTokensResponse:
     habr_oauth2: OAuth2HabrBackend = request.app.service.habr_oauth2
+    habr_client: HabrClient = request.app.service.habr_client
     jwt_methods: JWTMethods = request.app.service.jwt_methods
 
     database_service: UsersDatabaseService = request.app.service.database
@@ -42,10 +44,23 @@ async def callback(
 
     habr_user = await habr_oauth2.get_user_info(token)
     async with database_service.transaction() as session:
-        db_user = await database_service.get_or_create_user(
+        db_user = await database_service.get_user(
             session=session,
             email=habr_user.email,
         )
+    if db_user is None:
+        habr_user_card = await habr_client.get_user_card(username=habr_user.login)
+        first_name, last_name = None, None
+        if habr_user_card.full_name is not None:
+            first_name, last_name = habr_user_card.full_name.split()
+
+        async with database_service.transaction() as session:
+            db_user = await database_service.create_user(
+                session=session,
+                email=habr_user.email,
+                first_name=first_name,
+                last_name=last_name,
+            )
 
     access_token = jwt_methods.issue_access_token(db_user.id)
     refresh_token = jwt_methods.issue_refresh_token(db_user.id)
