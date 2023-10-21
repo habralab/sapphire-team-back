@@ -1,8 +1,9 @@
 from pydantic import AnyHttpUrl
-from pydantic_settings import BaseSettings
+
+from sapphire.common.jwt.settings import JWTSettings
 
 
-class AutotestsSettings(BaseSettings):
+class AutotestsSettings(JWTSettings):
     messenger_base_url: AnyHttpUrl
     notifications_base_url: AnyHttpUrl
     projects_base_url: AnyHttpUrl

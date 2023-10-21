@@ -65,6 +65,14 @@ services:
         target: habr_oauth2_client_secret
       - source: habr_api_key
         target: habr_api_key
+      - source: jwt_access_token_public_key
+        target: jwt_access_token_public_key
+      - source: jwt_access_token_private_key
+        target: jwt_access_token_private_key
+      - source: jwt_refresh_token_public_key
+        target: jwt_refresh_token_public_key
+      - source: jwt_refresh_token_private_key
+        target: jwt_refresh_token_private_key
     volumes:
       - ${USERS_MEDIA_DIR_PATH:-./users_data/media}:/media
     ports:
@@ -86,6 +94,15 @@ services:
       ROOT_URL: ${STORAGE_ROOT_URL:-http://localhost:3010}
       ROOT_PATH: ${STORAGE_ROOT_PATH}
       ALLOWED_ORIGINS: ${STORAGE_ALLOWED_ORIGINS:-["http://localhost:3050"]}
+    secrets:
+      - source: jwt_access_token_public_key
+        target: jwt_access_token_public_key
+      - source: jwt_access_token_private_key
+        target: jwt_access_token_private_key
+      - source: jwt_refresh_token_public_key
+        target: jwt_refresh_token_public_key
+      - source: jwt_refresh_token_private_key
+        target: jwt_refresh_token_private_key
     ports:
       - target: 8000
         published: ${STORAGE_PORT:-3010}
@@ -106,6 +123,15 @@ services:
       ROOT_PATH: ${PROJECTS_ROOT_PATH}
       ALLOWED_ORIGINS: ${PROJECTS_ALLOWED_ORIGINS:-["http://localhost:3050"]}
       PRODUCER_SERVERS: '["kafka:9091"]'
+    secrets:
+      - source: jwt_access_token_public_key
+        target: jwt_access_token_public_key
+      - source: jwt_access_token_private_key
+        target: jwt_access_token_private_key
+      - source: jwt_refresh_token_public_key
+        target: jwt_refresh_token_public_key
+      - source: jwt_refresh_token_private_key
+        target: jwt_refresh_token_private_key
     ports:
       - target: 8000
         published: ${PROJECTS_PORT:-3020}
@@ -127,11 +153,48 @@ services:
       ALLOWED_ORIGINS: ${NOTIFICATIONS_ALLOWED_ORIGINS:-["http://localhost:3050"]}
       CONSUMER_SERVERS: '["kafka:9091"]'
       TOPICS: '["notifications"]'
+    secrets:
+      - source: jwt_access_token_public_key
+        target: jwt_access_token_public_key
+      - source: jwt_access_token_private_key
+        target: jwt_access_token_private_key
+      - source: jwt_refresh_token_public_key
+        target: jwt_refresh_token_public_key
+      - source: jwt_refresh_token_private_key
+        target: jwt_refresh_token_private_key
     ports:
       - target: 8000
         published: ${NOTIFICATIONS_PORT:-3030}
         mode: host
     command: ["notifications", "run"]
+    deploy:
+      replicas: 1
+
+  messenger:
+    image: ${SAPPHIRE_IMAGE:-sapphire}
+    depends_on:
+      - redis
+      - database
+      - kafka
+    environment:
+      DB_DSN: ${MESSENGER_DB_DSN:-sqlite+aiosqlite:///messenger.db}
+      ROOT_URL: ${MESSENGER_ROOT_URL:-http://localhost:3040}
+      ROOT_PATH: ${MESSENGER_ROOT_PATH}
+      ALLOWED_ORIGINS: ${MESSENGER_ALLOWED_ORIGINS:-["http://localhost:3050"]}
+    secrets:
+      - source: jwt_access_token_public_key
+        target: jwt_access_token_public_key
+      - source: jwt_access_token_private_key
+        target: jwt_access_token_private_key
+      - source: jwt_refresh_token_public_key
+        target: jwt_refresh_token_public_key
+      - source: jwt_refresh_token_private_key
+        target: jwt_refresh_token_private_key
+    ports:
+      - target: 8000
+        published: ${MESSENGER_PORT:-3040}
+        mode: host
+    command: ["messenger", "run"]
     deploy:
       replicas: 1
 
@@ -144,10 +207,28 @@ services:
     environment:
       URLS: >
         [
-          {"url": "${USERS_ROOT_URL:-http://localhost:3000}${USERS_ROOT_PATH}/openapi.json", "name": "Users"},
-          {"url": "${STORAGE_ROOT_URL:-http://localhost:3010}${STORAGE_ROOT_PATH}/openapi.json", "name": "Storage"},
-          {"url": "${PROJECTS_ROOT_URL:-http://localhost:3020}${PROJECTS_ROOT_PATH}/openapi.json", "name": "Projects"},
-          {"url": "${NOTIFICATIONS_ROOT_URL:-http://localhost:3030}${NOTIFICATIONS_ROOT_PATH}/openapi.json", "name": "Notifications"}
+          {
+            "url": "${USERS_ROOT_URL:-http://localhost:3000}${USERS_ROOT_PATH}/openapi.json",
+            "name": "Users",
+          },
+          {
+            "url": "${STORAGE_ROOT_URL:-http://localhost:3010}${STORAGE_ROOT_PATH}/openapi.json",
+            "name": "Storage",
+          },
+          {
+            "url": "${PROJECTS_ROOT_URL:-http://localhost:3020}${PROJECTS_ROOT_PATH}/openapi.json",
+            "name": "Projects",
+          },
+          {
+            "url": "${NOTIFICATIONS_ROOT_URL:-http://localhost:3030}${NOTIFICATIONS_ROOT_PATH}"
+                   "/openapi.json",
+            "name": "Notifications",
+          },
+          {
+            "url": "${MESSENGER_ROOT_URL:-http://localhost:3040}${MESSENGER_ROOT_PATH}"
+                   "/openapi.json",
+            "name": "Messenger",
+          },
         ]
     ports:
       - target: 8080
