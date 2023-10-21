@@ -22,7 +22,6 @@ class User(Base):
 
     profile: Mapped["Profile"] = relationship("Profile", back_populates="user")
     skills: Mapped[list["UserSkill"]] = relationship("UserSkill", back_populates="user")
-    habr_sessions: Mapped[list["HabrSession"]] = relationship("HabrSession", back_populates="user")
 
 
 class Profile(Base):
@@ -47,15 +46,3 @@ class UserSkill(Base):
     updated_at: Mapped[datetime] = mapped_column(default=datetime.now, onupdate=datetime.now)
 
     user: Mapped[User] = relationship(User, back_populates="skills")
-
-
-class HabrSession(Base):
-    __tablename__ = "habr_sessions"
-
-    user_id: Mapped[str] = mapped_column(ForeignKey("users.id"), primary_key=True)
-    access_token: Mapped[str]
-    expire_at: Mapped[str]
-    created_at: Mapped[datetime] = mapped_column(default=datetime.now)
-    updated_at: Mapped[datetime] = mapped_column(default=datetime.now, onupdate=datetime.now)
-
-    user: Mapped[User] = relationship(User, back_populates="habr_sessions")

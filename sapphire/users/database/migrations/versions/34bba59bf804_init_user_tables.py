@@ -33,16 +33,6 @@ def upgrade() -> None:
         sa.UniqueConstraint("email"),
     )
     op.create_table(
-        "habr_sessions",
-        sa.Column("user_id", sa.Uuid(), nullable=False),
-        sa.Column("access_token", sa.String(), nullable=False),
-        sa.Column("expire_at", sa.String(), nullable=False),
-        sa.Column("created_at", sa.DateTime(), nullable=False),
-        sa.Column("updated_at", sa.DateTime(), nullable=False),
-        sa.ForeignKeyConstraint(["user_id"], ["users.id"]),
-        sa.PrimaryKeyConstraint("user_id"),
-    )
-    op.create_table(
         "profiles",
         sa.Column("user_id", sa.Uuid(), nullable=False),
         sa.Column("about", sa.Text(), nullable=False),

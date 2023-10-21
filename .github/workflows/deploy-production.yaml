@@ -49,5 +49,12 @@ jobs:
           echo "NOTIFICATIONS_ROOT_URL=${NOTIFICATIONS_ROOT_URL_PRODUCTION}" >> $GITHUB_ENV
           echo "NOTIFICATIONS_ROOT_PATH=${NOTIFICATIONS_ROOT_PATH_PRODUCTION}" >> $GITHUB_ENV
           echo "NOTIFICATIONS_ALLOWED_ORIGINS=${NOTIFICATIONS_ALLOWED_ORIGINS_PRODUCTION}" >> $GITHUB_ENV
+      - name: Migrate
+        run: |
+          docker run --rm sapphire:${{ github.ref_name }} storage database migrate
+          docker run --rm sapphire:${{ github.ref_name }} users database migrate
+          docker run --rm sapphire:${{ github.ref_name }} projects database migrate
+          docker run --rm sapphire:${{ github.ref_name }} notifications database migrate
+          docker run --rm sapphire:${{ github.ref_name }} messenger database migrate
       - name: Deploy
-        run: docker stack deploy -c docker-compose.yaml sapphire-stage
+        run: docker stack deploy -c docker-compose.yaml sapphire-production
