@@ -20,6 +20,7 @@ jobs:
         run: |
           echo "HABR_OAUTH2_CLIENT_ID_NAME=habr_oauth2_client_id_stage" >> $GITHUB_ENV
           echo "HABR_OAUTH2_CLIENT_SECRET_NAME=habr_oauth2_client_secret_stage" >> $GITHUB_ENV
+          echo "HABR_API_KEY_NAME=habr_api_key_stage" >> $GITHUB_ENV
           echo "JWT_ACCESS_TOKEN_PRIVATE_KEY_NAME=jwt_access_token_private_key_stage" >> $GITHUB_ENV
           echo "JWT_ACCESS_TOKEN_PUBLIC_KEY_NAME=jwt_access_token_public_key_stage" >> $GITHUB_ENV
           echo "JWT_REFRESH_TOKEN_PRIVATE_KEY_NAME=jwt_refresh_token_private_key_stage" >> $GITHUB_ENV

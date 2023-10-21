@@ -63,6 +63,8 @@ services:
         target: habr_oauth2_client_id
       - source: habr_oauth2_client_secret
         target: habr_oauth2_client_secret
+      - source: habr_api_key
+        target: habr_api_key
     volumes:
       - ${USERS_MEDIA_DIR_PATH:-./users_data/media}:/media
     ports:
@@ -161,6 +163,9 @@ secrets:
   habr_oauth2_client_secret:
     external: true
     name: ${HABR_OAUTH2_CLIENT_SECRET_NAME:-habr_oauth2_client_secret}
+  habr_api_key:
+    external: true
+    name: ${HABR_API_KEY_NAME:-habr_api_ky}
   postgresql_password:
     external: true
     name: ${POSTGRESQL_PASSWORD_NAME:-postgresql_password}

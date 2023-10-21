@@ -75,24 +75,6 @@ class UsersDatabaseService(BaseDatabaseService):
 
         return user
 
-    async def get_or_create_user(
-            self,
-            session: AsyncSession,
-            email: str,
-            first_name: str | None = None,
-            last_name: str | None = None,
-    ) -> User:
-        user = await self.get_user(session=session, email=email)
-        if user is None:
-            user = await self.create_user(
-                session=session,
-                email=email,
-                first_name=first_name,
-                last_name=last_name,
-            )
-
-        return user
-
 
 def get_service(settings: UsersSettings) -> UsersDatabaseService:
     return UsersDatabaseService(dsn=str(settings.db_dsn))

@@ -1,6 +1,6 @@
 import fastapi
 
-from sapphire.common.api.dependencies.pagination import pagination
+from sapphire.common.api.dependencies.pagination import Pagination, pagination
 from sapphire.common.api.schemas.paginated import PaginatedResponse
 from sapphire.storage.api.schemas.skills import SkillResponse
 from sapphire.storage.database.service import StorageDatabaseService
@@ -9,8 +9,8 @@ from sapphire.storage.database.service import StorageDatabaseService
 async def get_skills(
     request: fastapi.Request,
     response: fastapi.Response,
-    pagination: dict = fastapi.Depends(pagination),
-    ) -> PaginatedResponse:
+    pagination: Pagination = fastapi.Depends(pagination),
+) -> PaginatedResponse:
 
     database_service: StorageDatabaseService = request.app.service.database
     page = pagination.page
