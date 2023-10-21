@@ -1,4 +1,3 @@
-import httpx
 import pytest
 
 from .settings import AutotestsSettings

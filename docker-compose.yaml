@@ -246,7 +246,7 @@ secrets:
     name: ${HABR_OAUTH2_CLIENT_SECRET_NAME:-habr_oauth2_client_secret}
   habr_api_key:
     external: true
-    name: ${HABR_API_KEY_NAME:-habr_api_ky}
+    name: ${HABR_API_KEY_NAME:-habr_api_key}
   postgresql_password:
     external: true
     name: ${POSTGRESQL_PASSWORD_NAME:-postgresql_password}

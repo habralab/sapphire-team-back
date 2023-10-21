@@ -1,5 +1,8 @@
+import pytest
+
 from .client import StorageRestClient
 
 
-def test_health(storage_rest_client: StorageRestClient):
-    storage_rest_client.get_health()
+@pytest.mark.asyncio
+async def test_health(storage_rest_client: StorageRestClient):
+    await storage_rest_client.get_health()

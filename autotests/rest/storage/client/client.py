@@ -4,9 +4,9 @@ from .models import HealthResponse
 
 
 class StorageRestClient(BaseRestClient):
-    def get_health(self) -> HealthResponse:
+    async def get_health(self) -> HealthResponse:
         path = "/api/v1beta/rest/health"
 
-        response = self.get(path=path)
+        response = await self.get(url=path)
 
         return HealthResponse.model_validate(response.json())

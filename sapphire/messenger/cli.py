@@ -4,8 +4,8 @@ import typer
 from loguru import logger
 
 from sapphire.common.jwt.methods import get_jwt_methods
+
 from . import api, database
-from .service import MessengerService
 from .settings import get_settings
 
 

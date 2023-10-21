@@ -4,7 +4,7 @@ import httpx
 from facet import ServiceMixin
 
 
-class HTTPClient(httpx.AsyncClient, ServiceMixin):
+class BaseRestClient(httpx.AsyncClient, ServiceMixin):
     def __init__(
             self,
             base_url: str = "",
