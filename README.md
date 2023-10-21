@@ -98,6 +98,7 @@ Create secrets
 ```shell
 echo "any_client_id" | docker secret create habr_oauth2_client_id -
 echo "any_client_secret" | docker secret create habr_oauth2_client_secret -
+echo "any_api_key" | docker secret create habr_api_key -
 echo "any_password" | docker secret create postgresql_password -
 echo "any_access_private_key" | docker secret create jwt_access_token_private_key -
 echo "any_access_public_key" | docker secret create jwt_access_token_public_key -

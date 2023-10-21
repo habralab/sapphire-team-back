@@ -1,4 +1,4 @@
-import aiohttp
+import httpx
 import pydantic
 
 from sapphire.users.settings import UsersSettings
@@ -22,8 +22,8 @@ class OAuth2HabrBackend(OAuth2BaseBackend):
 
     async def get_user_info(self, token: str) -> HabrUser:
         headers = {"Authorization": f"Token {token}"}
-        async with aiohttp.request(method="GET", url=self.me_url, headers=headers) as response:
-            data = await response.json()
+        response = await self.get(url=self.me_url, headers=headers)
+        data = response.json()
 
         return HabrUser(
             id=int(data["id"]),
