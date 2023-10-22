@@ -67,35 +67,35 @@ jobs:
           postgres:16.0-bookworm
       - name: Migrate Storage
         run: >
-          docker run --rm -e DB_DSN=${STORAGE_DB_DSN}
+          docker run --rm -e DB_DSN=$(echo ${STORAGE_DB_DSN} | tr "%" "%%")
           --link sapphire-database-for-migrations-production:database
           sapphire:${{ github.ref_name }}
           storage database migrations migrate
       - name: Migrate Users
         run: >
-          docker run --rm -e DB_DSN=${USERS_DB_DSN}
+          docker run --rm -e DB_DSN=$(echo ${USERS_DB_DSN} | tr "%" "%%")
           --link sapphire-database-for-migrations-production:database
           sapphire:${{ github.ref_name }}
           users database migrations migrate
       - name: Migrate Projects
         run: >
-          docker run --rm -e DB_DSN=${PROJECTS_DB_DSN}
+          docker run --rm -e DB_DSN=$(echo ${PROJECTS_DB_DSN} | tr "%" "%%")
           --link sapphire-database-for-migrations-production:database
           sapphire:${{ github.ref_name }}
           projects database migrations migrate
       - name: Migrate Notifications
         run: >
-          docker run --rm -e DB_DSN=${NOTIFICATIONS_DB_DSN}
+          docker run --rm -e DB_DSN=$(echo ${NOTIFICATIONS_DB_DSN} | tr "%" "%%")
           --link sapphire-database-for-migrations-production:database
           sapphire:${{ github.ref_name }}
           notifications database migrations migrate
       - name: Migrate Messenger
         run: >  
-          docker run --rm -e DB_DSN=${MESSENGER_DB_DSN}
+          docker run --rm -e DB_DSN=$(echo ${MESSENGER_DB_DSN} | tr "%" "%%")
           --link sapphire-database-for-migrations-production:database
           sapphire:${{ github.ref_name }}
           messenger database migrations migrate
       - name: Stop Postgres for migrations
-        run: docker rm database --force
+        run: docker rm sapphire-database-for-migrations-production --force
       - name: Deploy
         run: docker stack deploy -c docker-compose.yaml sapphire-production
