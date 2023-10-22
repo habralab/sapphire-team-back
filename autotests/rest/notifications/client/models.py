@@ -4,5 +4,5 @@ from pydantic import BaseModel, constr
 
 
 class HealthResponse(BaseModel):
-    name: Literal["Projects"]
+    name: Literal["Notifications"]
     version: constr(pattern=r"^\d+\.\d+\.\d+$")
