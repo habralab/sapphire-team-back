@@ -118,7 +118,7 @@ async def delete_user_avatar(
     return UserFullResponse.from_db_model(user=user)
 
 
-async def skills_installation(  # rename
+async def update_user_skills(
         request: fastapi.Request,
         data: set[uuid.UUID] = fastapi.Body(embed=False),
         request_user_id: uuid.UUID = fastapi.Depends(auth_user_id),
@@ -130,10 +130,9 @@ async def skills_installation(  # rename
         )
     database_service: UsersDatabaseService = request.app.service.database
     async with database_service.transaction() as session:
-        skill = await database_service.update_user_skills(
+        skills = await database_service.update_user_skills(
             session=session,
             user=user,
             new_userskills_ids=data
         )
-    return skill
-
+    return skills
