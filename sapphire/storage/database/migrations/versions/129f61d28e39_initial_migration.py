@@ -35,7 +35,7 @@ def upgrade() -> None:
         sa.Column("id", sa.Uuid(), nullable=False),
         sa.Column("name", sa.String(), nullable=True),
         sa.Column("is_other", sa.Boolean(), nullable=False),
-        sa.Column("group_id", sa.String(), nullable=True),
+        sa.Column("group_id", sa.Uuid(), nullable=True),
         sa.Column("created_at", sa.DateTime(), nullable=False),
         sa.ForeignKeyConstraint(["group_id"], ["specialization_groups.id"]),
         sa.PrimaryKeyConstraint("id"),
