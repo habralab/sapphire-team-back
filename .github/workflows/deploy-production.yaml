@@ -57,10 +57,10 @@ jobs:
           echo "MESSENGER_ALLOWED_ORIGINS=${MESSENGER_ALLOWED_ORIGINS_PRODUCTION}" >> $GITHUB_ENV
       - name: Migrate
         run: |
-          docker run --rm sapphire:${{ github.ref_name }} storage database migrate
-          docker run --rm sapphire:${{ github.ref_name }} users database migrate
-          docker run --rm sapphire:${{ github.ref_name }} projects database migrate
-          docker run --rm sapphire:${{ github.ref_name }} notifications database migrate
-          docker run --rm sapphire:${{ github.ref_name }} messenger database migrate
+          docker run --rm sapphire:${{ github.ref_name }} storage database migrations migrate
+          docker run --rm sapphire:${{ github.ref_name }} users database migrations migrate
+          docker run --rm sapphire:${{ github.ref_name }} projects database migrations migrate
+          docker run --rm sapphire:${{ github.ref_name }} notifications database migrations migrate
+          docker run --rm sapphire:${{ github.ref_name }} messenger database migrations migrate
       - name: Deploy
         run: docker stack deploy -c docker-compose.yaml sapphire-production
