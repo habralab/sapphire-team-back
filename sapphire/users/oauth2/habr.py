@@ -24,13 +24,14 @@ class OAuth2HabrBackend(OAuth2BaseBackend):
         headers = {"Authorization": f"Token {token}"}
         response = await self.get(url=self.me_url, headers=headers)
         data = response.json()
+        user_data = data["user"]
 
         return HabrUser(
-            id=int(data["id"]),
-            login=data["login"],
-            email=data["email"],
-            is_active=(data["is_active"] == "1"),
-            is_email_confirmed=(data["is_email_confirmed"] == "1"),
+            id=int(user_data["id"]),
+            login=user_data["login"],
+            email=user_data["email"],
+            is_active=(user_data["is_active"] == "1"),
+            is_email_confirmed=(user_data["is_email_confirmed"] == "1"),
         )
 
 
