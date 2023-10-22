@@ -37,6 +37,7 @@ jobs:
           echo "USERS_ALLOWED_ORIGINS=${USERS_ALLOWED_ORIGINS_PRODUCTION}" >> $GITHUB_ENV
           echo "USERS_MEDIA_DIR_PATH=${USERS_MEDIA_DIR_PATH_PRODUCTION}" >> $GITHUB_ENV
           echo "STORAGE_PORT=2010" >> $GITHUB_ENV
+          echo "STORAGE_DB_DSN=${STORAGE_DB_DSN_PRODUCTION}" >> $GITHUB_ENV
           echo "STORAGE_ROOT_URL=${STORAGE_ROOT_URL_PRODUCTION}" >> $GITHUB_ENV
           echo "STORAGE_ROOT_PATH=${STORAGE_ROOT_PATH_PRODUCTION}" >> $GITHUB_ENV
           echo "STORAGE_ALLOWED_ORIGINS=${STORAGE_ALLOWED_ORIGINS_PRODUCTION}" >> $GITHUB_ENV
@@ -55,12 +56,36 @@ jobs:
           echo "MESSENGER_ROOT_URL=${MESSENGER_ROOT_URL_PRODUCTION}" >> $GITHUB_ENV
           echo "MESSENGER_ROOT_PATH=${MESSENGER_ROOT_PATH_PRODUCTION}" >> $GITHUB_ENV
           echo "MESSENGER_ALLOWED_ORIGINS=${MESSENGER_ALLOWED_ORIGINS_PRODUCTION}" >> $GITHUB_ENV
-      - name: Migrate
-        run: |
-          docker run --rm sapphire:${{ github.ref_name }} storage database migrations migrate
-          docker run --rm sapphire:${{ github.ref_name }} users database migrations migrate
-          docker run --rm sapphire:${{ github.ref_name }} projects database migrations migrate
-          docker run --rm sapphire:${{ github.ref_name }} notifications database migrations migrate
-          docker run --rm sapphire:${{ github.ref_name }} messenger database migrations migrate
+      - name: Remove old Postgres for migrations
+        run: docker rm sapphire-database-production-for-migrations --force || true
+      - name: Run Postgres for migrations
+        run: >
+          docker run --rm
+          -v ${DATABASE_DIR}:/var/lib/postgresql/data
+          --name sapphire-database-production-for-migrations
+          --detach
+          postgres:16.0-bookworm
+      - name: Migrate Storage
+        run: >
+          docker run --rm -e DB_DSN=${STORAGE_DB_DSN} sapphire:${{ github.ref_name }}
+          storage database migrations migrate
+      - name: Migrate Users
+        run: >
+          docker run --rm -e DB_DSN=${USERS_DB_DSN} sapphire:${{ github.ref_name }}
+          users database migrations migrate
+      - name: Migrate Projects
+        run: >
+          docker run --rm -e DB_DSN=${PROJECTS_DB_DSN} sapphire:${{ github.ref_name }}
+          projects database migrations migrate
+      - name: Migrate Notifications
+        run: >
+          docker run --rm -e DB_DSN=${NOTIFICATIONS_DB_DSN} sapphire:${{ github.ref_name }}
+          notifications database migrations migrate
+      - name: Migrate Messenger
+        run: >  
+          docker run --rm -e DB_DSN=${MESSENGER_DB_DSN} sapphire:${{ github.ref_name }}
+          messenger database migrations migrate
+      - name: Stop Postgres for migrations
+        run: docker rm sapphire-database-production-for-migrations --force
       - name: Deploy
         run: docker stack deploy -c docker-compose.yaml sapphire-production

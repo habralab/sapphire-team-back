@@ -37,6 +37,7 @@ jobs:
           echo "USERS_ALLOWED_ORIGINS=${USERS_ALLOWED_ORIGINS_STAGE}" >> $GITHUB_ENV
           echo "USERS_MEDIA_DIR_PATH=${USERS_MEDIA_DIR_PATH_STAGE}" >> $GITHUB_ENV
           echo "STORAGE_PORT=3010" >> $GITHUB_ENV
+          echo "STORAGE_DB_DSN=${STORAGE_DB_DSN_STAGE}" >> $GITHUB_ENV
           echo "STORAGE_ROOT_URL=${STORAGE_ROOT_URL_STAGE}" >> $GITHUB_ENV
           echo "STORAGE_ROOT_PATH=${STORAGE_ROOT_PATH_STAGE}" >> $GITHUB_ENV
           echo "STORAGE_ALLOWED_ORIGINS=${STORAGE_ALLOWED_ORIGINS_STAGE}" >> $GITHUB_ENV
@@ -55,12 +56,13 @@ jobs:
           echo "MESSENGER_ROOT_URL=${MESSENGER_ROOT_URL_STAGE}" >> $GITHUB_ENV
           echo "MESSENGER_ROOT_PATH=${MESSENGER_ROOT_PATH_STAGE}" >> $GITHUB_ENV
           echo "MESSENGER_ALLOWED_ORIGINS=${MESSENGER_ALLOWED_ORIGINS_STAGE}" >> $GITHUB_ENV
+      - name: Remove old Postgres for migrations
+        run: docker rm sapphire-database-stage-for-migrations --force || true
       - name: Run Postgres for migrations
         run: >
           docker run --rm
           -v ${DATABASE_DIR}:/var/lib/postgresql/data
-          --name database
-          -p 127.0.0.1:5432:5432
+          --name sapphire-database-stage-for-migrations
           --detach
           postgres:16.0-bookworm
       - name: Migrate Storage
@@ -84,6 +86,6 @@ jobs:
           docker run --rm -e DB_DSN=${MESSENGER_DB_DSN} sapphire:${{ github.sha }}
           messenger database migrations migrate
       - name: Stop Postgres for migrations
-        run: docker rm database --force
+        run: docker rm sapphire-database-stage-for-migrations --force
       - name: Deploy
         run: docker stack deploy -c docker-compose.yaml sapphire-stage
