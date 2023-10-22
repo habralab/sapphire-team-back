@@ -5,8 +5,13 @@ from facet import ServiceMixin
 
 
 class HTTPClient(httpx.AsyncClient, ServiceMixin):
-    def __init__(self, base_url: str = "", headers: dict[str, Any] | None = None):
-        super().__init__(base_url=base_url, headers=headers)
+    def __init__(
+            self,
+            base_url: str = "",
+            headers: dict[str, Any] | None = None,
+            verify: bool = True,
+    ):
+        super().__init__(base_url=base_url, headers=headers, verify=verify)
 
     async def start(self):
         await self.__aenter__()  # pylint: disable=unnecessary-dunder-call
