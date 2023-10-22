@@ -61,6 +61,7 @@ jobs:
           -v ${DATABASE_DIR}:/var/lib/postgresql/data
           --name database
           -p 127.0.0.1:5432:5432
+          --detach
           postgres:16.0-bookworm
       - name: Migrate Storage
         run: >
