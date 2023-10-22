@@ -67,23 +67,23 @@ jobs:
           postgres:16.0-bookworm
       - name: Migrate Storage
         run: >
-          docker run --rm -e DB_DSN=${STORAGE_DB_DSN} sapphire:${{ github.sha }}
+          docker run --rm -e DB_DSN=${STORAGE_DB_DSN_STAGE} sapphire:${{ github.sha }}
           storage database migrations migrate
       - name: Migrate Users
         run: >
-          docker run --rm -e DB_DSN=${USERS_DB_DSN} sapphire:${{ github.sha }}
+          docker run --rm -e DB_DSN=${USERS_DB_DSN_STAGE} sapphire:${{ github.sha }}
           users database migrations migrate
       - name: Migrate Projects
         run: >
-          docker run --rm -e DB_DSN=${PROJECTS_DB_DSN} sapphire:${{ github.sha }}
+          docker run --rm -e DB_DSN=${PROJECTS_DB_DSN_STAGE} sapphire:${{ github.sha }}
           projects database migrations migrate
       - name: Migrate Notifications
         run: >
-          docker run --rm -e DB_DSN=${NOTIFICATIONS_DB_DSN} sapphire:${{ github.sha }}
+          docker run --rm -e DB_DSN=${NOTIFICATIONS_DB_DSN_STAGE} sapphire:${{ github.sha }}
           notifications database migrations migrate
       - name: Migrate Messenger
         run: >  
-          docker run --rm -e DB_DSN=${MESSENGER_DB_DSN} sapphire:${{ github.sha }}
+          docker run --rm -e DB_DSN=${MESSENGER_DB_DSN_STAGE} sapphire:${{ github.sha }}
           messenger database migrations migrate
       - name: Stop Postgres for migrations
         run: docker rm database --force
