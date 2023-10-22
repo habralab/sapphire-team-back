@@ -57,33 +57,43 @@ jobs:
           echo "MESSENGER_ROOT_PATH=${MESSENGER_ROOT_PATH_STAGE}" >> $GITHUB_ENV
           echo "MESSENGER_ALLOWED_ORIGINS=${MESSENGER_ALLOWED_ORIGINS_STAGE}" >> $GITHUB_ENV
       - name: Remove old Postgres for migrations
-        run: docker rm database --force || true
+        run: docker rm sapphire-database-for-migrations-stage --force || true
       - name: Run Postgres for migrations
         run: >
           docker run --rm
           -v ${DATABASE_DIR}:/var/lib/postgresql/data
-          --name database
+          --name sapphire-database-for-migrations-stage
           --detach
           postgres:16.0-bookworm
       - name: Migrate Storage
         run: >
-          docker run --rm -e DB_DSN=${STORAGE_DB_DSN_STAGE} sapphire:${{ github.sha }}
+          docker run --rm -e DB_DSN=${STORAGE_DB_DSN_STAGE}
+          --link sapphire-database-for-migrations-stage:database
+          sapphire:${{ github.sha }}
           storage database migrations migrate
       - name: Migrate Users
         run: >
-          docker run --rm -e DB_DSN=${USERS_DB_DSN_STAGE} sapphire:${{ github.sha }}
+          docker run --rm -e DB_DSN=${USERS_DB_DSN_STAGE}
+          --link sapphire-database-for-migrations-stage:database
+          sapphire:${{ github.sha }}
           users database migrations migrate
       - name: Migrate Projects
         run: >
-          docker run --rm -e DB_DSN=${PROJECTS_DB_DSN_STAGE} sapphire:${{ github.sha }}
+          docker run --rm -e DB_DSN=${PROJECTS_DB_DSN_STAGE}
+          --link sapphire-database-for-migrations-stage:database
+          sapphire:${{ github.sha }}
           projects database migrations migrate
       - name: Migrate Notifications
         run: >
-          docker run --rm -e DB_DSN=${NOTIFICATIONS_DB_DSN_STAGE} sapphire:${{ github.sha }}
+          docker run --rm -e DB_DSN=${NOTIFICATIONS_DB_DSN_STAGE}
+          --link sapphire-database-for-migrations-stage:database
+          sapphire:${{ github.sha }}
           notifications database migrations migrate
       - name: Migrate Messenger
         run: >  
-          docker run --rm -e DB_DSN=${MESSENGER_DB_DSN_STAGE} sapphire:${{ github.sha }}
+          docker run --rm -e DB_DSN=${MESSENGER_DB_DSN_STAGE}
+          --link sapphire-database-for-migrations-stage:database
+          sapphire:${{ github.sha }}
           messenger database migrations migrate
       - name: Stop Postgres for migrations
         run: docker rm database --force
