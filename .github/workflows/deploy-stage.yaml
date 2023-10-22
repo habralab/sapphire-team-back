@@ -55,12 +55,34 @@ jobs:
           echo "MESSENGER_ROOT_URL=${MESSENGER_ROOT_URL_STAGE}" >> $GITHUB_ENV
           echo "MESSENGER_ROOT_PATH=${MESSENGER_ROOT_PATH_STAGE}" >> $GITHUB_ENV
           echo "MESSENGER_ALLOWED_ORIGINS=${MESSENGER_ALLOWED_ORIGINS_STAGE}" >> $GITHUB_ENV
-      - name: Migrate
-        run: |
-          docker run --rm sapphire:${{ github.sha }} storage database migrations migrate
-          docker run --rm sapphire:${{ github.sha }} users database migrations migrate
-          docker run --rm sapphire:${{ github.sha }} projects database migrations migrate
-          docker run --rm sapphire:${{ github.sha }} notifications database migrations migrate
-          docker run --rm sapphire:${{ github.sha }} messenger database migrations migrate
+      - name: Run Postgres for migrations
+        run: >
+          docker run --rm
+          -v ${DATABASE_DIR}:/var/lib/postgresql/data
+          -n database
+          -p 127.0.0.1:5432:5432
+          postgres:16.0-bookworm
+      - name: Migrate Storage
+        run: >
+          docker run --rm -e DB_DSN=${STORAGE_DB_DSN} sapphire:${{ github.sha }}
+          storage database migrations migrate
+      - name: Migrate Users
+        run: >
+          docker run --rm -e DB_DSN=${USERS_DB_DSN} sapphire:${{ github.sha }}
+          users database migrations migrate
+      - name: Migrate Projects
+        run: >
+          docker run --rm -e DB_DSN=${PROJECTS_DB_DSN} sapphire:${{ github.sha }}
+          projects database migrations migrate
+      - name: Migrate Notifications
+        run: >
+          docker run --rm -e DB_DSN=${NOTIFICATIONS_DB_DSN} sapphire:${{ github.sha }}
+          notifications database migrations migrate
+      - name: Migrate Messenger
+        run: >  
+          docker run --rm -e DB_DSN=${MESSENGER_DB_DSN} sapphire:${{ github.sha }}
+          messenger database migrations migrate
+      - name: Stop Postgres for migrations
+        run: docker rm database --force
       - name: Deploy
         run: docker stack deploy -c docker-compose.yaml sapphire-stage
