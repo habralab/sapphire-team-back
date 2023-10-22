@@ -2,12 +2,12 @@ import pathlib
 import uuid
 from typing import Type
 
-from sqlalchemy import delete, select
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from sapphire.common.database.service import BaseDatabaseService
 from sapphire.common.database.utils import Empty
-from sapphire.users.database.models import Profile, User, UserSkill
+from sapphire.users.database.models import Profile, User
 from sapphire.users.settings import UsersSettings
 
 

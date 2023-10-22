@@ -1,5 +1,8 @@
+import pytest
+
 from .client import UsersRestClient
 
 
-def test_health(users_rest_client: UsersRestClient):
-    users_rest_client.get_health()
+@pytest.mark.asyncio
+async def test_health(users_rest_client: UsersRestClient):
+    await users_rest_client.get_health()

@@ -1,6 +1,6 @@
 import fastapi
 
-from sapphire.common.api.dependancies.pagination import pagination
+from sapphire.common.api.dependencies.pagination import pagination
 from sapphire.common.api.schemas.paginated import PaginatedResponse
 from sapphire.storage.api.schemas.specializations import (
     SpecializationGroupResponse,
@@ -11,9 +11,8 @@ from sapphire.storage.database.service import StorageDatabaseService
 
 async def get_specializations(
     request: fastapi.Request,
-    response: fastapi.Response,
     pagination: dict = fastapi.Depends(pagination),
-    ) -> PaginatedResponse:
+) -> PaginatedResponse:
 
     database_service: StorageDatabaseService = request.app.service.database
     page = pagination.page
@@ -37,9 +36,8 @@ async def get_specializations(
 
 async def get_specialization_groups(
     request: fastapi.Request,
-    response: fastapi.Response,
     pagination: dict = fastapi.Depends(pagination),
-    ) -> PaginatedResponse:
+) -> PaginatedResponse:
 
     database_service: StorageDatabaseService = request.app.service.database
     page = pagination.page

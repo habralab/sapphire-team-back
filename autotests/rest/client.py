@@ -1,16 +1,20 @@
-import requests
-import yarl
+from typing import Any
+
+import httpx
+from facet import ServiceMixin
 
 
-class BaseRestClient:
-    def __init__(self, session: requests.Session, base_url: yarl.URL | str):
-        self._session = session
-        self._base_url = yarl.URL(base_url)
+class BaseRestClient(httpx.AsyncClient, ServiceMixin):
+    def __init__(
+            self,
+            base_url: str = "",
+            headers: dict[str, Any] | None = None,
+            verify: bool = True,
+    ):
+        super().__init__(base_url=base_url, headers=headers, verify=verify)
 
-    def request(self, path: str, **kwargs) -> requests.Response:
-        url = self._base_url / path.lstrip("/")
+    async def start(self):
+        await self.__aenter__()  # pylint: disable=unnecessary-dunder-call
 
-        return self._session.request(url=str(url), verify=False, **kwargs)
-
-    def get(self, path: str, **kwargs) -> requests.Response:
-        return self.request(path=path, method="GET", **kwargs)
+    async def stop(self):
+        await self.__aexit__()  # pylint: disable=unnecessary-dunder-call

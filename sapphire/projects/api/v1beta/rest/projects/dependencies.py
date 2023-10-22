@@ -24,7 +24,7 @@ async def get_path_project(
     return db_project
 
 
-async def auth_path_project(
+async def path_project_is_owner(
         request_user_id: uuid.UUID = fastapi.Depends(auth_user_id),
         project: Project = fastapi.Depends(get_path_project),
 ) -> Project:

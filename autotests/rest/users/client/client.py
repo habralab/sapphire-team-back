@@ -3,10 +3,10 @@ from autotests.rest.client import BaseRestClient
 from .models import HealthResponse
 
 
-class UsersRestClient(BaseRestClient):
-    def get_health(self) -> HealthResponse:
+class UsersRestClient(BaseRestClient):    
+    async def get_health(self) -> HealthResponse:
         path = "/api/v1beta/rest/health"
 
-        response = self.get(path=path)
+        response = await self.get(url=path)
 
         return HealthResponse.model_validate(response.json())

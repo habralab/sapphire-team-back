@@ -20,6 +20,7 @@ jobs:
         run: |
           echo "HABR_OAUTH2_CLIENT_ID_NAME=habr_oauth2_client_id_stage" >> $GITHUB_ENV
           echo "HABR_OAUTH2_CLIENT_SECRET_NAME=habr_oauth2_client_secret_stage" >> $GITHUB_ENV
+          echo "HABR_API_KEY_NAME=habr_api_key_stage" >> $GITHUB_ENV
           echo "JWT_ACCESS_TOKEN_PRIVATE_KEY_NAME=jwt_access_token_private_key_stage" >> $GITHUB_ENV
           echo "JWT_ACCESS_TOKEN_PUBLIC_KEY_NAME=jwt_access_token_public_key_stage" >> $GITHUB_ENV
           echo "JWT_REFRESH_TOKEN_PRIVATE_KEY_NAME=jwt_refresh_token_private_key_stage" >> $GITHUB_ENV
@@ -35,6 +36,10 @@ jobs:
           echo "USERS_ROOT_PATH=${USERS_ROOT_PATH_STAGE}" >> $GITHUB_ENV
           echo "USERS_ALLOWED_ORIGINS=${USERS_ALLOWED_ORIGINS_STAGE}" >> $GITHUB_ENV
           echo "USERS_MEDIA_DIR_PATH=${USERS_MEDIA_DIR_PATH_STAGE}" >> $GITHUB_ENV
+          echo "STORAGE_PORT=3010" >> $GITHUB_ENV
+          echo "STORAGE_ROOT_URL=${STORAGE_ROOT_URL_STAGE}" >> $GITHUB_ENV
+          echo "STORAGE_ROOT_PATH=${STORAGE_ROOT_PATH_STAGE}" >> $GITHUB_ENV
+          echo "STORAGE_ALLOWED_ORIGINS=${STORAGE_ALLOWED_ORIGINS_STAGE}" >> $GITHUB_ENV
           echo "PROJECTS_PORT=3020" >> $GITHUB_ENV
           echo "PROJECTS_DB_DSN=${PROJECTS_DB_DSN_STAGE}" >> $GITHUB_ENV
           echo "PROJECTS_ROOT_URL=${PROJECTS_ROOT_URL_STAGE}" >> $GITHUB_ENV
@@ -45,5 +50,40 @@ jobs:
           echo "NOTIFICATIONS_ROOT_URL=${NOTIFICATIONS_ROOT_URL_STAGE}" >> $GITHUB_ENV
           echo "NOTIFICATIONS_ROOT_PATH=${NOTIFICATIONS_ROOT_PATH_STAGE}" >> $GITHUB_ENV
           echo "NOTIFICATIONS_ALLOWED_ORIGINS=${NOTIFICATIONS_ALLOWED_ORIGINS_STAGE}" >> $GITHUB_ENV
+          echo "MESSENGER_PORT=3040" >> $GITHUB_ENV
+          echo "MESSENGER_DB_DSN=${MESSENGER_DB_DSN_STAGE}" >> $GITHUB_ENV
+          echo "MESSENGER_ROOT_URL=${MESSENGER_ROOT_URL_STAGE}" >> $GITHUB_ENV
+          echo "MESSENGER_ROOT_PATH=${MESSENGER_ROOT_PATH_STAGE}" >> $GITHUB_ENV
+          echo "MESSENGER_ALLOWED_ORIGINS=${MESSENGER_ALLOWED_ORIGINS_STAGE}" >> $GITHUB_ENV
+      - name: Run Postgres for migrations
+        run: >
+          docker run --rm
+          -v ${DATABASE_DIR}:/var/lib/postgresql/data
+          --name database
+          -p 127.0.0.1:5432:5432
+          --detach
+          postgres:16.0-bookworm
+      - name: Migrate Storage
+        run: >
+          docker run --rm -e DB_DSN=${STORAGE_DB_DSN} sapphire:${{ github.sha }}
+          storage database migrations migrate
+      - name: Migrate Users
+        run: >
+          docker run --rm -e DB_DSN=${USERS_DB_DSN} sapphire:${{ github.sha }}
+          users database migrations migrate
+      - name: Migrate Projects
+        run: >
+          docker run --rm -e DB_DSN=${PROJECTS_DB_DSN} sapphire:${{ github.sha }}
+          projects database migrations migrate
+      - name: Migrate Notifications
+        run: >
+          docker run --rm -e DB_DSN=${NOTIFICATIONS_DB_DSN} sapphire:${{ github.sha }}
+          notifications database migrations migrate
+      - name: Migrate Messenger
+        run: >  
+          docker run --rm -e DB_DSN=${MESSENGER_DB_DSN} sapphire:${{ github.sha }}
+          messenger database migrations migrate
+      - name: Stop Postgres for migrations
+        run: docker rm database --force
       - name: Deploy
         run: docker stack deploy -c docker-compose.yaml sapphire-stage
