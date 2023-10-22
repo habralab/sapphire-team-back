@@ -57,12 +57,12 @@ jobs:
           echo "MESSENGER_ROOT_PATH=${MESSENGER_ROOT_PATH_PRODUCTION}" >> $GITHUB_ENV
           echo "MESSENGER_ALLOWED_ORIGINS=${MESSENGER_ALLOWED_ORIGINS_PRODUCTION}" >> $GITHUB_ENV
       - name: Remove old Postgres for migrations
-        run: docker rm sapphire-database-production-for-migrations --force || true
+        run: docker rm database --force || true
       - name: Run Postgres for migrations
         run: >
           docker run --rm
           -v ${DATABASE_DIR}:/var/lib/postgresql/data
-          --name sapphire-database-production-for-migrations
+          --name database
           --detach
           postgres:16.0-bookworm
       - name: Migrate Storage
@@ -86,6 +86,6 @@ jobs:
           docker run --rm -e DB_DSN=${MESSENGER_DB_DSN} sapphire:${{ github.ref_name }}
           messenger database migrations migrate
       - name: Stop Postgres for migrations
-        run: docker rm sapphire-database-production-for-migrations --force
+        run: docker rm database --force
       - name: Deploy
         run: docker stack deploy -c docker-compose.yaml sapphire-production

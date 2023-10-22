@@ -77,7 +77,7 @@ services:
       - ${USERS_MEDIA_DIR_PATH:-./users_data/media}:/media
     ports:
       - target: 8000
-        published: 127.0.0.1:${USERS_PORT:-3000}
+        published: ${USERS_PORT:-3000}
         mode: host
     command: ["users", "run"]
     deploy:
@@ -105,7 +105,7 @@ services:
         target: jwt_refresh_token_private_key
     ports:
       - target: 8000
-        published: 127.0.0.1:${STORAGE_PORT:-3010}
+        published: ${STORAGE_PORT:-3010}
         mode: host
     command: ["storage", "run"]
     deploy:
@@ -134,7 +134,7 @@ services:
         target: jwt_refresh_token_private_key
     ports:
       - target: 8000
-        published: 127.0.0.1:${PROJECTS_PORT:-3020}
+        published: ${PROJECTS_PORT:-3020}
         mode: host
     command: ["projects", "run"]
     deploy:
@@ -164,7 +164,7 @@ services:
         target: jwt_refresh_token_private_key
     ports:
       - target: 8000
-        published: 127.0.0.1:${NOTIFICATIONS_PORT:-3030}
+        published: ${NOTIFICATIONS_PORT:-3030}
         mode: host
     command: ["notifications", "run"]
     deploy:
@@ -192,7 +192,7 @@ services:
         target: jwt_refresh_token_private_key
     ports:
       - target: 8000
-        published: 127.0.0.1:${MESSENGER_PORT:-3040}
+        published: ${MESSENGER_PORT:-3040}
         mode: host
     command: ["messenger", "run"]
     deploy:
@@ -232,7 +232,7 @@ services:
         ]
     ports:
       - target: 8080
-        published: 127.0.0.1:${SWAGGER_PORT:-3050}
+        published: ${SWAGGER_PORT:-3050}
         mode: host
     deploy:
       replicas: 1
