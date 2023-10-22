@@ -10,7 +10,7 @@ from sapphire.common.jwt.dependencies.rest import auth_user_id, get_request_user
 from sapphire.users.database.models import User
 from sapphire.users.database.service import UsersDatabaseService
 
-from .dependencies import get_path_user
+from .dependencies import get_path_user, get_request_user
 from .schemas import UserFullResponse, UserResponse, UserUpdateRequest
 
 
@@ -18,7 +18,7 @@ async def get_user(
         request_user_id: uuid.UUID | None = fastapi.Depends(get_request_user_id),
         path_user: User = fastapi.Depends(get_path_user),
 ) -> UserResponse | UserFullResponse:
-    model_cls = UserResponse if request_user_id != path_user.id else UserFullResponse
+    model_cls = UserFullResponse if request_user_id != path_user.id else UserResponse
 
     return model_cls.from_db_model(path_user)
 
@@ -26,7 +26,7 @@ async def get_user(
 async def update_user(
         request: fastapi.Request,
         request_user_id: uuid.UUID = fastapi.Depends(auth_user_id),
-        user: User = fastapi.Depends(get_user),
+        user: User = fastapi.Depends(get_request_user),  #???
         data: UserUpdateRequest = fastapi.Body(embed=False),
 ) -> UserFullResponse:
     if user.id != request_user_id:
@@ -118,13 +118,12 @@ async def delete_user_avatar(
     return UserFullResponse.from_db_model(user=user)
 
 
-async def slills_installation(
+async def skills_installation(  # rename
         request: fastapi.Request,
-        new_userskills_ids: list[uuid.UUID] = fastapi.Body(embed=False),  ##??????
-        path_user_id: uuid.UUID | None = fastapi.Depends(get_path_user),
-        request_user_id: uuid.UUID | None = fastapi.Depends(auth_user_id),
-        user: User = fastapi.Depends(get_user), ):
-    if path_user_id != request_user_id:
+        data: set[uuid.UUID] = fastapi.Body(embed=False),
+        request_user_id: uuid.UUID = fastapi.Depends(auth_user_id),
+        user: User = fastapi.Depends(get_path_user), ):
+    if user.id != request_user_id:
         raise fastapi.HTTPException(
             status_code=fastapi.status.HTTP_403_FORBIDDEN,
             detail="Forbidden.",
@@ -134,7 +133,7 @@ async def slills_installation(
         skill = await database_service.update_user_skills(
             session=session,
             user=user,
-            new_userskills_ids=new_userskills_ids
+            new_userskills_ids=data
         )
     return skill
 

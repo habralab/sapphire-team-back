@@ -2,13 +2,14 @@ import pathlib
 import uuid
 from typing import Type
 
-from sqlalchemy import select
+from sqlalchemy import select, delete
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from sapphire.common.database.service import BaseDatabaseService
 from sapphire.common.database.utils import Empty
 from sapphire.users.database.models import Profile, User
 from sapphire.users.settings import UsersSettings
+from sapphire.users.database.models import User, UserSkill
 
 
 class UsersDatabaseService(BaseDatabaseService):
@@ -75,33 +76,14 @@ class UsersDatabaseService(BaseDatabaseService):
 
         return user
 
-    async def get_or_create_user(
-            self,
-            session: AsyncSession,
-            email: str,
-            first_name: str | None = None,
-            last_name: str | None = None,
-    ) -> User:
-        user = await self.get_user(session=session, email=email)
-        if user is None:
-            user = await self.create_user(
-                session=session,
-                email=email,
-                first_name=first_name,
-                last_name=last_name,
-            )
-
-        return user
-
     async def get_user_skills(self,
                               session: AsyncSession,
-                              skill_id: uuid.UUID | Type[Empty] = Empty,
                               user: User | Type[Empty] = Empty,
                               ):
         filters = []
-        if skill_id is not Empty:  # of if user is not Empty?
+        if user is not Empty:
             filters.append(UserSkill.user_id == user.id)
-        stmt = select(UserSkill.skill_id).where(*filters)
+        stmt = select(UserSkill.user_id).where(*filters)
         result = await session.execute(stmt)
         current_skills = result.scalars().all()
 
@@ -109,18 +91,19 @@ class UsersDatabaseService(BaseDatabaseService):
 
     async def update_user_skills(self,
                                  session: AsyncSession,
-                                 new_userskills_ids: list[uuid.UUID] | None | Type[Empty],
                                  user: User,
+                                 new_userskills_ids: set[uuid.UUID] = frozenset(),
                                  ):
 
         stmt = delete(UserSkill).where(UserSkill.user_id == user.id)
         await session.execute(stmt)
 
-        if new_userskills_ids is not Empty:
-            for new_skill_id in new_userskills_ids:
-                new_skill = UserSkill(user_id=user.id, skill_id=new_skill_id)
-                session.add(new_skill)
-        return new_userskills_ids
+        new_skills = []
+        for new_skill_id in new_userskills_ids:
+            new_skill = UserSkill(user_id=user.id, skill_id=new_skill_id)
+            new_skills.append(new_skill)
+        session.add_all(new_skills)
+        return new_skills
 
 
 def get_service(settings: UsersSettings) -> UsersDatabaseService:
