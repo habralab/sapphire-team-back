@@ -23,7 +23,7 @@ class Specialization(Base):
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True)
     name: Mapped[str | None]
     is_other: Mapped[bool] = mapped_column(default=False)
-    group_id: Mapped[str | None] = mapped_column(ForeignKey("specialization_groups.id"))
+    group_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("specialization_groups.id"))
     created_at: Mapped[datetime] = mapped_column(default=datetime.now)
 
 
