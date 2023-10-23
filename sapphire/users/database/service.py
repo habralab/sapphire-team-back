@@ -4,6 +4,7 @@ from typing import Type
 
 from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import joinedload
 
 from sapphire.common.database.service import BaseDatabaseService
 from sapphire.common.database.utils import Empty
@@ -27,7 +28,9 @@ class UsersDatabaseService(BaseDatabaseService):
         if email is not Empty:
             filters.append(User.email == email)
 
-        stmt = select(User).where(*filters)
+        stmt = select(User).options(
+            joinedload(User.profile), joinedload(User.skills),
+        ).where(*filters)
         result = await session.execute(stmt)
         user = result.unique().scalar_one_or_none()
 

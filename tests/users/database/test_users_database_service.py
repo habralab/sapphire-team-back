@@ -27,7 +27,7 @@ async def test_get_user(database_service: UsersDatabaseService):
     user_id = uuid.uuid4()
     email = "test@gmail.com"
 
-    result.scalar_one_or_none.return_value = User(id=user_id, email=email)
+    result.unique().scalar_one_or_none.return_value = User(id=user_id, email=email)
     session.execute = AsyncMock()
     session.execute.return_value = result
 
