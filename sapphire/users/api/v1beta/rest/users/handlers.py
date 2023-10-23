@@ -17,7 +17,7 @@ from .schemas import UserResponse, UserUpdateRequest
 async def get_user(
         request_user_id: uuid.UUID | None = fastapi.Depends(get_request_user_id),
         path_user: User = fastapi.Depends(get_path_user),
-) -> UserResponse | UserResponse:
+) -> UserResponse:
     model_cls = UserResponse if request_user_id != path_user.id else UserResponse
 
     return model_cls.from_db_model(path_user)
