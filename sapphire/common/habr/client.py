@@ -18,7 +18,7 @@ class HabrClient(HTTPClient):
         super().__init__(base_url=self.BASE_URL, headers=headers)
 
     async def get_user_card(self, username: str) -> UserCard:
-        response = await self.get(url=f"/{username}/card")
+        response = await self.get(url=f"/users/{username}/card")
 
         data = response.json()
         user_card = UserCard(
