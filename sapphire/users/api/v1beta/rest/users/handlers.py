@@ -42,6 +42,7 @@ async def update_user(
             session=session,
             first_name=data.first_name,
             last_name=data.last_name,
+            about=data.about,
             main_specialization_id=data.main_specialization_id,
             secondary_specialization_id=data.secondary_specialization_id
         )
@@ -63,7 +64,7 @@ async def upload_user_avatar(
         request: fastapi.Request,
         request_user_id: uuid.UUID = fastapi.Depends(auth_user_id),
         user: User = fastapi.Depends(get_path_user),
-        avatar: fastapi.UploadFile = fastapi.File(...),
+        avatar: fastapi.UploadFile = fastapi.UploadFile(...),
 ) -> UserResponse:
     if request_user_id != user.id:
         raise fastapi.HTTPException(

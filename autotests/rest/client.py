@@ -38,9 +38,16 @@ class BaseRestClient(httpx.AsyncClient, ServiceMixin):
             response_model: Type[ResponseModel],
             data: BaseModel | None = None,
             files: dict[str, io.BytesIO] | None = None,
+            headers: dict[str, Any] | None = None,
     ) -> ResponseModel:
-        request_data = None if data is None else data.model_dump()
-        response = await self.request(method=method, url=path, json=request_data, files=files)
+        headers = headers or {}
+        request_data = None
+        if isinstance(data, BaseModel):
+            request_data = data.model_dump_json()
+            headers["Content-Type"] = "application/json"
+
+        response = await self.request(method=method, url=path, content=request_data, files=files,
+                                      headers=headers)
 
         if response.status_code // 100 != 2:
             raise ResponseException(status_code=response.status_code, body=response.read())

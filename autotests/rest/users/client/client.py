@@ -2,17 +2,27 @@ import io
 import uuid
 from typing import Set
 
-from autotests.rest.client import BaseRestClient
+import httpx
+
+from autotests.rest.client import BaseRestClient, ResponseException
 
 from .models import HealthResponse, UserResponse, UserUpdateRequest
 
 
 class UsersRestClient(BaseRestClient):
-    
     async def get_health(self) -> HealthResponse:
         path = "/api/v1beta/rest/health"
 
         return await self.rest_get(path=path, response_model=HealthResponse)
+
+    async def logout(self) -> httpx.Response:
+        path = "/api/v1beta/rest/auth/logout"
+
+        response = await self.delete(url=path)
+        if response.status_code // 100 != 2:
+            raise ResponseException(status_code=response.status_code, body=response.content)
+
+        return response
 
     async def get_user(self, user_id: uuid.UUID) -> UserResponse:
         path = f"/api/v1beta/rest/users/{user_id}"
@@ -40,9 +50,11 @@ class UsersRestClient(BaseRestClient):
         return await self.rest_post(path=path, response_model=UserResponse, data=request)
 
     async def get_user_avatar(self, user_id: uuid.UUID) -> io.BytesIO:
-        path = f"/api/v1beta/rest/user/{user_id}/avatar"
+        path = f"/api/v1beta/rest/users/{user_id}/avatar"
 
         response = await self.get(url=path)
+        if response.status_code // 100 != 2:
+            raise ResponseException(status_code=response.status_code, body=response.content)
 
         return io.BytesIO(response.content)
 
@@ -60,6 +72,8 @@ class UsersRestClient(BaseRestClient):
         path = f"/api/v1beta/rest/users/{user_id}/skills"
 
         response = await self.get(url=path)
+        if response.status_code // 100 != 2:
+            raise ResponseException(status_code=response.status_code, body=response.content)
 
         return {uuid.UUID(skill) for skill in response.json()}
 
@@ -70,6 +84,8 @@ class UsersRestClient(BaseRestClient):
     ) -> set[uuid.UUID]:
         path = f"/api/v1beta/rest/users/{user_id}/skills"
 
-        response = await self.post(url=path, json=skills)
+        response = await self.post(url=path, json=list(map(str, skills)))
+        if response.status_code // 100 != 2:
+            raise ResponseException(status_code=response.status_code, body=response.content)
 
         return {uuid.UUID(skill) for skill in response.json()}
