@@ -29,16 +29,23 @@ services:
     volumes:
       - ${BROKER_DIR:-./broker_data}/zookeeper/data:/var/lib/zookeeper/data
       - ${BROKER_DIR:-./broker_data}/zookeeper/log:/var/lib/zookeeper/log
+    healthcheck:
+      test: nc -z localhost 2181 || exit -1
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
     deploy:
       replicas: 1
 
   kafka:
     image: confluentinc/cp-kafka:7.5.0
     depends_on:
-      - zookeeper
+      zookeeper:
+        condition: service_healthy
     user: 0:0
     environment:
-      # KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9091
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
