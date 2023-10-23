@@ -20,9 +20,8 @@ class User(Base):
     created_at: Mapped[datetime] = mapped_column(default=datetime.now)
     updated_at: Mapped[datetime] = mapped_column(default=datetime.now, onupdate=datetime.now)
 
-    profile: Mapped["Profile"] = relationship("Profile", back_populates="user", lazy="joined")
-    skills: Mapped[list["UserSkill"]] = relationship("UserSkill", back_populates="user",
-                                                     lazy="joined")
+    profile: Mapped["Profile"] = relationship("Profile", back_populates="user", lazy=False)
+    skills: Mapped[list["UserSkill"]] = relationship("UserSkill", back_populates="user", lazy=False)
 
 
 class Profile(Base):
@@ -35,8 +34,6 @@ class Profile(Base):
     created_at: Mapped[datetime] = mapped_column(default=datetime.now)
     updated_at: Mapped[datetime] = mapped_column(default=datetime.now, onupdate=datetime.now)
 
-    user: Mapped[User] = relationship(User, back_populates="profile", lazy="joined")
-
 
 class UserSkill(Base):
     __tablename__ = "user_skills"
@@ -46,4 +43,4 @@ class UserSkill(Base):
     created_at: Mapped[datetime] = mapped_column(default=datetime.now)
     updated_at: Mapped[datetime] = mapped_column(default=datetime.now, onupdate=datetime.now)
 
-    user: Mapped[User] = relationship(User, back_populates="skills", lazy="joined")
+    user: Mapped[User] = relationship(User, back_populates="skills", lazy=False)
