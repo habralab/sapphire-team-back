@@ -83,7 +83,6 @@ jobs:
       - migrate-notifications
       - migrate-messenger
     runs-on: self-hosted
-    if: jobs.up-postgres.result == "success"
     steps:
       - name: Stop Postgres for migrations
         run: docker rm sapphire-database-for-migrations-stage --force
