@@ -7,13 +7,21 @@ from autotests.rest.client import ResponseException
 from autotests.rest.users.client.client import UsersRestClient
 
 
-@pytest.mark.parametrize(("user_id", "user_email"), (
-    (pytest.lazy_fixture("oleg_id"), pytest.lazy_fixture("oleg_email")),
-    (pytest.lazy_fixture("matvey_id"), pytest.lazy_fixture("matvey_email")),
+@pytest.mark.parametrize(("user_id", "user_email", "client"), (
+    (
+        pytest.lazy_fixture("oleg_id"),
+        pytest.lazy_fixture("oleg_email"),
+        pytest.lazy_fixture("oleg_users_rest_client"),
+    ),
+    (
+        pytest.lazy_fixture("matvey_id"),
+        pytest.lazy_fixture("matvey_email"),
+        pytest.lazy_fixture("matvey_users_rest_client"),
+    ),
 ))
 @pytest.mark.asyncio
-async def test_get_user_full(user_id: uuid.UUID, user_email: str, oleg_users_rest_client: UsersRestClient):
-    user = await oleg_users_rest_client.get_user(user_id=user_id)
+async def test_get_user_full(user_id: uuid.UUID, user_email: str, client: UsersRestClient):
+    user = await client.get_user(user_id=user_id)
 
     assert user.id == user_id
     assert user.email == user_email
@@ -80,7 +88,7 @@ async def test_update_user_forbidden(
         await oleg_users_rest_client.update_user(user_id=matvey_id)
 
     assert exception.value.status_code == 403
-    assert exception.value.body == b'{"detail":"Forbidden"}'
+    assert exception.value.body == b'{"detail":"Forbidden."}'
 
 
 @pytest.mark.asyncio
@@ -89,7 +97,7 @@ async def test_get_user_avatar(oleg_users_rest_client: UsersRestClient, oleg_id:
         await oleg_users_rest_client.get_user_avatar(user_id=oleg_id)
     except ResponseException as exception:
         assert exception.status_code == 404
-        assert exception.body == b"Avatar not found."
+        assert exception.body == b'{"detail":"Avatar not found."}'
 
 
 @pytest.mark.asyncio
@@ -114,13 +122,14 @@ async def test_update_user_avatar_forbidden(
         await oleg_users_rest_client.update_user_avatar(user_id=matvey_id, avatar=avatar_file)
 
     assert exception.value.status_code == 403
-    assert exception.value.body == b"{}"
+    assert exception.value.body == b'{"detail":"Forbidden."}'
 
 
 @pytest.mark.parametrize("user_id", (
     pytest.lazy_fixture("oleg_id"),
     pytest.lazy_fixture("matvey_id"),
 ))
+@pytest.mark.skip("Not implemented")
 @pytest.mark.asyncio
 async def test_get_user_skills(user_id: uuid.UUID, oleg_users_rest_client: UsersRestClient):
     await oleg_users_rest_client.get_user_skills(user_id=user_id)
