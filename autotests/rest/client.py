@@ -1,3 +1,4 @@
+import io
 from typing import Any, Type, TypeVar
 
 import httpx
@@ -36,9 +37,10 @@ class BaseRestClient(httpx.AsyncClient, ServiceMixin):
             path: str,
             response_model: Type[ResponseModel],
             data: BaseModel | None = None,
+            files: dict[str, io.BytesIO] | None = None,
     ) -> ResponseModel:
         request_data = None if data is None else data.model_dump()
-        response = await self.request(method=method, url=path, json=request_data)
+        response = await self.request(method=method, url=path, json=request_data, files=files)
 
         if response.status_code // 100 != 2:
             raise ResponseException(status_code=response.status_code, body=response.read())
@@ -53,6 +55,7 @@ class BaseRestClient(httpx.AsyncClient, ServiceMixin):
             path: str,
             response_model: Type[ResponseModel],
             data: BaseModel | None = None,
+            files: dict[str, io.BytesIO] | None = None,
     ) -> ResponseModel:
         return await self.rest_request(method="POST", path=path, response_model=response_model,
                                        data=data)
