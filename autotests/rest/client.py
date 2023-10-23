@@ -65,7 +65,7 @@ class BaseRestClient(httpx.AsyncClient, ServiceMixin):
             files: dict[str, io.BytesIO] | None = None,
     ) -> ResponseModel:
         return await self.rest_request(method="POST", path=path, response_model=response_model,
-                                       data=data)
+                                       data=data, files=files)
 
     async def rest_delete(self, path: str, response_model: Type[ResponseModel]) -> ResponseModel:
         return await self.rest_request(method="DELETE", path=path, response_model=response_model)

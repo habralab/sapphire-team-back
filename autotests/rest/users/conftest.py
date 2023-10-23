@@ -87,7 +87,7 @@ def oleg_revert_user_data(
 
 @pytest.fixture
 def avatar_file():
-    with open(pathlib.Path(__file__).parent / "static" / "avatar.png") as f:
+    with open(pathlib.Path(__file__).parent / "static" / "avatar.png", "rb") as f:
         yield f
 
 
