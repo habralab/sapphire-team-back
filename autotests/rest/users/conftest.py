@@ -110,5 +110,5 @@ def oleg_revert_user_skills(
     yield
     event_loop.run_until_complete(oleg_users_rest_client.update_user_skills(
         user_id=oleg_id,
-        skills=[],
+        skills=set(),
     ))

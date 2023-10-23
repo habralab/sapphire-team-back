@@ -80,7 +80,7 @@ async def test_update_user_forbidden(
         await oleg_users_rest_client.update_user(user_id=matvey_id)
 
     assert exception.value.status_code == 403
-    assert exception.value.body == b"{}"
+    assert exception.value.body == b'{"detail":"Forbidden"}'
 
 
 @pytest.mark.asyncio
@@ -132,7 +132,7 @@ async def test_update_user_skills_success(
         oleg_id: uuid.UUID,
         oleg_users_rest_client: UsersRestClient,
 ):
-    skills = [uuid.uuid4() for _ in range(10)]
+    skills = {uuid.uuid4() for _ in range(10)}
     response = await oleg_users_rest_client.update_user_skills(user_id=oleg_id, skills=skills)
 
     assert response == skills

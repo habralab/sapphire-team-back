@@ -122,7 +122,8 @@ async def update_user_skills(
         request: fastapi.Request,
         data: set[uuid.UUID] = fastapi.Body(embed=False),
         request_user_id: uuid.UUID = fastapi.Depends(auth_user_id),
-        user: User = fastapi.Depends(get_path_user), ):
+        user: User = fastapi.Depends(get_path_user)
+):
     if user.id != request_user_id:
         raise fastapi.HTTPException(
             status_code=fastapi.status.HTTP_403_FORBIDDEN,
@@ -133,6 +134,6 @@ async def update_user_skills(
         skills = await database_service.update_user_skills(
             session=session,
             user=user,
-            new_userskills_ids=data
+            skills=data,
         )
     return skills

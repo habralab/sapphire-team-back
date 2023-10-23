@@ -1,5 +1,6 @@
 import io
 import uuid
+from typing import Set
 
 from autotests.rest.client import BaseRestClient
 
@@ -55,20 +56,20 @@ class UsersRestClient(BaseRestClient):
 
         return await self.rest_delete(path=path, response_model=UserResponse)
 
-    async def get_user_skills(self, user_id: uuid.UUID) -> list[uuid.UUID]:
+    async def get_user_skills(self, user_id: uuid.UUID) -> set[uuid.UUID]:
         path = f"/api/v1beta/rest/users/{user_id}/skills"
 
         response = await self.get(url=path)
 
-        return [uuid.UUID(skill) for skill in response.json()]
+        return {uuid.UUID(skill) for skill in response.json()}
 
     async def update_user_skills(
             self,
             user_id: uuid.UUID,
-            skills: list[uuid.UUID],
-    ) -> list[uuid.UUID]:
+            skills: Set[uuid.UUID],
+    ) -> set[uuid.UUID]:
         path = f"/api/v1beta/rest/users/{user_id}/skills"
 
         response = await self.post(url=path, json=skills)
 
-        return [uuid.UUID(skill) for skill in response.json()]
+        return {uuid.UUID(skill) for skill in response.json()}
