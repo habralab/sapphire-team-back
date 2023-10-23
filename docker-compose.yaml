@@ -5,6 +5,7 @@ services:
     secrets:
       - source: postgresql_password
         target: postgresql_password
+    user: postgres:postgres
     environment:
       POSTGRES_PASSWORD_FILE: /run/secrets/postgresql_password
     volumes:
