@@ -4,7 +4,6 @@ import httpx
 from facet import ServiceMixin
 from pydantic import BaseModel
 
-
 ResponseModel = TypeVar("ResponseModel")
 
 

@@ -20,22 +20,21 @@ class User(Base):
     created_at: Mapped[datetime] = mapped_column(default=datetime.now)
     updated_at: Mapped[datetime] = mapped_column(default=datetime.now, onupdate=datetime.now)
 
-    profile: Mapped["Profile"] = relationship("Profile", back_populates="user", lazy="joined")
-    skills: Mapped[list["UserSkill"]] = relationship("UserSkill", back_populates="user",
-                                                     lazy="joined")
+    profile: Mapped["Profile"] = relationship("Profile", back_populates="user", lazy=False)
+    skills: Mapped[list["UserSkill"]] = relationship("UserSkill", back_populates="user", lazy=False)
 
 
 class Profile(Base):
     __tablename__ = "profiles"
 
     user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"), primary_key=True)
-    about: Mapped[str | None] = mapped_column(Text, deferred=True)
+    about: Mapped[str | None] = mapped_column(Text)
     main_specialization_id: Mapped[uuid.UUID | None]
     secondary_specialization_id: Mapped[uuid.UUID | None]
     created_at: Mapped[datetime] = mapped_column(default=datetime.now)
     updated_at: Mapped[datetime] = mapped_column(default=datetime.now, onupdate=datetime.now)
 
-    user: Mapped[User] = relationship(User, back_populates="profile", lazy="joined")
+    user: Mapped[User] = relationship(User, back_populates="profile", lazy=False)
 
 
 class UserSkill(Base):
@@ -46,4 +45,4 @@ class UserSkill(Base):
     created_at: Mapped[datetime] = mapped_column(default=datetime.now)
     updated_at: Mapped[datetime] = mapped_column(default=datetime.now, onupdate=datetime.now)
 
-    user: Mapped[User] = relationship(User, back_populates="skills", lazy="joined")
+    user: Mapped[User] = relationship(User, back_populates="skills", lazy=False)
