@@ -2,12 +2,12 @@ import pathlib
 import uuid
 from typing import Type
 
-from sqlalchemy import select
+from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from sapphire.common.database.service import BaseDatabaseService
 from sapphire.common.database.utils import Empty
-from sapphire.users.database.models import Profile, User
+from sapphire.users.database.models import Profile, User, UserSkill
 from sapphire.users.settings import UsersSettings
 
 
@@ -77,6 +77,35 @@ class UsersDatabaseService(BaseDatabaseService):
         session.add_all([user, profile])
 
         return user
+
+    async def get_user_skills(self,
+                              session: AsyncSession,
+                              user: User | Type[Empty] = Empty,
+                              ):
+        filters = []
+        if user is not Empty:
+            filters.append(UserSkill.user_id == user.id)
+        stmt = select(UserSkill.user_id).where(*filters)
+        result = await session.execute(stmt)
+        current_skills = result.scalars().all()
+
+        return current_skills
+
+    async def update_user_skills(self,
+                                 session: AsyncSession,
+                                 user: User,
+                                 new_userskills_ids: set[uuid.UUID] = frozenset(),
+                                 ):
+
+        stmt = delete(UserSkill).where(UserSkill.user_id == user.id)
+        await session.execute(stmt)
+
+        new_skills = []
+        for new_skill_id in new_userskills_ids:
+            new_skill = UserSkill(user_id=user.id, skill_id=new_skill_id)
+            new_skills.append(new_skill)
+        session.add_all(new_skills)
+        return new_skills
 
 
 def get_service(settings: UsersSettings) -> UsersDatabaseService:

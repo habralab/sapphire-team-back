@@ -26,7 +26,7 @@ async def get_user(
 async def update_user(
         request: fastapi.Request,
         request_user_id: uuid.UUID = fastapi.Depends(auth_user_id),
-        user: User = fastapi.Depends(get_user),
+        user: User = fastapi.Depends(get_path_user),
         data: UserUpdateRequest = fastapi.Body(embed=False),
 ) -> UserResponse:
     if user.id != request_user_id:
@@ -116,3 +116,23 @@ async def delete_user_avatar(
         await aiofiles.os.remove(original_avatar_file_path)
 
     return UserResponse.from_db_model(user=user)
+
+
+async def update_user_skills(
+        request: fastapi.Request,
+        data: set[uuid.UUID] = fastapi.Body(embed=False),
+        request_user_id: uuid.UUID = fastapi.Depends(auth_user_id),
+        user: User = fastapi.Depends(get_path_user), ):
+    if user.id != request_user_id:
+        raise fastapi.HTTPException(
+            status_code=fastapi.status.HTTP_403_FORBIDDEN,
+            detail="Forbidden.",
+        )
+    database_service: UsersDatabaseService = request.app.service.database
+    async with database_service.transaction() as session:
+        skills = await database_service.update_user_skills(
+            session=session,
+            user=user,
+            new_userskills_ids=data
+        )
+    return skills
