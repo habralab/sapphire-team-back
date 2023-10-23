@@ -28,9 +28,9 @@ class Profile(Base):
     __tablename__ = "profiles"
 
     user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"), primary_key=True)
-    about: Mapped[str] = mapped_column(Text, deferred=True)
-    main_specialization_id: Mapped[uuid.UUID] = mapped_column(default=uuid.uuid4)
-    secondary_specialization_id: Mapped[uuid.UUID] = mapped_column(default=uuid.uuid4)
+    about: Mapped[str | None] = mapped_column(Text, deferred=True)
+    main_specialization_id: Mapped[uuid.UUID | None]
+    secondary_specialization_id: Mapped[uuid.UUID | None]
     created_at: Mapped[datetime] = mapped_column(default=datetime.now)
     updated_at: Mapped[datetime] = mapped_column(default=datetime.now, onupdate=datetime.now)
 
@@ -40,8 +40,8 @@ class Profile(Base):
 class UserSkill(Base):
     __tablename__ = "user_skills"
 
-    user_id: Mapped[str] = mapped_column(ForeignKey("users.id"), primary_key=True)
-    skill_id: Mapped[str] = mapped_column(default=uuid.uuid4, primary_key=True)
+    user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"), primary_key=True)
+    skill_id: Mapped[uuid.UUID] = mapped_column(primary_key=True)
     created_at: Mapped[datetime] = mapped_column(default=datetime.now)
     updated_at: Mapped[datetime] = mapped_column(default=datetime.now, onupdate=datetime.now)
 
