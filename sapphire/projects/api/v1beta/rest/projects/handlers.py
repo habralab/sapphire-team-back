@@ -84,16 +84,23 @@ async def get_projects(
 ) -> ProjectsResponse:
     database_service: ProjectsDatabaseService = request.app.service.database
 
-    filters = {
-        "project_name_substring": project_name_substring,
-        "project_description_substring": project_description_substring,
-        "project_owner_id": project_owner_id,
-        "project_deadline": project_deadline,
-        "project_status": project_status,
-        "position_name_substring": position_name_substring,
-        "position_is_deleted": position_is_deleted,
-        "position_is_closed": position_is_closed,
-    }
+    filters = {}
+    if project_name_substring:
+        filters["project_name_substring"] = project_name_substring
+    if project_description_substring:
+        filters["project_description_substring"] = project_description_substring
+    if project_owner_id:
+        filters["project_owner_id"] = project_owner_id
+    if project_deadline:
+        filters["project_deadline"] = project_deadline
+    if project_status:
+        filters["project_status"] = project_status
+    if position_name_substring:
+        filters["position_name_substring"] = position_name_substring
+    if position_is_deleted:
+        filters["position_is_deleted"] = position_is_deleted
+    if position_is_closed:
+        filters["position_is_closed"] = position_is_closed
 
     async with database_service.transaction() as session:
         projects_db = await database_service.get_projects(
