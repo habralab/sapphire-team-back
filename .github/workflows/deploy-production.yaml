@@ -21,7 +21,7 @@ jobs:
       - name: Run Postgres for migrations
         run: >
           docker run --rm
-          -v ${DATABASE_DIR_PRODUCTION}:/var/lib/postgresql/data
+          -v /sapphire/production/database_data:/var/lib/postgresql/data
           --name sapphire-database-for-migrations-production
           --detach
           postgres:16.0-bookworm
