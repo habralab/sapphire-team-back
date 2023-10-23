@@ -1,6 +1,6 @@
 import pathlib
 import uuid
-from typing import Type
+from typing import Set, Type
 
 from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -94,18 +94,15 @@ class UsersDatabaseService(BaseDatabaseService):
     async def update_user_skills(self,
                                  session: AsyncSession,
                                  user: User,
-                                 new_userskills_ids: set[uuid.UUID] = frozenset(),
-                                 ):
+                                 skills: Set[uuid.UUID] = frozenset(),
+                                 ) -> Set[uuid.UUID]:
 
         stmt = delete(UserSkill).where(UserSkill.user_id == user.id)
         await session.execute(stmt)
 
-        new_skills = []
-        for new_skill_id in new_userskills_ids:
-            new_skill = UserSkill(user_id=user.id, skill_id=new_skill_id)
-            new_skills.append(new_skill)
-        session.add_all(new_skills)
-        return new_skills
+        new_skills = [UserSkill(user=user, skill_id=skill) for skill in skills]
+        user.skills = new_skills
+        return skills
 
 
 def get_service(settings: UsersSettings) -> UsersDatabaseService:
