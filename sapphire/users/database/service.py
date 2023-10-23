@@ -29,7 +29,7 @@ class UsersDatabaseService(BaseDatabaseService):
 
         stmt = select(User).where(*filters)
         result = await session.execute(stmt)
-        user = result.scalar_one_or_none()
+        user = result.unique().scalar_one_or_none()
 
         return user
 
@@ -40,6 +40,7 @@ class UsersDatabaseService(BaseDatabaseService):
             first_name: str | None | Type[Empty] = Empty,
             last_name: str | None | Type[Empty] = Empty,
             avatar: str | None | Type[Empty] = Empty,
+            about: str | None | Type[Empty] = Empty,
             main_specialization_id: uuid.UUID | None | Type[Empty] = Empty,
             secondary_specialization_id: uuid.UUID | None | Type[Empty] = Empty,
     ) -> User:
@@ -49,6 +50,8 @@ class UsersDatabaseService(BaseDatabaseService):
             user.last_name = last_name
         if avatar is not Empty:
             user.avatar = avatar
+        if about is not Empty:
+            user.profile.about = about
         if main_specialization_id is not Empty:
             user.profile.main_specialization_id = main_specialization_id
         if secondary_specialization_id is not Empty:

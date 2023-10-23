@@ -9,7 +9,7 @@ from autotests.settings import AutotestsSettings
 
 @pytest.fixture
 def oleg_id() -> uuid.UUID:
-    return uuid.UUID()
+    return uuid.UUID("e23dfa16-6d0f-4de2-a1b1-a42f8a5bfd94")
 
 
 @pytest.fixture
@@ -33,4 +33,3 @@ def matvey_access_token(settings: AutotestsSettings, matvey_id: uuid.UUID) -> st
         "exp": int(datetime.datetime.now().timestamp()) + 24 * 3600,
     }
     return jwt.encode(payload, settings.jwt_access_token_private_key, algorithm="RS256")
-
