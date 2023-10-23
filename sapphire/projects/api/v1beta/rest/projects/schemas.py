@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 from sapphire.common.api.schemas.paginated import PaginatedResponse
 from sapphire.projects.database.models import ProjectStatusEnum
@@ -42,3 +42,14 @@ class ProjectHistoryListResponse(PaginatedResponse):
 
 class ProjectsResponse(PaginatedResponse):
     data: list[ProjectResponse]
+
+
+class ProjectFiltersRequest(BaseModel):
+    name_substring: str | None = Field(None)
+    description_substring: str | None = Field(None)
+    owner_id: uuid.UUID | None = Field(None)
+    deadline: datetime | None = Field(None)
+    status: ProjectStatusEnum | None = Field(None)
+    position_name_substring: str | None = Field(None)
+    position_is_deleted: bool | None = Field(None)
+    position_is_closed: bool | None = Field(None)

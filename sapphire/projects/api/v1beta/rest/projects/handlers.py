@@ -1,17 +1,17 @@
 import math
 import uuid
-from datetime import datetime
 
 import fastapi
 
 from sapphire.common.api.dependencies.pagination import Pagination, pagination
 from sapphire.common.jwt.dependencies.rest import auth_user_id
-from sapphire.projects.database.models import Project, ProjectStatusEnum
+from sapphire.projects.database.models import Project
 from sapphire.projects.database.service import ProjectsDatabaseService
 
 from .dependencies import get_path_project
 from .schemas import (
     CreateProjectRequest,
+    ProjectFiltersRequest,
     ProjectHistoryListResponse,
     ProjectHistoryResponse,
     ProjectResponse,
@@ -73,41 +73,19 @@ async def history(
 async def get_projects(
     request: fastapi.Request,
     pagination: Pagination = fastapi.Depends(pagination),
-    project_name_substring: str | None = None,
-    project_description_substring: str | None = None,
-    project_owner_id: uuid.UUID | None = None,
-    project_deadline: datetime | None = None,
-    project_status: ProjectStatusEnum | None = None,
-    position_name_substring: str | None = None,
-    position_is_deleted: bool | None = None,
-    position_is_closed: bool | None = None,
+    filters: ProjectFiltersRequest = fastapi.Depends(),
 ) -> ProjectsResponse:
     database_service: ProjectsDatabaseService = request.app.service.database
 
-    filters = {}
-    if project_name_substring is not None:
-        filters["project_name_substring"] = project_name_substring
-    if project_description_substring:
-        filters["project_description_substring"] = project_description_substring
-    if project_owner_id is not None:
-        filters["project_owner_id"] = project_owner_id
-    if project_deadline is not None:
-        filters["project_deadline"] = project_deadline
-    if project_status is not None:
-        filters["project_status"] = project_status
-    if position_name_substring is not None:
-        filters["position_name_substring"] = position_name_substring
-    if position_is_deleted is not None:
-        filters["position_is_deleted"] = position_is_deleted
-    if position_is_closed is not None:
-        filters["position_is_closed"] = position_is_closed
+    filters_data = filters.model_dump()
+    filters_data = {key: value for key, value in filters_data.items() if value is not None}
 
     async with database_service.transaction() as session:
         projects_db = await database_service.get_projects(
             session=session,
             page=pagination.page,
             per_page=pagination.per_page,
-            **filters,
+            **filters_data,
         )
 
     projects = [ProjectResponse.model_validate(project_db) for project_db in projects_db]

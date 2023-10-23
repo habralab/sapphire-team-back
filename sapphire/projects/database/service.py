@@ -152,11 +152,11 @@ class ProjectsDatabaseService(BaseDatabaseService):
     async def get_projects(
         self,
         session: AsyncSession,
-        project_name_substring: str | Type[Empty] = Empty,
-        project_description_substring: str | Type[Empty] = Empty,
-        project_owner_id: uuid.UUID | Type[Empty] = Empty,
-        project_deadline: datetime | Type[Empty] = Empty,
-        project_status: ProjectStatusEnum | Type[Empty] = Empty,
+        name_substring: str | Type[Empty] = Empty,
+        description_substring: str | Type[Empty] = Empty,
+        owner_id: uuid.UUID | Type[Empty] = Empty,
+        deadline: datetime | Type[Empty] = Empty,
+        status: ProjectStatusEnum | Type[Empty] = Empty,
         position_name_substring: str | Type[Empty] = Empty,
         position_is_deleted: bool | Type[Empty] = Empty,
         position_is_closed: bool | Type[Empty] = Empty,
@@ -166,16 +166,16 @@ class ProjectsDatabaseService(BaseDatabaseService):
 
         filters = []
 
-        if project_name_substring is not Empty:
-            filters.append(Project.name.contains(project_name_substring))
-        if project_description_substring is not Empty:
-            filters.append(Project.description.contains(project_description_substring))
-        if project_owner_id is not Empty:
-            filters.append(Project.owner_id == project_owner_id)
-        if project_deadline is not Empty:
-            filters.append(Project.deadline <= project_deadline)
-        if project_status is not Empty:
-            filters.append(Project.status == project_status)
+        if name_substring is not Empty:
+            filters.append(Project.name.contains(name_substring))
+        if description_substring is not Empty:
+            filters.append(Project.description.contains(description_substring))
+        if owner_id is not Empty:
+            filters.append(Project.owner_id == owner_id)
+        if deadline is not Empty:
+            filters.append(Project.deadline <= deadline)
+        if status is not Empty:
+            filters.append(Project.status == status)
 
         if position_name_substring is not Empty:
             position_filters = [Position.name.contains(position_name_substring)]
