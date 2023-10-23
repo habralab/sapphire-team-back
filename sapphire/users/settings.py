@@ -5,6 +5,7 @@ from pydantic_settings import SettingsConfigDict
 
 from sapphire.common.api.settings import BaseAPISettings
 from sapphire.common.database.settings import BaseDatabaseSettings
+from sapphire.common.habr.settings import HabrSettings
 from sapphire.common.jwt.settings import JWTSettings
 from sapphire.common.utils.rsa256 import generate_rsa_keys
 
@@ -12,7 +13,7 @@ access_token = generate_rsa_keys()
 refresh_token = generate_rsa_keys()
 
 
-class UsersSettings(BaseAPISettings, BaseDatabaseSettings, JWTSettings):
+class UsersSettings(BaseAPISettings, BaseDatabaseSettings, JWTSettings, HabrSettings):
     model_config = SettingsConfigDict(secrets_dir="/run/secrets")
 
     db_dsn: AnyUrl = AnyUrl("sqlite+aiosqlite:///users.sqlite3")

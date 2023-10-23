@@ -27,7 +27,7 @@ async def test_get_user(database_service: UsersDatabaseService):
     user_id = uuid.uuid4()
     email = "test@gmail.com"
 
-    result.scalar_one_or_none.return_value = User(id=user_id, email=email)
+    result.unique().scalar_one_or_none.return_value = User(id=user_id, email=email)
     session.execute = AsyncMock()
     session.execute.return_value = result
 
@@ -61,41 +61,6 @@ async def test_create_user(database_service: UsersDatabaseService):
 
 
 @pytest.mark.asyncio
-async def test_get_or_create_user_no_user(database_service: UsersDatabaseService):
-    session = MagicMock()
-    email = "test@gmail.com"
-
-    created_user = User(id=uuid.uuid4(), email=email)
-    database_service.get_user = AsyncMock(return_value=None)
-    database_service.create_user = AsyncMock(return_value=created_user)
-
-    user = await database_service.get_or_create_user(
-        session=session,
-        email=email,
-    )
-
-    assert user is created_user
-
-
-@pytest.mark.asyncio
-async def test_get_or_create_user_user_exists(database_service: UsersDatabaseService):
-    session = MagicMock()
-    email = "test@gmail.com"
-    expected_user = User(id=uuid.uuid4(), email=email)
-
-    database_service.get_user = AsyncMock(return_value=expected_user)
-    database_service.create_user = AsyncMock()
-
-    user = await database_service.get_or_create_user(
-        session=session,
-        email=email,
-    )
-
-    database_service.create_user.assert_not_awaited()
-    assert user is expected_user
-
-
-@pytest.mark.asyncio
 async def test_update_user(database_service: UsersDatabaseService):
     session = MagicMock()
     user = User(id=uuid.uuid4(), email="test@gmail.com", first_name="Test", last_name="Testovich",
@@ -106,6 +71,7 @@ async def test_update_user(database_service: UsersDatabaseService):
     new_first_name = "NewTest"
     new_last_name = "NewTestovich"
     new_avatar = "/new-avatar.png"
+    new_about = "New about"
     new_main_specialization_id = uuid.uuid4()
     new_secondary_specialization_id = uuid.uuid4()
 
@@ -115,6 +81,7 @@ async def test_update_user(database_service: UsersDatabaseService):
         first_name=new_first_name,
         last_name=new_last_name,
         avatar=new_avatar,
+        about=new_about,
         main_specialization_id=new_main_specialization_id,
         secondary_specialization_id=new_secondary_specialization_id,
     )
@@ -124,5 +91,6 @@ async def test_update_user(database_service: UsersDatabaseService):
     assert result_user.first_name == new_first_name
     assert result_user.last_name == new_last_name
     assert result_user.avatar == new_avatar
+    assert result_user.profile.about == new_about
     assert result_user.profile.main_specialization_id == new_main_specialization_id
     assert result_user.profile.secondary_specialization_id == new_secondary_specialization_id

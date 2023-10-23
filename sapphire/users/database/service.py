@@ -2,12 +2,12 @@ import pathlib
 import uuid
 from typing import Type
 
-from sqlalchemy import select
+from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from sapphire.common.database.service import BaseDatabaseService
 from sapphire.common.database.utils import Empty
-from sapphire.users.database.models import Profile, User
+from sapphire.users.database.models import Profile, User, UserSkill
 from sapphire.users.settings import UsersSettings
 
 
@@ -29,7 +29,7 @@ class UsersDatabaseService(BaseDatabaseService):
 
         stmt = select(User).where(*filters)
         result = await session.execute(stmt)
-        user = result.scalar_one_or_none()
+        user = result.unique().scalar_one_or_none()
 
         return user
 
@@ -40,6 +40,7 @@ class UsersDatabaseService(BaseDatabaseService):
             first_name: str | None | Type[Empty] = Empty,
             last_name: str | None | Type[Empty] = Empty,
             avatar: str | None | Type[Empty] = Empty,
+            about: str | None | Type[Empty] = Empty,
             main_specialization_id: uuid.UUID | None | Type[Empty] = Empty,
             secondary_specialization_id: uuid.UUID | None | Type[Empty] = Empty,
     ) -> User:
@@ -49,6 +50,8 @@ class UsersDatabaseService(BaseDatabaseService):
             user.last_name = last_name
         if avatar is not Empty:
             user.avatar = avatar
+        if about is not Empty:
+            user.profile.about = about
         if main_specialization_id is not Empty:
             user.profile.main_specialization_id = main_specialization_id
         if secondary_specialization_id is not Empty:
@@ -75,23 +78,34 @@ class UsersDatabaseService(BaseDatabaseService):
 
         return user
 
-    async def get_or_create_user(
-            self,
-            session: AsyncSession,
-            email: str,
-            first_name: str | None = None,
-            last_name: str | None = None,
-    ) -> User:
-        user = await self.get_user(session=session, email=email)
-        if user is None:
-            user = await self.create_user(
-                session=session,
-                email=email,
-                first_name=first_name,
-                last_name=last_name,
-            )
+    async def get_user_skills(self,
+                              session: AsyncSession,
+                              user: User | Type[Empty] = Empty,
+                              ):
+        filters = []
+        if user is not Empty:
+            filters.append(UserSkill.user_id == user.id)
+        stmt = select(UserSkill.user_id).where(*filters)
+        result = await session.execute(stmt)
+        current_skills = result.scalars().all()
 
-        return user
+        return current_skills
+
+    async def update_user_skills(self,
+                                 session: AsyncSession,
+                                 user: User,
+                                 new_userskills_ids: set[uuid.UUID] = frozenset(),
+                                 ):
+
+        stmt = delete(UserSkill).where(UserSkill.user_id == user.id)
+        await session.execute(stmt)
+
+        new_skills = []
+        for new_skill_id in new_userskills_ids:
+            new_skill = UserSkill(user_id=user.id, skill_id=new_skill_id)
+            new_skills.append(new_skill)
+        session.add_all(new_skills)
+        return new_skills
 
 
 def get_service(settings: UsersSettings) -> UsersDatabaseService:

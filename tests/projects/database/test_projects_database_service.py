@@ -124,6 +124,7 @@ async def test_get_project_position(database_service: ProjectsDatabaseService):
     assert result_position is position
 
 
+@pytest.mark.asyncio
 async def test_get_participant_with_participant_id(
     database_service: ProjectsDatabaseService,
 ):
@@ -226,7 +227,7 @@ async def test_get_projects_without_pagination(database_service: ProjectsDatabas
 
     projects = await database_service.get_projects(session=session)
 
-    assert projects is expected_projects
+    assert projects == expected_projects
 
     query = session.execute.call_args_list[0].args[0]
     assert expected_query.compare(query)
@@ -253,7 +254,27 @@ async def test_get_projects_with_pagination(database_service: ProjectsDatabaseSe
 
     projects = await database_service.get_projects(session=session, page=page, per_page=per_page)
 
-    assert projects is expected_projects
+    assert projects == expected_projects
 
     query = session.execute.call_args_list[0].args[0]
     assert expected_query.compare(query)
+
+
+@pytest.mark.asyncio
+async def test_get_project_positions(database_service: ProjectsDatabaseService):
+    session = MagicMock()
+    result = MagicMock()
+    project_id = uuid.uuid4()
+    expected_positions = [Position(id=uuid.uuid4(), name="test", project_id=project_id)]
+    expected_query = select(Position).where(Position.project_id == project_id)
+    result.scalars.return_value.all.return_value = expected_positions
+    session.execute = AsyncMock()
+    session.execute.return_value = result
+
+    positions = await database_service.get_project_positions(
+        session=session,
+        project_id=project_id,
+    )
+
+    assert positions == expected_positions
+    assert expected_query.compare(session.execute.call_args_list[0].args[0])

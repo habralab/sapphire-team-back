@@ -3,7 +3,7 @@ import uuid
 
 import fastapi
 
-from sapphire.common.api.dependencies.pagination import PaginationModel, pagination
+from sapphire.common.api.dependencies.pagination import Pagination, pagination
 from sapphire.common.jwt.dependencies.rest import auth_user_id
 from sapphire.projects.database.models import Project
 from sapphire.projects.database.service import ProjectsDatabaseService
@@ -51,7 +51,7 @@ async def get_project(
 
 async def history(
     project: Project = fastapi.Depends(get_path_project),
-    pagination: PaginationModel = fastapi.Depends(pagination),
+    pagination: Pagination = fastapi.Depends(pagination),
 ) -> ProjectHistoryListResponse:
     offset = (pagination.page - 1) * pagination.per_page
     history = [
@@ -71,7 +71,7 @@ async def history(
 
 async def get_projects(
     request: fastapi.Request,
-    pagination: PaginationModel = fastapi.Depends(pagination),
+    pagination: Pagination = fastapi.Depends(pagination),
 ) -> ProjectsResponse:
     database_service: ProjectsDatabaseService = request.app.service.database
 

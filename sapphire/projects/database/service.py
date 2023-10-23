@@ -55,6 +55,19 @@ class ProjectsDatabaseService(BaseDatabaseService):
         result = await session.execute(statement)
         return result.unique().scalar_one_or_none()
 
+    async def get_project_positions(
+            self,
+            session: AsyncSession,
+            project_id: uuid.UUID | Type[Empty] = Empty,
+    ) -> list[Position]:
+        filters = []
+        if project_id is not Empty:
+            filters.append(Position.project_id == project_id)
+
+        statement = select(Position).where(*filters)
+        result = await session.execute(statement)
+        return list(result.scalars().all())
+
     async def get_project_position(
             self,
             session: AsyncSession,
@@ -150,7 +163,7 @@ class ProjectsDatabaseService(BaseDatabaseService):
             query = query.limit(per_page).offset(offset)
         result = await session.execute(query)
 
-        return result.unique().scalars().all()
+        return list(result.unique().scalars().all())
 
     async def update_project_avatar(
         self,
