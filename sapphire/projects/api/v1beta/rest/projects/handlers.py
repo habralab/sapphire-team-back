@@ -1,11 +1,12 @@
 import math
 import uuid
+from datetime import datetime
 
 import fastapi
 
 from sapphire.common.api.dependencies.pagination import Pagination, pagination
 from sapphire.common.jwt.dependencies.rest import auth_user_id
-from sapphire.projects.database.models import Project
+from sapphire.projects.database.models import Project, ProjectStatusEnum
 from sapphire.projects.database.service import ProjectsDatabaseService
 
 from .dependencies import get_path_project
@@ -72,14 +73,34 @@ async def history(
 async def get_projects(
     request: fastapi.Request,
     pagination: Pagination = fastapi.Depends(pagination),
+    project_name_substring: str | None = None,
+    project_description_substring: str | None = None,
+    project_owner_id: uuid.UUID | None = None,
+    project_deadline: datetime | None = None,
+    project_status: ProjectStatusEnum | None = None,
+    position_name_substring: str | None = None,
+    position_is_deleted: bool | None = None,
+    position_is_closed: bool | None = None,
 ) -> ProjectsResponse:
     database_service: ProjectsDatabaseService = request.app.service.database
+
+    filters = {
+        "project_name_substring": project_name_substring,
+        "project_description_substring": project_description_substring,
+        "project_owner_id": project_owner_id,
+        "project_deadline": project_deadline,
+        "project_status": project_status,
+        "position_name_substring": position_name_substring,
+        "position_is_deleted": position_is_deleted,
+        "position_is_closed": position_is_closed,
+    }
 
     async with database_service.transaction() as session:
         projects_db = await database_service.get_projects(
             session=session,
             page=pagination.page,
             per_page=pagination.per_page,
+            **filters,
         )
 
     projects = [ProjectResponse.model_validate(project_db) for project_db in projects_db]

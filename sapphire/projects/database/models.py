@@ -3,6 +3,7 @@ import uuid
 from datetime import datetime
 
 from sqlalchemy import Enum, ForeignKey
+from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 
@@ -41,7 +42,7 @@ class Project(Base):
     )
     positions: Mapped[list["Position"]] = relationship(back_populates="project", lazy="joined")
 
-    @property
+    @hybrid_property
     def status(self):
         return self.history[0].status
 

@@ -3,7 +3,6 @@ import uuid
 from datetime import datetime
 from typing import Type
 
-from sqlalchemy import desc
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
@@ -153,14 +152,48 @@ class ProjectsDatabaseService(BaseDatabaseService):
     async def get_projects(
         self,
         session: AsyncSession,
+        project_name_substring: str | Type[Empty] = Empty,
+        project_description_substring: str | Type[Empty] = Empty,
+        project_owner_id: uuid.UUID | Type[Empty] = Empty,
+        project_deadline: datetime | Type[Empty] = Empty,
+        project_status: ProjectStatusEnum | Type[Empty] = Empty,
+        position_name_substring: str | Type[Empty] = Empty,
+        position_is_deleted: bool | Type[Empty] = Empty,
+        position_is_closed: bool | Type[Empty] = Empty,
         page: int | Type[Empty] = Empty,
         per_page: int | Type[Empty] = Empty,
     ) -> list[Project]:
-        query = select(Project).order_by(desc(Project.created_at))
+
+        filters = []
+
+        if project_name_substring is not Empty:
+            filters.append(Project.name.contains(project_name_substring))
+        if project_description_substring is not Empty:
+            filters.append(Project.description.contains(project_description_substring))
+        if project_owner_id is not Empty:
+            filters.append(Project.owner_id == project_owner_id)
+        if project_deadline is not Empty:
+            filters.append(Project.deadline <= project_deadline)
+        if project_status is not Empty:
+            filters.append(Project.status == project_status)
+
+        if position_name_substring is not Empty:
+            position_filters = [Position.name.contains(position_name_substring)]
+            if position_is_deleted is not Empty:
+                position_filters.append(Position.is_deleted == position_is_deleted)
+            if position_is_closed is not Empty:
+                position_filters.append(
+                    Position.closed_at.is_(None) if position_is_closed
+                    else Position.closed_at.is_not(None)
+                )
+            filters.append(Project.id.in_(select(Position.project_id).where(*position_filters)))
+
+        query = select(Project).order_by(Project.created_at.desc()).where(*filters)
 
         if page is not Empty and per_page is not Empty:
             offset = (page - 1) * per_page
             query = query.limit(per_page).offset(offset)
+
         result = await session.execute(query)
 
         return list(result.unique().scalars().all())
