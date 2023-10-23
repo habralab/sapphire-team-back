@@ -41,8 +41,7 @@ services:
   kafka:
     image: confluentinc/cp-kafka:7.5.0
     depends_on:
-      zookeeper:
-        condition: service_healthy
+      - zookeeper
     user: 0:0
     environment:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
