@@ -5,6 +5,7 @@ services:
     secrets:
       - source: postgresql_password
         target: postgresql_password
+    user: postgres:postgres
     environment:
       POSTGRES_PASSWORD_FILE: /run/secrets/postgresql_password
     volumes:
@@ -28,6 +29,12 @@ services:
     volumes:
       - ${BROKER_DIR:-./broker_data}/zookeeper/data:/var/lib/zookeeper/data
       - ${BROKER_DIR:-./broker_data}/zookeeper/log:/var/lib/zookeeper/log
+    healthcheck:
+      test: nc -z localhost 2181 || exit -1
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
     deploy:
       replicas: 1
 
@@ -220,13 +227,11 @@ services:
             "name": "Projects",
           },
           {
-            "url": "${NOTIFICATIONS_ROOT_URL:-http://localhost:3030}${NOTIFICATIONS_ROOT_PATH}"
-                   "/openapi.json",
+            "url": "${NOTIFICATIONS_ROOT_URL:-http://localhost:3030}${NOTIFICATIONS_ROOT_PATH}/openapi.json",
             "name": "Notifications",
           },
           {
-            "url": "${MESSENGER_ROOT_URL:-http://localhost:3040}${MESSENGER_ROOT_PATH}"
-                   "/openapi.json",
+            "url": "${MESSENGER_ROOT_URL:-http://localhost:3040}${MESSENGER_ROOT_PATH}/openapi.json",
             "name": "Messenger",
           },
         ]
