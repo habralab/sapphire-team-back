@@ -221,13 +221,11 @@ services:
             "name": "Projects",
           },
           {
-            "url": "${NOTIFICATIONS_ROOT_URL:-http://localhost:3030}${NOTIFICATIONS_ROOT_PATH}"
-                   "/openapi.json",
+            "url": "${NOTIFICATIONS_ROOT_URL:-http://localhost:3030}${NOTIFICATIONS_ROOT_PATH}/openapi.json",
             "name": "Notifications",
           },
           {
-            "url": "${MESSENGER_ROOT_URL:-http://localhost:3040}${MESSENGER_ROOT_PATH}"
-                   "/openapi.json",
+            "url": "${MESSENGER_ROOT_URL:-http://localhost:3040}${MESSENGER_ROOT_PATH}/openapi.json",
             "name": "Messenger",
           },
         ]
