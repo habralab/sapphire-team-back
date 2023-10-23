@@ -18,9 +18,9 @@ async def get_user(
         request_user_id: uuid.UUID | None = fastapi.Depends(get_request_user_id),
         path_user: User = fastapi.Depends(get_path_user),
 ) -> UserResponse:
-    model_cls = UserResponse if request_user_id != path_user.id else UserResponse
+    with_email = (request_user_id != path_user.id)
 
-    return model_cls.from_db_model(path_user)
+    return UserResponse.from_db_model(path_user, with_email=with_email)
 
 
 async def update_user(
