@@ -71,6 +71,7 @@ async def test_update_user(database_service: UsersDatabaseService):
     new_first_name = "NewTest"
     new_last_name = "NewTestovich"
     new_avatar = "/new-avatar.png"
+    new_about = "New about"
     new_main_specialization_id = uuid.uuid4()
     new_secondary_specialization_id = uuid.uuid4()
 
@@ -80,6 +81,7 @@ async def test_update_user(database_service: UsersDatabaseService):
         first_name=new_first_name,
         last_name=new_last_name,
         avatar=new_avatar,
+        about=new_about,
         main_specialization_id=new_main_specialization_id,
         secondary_specialization_id=new_secondary_specialization_id,
     )
@@ -89,5 +91,6 @@ async def test_update_user(database_service: UsersDatabaseService):
     assert result_user.first_name == new_first_name
     assert result_user.last_name == new_last_name
     assert result_user.avatar == new_avatar
+    assert result_user.profile.about == new_about
     assert result_user.profile.main_specialization_id == new_main_specialization_id
     assert result_user.profile.secondary_specialization_id == new_secondary_specialization_id
