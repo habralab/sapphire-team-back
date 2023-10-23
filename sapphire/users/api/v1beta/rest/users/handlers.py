@@ -18,7 +18,7 @@ async def get_user(
         request_user_id: uuid.UUID | None = fastapi.Depends(get_request_user_id),
         path_user: User = fastapi.Depends(get_path_user),
 ) -> UserResponse | UserFullResponse:
-    model_cls = UserFullResponse if request_user_id != path_user.id else UserResponse
+    model_cls = UserResponse if request_user_id != path_user.id else UserFullResponse
 
     return model_cls.from_db_model(path_user)
 
@@ -26,7 +26,7 @@ async def get_user(
 async def update_user(
         request: fastapi.Request,
         request_user_id: uuid.UUID = fastapi.Depends(auth_user_id),
-        user: User = fastapi.Depends(get_request_user),  #???
+        user: User = fastapi.Depends(get_path_user),
         data: UserUpdateRequest = fastapi.Body(embed=False),
 ) -> UserFullResponse:
     if user.id != request_user_id:
