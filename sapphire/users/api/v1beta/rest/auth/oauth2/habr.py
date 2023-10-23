@@ -2,7 +2,6 @@ import fastapi
 import yarl
 from fastapi.responses import RedirectResponse
 
-from sapphire.common.habr.client import HabrClient
 from sapphire.common.jwt import JWTMethods
 from sapphire.users.api.v1beta.rest.auth.schemas import JWTTokensResponse
 from sapphire.users.database.service import UsersDatabaseService
@@ -30,7 +29,6 @@ async def callback(
     state: str, code: str, request: fastapi.Request, response: fastapi.Response
 ) -> JWTTokensResponse:
     habr_oauth2: OAuth2HabrBackend = request.app.service.habr_oauth2
-    habr_client: HabrClient = request.app.service.habr_client
     jwt_methods: JWTMethods = request.app.service.jwt_methods
 
     database_service: UsersDatabaseService = request.app.service.database
