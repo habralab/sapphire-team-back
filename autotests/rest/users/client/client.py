@@ -15,6 +15,13 @@ class UsersRestClient(BaseRestClient):
 
         return await self.rest_get(path=path, response_model=HealthResponse)
 
+    async def oauth2_habr_authorize(self) -> httpx.Response:
+        path = "/api/v1beta/rest/auth/oauth2/habr/authorize"
+
+        response = await self.get(url=path, follow_redirects=False)
+
+        return response
+
     async def logout(self) -> httpx.Response:
         path = "/api/v1beta/rest/auth/logout"
 
@@ -60,8 +67,8 @@ class UsersRestClient(BaseRestClient):
 
     async def update_user_avatar(self, user_id: uuid.UUID, avatar: io.BytesIO) -> UserResponse:
         path = f"/api/v1beta/rest/users/{user_id}/avatar"
-        
-        return await self.rest_post(path=path, response_model=UserResponse, files={"file": avatar})
+
+        return await self.rest_post(path=path, response_model=UserResponse, files={"avatar": avatar})
 
     async def remove_user_avatar(self, user_id: uuid.UUID) -> UserResponse:
         path = f"/api/v1beta/rest/users/{user_id}/avatar"
