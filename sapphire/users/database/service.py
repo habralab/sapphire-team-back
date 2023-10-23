@@ -29,7 +29,7 @@ class UsersDatabaseService(BaseDatabaseService):
 
         stmt = select(User).where(*filters)
         result = await session.execute(stmt)
-        user = result.scalar_one_or_none()
+        user = result.unique().scalar_one_or_none()
 
         return user
 
