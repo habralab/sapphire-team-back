@@ -28,11 +28,13 @@ class Profile(Base):
     __tablename__ = "profiles"
 
     user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"), primary_key=True)
-    about: Mapped[str | None] = mapped_column(Text, deferred=True)
+    about: Mapped[str | None] = mapped_column(Text)
     main_specialization_id: Mapped[uuid.UUID | None]
     secondary_specialization_id: Mapped[uuid.UUID | None]
     created_at: Mapped[datetime] = mapped_column(default=datetime.now)
     updated_at: Mapped[datetime] = mapped_column(default=datetime.now, onupdate=datetime.now)
+
+    user: Mapped[User] = relationship(User, back_populates="profile", lazy=False)
 
 
 class UserSkill(Base):
