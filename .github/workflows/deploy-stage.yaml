@@ -13,7 +13,6 @@ jobs:
       - name: Build
         run: docker build -t sapphire:${{ github.sha }} --target slim .
   up-postgres:
-    needs: [build]
     runs-on: self-hosted
     steps:
       - name: Remove old Postgres for migrations
@@ -26,7 +25,7 @@ jobs:
           --detach
           postgres:16.0-bookworm
   migrate-users:
-    needs: [up-postgres]
+    needs: [build, up-postgres]
     runs-on: self-hosted
     steps:
       - name: Migrate Users
@@ -36,7 +35,7 @@ jobs:
           sapphire:${{ github.sha }}
           users database migrations migrate
   migrate-storage:
-    needs: [up-postgres]
+    needs: [build, up-postgres]
     runs-on: self-hosted
     steps:
       - name: Migrate Storage
@@ -46,7 +45,7 @@ jobs:
           sapphire:${{ github.sha }}
           storage database migrations migrate
   migrate-projects:
-    needs: [up-postgres]
+    needs: [build, up-postgres]
     runs-on: self-hosted
     steps:
       - name: Migrate Projects
@@ -56,7 +55,7 @@ jobs:
           sapphire:${{ github.sha }}
           projects database migrations migrate
   migrate-notifications:
-    needs: [up-postgres]
+    needs: [build, up-postgres]
     runs-on: self-hosted
     steps:
       - name: Migrate Notifications
@@ -66,7 +65,7 @@ jobs:
           sapphire:${{ github.sha }}
           notifications database migrations migrate
   migrate-messenger:
-    needs: [up-postgres]
+    needs: [build, up-postgres]
     runs-on: self-hosted
     steps:
       - name: Migrate Messenger
