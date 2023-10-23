@@ -23,7 +23,7 @@ class HabrClient(HTTPClient):
         data = response.json()
         user_card = UserCard(
             username=data["alias"],
-            full_name=data["full_name"],
+            full_name=data["fullname"],
             avatar=data["avatarUrl"],
             speciality=data["speciality"],
             gender=self.GENDER_MAPPING[data["gender"]],
