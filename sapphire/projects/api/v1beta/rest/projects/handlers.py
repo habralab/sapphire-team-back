@@ -114,7 +114,7 @@ async def upload_project_avatar(
             avatar=str(avatar_file_path),
         )
 
-    return ProjectResponse.model_validate(project=project)
+    return ProjectResponse.model_validate(project)
 
 
 async def delete_project_avatar(
@@ -126,7 +126,7 @@ async def delete_project_avatar(
         database_service: ProjectsDatabaseService = request.app.service.database
         original_avatar_file_path = project.avatar
         async with database_service.transaction() as session:
-            user = await database_service.update_project_avatar(
+            project = await database_service.update_project_avatar(
                 session=session,
                 project=project,
                 avatar=None,
@@ -134,4 +134,4 @@ async def delete_project_avatar(
 
         await aiofiles.os.remove(original_avatar_file_path)
 
-    return ProjectResponse.model_validate(project=project)
+    return ProjectResponse.model_validate(project)
