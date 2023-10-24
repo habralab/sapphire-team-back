@@ -10,7 +10,7 @@ from sapphire.common.jwt.dependencies.rest import auth_user_id
 from sapphire.projects.database.models import Project
 from sapphire.projects.database.service import ProjectsDatabaseService
 
-from .dependencies import get_path_project
+from .dependencies import get_path_project, path_project_is_owner
 from .schemas import (
     CreateProjectRequest,
     ProjectHistoryListResponse,
@@ -91,16 +91,9 @@ async def get_projects(
 
 async def upload_project_avatar(
         request: fastapi.Request,
-        request_user_id: uuid.UUID = fastapi.Depends(auth_user_id),
-        project: Project = fastapi.Depends(get_path_project),
+        project: Project = fastapi.Depends(path_project_is_owner),
         avatar: fastapi.UploadFile = fastapi.File(...),
 ) -> ProjectResponse:
-
-    if request_user_id != user.id:
-        raise fastapi.HTTPException(
-            status_code=fastapi.status.HTTP_403_FORBIDDEN,
-            detail="Forbidden.",
-        )
 
     database_service: ProjectsDatabaseService = request.app.service.database
     media_dir_path: pathlib.Path = request.app.service.media_dir_path
@@ -121,19 +114,14 @@ async def upload_project_avatar(
             avatar=str(avatar_file_path),
         )
 
-    return ProjectResponse.from_db_model(project=project)
+    return ProjectResponse.model_validate(project=project)
 
 
 async def delete_project_avatar(
         request: fastapi.Request,
-        request_user_id: uuid.UUID = fastapi.Depends(auth_user_id),
-        project: Project = fastapi.Depends(get_path_project),
+        project: Project = fastapi.Depends(path_project_is_owner),
 ) -> ProjectResponse:
-    if request_user_id != user.id:
-        raise fastapi.HTTPException(
-            status_code=fastapi.status.HTTP_403_FORBIDDEN,
-            detail="Forbidden.",
-        )
+
     if project.avatar is not None:
         database_service: ProjectsDatabaseService = request.app.service.database
         original_avatar_file_path = project.avatar
@@ -146,4 +134,4 @@ async def delete_project_avatar(
 
         await aiofiles.os.remove(original_avatar_file_path)
 
-    return ProjectResponse.from_db_model(project=project)
+    return ProjectResponse.model_validate(project=project)

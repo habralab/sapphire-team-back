@@ -171,13 +171,17 @@ class ProjectsDatabaseService(BaseDatabaseService):
         project: Project,
         avatar: str | None | Type[Empty] = Empty,
     ) -> Project:
-        query = (
-            update(Project)
-            .where(Project.id == project.id)
-            .values(avatar=avatar)
-        )
-        session.add(query)
-        session.refresh(project)
+        if avatar is not Empty:
+            query = (
+                update(Project)
+                .where(Project.id == project.id)
+                .values(avatar=avatar)
+            )
+
+            result = await session.execute(query)
+            updated_project = result.scalar_one()
+
+            return updated_project
 
         return project
 
