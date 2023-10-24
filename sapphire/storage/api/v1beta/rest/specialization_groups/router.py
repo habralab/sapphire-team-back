@@ -4,4 +4,4 @@ from . import handlers
 
 router = fastapi.APIRouter()
 
-router.add_api_route(path="", endpoint=handlers.get_specialization_groups)
+router.add_api_route(path="/", endpoint=handlers.get_specialization_groups)
