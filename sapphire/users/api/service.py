@@ -78,7 +78,7 @@ class UsersAPIService(BaseAPIService):
         return self._media_dir_path
 
     @property
-    def load_chunk_file_size(self) -> int:
+    def load_file_chunk_size(self) -> int:
         return self._load_file_chunk_size
 
 

@@ -4,8 +4,9 @@ import uuid
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
+from sqlalchemy import delete
 
-from sapphire.users.database.models import Profile, User
+from sapphire.users.database.models import Profile, User, UserSkill
 from sapphire.users.database.service import UsersDatabaseService
 
 
@@ -94,3 +95,32 @@ async def test_update_user(database_service: UsersDatabaseService):
     assert result_user.profile.about == new_about
     assert result_user.profile.main_specialization_id == new_main_specialization_id
     assert result_user.profile.secondary_specialization_id == new_secondary_specialization_id
+
+
+@pytest.mark.asyncio
+async def test_update_skills(database_service: UsersDatabaseService):
+    user = User(id=uuid.uuid4(), email="test@gmail.com")
+    user.profile = Profile(user=user)
+    user.skills = [UserSkill(user=user, skill_id=uuid.uuid4()) for _ in range(10)]
+    new_skills = {uuid.uuid4() for _ in range(5)}
+
+    session = MagicMock()
+    expected_query = delete(UserSkill).where(UserSkill.user_id == user.id)
+    session.execute = AsyncMock()
+
+    skills = await database_service.update_user_skills(
+        session=session,
+        user=user,
+        skills=new_skills,
+    )
+ 
+    session.execute.assert_awaited_once()
+    assert len(session.execute.call_args_list[0].args) == 1
+    query = session.execute.call_args_list[0].args[0]
+    assert expected_query.compare(query)
+
+    expected_user_skills = {(user.id, new_skill) for new_skill in new_skills}
+    actual_user_skills = {(user_skill.user.id, user_skill.skill_id) for user_skill in user.skills}
+    assert actual_user_skills == expected_user_skills
+
+    assert skills is new_skills

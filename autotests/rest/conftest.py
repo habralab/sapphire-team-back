@@ -14,7 +14,7 @@ def oleg_id() -> uuid.UUID:
 
 @pytest.fixture
 def matvey_id() -> uuid.UUID:
-    return uuid.UUID()
+    return uuid.UUID("07dcf2a2-0a9e-4674-a5d5-8103eddcf68e")
 
 
 @pytest.fixture

@@ -5,7 +5,7 @@ from sapphire.common.jwt.settings import JWTSettings
 
 
 class AutotestsSettings(JWTSettings):
-    model_config = SettingsConfigDict(extra="allow", env_file=".env")
+    model_config = SettingsConfigDict(extra="allow", env_file=".env", secrets_dir="/run/secrets")
 
     messenger_base_url: AnyHttpUrl
     notifications_base_url: AnyHttpUrl

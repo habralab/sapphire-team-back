@@ -25,4 +25,5 @@ jobs:
           -e "PROJECTS_BASE_URL=${PROJECTS_ROOT_URL_STAGE}${PROJECTS_ROOT_PATH_STAGE}"
           -e "STORAGE_BASE_URL=${STORAGE_ROOT_URL_STAGE}${STORAGE_ROOT_PATH_STAGE}"
           -e "USERS_BASE_URL=${USERS_ROOT_URL_STAGE}${USERS_ROOT_PATH_STAGE}"
+          -v /sapphire/stage/secrets:/run/secrets
           sapphire:test-${{ github.sha }} pytest autotests
