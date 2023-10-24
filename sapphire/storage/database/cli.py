@@ -7,6 +7,7 @@ from rich.console import Console
 from rich.table import Table
 
 from sapphire.common.database.service import FixtureFormatEnum
+
 from .service import get_service
 
 
@@ -54,12 +55,15 @@ def fixtures_list(ctx: typer.Context):
 def apply_fixture(
     ctx: typer.Context,
     name: str = typer.Argument(..., help="Fixture name"),
-    format: FixtureFormatEnum = typer.Option(FixtureFormatEnum.YAML,
-                                             help="Fixture format/extension"),
+    fixture_format: FixtureFormatEnum = typer.Option(
+        FixtureFormatEnum.YAML,
+        "-f", "--format",
+        help="Fixture format/extension",
+    ),
 ):
     database_service = ctx.obj["database"]
 
-    asyncio.run(database_service.apply_fixture(name=name, format=format))
+    asyncio.run(database_service.apply_fixture(name=name, fixture_format=fixture_format))
 
 
 def get_fixtures_cli() -> typer.Typer:

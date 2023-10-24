@@ -58,7 +58,7 @@ class BaseDatabaseService(ServiceMixin):
             "For working with fixtures you need override `get_fixtures_directory_path` method",
         )
 
-    def get_models_mapping(self) -> dict[str, Type[DeclarativeBase]]:
+    def get_models(self) -> list[Type[DeclarativeBase]]:
         raise NotImplementedError(
             "For working with fixtures you need override `get_models_mapping` method",
         )
@@ -105,26 +105,26 @@ class BaseDatabaseService(ServiceMixin):
     async def apply_fixture(
             self,
             name: str,
-            format: FixtureFormatEnum = FixtureFormatEnum.YAML,
+            fixture_format: FixtureFormatEnum = FixtureFormatEnum.YAML,
     ):
         fixtures_directory_path = self.get_fixtures_directory_path()
-        models_mapping = self.get_models_mapping()
+        models_mapping = {model.__tablename__: model for model in self.get_models()}
 
         fixture_file_path = fixtures_directory_path / f"{name}.{format.value}"
-        fixture_file_loader = self.FIXTURES_FORMATS_MAPPING[format]
-        with open(fixture_file_path, "rt") as fixture_file:
+        fixture_file_loader = self.FIXTURES_FORMATS_MAPPING[fixture_format]
+        with open(fixture_file_path, "rt", encoding="utf-8") as fixture_file:
             fixture_payload = fixture_file_loader(fixture_file)
         fixture_content = FixtureContent(**fixture_payload)
         logger.info("Load fixture '{}'", name)
 
         model = models_mapping.get(fixture_content.model)
         if model is None:
-            raise Exception(f"Incorrect model name in fixture '{name}': {fixture_content.model}")
+            raise ValueError(f"Incorrect model name in fixture '{name}': {fixture_content.model}")
         records = [
             model(**self.prepare_fixture_fields_for_model(fields))
             for fields in fixture_content.data
         ]
-        
+
         async with self.transaction() as session:
             session.add_all(records)
         logger.info("Fixture '{}' apply to database", name)

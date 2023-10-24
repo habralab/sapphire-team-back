@@ -1,4 +1,5 @@
 import pytest
+
 from autotests.rest.storage.client.client import StorageRestClient
 
 

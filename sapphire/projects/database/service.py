@@ -12,6 +12,7 @@ from sapphire.common.database.utils import Empty
 from sapphire.projects.settings import ProjectsSettings
 
 from .models import (
+    Base,
     Participant,
     ParticipantStatusEnum,
     Position,
@@ -24,6 +25,12 @@ from .models import (
 class ProjectsDatabaseService(BaseDatabaseService):
     def get_alembic_config_path(self) -> pathlib.Path:
         return pathlib.Path(__file__).parent / "migrations"
+
+    def get_fixtures_directory_path(self) -> pathlib.Path:
+        return pathlib.Path(__file__).parent / "fixtures"
+
+    def get_models(self) -> list[Type[Base]]:
+        return [Participant, Position, Project, ProjectHistory]
 
     async def create_project(
         self,

@@ -3,10 +3,10 @@ from typing import Type
 
 from sqlalchemy import desc, select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import DeclarativeBase
 
 from sapphire.common.database.service import BaseDatabaseService
 from sapphire.storage.database.models import (
+    Base,
     Skill,
     Specialization,
     SpecializationGroup,
@@ -22,13 +22,8 @@ class StorageDatabaseService(BaseDatabaseService):
     def get_fixtures_directory_path(self) -> pathlib.Path | None:
         return pathlib.Path(__file__).parent / "fixtures"
 
-    def get_models_mapping(self) -> dict[str, Type[DeclarativeBase]]:
-        return {
-            "skills": Skill,
-            "specializations": Specialization,
-            "specialization_groups": SpecializationGroup,
-            "specialization_skills": SpecializationsSkills,
-        }
+    def get_models(self) -> list[Type[Base]]:
+        return [Skill, Specialization, SpecializationGroup, SpecializationsSkills]
 
     async def get_specializations(
         self,
