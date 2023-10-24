@@ -1,16 +1,29 @@
 import pathlib
+from typing import Type
 
 from sqlalchemy import desc, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from sapphire.common.database.service import BaseDatabaseService
-from sapphire.storage.database.models import Skill, Specialization, SpecializationGroup
+from sapphire.storage.database.models import (
+    Base,
+    Skill,
+    Specialization,
+    SpecializationGroup,
+    SpecializationsSkills,
+)
 from sapphire.storage.settings import StorageSettings
 
 
 class StorageDatabaseService(BaseDatabaseService):
     def get_alembic_config_path(self) -> pathlib.Path:
         return pathlib.Path(__file__).parent / "migrations"
+
+    def get_fixtures_directory_path(self) -> pathlib.Path | None:
+        return pathlib.Path(__file__).parent / "fixtures"
+
+    def get_models(self) -> list[Type[Base]]:
+        return [Skill, Specialization, SpecializationGroup, SpecializationsSkills]
 
     async def get_specializations(
         self,

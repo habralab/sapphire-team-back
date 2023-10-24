@@ -7,13 +7,19 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from sapphire.common.database.service import BaseDatabaseService
 from sapphire.common.database.utils import Empty
-from sapphire.users.database.models import Profile, User, UserSkill
+from sapphire.users.database.models import Base, Profile, User, UserSkill
 from sapphire.users.settings import UsersSettings
 
 
 class UsersDatabaseService(BaseDatabaseService):
     def get_alembic_config_path(self) -> pathlib.Path:
         return pathlib.Path(__file__).parent / "migrations"
+
+    def get_fixtures_directory_path(self) -> pathlib.Path:
+        return pathlib.Path(__file__).parent / "fixtures"
+
+    def get_models(self) -> list[Type[Base]]:
+        return [Profile, User, UserSkill]
 
     async def get_user(
             self,
