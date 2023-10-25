@@ -67,11 +67,11 @@ class ProjectsDatabaseService(BaseDatabaseService):
         self,
         session: AsyncSession,
         project: Project,
-        name:        str       | None | Type[Empty] = Empty,
+        name:        str | None | Type[Empty] = Empty,
         owner_id:    uuid.UUID | None | Type[Empty] = Empty,
-        description: str       | None | Type[Empty] = Empty,
-        deadline:    datetime  | None | Type[Empty] = Empty,
-        avatar:      str       | None | Type[Empty] = Empty,
+        description: str | None | Type[Empty] = Empty,
+        deadline:    datetime | None | Type[Empty] = Empty,
+        avatar:      str | None | Type[Empty] = Empty,
     ) -> Project:
         query = select(Project).where(Project.id == project.id)
         result = await session.execute(query)
