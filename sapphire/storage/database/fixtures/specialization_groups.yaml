@@ -1,0 +1,32 @@
+model: specialization_groups
+data:
+- id: f6fccd64-1df1-4355-8cbc-e02c347c464e
+  name: Разработка
+- id: af520dbd-08fc-4c85-9894-37c623a97d73
+  name: Тестирование
+- id: 2046dc47-98d7-4c61-b55f-c250fbc65ad8
+  name: Администрирование
+- id: ec1a9abe-f21e-40d8-b83a-b152fa8145de
+  name: Дизайн
+- id: 42f09815-393e-451a-bc64-a232062e3096
+  name: Менеджмент
+- id: a27bde68-c0e2-4acc-8321-5479c2fa293d
+  name: Аналитика
+- id: 684c4d01-de1d-490a-b10e-f8a38c6cafe1
+  name: Поддержка
+- id: 536b02b4-077a-4e4f-a9a9-114aee4b539e
+  name: Маркетинг
+- id: a97d0047-7914-4dfb-a35e-7c18328bfff9
+  name: Продажи
+- id: baa5ece9-0392-490c-a8df-6ba9a87cf784
+  name: Контент
+- id: 7f31465e-f068-4f33-92f3-73fafff8f726
+  name: HR
+- id: 589eddd7-effb-4f23-90fa-20bff1e0d88f
+  name: Офис
+- id: 9ec4acd9-bcae-4db6-ba48-bc80e7812e92
+  name: Информационная безопасность
+- id: 63a79807-6a83-4ee3-9716-41c9c368c604
+  name: Искусственный интеллект
+- id: 068203d8-7fa6-45ca-92aa-e3dd629d9cec
+  name: Зерокодинг
