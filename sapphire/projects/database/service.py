@@ -62,7 +62,6 @@ class ProjectsDatabaseService(BaseDatabaseService):
         result = await session.execute(statement)
         return result.unique().scalar_one_or_none()
 
-
     async def update_project(
         self,
         session: AsyncSession,
