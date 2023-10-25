@@ -33,6 +33,7 @@ class Project(Base):
     deadline: Mapped[datetime | None]
     created_at: Mapped[datetime] = mapped_column(default=datetime.now)
     updated_at: Mapped[datetime] = mapped_column(default=datetime.now, onupdate=datetime.now)
+    avatar: Mapped[str | None] = mapped_column(default=None)
 
     history: Mapped[list["ProjectHistory"]] = relationship(
         back_populates="project",

@@ -108,7 +108,7 @@ async def upload_project_avatar(
             await avatar_file.write(content)
 
     async with database_service.transaction() as session:
-        project = await database_service.update_project_avatar(
+        project = await database_service.update_project(
             session=session,
             project=project,
             avatar=str(avatar_file_path),
@@ -126,7 +126,7 @@ async def delete_project_avatar(
         database_service: ProjectsDatabaseService = request.app.service.database
         original_avatar_file_path = project.avatar
         async with database_service.transaction() as session:
-            project = await database_service.update_project_avatar(
+            project = await database_service.update_project(
                 session=session,
                 project=project,
                 avatar=None,

@@ -55,6 +55,34 @@ class ProjectsDatabaseService(BaseDatabaseService):
         result = await session.execute(statement)
         return result.unique().scalar_one_or_none()
 
+
+    async def update_project(
+        self,
+        session: AsyncSession,
+        project: Project,
+        name:        str       | None | Type[Empty] = Empty,
+        owner_id:    uuid.UUID | None | Type[Empty] = Empty,
+        description: str       | None | Type[Empty] = Empty,
+        deadline:    datetime  | None | Type[Empty] = Empty,
+        avatar:      str       | None | Type[Empty] = Empty,
+    ) -> Project:
+        query = select(Project).where(Project.id == project_id)
+        result = await session.execute(query)
+        project = result.scalar_one()
+
+        if name is not Empty:
+            project.name = name
+        if owner_id is not Empty:
+            project.owner_id = owner_id
+        if description is not Empty:
+            project.description = description
+        if deadline is not Empty:
+            project.deadline = deadline
+        if avatar is not Empty:
+            project.avatar = avatar
+
+        return project
+
     async def get_project_positions(
             self,
             session: AsyncSession,
@@ -164,26 +192,6 @@ class ProjectsDatabaseService(BaseDatabaseService):
         result = await session.execute(query)
 
         return list(result.unique().scalars().all())
-
-    async def update_project_avatar(
-        self,
-        session: AsyncSession,
-        project: Project,
-        avatar: str | None | Type[Empty] = Empty,
-    ) -> Project:
-        if avatar is not Empty:
-            query = (
-                update(Project)
-                .where(Project.id == project.id)
-                .values(avatar=avatar)
-            )
-
-            result = await session.execute(query)
-            updated_project = result.scalar_one()
-
-            return updated_project
-
-        return project
 
 
 def get_service(settings: ProjectsSettings) -> ProjectsDatabaseService:
