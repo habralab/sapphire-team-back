@@ -3,7 +3,7 @@ import uuid
 from datetime import datetime
 from typing import Type
 
-from sqlalchemy import desc, update
+from sqlalchemy import desc
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
@@ -73,7 +73,7 @@ class ProjectsDatabaseService(BaseDatabaseService):
         deadline:    datetime  | None | Type[Empty] = Empty,
         avatar:      str       | None | Type[Empty] = Empty,
     ) -> Project:
-        query = select(Project).where(Project.id == project_id)
+        query = select(Project).where(Project.id == project.id)
         result = await session.execute(query)
         project = result.scalar_one()
 
