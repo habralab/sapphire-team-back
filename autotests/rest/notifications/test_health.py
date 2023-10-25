@@ -1,6 +1,6 @@
 import pytest
 
-from .client import NotificationsRestClient
+from autotests.clients.rest.notifications.client import NotificationsRestClient
 
 
 @pytest.mark.asyncio

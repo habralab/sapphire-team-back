@@ -13,8 +13,8 @@ from .schemas import (
     CreateProjectRequest,
     ProjectHistoryListResponse,
     ProjectHistoryResponse,
+    ProjectListResponse,
     ProjectResponse,
-    ProjectsResponse,
 )
 
 
@@ -72,7 +72,7 @@ async def history(
 async def get_projects(
     request: fastapi.Request,
     pagination: Pagination = fastapi.Depends(pagination),
-) -> ProjectsResponse:
+) -> ProjectListResponse:
     database_service: ProjectsDatabaseService = request.app.service.database
 
     async with database_service.transaction() as session:
@@ -84,4 +84,4 @@ async def get_projects(
 
     projects = [ProjectResponse.model_validate(project_db) for project_db in projects_db]
 
-    return ProjectsResponse(data=projects, page=pagination.page, per_page=pagination.per_page)
+    return ProjectListResponse(data=projects, page=pagination.page, per_page=pagination.per_page)

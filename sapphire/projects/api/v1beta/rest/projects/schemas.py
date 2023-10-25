@@ -40,5 +40,5 @@ class ProjectHistoryListResponse(PaginatedResponse):
     data: list[ProjectHistoryResponse]
 
 
-class ProjectsResponse(PaginatedResponse):
+class ProjectListResponse(PaginatedResponse):
     data: list[ProjectResponse]

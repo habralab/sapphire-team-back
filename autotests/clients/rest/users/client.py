@@ -4,7 +4,8 @@ from typing import Set
 
 import httpx
 
-from autotests.rest.client import BaseRestClient, ResponseException
+from autotests.clients.rest.base_client import BaseRestClient
+from autotests.clients.rest.exceptions import ResponseException
 
 from .models import HealthResponse, UserResponse, UserUpdateRequest
 

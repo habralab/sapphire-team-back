@@ -1,6 +1,6 @@
 import pytest
 
-from .client import MessengerRestClient
+from autotests.clients.rest.messenger.client import MessengerRestClient
 
 
 @pytest.mark.asyncio
