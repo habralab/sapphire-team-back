@@ -11,24 +11,24 @@ def projects_rest_client(settings: AutotestsSettings) -> ProjectsRestClient:
 
 
 @pytest.fixture
-def user_1_projects_rest_client(
+def oleg_projects_rest_client(
         settings: AutotestsSettings,
-        user_1_access_token: str,
+        oleg_access_token: str,
 ) -> ProjectsRestClient:
     return ProjectsRestClient(
         base_url=str(settings.users_base_url),
-        headers={"Authorization": f"Bearer {user_1_access_token}"},
+        headers={"Authorization": f"Bearer {oleg_access_token}"},
         verify=False,
     )
 
 
 @pytest.fixture
-def user_2_projects_rest_client(
+def matvey_projects_rest_client(
         settings: AutotestsSettings,
-        user_2_access_token: str,
+        matvey_access_token: str,
 ) -> ProjectsRestClient:
     return ProjectsRestClient(
         base_url=str(settings.users_base_url),
-        headers={"Authorization": f"Bearer {user_2_access_token}"},
+        headers={"Authorization": f"Bearer {matvey_access_token}"},
         verify=False,
     )
