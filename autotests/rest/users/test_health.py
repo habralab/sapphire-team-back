@@ -1,6 +1,6 @@
 import pytest
 
-from .client import UsersRestClient
+from autotests.clients.rest.users.client import UsersRestClient
 
 
 @pytest.mark.asyncio

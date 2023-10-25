@@ -38,7 +38,7 @@ class BaseDatabaseService(ServiceMixin):
 
     def __init__(self, dsn: str):
         self._dsn = dsn
-        self._engine = create_async_engine(self._dsn)
+        self._engine = create_async_engine(self._dsn, pool_recycle=60)
         self._sessionmaker = async_sessionmaker(self._engine, expire_on_commit=False)
 
     def get_alembic_config_path(self) -> pathlib.Path:

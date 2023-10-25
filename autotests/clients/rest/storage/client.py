@@ -1,4 +1,4 @@
-from autotests.rest.client import BaseRestClient
+from autotests.clients.rest.base_client import BaseRestClient
 
 from .models import (
     HealthResponse,

@@ -3,8 +3,8 @@ import uuid
 
 import pytest
 
-from autotests.rest.client import ResponseException
-from autotests.rest.users.client.client import UsersRestClient
+from autotests.clients.rest.exceptions import ResponseException
+from autotests.clients.rest.users.client import UsersRestClient
 
 
 @pytest.mark.parametrize(("user_id", "user_email", "client"), (

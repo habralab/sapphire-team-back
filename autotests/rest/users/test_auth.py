@@ -1,7 +1,7 @@
 import pytest
 import yarl
 
-from autotests.rest.users.client.client import UsersRestClient
+from autotests.clients.rest.users.client import UsersRestClient
 from autotests.settings import AutotestsSettings
 
 
