@@ -1,6 +1,6 @@
 import pytest
 
-from autotests.rest.storage.client.client import StorageRestClient
+from autotests.clients.rest.storage.client import StorageRestClient
 
 
 @pytest.mark.asyncio

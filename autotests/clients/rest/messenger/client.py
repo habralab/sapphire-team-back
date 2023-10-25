@@ -1,9 +1,9 @@
-from autotests.rest.client import BaseRestClient
+from autotests.clients.rest.base_client import BaseRestClient
 
 from .models import HealthResponse
 
 
-class NotificationsRestClient(BaseRestClient):
+class MessengerRestClient(BaseRestClient):
     async def get_health(self) -> HealthResponse:
         path = "/api/v1beta/rest/health"
 

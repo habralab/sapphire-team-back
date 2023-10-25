@@ -6,7 +6,7 @@ from pydantic import BaseModel, constr
 
 from autotests.rest.models import PaginatedResponse
 
-from .enums import ProjectStatusEnum
+from .enums import ParticipantStatusEnum, ProjectStatusEnum
 
 
 class HealthResponse(BaseModel):
@@ -34,3 +34,26 @@ class ProjectResponse(BaseModel):
 
 class ProjectListResponse(PaginatedResponse):
     data: list[ProjectResponse]
+
+
+class CreatePositionRequest(BaseModel):
+    name: str
+
+
+class PositionResponse(BaseModel):
+    id: uuid.UUID
+    project_id: uuid.UUID
+    name: str
+    is_deleted: bool
+    closed_at: datetime | None
+    created_at: datetime
+    updated_at: datetime
+
+
+class ParticipantResponse(BaseModel):
+    id: uuid.UUID
+    position_id: uuid.UUID
+    user_id: uuid.UUID
+    status: ParticipantStatusEnum
+    created_at: datetime
+    updated_at: datetime
