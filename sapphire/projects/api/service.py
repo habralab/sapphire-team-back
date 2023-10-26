@@ -18,7 +18,7 @@ class ProjectsAPIService(BaseAPIService):
         self,
         database: ProjectsDatabaseService,
         jwt_methods: JWTMethods,
-        broker_service: BaseBrokerProducerService,
+        broker_service: ProjectsBrokerService,
         version: str = "0.0.0.0",
         root_url: str = "http://localhost",
         root_path: str = "",
