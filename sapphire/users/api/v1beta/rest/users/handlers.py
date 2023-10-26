@@ -18,9 +18,9 @@ async def get_user(
         request_user_id: uuid.UUID | None = fastapi.Depends(get_request_user_id),
         path_user: User = fastapi.Depends(get_path_user),
 ) -> UserResponse:
-    with_email = request_user_id == path_user.id
+    # with_email = request_user_id == path_user.id
 
-    return UserResponse.from_db_model(path_user, with_email=with_email)
+    return UserResponse.from_db_model(path_user, with_email=True)
 
 
 async def update_user(
@@ -42,7 +42,6 @@ async def update_user(
             session=session,
             first_name=data.first_name,
             last_name=data.last_name,
-            about=data.about,
             main_specialization_id=data.main_specialization_id,
             secondary_specialization_id=data.secondary_specialization_id
         )
@@ -62,9 +61,9 @@ async def get_user_avatar(user: User = fastapi.Depends(get_path_user)) -> FileRe
 
 async def upload_user_avatar(
         request: fastapi.Request,
-        avatar: fastapi.UploadFile = fastapi.File(...),
         request_user_id: uuid.UUID = fastapi.Depends(auth_user_id),
         user: User = fastapi.Depends(get_path_user),
+        avatar: fastapi.UploadFile = fastapi.File(...),
 ) -> UserResponse:
     if request_user_id != user.id:
         raise fastapi.HTTPException(
