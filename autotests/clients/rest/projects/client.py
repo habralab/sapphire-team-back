@@ -3,7 +3,7 @@ from datetime import datetime
 from typing import Type
 
 from autotests.clients.rest.base_client import BaseRestClient
-from autotests.clients.rest.projects.enums import ProjectStatusEnum
+from autotests.clients.rest.projects.enums import ParticipantStatusEnum, ProjectStatusEnum
 from autotests.utils import Empty
 
 from .models import (
@@ -14,6 +14,7 @@ from .models import (
     PositionResponse,
     ProjectListResponse,
     ProjectResponse,
+    UpdateParticipantRequest,
 )
 
 
@@ -70,3 +71,18 @@ class ProjectsRestClient(BaseRestClient):
         path = f"/api/v1beta/rest/projects/{project_id}/positions/{position_id}/participants/"
         
         return await self.rest_post(path=path, response_model=ParticipantResponse)
+
+    async def update_project_position_participant(
+            self,
+            project_id: uuid.UUID,
+            position_id: uuid.UUID,
+            participant_id: uuid.UUID,
+            status: ParticipantStatusEnum,
+    ) -> ParticipantResponse:
+        path = (
+            f"/api/v1beta/rest/projects/{project_id}/positions/{position_id}/participants"
+            f"/{participant_id}"
+        )
+        request = UpdateParticipantRequest(status=status)
+
+        return await self.rest_post(path=path, data=request, response_model=ParticipantResponse)

@@ -10,7 +10,7 @@ from sapphire.projects.database.models import Participant, ParticipantStatusEnum
 from sapphire.projects.database.service import ProjectsDatabaseService
 
 from .dependencies import get_path_participant
-from .schemas import ChangeParticipantStatusRequest, ProjectParticipantResponse
+from .schemas import ProjectParticipantResponse, UpdateParticipantRequest
 
 
 async def create_participant(
@@ -49,22 +49,22 @@ async def create_participant(
 
 async def update_participant(
     request: fastapi.Request,
-    data: ChangeParticipantStatusRequest = fastapi.Body(...),
-    user_id: uuid.UUID = fastapi.Depends(auth_user_id),
+    data: UpdateParticipantRequest = fastapi.Body(...),
+    request_user_id: uuid.UUID = fastapi.Depends(auth_user_id),
     project: Project = fastapi.Depends(get_path_project),
     participant: Participant = fastapi.Depends(get_path_participant),
 ) -> ProjectParticipantResponse:
     database_service: ProjectsDatabaseService = request.app.service.database
 
     project_owner_nodes = {
-        # New expected status : Required current status
-        ParticipantStatusEnum.DECLINED: ParticipantStatusEnum.REQUEST,
-        ParticipantStatusEnum.JOINED: ParticipantStatusEnum.REQUEST,
+        # New expected status : Required current statuses
+        ParticipantStatusEnum.DECLINED: [ParticipantStatusEnum.REQUEST],
+        ParticipantStatusEnum.JOINED: [ParticipantStatusEnum.REQUEST],
     }
     participant_nodes = {
-        # New expected status : Required current status
-        ParticipantStatusEnum.DECLINED: ParticipantStatusEnum.REQUEST,
-        ParticipantStatusEnum.LEFT: ParticipantStatusEnum.JOINED,
+        # New expected status : Required current statuses
+        ParticipantStatusEnum.DECLINED: [ParticipantStatusEnum.REQUEST],
+        ParticipantStatusEnum.LEFT: [ParticipantStatusEnum.JOINED],
     }
 
     participant_status_nodes = defaultdict(dict)
@@ -72,7 +72,8 @@ async def update_participant(
     participant_status_nodes[project.owner_id].update(project_owner_nodes)
     participant_status_nodes[participant.user_id].update(participant_nodes)
 
-    if participant_status_nodes.get(user_id, {}).get(data.status, None) == participant.status:
+    required_statuses = participant_status_nodes.get(request_user_id, {}).get(data.status, ())
+    if participant.status in required_statuses:
         async with database_service.transaction() as session:
             updated_participant_db = await database_service.update_participant_status(
                 session=session,

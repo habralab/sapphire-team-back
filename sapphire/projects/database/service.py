@@ -8,7 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
 from sapphire.common.database.service import BaseDatabaseService
-from sapphire.common.database.utils import Empty
+from sapphire.common.utils.empty import Empty
 from sapphire.projects.settings import ProjectsSettings
 
 from .models import (
