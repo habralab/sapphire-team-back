@@ -139,6 +139,8 @@ services:
         target: jwt_refresh_token_public_key
       - source: jwt_refresh_token_private_key
         target: jwt_refresh_token_private_key
+    volumes:
+      - ${PROJECTS_MEDIA_DIR_PATH:-./projects_data/media}:/media
     ports:
       - target: 8000
         published: ${PROJECTS_PORT:-3020}
