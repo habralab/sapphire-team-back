@@ -1,6 +1,8 @@
 import math
+import pathlib
 import uuid
 
+import aiofiles
 import fastapi
 
 from sapphire.common.api.dependencies.pagination import Pagination, pagination
@@ -8,7 +10,7 @@ from sapphire.common.jwt.dependencies.rest import auth_user_id
 from sapphire.projects.database.models import Project
 from sapphire.projects.database.service import ProjectsDatabaseService
 
-from .dependencies import get_path_project
+from .dependencies import get_path_project, path_project_is_owner
 from .schemas import (
     CreateProjectRequest,
     ProjectHistoryListResponse,
@@ -85,3 +87,51 @@ async def get_projects(
     projects = [ProjectResponse.model_validate(project_db) for project_db in projects_db]
 
     return ProjectListResponse(data=projects, page=pagination.page, per_page=pagination.per_page)
+
+
+async def upload_project_avatar(
+        request: fastapi.Request,
+        project: Project = fastapi.Depends(path_project_is_owner),
+        avatar: fastapi.UploadFile = fastapi.File(...),
+) -> ProjectResponse:
+
+    database_service: ProjectsDatabaseService = request.app.service.database
+    media_dir_path: pathlib.Path = request.app.service.media_dir_path
+    load_file_chunk_size: int = request.app.service.load_file_chunk_size
+
+    avatars_dir_path: pathlib.Path = media_dir_path / "project-avatars"
+    avatar_file_path = avatars_dir_path / f"project-{project.id}"
+
+    await aiofiles.os.makedirs(avatars_dir_path, exist_ok=True)
+    async with aiofiles.open(avatar_file_path, "wb") as avatar_file:
+        while content := await avatar.read(size=load_file_chunk_size):
+            await avatar_file.write(content)
+
+    async with database_service.transaction() as session:
+        project = await database_service.update_project(
+            session=session,
+            project=project,
+            avatar=str(avatar_file_path),
+        )
+
+    return ProjectResponse.model_validate(project)
+
+
+async def delete_project_avatar(
+        request: fastapi.Request,
+        project: Project = fastapi.Depends(path_project_is_owner),
+) -> ProjectResponse:
+
+    if project.avatar is not None:
+        database_service: ProjectsDatabaseService = request.app.service.database
+        original_avatar_file_path = project.avatar
+        async with database_service.transaction() as session:
+            project = await database_service.update_project(
+                session=session,
+                project=project,
+                avatar=None,
+            )
+
+        await aiofiles.os.remove(original_avatar_file_path)
+
+    return ProjectResponse.model_validate(project)
