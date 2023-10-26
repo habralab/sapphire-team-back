@@ -59,27 +59,27 @@ def matvey_access_token(settings: AutotestsSettings, matvey_id: uuid.UUID) -> st
 
 @pytest.fixture(scope="session")
 def users_rest_client(settings: AutotestsSettings) -> UsersRestClient:
-    return UsersRestClient(base_url=str(settings.users_base_url), verify=False)
+    return UsersRestClient(base_url=str(settings.users_base_url), verify=True)
 
 
 @pytest.fixture(scope="session")
 def storage_rest_client(settings: AutotestsSettings) -> StorageRestClient:
-    return StorageRestClient(base_url=str(settings.storage_base_url), verify=False)
+    return StorageRestClient(base_url=str(settings.storage_base_url), verify=True)
 
 
 @pytest.fixture(scope="session")
 def projects_rest_client(settings: AutotestsSettings) -> ProjectsRestClient:
-    return ProjectsRestClient(base_url=str(settings.projects_base_url), verify=False)
+    return ProjectsRestClient(base_url=str(settings.projects_base_url), verify=True)
 
 
 @pytest.fixture(scope="session")
 def notifications_rest_client(settings: AutotestsSettings) -> NotificationsRestClient:
-    return NotificationsRestClient(base_url=str(settings.notifications_base_url), verify=False)
+    return NotificationsRestClient(base_url=str(settings.notifications_base_url), verify=True)
 
 
 @pytest.fixture(scope="session")
 def messenger_rest_client(settings: AutotestsSettings) -> MessengerRestClient:
-    return MessengerRestClient(base_url=str(settings.messenger_base_url), verify=False)
+    return MessengerRestClient(base_url=str(settings.messenger_base_url), verify=True)
 
 
 @pytest.fixture(scope="session")
@@ -90,7 +90,7 @@ def oleg_users_rest_client(
     return UsersRestClient(
         base_url=str(settings.users_base_url),
         headers={"Authorization": f"Bearer {oleg_access_token}"},
-        verify=False,
+        verify=True,
     )
 
 
@@ -102,7 +102,7 @@ def matvey_users_rest_client(
     return UsersRestClient(
         base_url=str(settings.users_base_url),
         headers={"Authorization": f"Bearer {matvey_access_token}"},
-        verify=False,
+        verify=True,
     )
 
 
@@ -114,7 +114,7 @@ def oleg_storage_rest_client(
     return StorageRestClient(
         base_url=str(settings.users_base_url),
         headers={"Authorization": f"Bearer {oleg_access_token}"},
-        verify=False,
+        verify=True,
     )
 
 
@@ -126,7 +126,7 @@ def matvey_storage_rest_client(
     return StorageRestClient(
         base_url=str(settings.users_base_url),
         headers={"Authorization": f"Bearer {matvey_access_token}"},
-        verify=False,
+        verify=True,
     )
 
 
@@ -138,7 +138,7 @@ def oleg_projects_rest_client(
     return ProjectsRestClient(
         base_url=str(settings.projects_base_url),
         headers={"Authorization": f"Bearer {oleg_access_token}"},
-        verify=False,
+        verify=True,
     )
 
 
@@ -150,7 +150,7 @@ def matvey_projects_rest_client(
     return ProjectsRestClient(
         base_url=str(settings.projects_base_url),
         headers={"Authorization": f"Bearer {matvey_access_token}"},
-        verify=False,
+        verify=True,
     )
 
 
@@ -162,7 +162,7 @@ def oleg_notifications_rest_client(
     return NotificationsRestClient(
         base_url=str(settings.notifications_base_url),
         headers={"Authorization": f"Bearer {oleg_access_token}"},
-        verify=False,
+        verify=True,
     )
 
 
@@ -174,7 +174,7 @@ def matvey_notifications_rest_client(
     return NotificationsRestClient(
         base_url=str(settings.notifications_base_url),
         headers={"Authorization": f"Bearer {matvey_access_token}"},
-        verify=False,
+        verify=True,
     )
 
 
@@ -187,7 +187,7 @@ def oleg_messenger_rest_client(
     return MessengerRestClient(
         base_url=str(settings.messenger_base_url),
         headers={"Authorization": f"Bearer {oleg_access_token}"},
-        verify=False,
+        verify=True,
     )
 
 
@@ -199,5 +199,5 @@ def matvey_messenger_rest_client(
     return MessengerRestClient(
         base_url=str(settings.messenger_base_url),
         headers={"Authorization": f"Bearer {matvey_access_token}"},
-        verify=False,
+        verify=True,
     )

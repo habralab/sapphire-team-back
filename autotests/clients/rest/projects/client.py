@@ -63,6 +63,15 @@ class ProjectsRestClient(BaseRestClient):
 
         return await self.rest_post(path=path, data=request, response_model=PositionResponse)
 
+    async def remove_project_position(
+            self,
+            project_id: uuid.UUID,
+            position_id: uuid.UUID,
+    ) -> PositionResponse:
+        path = f"/api/v1beta/rest/projects/{project_id}/positions/{position_id}"
+
+        return await self.rest_delete(path=path, response_model=PositionResponse)
+
     async def create_request_to_join_project_position(
             self,
             project_id: uuid.UUID,
