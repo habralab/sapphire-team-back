@@ -1,6 +1,7 @@
 import typer
 
 from sapphire.common.database.cli import get_fixtures_cli, get_migrations_cli
+
 from .service import get_service
 
 
