@@ -107,9 +107,6 @@ async def update_participant(
             # The Owner declined the participant
             if data.status == ParticipantStatusEnum.DECLINED and request_user_id == project.owner_id:
                 notification_type = ""
-                notification_data = {
-                    "user": participant.user_id,"position": participant.position_id, "project": project.owner_id
-                }
                 recipients = [participant.user_id]
 
             if data.status == ParticipantStatusEnum.LEFT:
