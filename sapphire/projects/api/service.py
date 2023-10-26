@@ -8,6 +8,7 @@ from sapphire.common.jwt import JWTMethods
 from sapphire.common.utils.package import get_version
 from sapphire.projects.database.service import ProjectsDatabaseService
 from sapphire.projects.settings import ProjectsSettings
+from sapphire.projects.broker.service import ProjectsBrokerService
 
 from . import router
 
@@ -17,6 +18,7 @@ class ProjectsAPIService(BaseAPIService):
         self,
         database: ProjectsDatabaseService,
         jwt_methods: JWTMethods,
+        broker_service: BaseBrokerProducerService,
         version: str = "0.0.0.0",
         root_url: str = "http://localhost",
         root_path: str = "",
@@ -25,6 +27,7 @@ class ProjectsAPIService(BaseAPIService):
     ):
         self._database = database
         self._jwt_methods = jwt_methods
+        self._broker_service = broker_service
 
         super().__init__(
             title="Projects",
@@ -51,16 +54,22 @@ class ProjectsAPIService(BaseAPIService):
     @property
     def jwt_methods(self) -> JWTMethods:
         return self._jwt_methods
+    
+    @property
+    def broker_service(self) -> ProjectsBrokerService:
+        return self._broker_service
 
 
 def get_service(
         database: ProjectsDatabaseService,
         jwt_methods: JWTMethods,
         settings: ProjectsSettings,
+        broker_service: ProjectsBrokerService
 ) -> ProjectsAPIService:
     return ProjectsAPIService(
         database=database,
         jwt_methods=jwt_methods,
+        broker_service=broker_service,
         version=get_version() or "0.0.0",
         root_url=str(settings.root_url),
         root_path=settings.root_path,
