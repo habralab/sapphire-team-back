@@ -1,7 +1,6 @@
 import asyncio
 from typing import Iterable
 
-
 from sapphire.common.broker.service import BaseBrokerConsumerService
 from sapphire.email.settings import EmailSettings
 from sapphire.messenger.broker.handler import MessengerBrokerHandler
