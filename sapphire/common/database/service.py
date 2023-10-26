@@ -81,6 +81,14 @@ class BaseDatabaseService(ServiceMixin):
     def migrate(self):
         alembic_command.upgrade(self.get_alembic_config(), "head")
 
+    def rollback(self, revision: str | None = None):
+        revision = revision or "-1"
+
+        alembic_command.downgrade(self.get_alembic_config(), revision)
+
+    def show_migrations(self):
+        alembic_command.history(self.get_alembic_config())
+
     def create_migration(self, message: str | None = None):
         alembic_command.revision(
             self.get_alembic_config(), message=message, autogenerate=True,
