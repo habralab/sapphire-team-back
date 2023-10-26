@@ -4,10 +4,12 @@ from collections import defaultdict
 import fastapi
 
 from sapphire.common.jwt.dependencies.rest import auth_user_id
+from sapphire.common.broker.models.notification import Notification
 from sapphire.projects.api.v1beta.rest.projects.dependencies import get_path_project
 from sapphire.projects.api.v1beta.rest.projects.positions.dependencies import get_path_position
 from sapphire.projects.database.models import Participant, ParticipantStatusEnum, Position, Project
 from sapphire.projects.database.service import ProjectsDatabaseService
+from sapphire.projects.broker.service import ProjectsBrokerService
 
 from .dependencies import get_path_participant
 from .schemas import ProjectParticipantResponse, UpdateParticipantRequest
@@ -55,6 +57,7 @@ async def update_participant(
     participant: Participant = fastapi.Depends(get_path_participant),
 ) -> ProjectParticipantResponse:
     database_service: ProjectsDatabaseService = request.app.service.database
+    broker_service: ProjectsBrokerService = request.app.service.broker_service
 
     project_owner_nodes = {
         # New expected status : Required current statuses
@@ -80,6 +83,29 @@ async def update_participant(
                 participant=participant,
                 status=data.status,
             )
+
+            if data.status == ParticipantStatusEnum.REQUEST:
+                broker_message = ...
+                recipients = [project.owner_id]
+
+            if data.status == ParticipantStatusEnum.JOINED:
+                broker_message = ...
+                recipients = [project.owner_id].extend([p.user_id for p in project.participants])
+
+            # The Participant withdrew an application
+            if data.status == ParticipantStatusEnum.DECLINED and request_user_id == participant.user_id:
+                broker_message = ...
+                recipients = [project.owner_id]
+
+            # The Owner declined the participant
+            if data.status == ParticipantStatusEnum.DECLINED and request_user_id == project.owner_id:
+                broker_message = ...
+                recipients = [participant.user_id]
+
+            if data.status == ParticipantStatusEnum.LEFT:
+                broker_message = ...
+                recipients = [project.owner_id].extend([p.user_id for p in project.participants])
+
     else:
         raise fastapi.HTTPException(
             status_code=fastapi.status.HTTP_403_FORBIDDEN,

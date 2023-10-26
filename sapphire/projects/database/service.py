@@ -132,7 +132,7 @@ class ProjectsDatabaseService(BaseDatabaseService):
         return position
 
     async def remove_project_position(self, session: AsyncSession, position: Position) -> Position:
-        position.is_deleted = True
+        position.closed_at = datetime.datetime.now()
 
         session.add(position)
 

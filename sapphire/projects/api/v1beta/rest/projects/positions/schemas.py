@@ -12,7 +12,6 @@ class ProjectPositionResponse(BaseModel):
     id: uuid.UUID
     project_id: uuid.UUID
     name: str
-    is_deleted: bool
     closed_at: datetime | None
     created_at: datetime
     updated_at: datetime
