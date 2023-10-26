@@ -1,15 +1,13 @@
 import uuid
-from datetime import datetime
-from typing import Any, Optional
+from typing import Optional
 
 from pydantic import BaseModel, ConfigDict
 
 
-class Messenger(BaseModel):
+class Chat(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
-    senders_id: Optional[uuid.UUID]
-    owner_id: Optional[uuid.UUID]
-    project_id = Optional[uuid.UUID]
+    chat_id: uuid.UUID
+    name: Optional[str]
     type: str
-    created_at: datetime | None
+    is_personal: Optional[bool]
