@@ -7,7 +7,6 @@ from autotests.clients.rest.projects.enums import ParticipantStatusEnum, Project
 from autotests.utils import Empty
 
 from .models import (
-    CreatePositionRequest,
     CreateProjectRequest,
     HealthResponse,
     ParticipantResponse,
@@ -57,11 +56,10 @@ class ProjectsRestClient(BaseRestClient):
     ):
         raise NotImplementedError
 
-    async def create_project_position(self, project_id: uuid.UUID, name: str) -> PositionResponse:
+    async def create_project_position(self, project_id: uuid.UUID) -> PositionResponse:
         path = f"/api/v1beta/rest/projects/{project_id}/positions/"
-        request = CreatePositionRequest(name=name)
 
-        return await self.rest_post(path=path, data=request, response_model=PositionResponse)
+        return await self.rest_post(path=path, response_model=PositionResponse)
 
     async def remove_project_position(
             self,
