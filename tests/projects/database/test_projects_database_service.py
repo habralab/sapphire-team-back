@@ -81,19 +81,17 @@ async def test_create_project_position(database_service: ProjectsDatabaseService
 
     result_position = await database_service.create_project_position(
         session=session,
-        name=name,
         project=project,
     )
 
     session.add.assert_called_once_with(result_position)
-    assert result_position.name == name
     assert result_position.project is project
 
 
 @pytest.mark.asyncio
 async def test_remove_project_position(database_service: ProjectsDatabaseService):
     session = MagicMock()
-    position = Position(id=uuid.uuid4(), name="Position", project_id=uuid.uuid4())
+    position = Position(id=uuid.uuid4(), project_id=uuid.uuid4())
 
     result_position = await database_service.remove_project_position(
         session=session,
@@ -110,7 +108,7 @@ async def test_get_project_position(database_service: ProjectsDatabaseService):
     session = MagicMock()
     result = MagicMock()
     position_id = uuid.uuid4()
-    position = Position(id=position_id, name="test", project_id=uuid.uuid4())
+    position = Position(id=position_id, project_id=uuid.uuid4())
 
     result.unique.return_value.scalar_one_or_none.return_value = position
     session.execute = AsyncMock()
@@ -265,7 +263,7 @@ async def test_get_project_positions(database_service: ProjectsDatabaseService):
     session = MagicMock()
     result = MagicMock()
     project_id = uuid.uuid4()
-    expected_positions = [Position(id=uuid.uuid4(), name="test", project_id=project_id)]
+    expected_positions = [Position(id=uuid.uuid4(), project_id=project_id)]
     expected_query = select(Position).where(Position.project_id == project_id)
     result.scalars.return_value.all.return_value = expected_positions
     session.execute = AsyncMock()
