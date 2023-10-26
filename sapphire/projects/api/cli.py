@@ -4,8 +4,8 @@ import typer
 from loguru import logger
 
 from sapphire.common.jwt import get_jwt_methods
-from sapphire.projects.database import get_service as get_database_service
 from sapphire.projects.broker.service import get_service as get_broker_service
+from sapphire.projects.database import get_service as get_database_service
 
 from .service import get_service
 

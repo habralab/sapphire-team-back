@@ -6,9 +6,9 @@ from facet import ServiceMixin
 from sapphire.common.api.service import BaseAPIService
 from sapphire.common.jwt import JWTMethods
 from sapphire.common.utils.package import get_version
+from sapphire.projects.broker.service import ProjectsBrokerService
 from sapphire.projects.database.service import ProjectsDatabaseService
 from sapphire.projects.settings import ProjectsSettings
-from sapphire.projects.broker.service import ProjectsBrokerService
 
 from . import router
 
@@ -54,7 +54,7 @@ class ProjectsAPIService(BaseAPIService):
     @property
     def jwt_methods(self) -> JWTMethods:
         return self._jwt_methods
-    
+
     @property
     def broker_service(self) -> ProjectsBrokerService:
         return self._broker_service
