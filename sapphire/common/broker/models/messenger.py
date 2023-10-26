@@ -5,7 +5,7 @@ from typing import Any, Optional
 from pydantic import BaseModel, ConfigDict
 
 
-class Messegner(BaseModel):
+class Messenger(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     senders_id: Optional[uuid.UUID]
