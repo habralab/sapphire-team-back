@@ -13,7 +13,7 @@ jobs:
       - name: Build
         run: docker build -t sapphire:${{ github.sha }} --target slim .
   deploy:
-    needs: [down-postgres]
+    needs: [build]
     runs-on: self-hosted
     steps:
       - name: Set environment variables
