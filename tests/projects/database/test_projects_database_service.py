@@ -101,7 +101,7 @@ async def test_remove_project_position(database_service: ProjectsDatabaseService
     )
 
     session.add.assert_called_once_with(result_position)
-    assert result_position.is_deleted is True
+    assert result_position.closed_at is not None
     assert result_position is position
 
 
