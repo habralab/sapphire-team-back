@@ -6,7 +6,7 @@ from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from sapphire.common.database.service import BaseDatabaseService
-from sapphire.common.database.utils import Empty
+from sapphire.common.utils.empty import Empty
 from sapphire.users.database.models import Base, Profile, User, UserSkill
 from sapphire.users.settings import UsersSettings
 

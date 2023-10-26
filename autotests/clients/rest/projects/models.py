@@ -50,6 +50,10 @@ class PositionResponse(BaseModel):
     updated_at: datetime
 
 
+class UpdateParticipantRequest(BaseModel):
+    status: ParticipantStatusEnum
+
+
 class ParticipantResponse(BaseModel):
     id: uuid.UUID
     position_id: uuid.UUID
