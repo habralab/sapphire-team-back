@@ -131,7 +131,7 @@ async def update_participant(
                 )
                 broker_tasks.append(broker_service.send(message=notification))
 
-            await asyncio.gather(*tasks)
+            await asyncio.gather(*broker_tasks)
 
     else:
         raise fastapi.HTTPException(
