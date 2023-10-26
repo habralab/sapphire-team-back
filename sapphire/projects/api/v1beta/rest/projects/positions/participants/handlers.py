@@ -1,3 +1,4 @@
+import asyncio
 import uuid
 from collections import defaultdict
 
@@ -85,26 +86,52 @@ async def update_participant(
             )
 
             if data.status == ParticipantStatusEnum.REQUEST:
-                broker_message = ...
+                notification_type = ""
+                notification_data = {
+                    "user": participant.user_id, "position": participant.position_id, "project": project.owner_id
+                }
                 recipients = [project.owner_id]
 
             if data.status == ParticipantStatusEnum.JOINED:
-                broker_message = ...
-                recipients = [project.owner_id].extend([p.user_id for p in project.participants])
+                notification_type = ""
+                notification_data = {
+                    "user": participant.user_id, "position": participant.position_id, "project": project.owner_id
+                }
+                recipients = [project.owner_id] + [p.user_id for p in project.participants]
 
             # The Participant withdrew an application
             if data.status == ParticipantStatusEnum.DECLINED and request_user_id == participant.user_id:
-                broker_message = ...
+                notification_type = ""
+                notification_data = {
+                    "user": participant.user_id, "position": participant.position_id, "project": project.owner_id
+                }
                 recipients = [project.owner_id]
 
             # The Owner declined the participant
             if data.status == ParticipantStatusEnum.DECLINED and request_user_id == project.owner_id:
-                broker_message = ...
+                notification_type = ""
+                notification_data = {
+                    "user": participant.user_id,"position": participant.position_id, "project": project.owner_id
+                }
                 recipients = [participant.user_id]
 
             if data.status == ParticipantStatusEnum.LEFT:
-                broker_message = ...
-                recipients = [project.owner_id].extend([p.user_id for p in project.participants])
+                notification_type = ""
+                notification_data = {
+                    "user": participant.user_id, "position": participant.position_id, "project": project.owner_id
+                }
+                recipients = [project.owner_id] + [p.user_id for p in project.participants]
+            
+            broker_tasks = []
+            for recipient in recipients:
+                notification = Notification(
+                    type=notification_type,
+                    data=notification_data,
+                    recipient=recipient
+                )
+                broker_tasks.append(broker_service.send(message=notification))
+
+            await asyncio.gather(*tasks)
 
     else:
         raise fastapi.HTTPException(
