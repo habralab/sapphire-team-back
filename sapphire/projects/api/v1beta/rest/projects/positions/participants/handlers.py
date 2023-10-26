@@ -89,9 +89,11 @@ async def update_participant(
                 status=data.status,
             )
 
-            participant_notification_data.user_id = participant.user_id
-            participant_notification_data.position_id = participant.position_id
-            participant_notification_data.project_id = project.id
+            participant_notification_data = ParticipantNotificationData(
+                user_id=participant.user_id,
+                position_id=participant.position_id,
+                project_id=project.id,
+            )
 
             if data.status == ParticipantStatusEnum.REQUEST:
                 notification_type = ""
@@ -101,26 +103,26 @@ async def update_participant(
                 notification_type = ""
                 recipients = [project.owner_id] + [p.user_id for p in project.participants]
 
-            # The Participant withdrew an application
-            if data.status == ParticipantStatusEnum.DECLINED and request_user_id == participant.user_id:
-                notification_type = ""
-                recipients = [project.owner_id]
-
-            # The Owner declined the participant
-            if data.status == ParticipantStatusEnum.DECLINED and request_user_id == project.owner_id:
-                notification_type = ""
-                recipients = [participant.user_id]
+            if data.status == ParticipantStatusEnum.DECLINED:
+                # The Participant withdrew an application
+                if request_user_id == participant.user_id:
+                    notification_type = ""
+                    recipients = [project.owner_id]
+                # The Owner declined the participant
+                if request_user_id == project.owner_id:
+                    notification_type = ""
+                    recipients = [participant.user_id]
 
             if data.status == ParticipantStatusEnum.LEFT:
                 notification_type = ""
                 recipients = [project.owner_id] + [p.user_id for p in project.participants]
-            
+
             broker_tasks = []
             for recipient_id in recipients:
                 notification = Notification(
                     type=notification_type,
                     data=ParticipantNotificationData.model_validate(participant_notification_data),
-                    recipient_id=recipient_id
+                    recipient_id=recipient_id,
                 )
                 broker_tasks.append(broker_service.send(message=notification))
 
