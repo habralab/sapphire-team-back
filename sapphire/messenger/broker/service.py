@@ -2,8 +2,8 @@ import asyncio
 from typing import Iterable
 
 from sapphire.common.broker.service import BaseBrokerConsumerService
-from sapphire.messenger.settings import MessengerSettings
 from sapphire.messenger.broker.handler import MessengerBrokerHandler
+from sapphire.messenger.settings import MessengerSettings
 
 
 class MessengerBrokerService(BaseBrokerConsumerService):
@@ -26,8 +26,8 @@ class MessengerBrokerService(BaseBrokerConsumerService):
 def get_service(
         loop: asyncio.AbstractEventLoop,
         settings: MessengerSettings,
-) -> EmailBrokerService:
-    return EmailBrokerService(
+) -> MessengerBrokerService:
+    return MessengerBrokerService(
         loop=loop,
         servers=settings.consumer_servers,
         topics=settings.topics,

@@ -1,10 +1,10 @@
 from typing import Iterable
 
-from sapphire.common.broker.handler import BaseBrokerHandler
-
 import aiokafka
 
+from sapphire.common.broker.handler import BaseBrokerHandler
 from sapphire.common.broker.models.messenger import Messegner
+
 # from sapphire.messenger.database.service import MessengerDatabaseService
 
 
