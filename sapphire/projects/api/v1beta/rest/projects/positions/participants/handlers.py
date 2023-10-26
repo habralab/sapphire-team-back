@@ -4,13 +4,13 @@ from collections import defaultdict
 
 import fastapi
 
-from sapphire.common.jwt.dependencies.rest import auth_user_id
 from sapphire.common.broker.models.notification import Notification
+from sapphire.common.jwt.dependencies.rest import auth_user_id
 from sapphire.projects.api.v1beta.rest.projects.dependencies import get_path_project
 from sapphire.projects.api.v1beta.rest.projects.positions.dependencies import get_path_position
+from sapphire.projects.broker.service import ProjectsBrokerService
 from sapphire.projects.database.models import Participant, ParticipantStatusEnum, Position, Project
 from sapphire.projects.database.service import ProjectsDatabaseService
-from sapphire.projects.broker.service import ProjectsBrokerService
 
 from .dependencies import get_path_participant
 from .schemas import ProjectParticipantResponse, UpdateParticipantRequest
@@ -85,26 +85,23 @@ async def update_participant(
                 status=data.status,
             )
 
+            notification_data = {
+                    "user": participant.user_id,
+                    "position": participant.position_id,
+                    "project": project.owner_id
+                }
+
             if data.status == ParticipantStatusEnum.REQUEST:
                 notification_type = ""
-                notification_data = {
-                    "user": participant.user_id, "position": participant.position_id, "project": project.owner_id
-                }
                 recipients = [project.owner_id]
 
             if data.status == ParticipantStatusEnum.JOINED:
                 notification_type = ""
-                notification_data = {
-                    "user": participant.user_id, "position": participant.position_id, "project": project.owner_id
-                }
                 recipients = [project.owner_id] + [p.user_id for p in project.participants]
 
             # The Participant withdrew an application
             if data.status == ParticipantStatusEnum.DECLINED and request_user_id == participant.user_id:
                 notification_type = ""
-                notification_data = {
-                    "user": participant.user_id, "position": participant.position_id, "project": project.owner_id
-                }
                 recipients = [project.owner_id]
 
             # The Owner declined the participant
@@ -117,9 +114,6 @@ async def update_participant(
 
             if data.status == ParticipantStatusEnum.LEFT:
                 notification_type = ""
-                notification_data = {
-                    "user": participant.user_id, "position": participant.position_id, "project": project.owner_id
-                }
                 recipients = [project.owner_id] + [p.user_id for p in project.participants]
             
             broker_tasks = []
