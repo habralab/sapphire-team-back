@@ -13,7 +13,7 @@ jobs:
       - name: Build
         run: docker build -t sapphire:${{ github.ref_name }} --target slim .
   deploy:
-    needs: [down-postgres]
+    needs: [build]
     runs-on: self-hosted
     if: jobs.up-postgres.result == "success"
     steps:
