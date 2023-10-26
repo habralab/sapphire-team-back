@@ -13,7 +13,11 @@ from sapphire.projects.database.models import Participant, ParticipantStatusEnum
 from sapphire.projects.database.service import ProjectsDatabaseService
 
 from .dependencies import get_path_participant
-from .schemas import ProjectParticipantResponse, UpdateParticipantRequest, ParticipantNotificationData
+from .schemas import (
+    ParticipantNotificationData,
+    ProjectParticipantResponse,
+    UpdateParticipantRequest,
+)
 
 
 async def create_participant(
