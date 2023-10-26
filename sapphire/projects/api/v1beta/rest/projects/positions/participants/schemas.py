@@ -19,3 +19,9 @@ class ProjectParticipantResponse(BaseModel):
 
 class UpdateParticipantRequest(BaseModel):
     status: ParticipantStatusEnum
+
+
+class ParticipantNotificationData(BaseModel):
+    user_id: uuid.UUID
+    position_id: uuid.UUID
+    project_id: uuid.UUID

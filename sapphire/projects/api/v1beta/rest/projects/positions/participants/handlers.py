@@ -13,7 +13,7 @@ from sapphire.projects.database.models import Participant, ParticipantStatusEnum
 from sapphire.projects.database.service import ProjectsDatabaseService
 
 from .dependencies import get_path_participant
-from .schemas import ProjectParticipantResponse, UpdateParticipantRequest
+from .schemas import ProjectParticipantResponse, UpdateParticipantRequest, ParticipantNotificationData
 
 
 async def create_participant(
@@ -85,11 +85,9 @@ async def update_participant(
                 status=data.status,
             )
 
-            notification_data = {
-                    "user": participant.user_id,
-                    "position": participant.position_id,
-                    "project": project.owner_id
-                }
+            participant_notification_data.user_id = participant.user_id
+            participant_notification_data.position_id = participant.position_id
+            participant_notification_data.project_id = project.id
 
             if data.status == ParticipantStatusEnum.REQUEST:
                 notification_type = ""
@@ -114,11 +112,11 @@ async def update_participant(
                 recipients = [project.owner_id] + [p.user_id for p in project.participants]
             
             broker_tasks = []
-            for recipient in recipients:
+            for recipient_id in recipients:
                 notification = Notification(
                     type=notification_type,
-                    data=notification_data,
-                    recipient=recipient
+                    data=ParticipantNotificationData.model_validate(participant_notification_data),
+                    recipient_id=recipient_id
                 )
                 broker_tasks.append(broker_service.send(message=notification))
 
