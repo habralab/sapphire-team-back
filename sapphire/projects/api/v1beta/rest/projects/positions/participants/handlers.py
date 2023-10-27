@@ -90,7 +90,7 @@ async def update_participant(
             status=data.status,
         )
 
-        participant_status_function_map = {
+        broker_send_map = {
             ParticipantStatusEnum.REQUEST: broker_service.send_participant_requested,
             ParticipantStatusEnum.JOINED: broker_service.send_participant_joined,
             ParticipantStatusEnum.DECLINED: {
@@ -102,13 +102,13 @@ async def update_participant(
                 project.owner_id: broker_service.send_owner_excluded
             }
         }
-        send_func = participant_status_function_map.get(data.status)
-        if callable(send_func):
-            await send_func(project=project, participant=participant)
-        elif isinstance(send_func, dict):
-            send_func = send_func.get(request_user_id)
-            if callable(send_func):
-                await send_func(project=project, participant=participant)
+        broker_send = broker_send_map.get(data.status)
+        if callable(broker_send):
+            await broker_send(project=project, participant=participant)
+        elif isinstance(broker_send, dict):
+            broker_send = broker_send.get(request_user_id)
+            if callable(broker_send):
+                await broker_send(project=project, participant=participant)
 
 
     return ProjectParticipantResponse.model_validate(updated_participant_db)
