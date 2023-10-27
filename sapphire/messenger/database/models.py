@@ -13,7 +13,6 @@ class Chat(Base):
     __tablename__ = "chats"
 
     id: Mapped[uuid.UUID] = mapped_column(default=uuid.uuid4, primary_key=True)
-    name: Mapped[str] = mapped_column(nullable=False)
     created_at: Mapped[datetime] = mapped_column(default=datetime.now)
     is_personal: Mapped[bool]
 

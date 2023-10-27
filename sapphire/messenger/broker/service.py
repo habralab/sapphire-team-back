@@ -23,15 +23,17 @@ class MessengerBrokerService(BaseBrokerConsumerService):
             servers=servers,
             topics=topics,
             handlers=handlers
-    )
+            )
 
 
 def get_service(
         loop: asyncio.AbstractEventLoop,
         settings: MessengerSettings,
+        database: MessengerDatabaseService
 ) -> MessengerBrokerService:
     return MessengerBrokerService(
-            loop=loop,
-            servers=settings.consumer_servers,
-            topics=settings.topics,
-    )
+        loop=loop,
+        servers=settings.consumer_servers,
+        topics=settings.topics,
+        database=database
+        )

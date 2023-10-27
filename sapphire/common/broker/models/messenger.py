@@ -7,7 +7,7 @@ from pydantic import BaseModel, ConfigDict
 class Chat(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
-    chat_id: uuid.UUID
-    name: Optional[str]
+    requester_id: uuid.UUID
+    recipient_id: uuid.UUID
     type: str
-    is_personal: Optional[bool]
+    is_personal: bool

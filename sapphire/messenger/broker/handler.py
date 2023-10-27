@@ -22,8 +22,6 @@ class MessengerBrokerHandler(BaseBrokerHandler):
         async with self._database.transaction() as session:
             db_chat = self._database.create_chat(
                 session=session,
-                chat_id=chat.chat_id,
-                name=chat.name,
                 is_personal=chat.is_personal
             )
         chat = Chat.model_validate(db_chat)
