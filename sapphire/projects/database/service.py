@@ -3,6 +3,7 @@ import uuid
 from datetime import datetime
 from typing import Type
 
+from sqlalchemy import or_
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
@@ -14,6 +15,7 @@ from .models import (
     Participant,
     ParticipantStatusEnum,
     Position,
+    PositionsSkills,
     Project,
     ProjectHistory,
     ProjectStatusEnum,
@@ -42,9 +44,9 @@ class ProjectsDatabaseService(BaseDatabaseService):
         return project
 
     async def get_project(
-            self,
-            session: AsyncSession,
-            project_id: uuid.UUID | Type[Empty] = Empty,
+        self,
+        session: AsyncSession,
+        project_id: uuid.UUID | Type[Empty] = Empty,
     ) -> Project | None:
         filters = []
         if project_id is not Empty:
@@ -55,9 +57,9 @@ class ProjectsDatabaseService(BaseDatabaseService):
         return result.unique().scalar_one_or_none()
 
     async def get_project_positions(
-            self,
-            session: AsyncSession,
-            project_id: uuid.UUID | Type[Empty] = Empty,
+        self,
+        session: AsyncSession,
+        project_id: uuid.UUID | Type[Empty] = Empty,
     ) -> list[Position]:
         filters = []
         if project_id is not Empty:
@@ -68,10 +70,10 @@ class ProjectsDatabaseService(BaseDatabaseService):
         return list(result.scalars().all())
 
     async def get_project_position(
-            self,
-            session: AsyncSession,
-            project_id: uuid.UUID | Type[Empty] = Empty,
-            position_id: uuid.UUID | Type[Empty] = Empty,
+        self,
+        session: AsyncSession,
+        project_id: uuid.UUID | Type[Empty] = Empty,
+        position_id: uuid.UUID | Type[Empty] = Empty,
     ) -> Position | None:
         filters = []
         if project_id is not Empty:
@@ -85,18 +87,20 @@ class ProjectsDatabaseService(BaseDatabaseService):
         return result.unique().scalar_one_or_none()
 
     async def create_project_position(
-            self,
-            session: AsyncSession,
-            project: Project,
-            name: str,
+        self,
+        session: AsyncSession,
+        project: Project,
+        specialization_id: uuid.UUID,
     ) -> Position:
-        position = Position(project=project, name=name)
+        position = Position(project=project, specialization_id=specialization_id)
 
         session.add(position)
 
         return position
 
-    async def remove_project_position(self, session: AsyncSession, position: Position) -> Position:
+    async def remove_project_position(
+        self, session: AsyncSession, position: Position
+    ) -> Position:
         position.is_deleted = True
 
         session.add(position)
@@ -117,7 +121,9 @@ class ProjectsDatabaseService(BaseDatabaseService):
             filters.append(Participant.position_id == position_id)
         if user_id is not Empty:
             filters.append(Participant.user_id == user_id)
-        stmt = select(Participant).where(*filters).order_by(Participant.created_at.desc())
+        stmt = (
+            select(Participant).where(*filters).order_by(Participant.created_at.desc())
+        )
         result = await session.execute(stmt)
         return result.scalars().first()
 
@@ -152,43 +158,79 @@ class ProjectsDatabaseService(BaseDatabaseService):
     async def get_projects(
         self,
         session: AsyncSession,
-        name_substring: str | Type[Empty] = Empty,
-        description_substring: str | Type[Empty] = Empty,
+        query_text: str | Type[Empty] = Empty,
         owner_id: uuid.UUID | Type[Empty] = Empty,
         deadline: datetime | Type[Empty] = Empty,
         status: ProjectStatusEnum | Type[Empty] = Empty,
-        position_name_substring: str | Type[Empty] = Empty,
         position_is_deleted: bool | Type[Empty] = Empty,
         position_is_closed: bool | Type[Empty] = Empty,
+        position_skill_ids: list[uuid.UUID] | Type[Empty] = Empty,
+        position_specialization_ids: list[uuid.UUID] | Type[Empty] = Empty,
         page: int | Type[Empty] = Empty,
         per_page: int | Type[Empty] = Empty,
     ) -> list[Project]:
-
         filters = []
+        query = select(Project).order_by(Project.created_at.desc())
 
-        if name_substring is not Empty:
-            filters.append(Project.name.contains(name_substring))
-        if description_substring is not Empty:
-            filters.append(Project.description.contains(description_substring))
+        if query_text is not Empty:
+            filters.append(
+                or_(
+                    Project.name.contains(query_text),
+                    Project.description.contains(query_text),
+                )
+            )
         if owner_id is not Empty:
             filters.append(Project.owner_id == owner_id)
         if deadline is not Empty:
             filters.append(Project.deadline <= deadline)
         if status is not Empty:
-            filters.append(Project.status == status)
+            history_query = (
+                select(ProjectHistory)
+                .order_by(ProjectHistory.created_at.desc())
+                .limit(1)
+            )
+            result = await session.execute(history_query)
+            project_ids = []
+            for history in result.unique().scalars().all():
+                if history.status == status:
+                    project_ids.append(history.project_id)
+            filters.append(Project.id.in_(project_ids))
 
-        if position_name_substring is not Empty:
-            position_filters = [Position.name.contains(position_name_substring)]
+        if any(
+            x is not Empty
+            for x in [
+                position_is_deleted,
+                position_is_closed,
+                position_skill_ids,
+                position_specialization_ids,
+            ]
+        ):
+            position_filters = []
             if position_is_deleted is not Empty:
                 position_filters.append(Position.is_deleted == position_is_deleted)
             if position_is_closed is not Empty:
                 position_filters.append(
-                    Position.closed_at.is_(None) if position_is_closed
+                    Position.closed_at.is_(None)
+                    if position_is_closed
                     else Position.closed_at.is_not(None)
                 )
-            filters.append(Project.id.in_(select(Position.project_id).where(*position_filters)))
+            if position_specialization_ids is not Empty:
+                position_filters.append(
+                    Position.specialization_id.in_(position_specialization_ids)
+                )
+            if position_skill_ids is not Empty:
+                position_filters.append(
+                    Position.id.in_(
+                        select(PositionsSkills.position_id).where(
+                            PositionsSkills.skill_id.in_(position_skill_ids)
+                        )
+                    )
+                )
+            filters.append(
+                Project.id.in_(select(Position.project_id).where(*position_filters))
+            )
 
-        query = select(Project).order_by(Project.created_at.desc()).where(*filters)
+        query = query.where(*filters)
 
         if page is not Empty and per_page is not Empty:
             offset = (page - 1) * per_page

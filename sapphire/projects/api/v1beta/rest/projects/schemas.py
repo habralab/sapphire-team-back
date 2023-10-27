@@ -1,6 +1,7 @@
 import uuid
 from datetime import datetime
 
+import fastapi
 from pydantic import BaseModel, ConfigDict, Field
 
 from sapphire.common.api.schemas.paginated import PaginatedResponse
@@ -45,11 +46,11 @@ class ProjectsResponse(PaginatedResponse):
 
 
 class ProjectFiltersRequest(BaseModel):
-    name_substring: str | None = Field(None)
-    description_substring: str | None = Field(None)
-    owner_id: uuid.UUID | None = Field(None)
-    deadline: datetime | None = Field(None)
-    status: ProjectStatusEnum | None = Field(None)
-    position_name_substring: str | None = Field(None)
-    position_is_deleted: bool | None = Field(None)
-    position_is_closed: bool | None = Field(None)
+    query_text: str | None = None
+    owner_id: uuid.UUID | None = None
+    deadline: datetime | None = None
+    status: ProjectStatusEnum | None = None
+    position_is_deleted: bool | None = None
+    position_is_closed: bool | None = None
+    position_skill_ids: list[str] | None = Field(fastapi.Query(None))
+    position_specialization_ids: uuid.UUID | None = Field(fastapi.Query(None))

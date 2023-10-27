@@ -73,7 +73,7 @@ async def history(
 async def get_projects(
     request: fastapi.Request,
     pagination: Pagination = fastapi.Depends(pagination),
-    filters: ProjectFiltersRequest = fastapi.Depends(),
+    filters: ProjectFiltersRequest = fastapi.Depends(ProjectFiltersRequest),
 ) -> ProjectsResponse:
     database_service: ProjectsDatabaseService = request.app.service.database
 

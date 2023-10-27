@@ -31,7 +31,7 @@ class SpecializationsSkills(Base):
     __tablename__ = "specializations_skills"
 
     skill_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("skills.id"), primary_key=True)
-    specialization_id: Mapped[str] = mapped_column(
+    specialization_id: Mapped[uuid.UUID] = mapped_column(
         ForeignKey("specializations.id"), primary_key=True
     )
     created_at: Mapped[datetime] = mapped_column(default=datetime.now)

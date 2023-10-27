@@ -3,7 +3,6 @@ import uuid
 from datetime import datetime
 
 from sqlalchemy import Enum, ForeignKey
-from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 
@@ -42,7 +41,7 @@ class Project(Base):
     )
     positions: Mapped[list["Position"]] = relationship(back_populates="project", lazy="joined")
 
-    @hybrid_property
+    @property
     def status(self):
         return self.history[0].status
 
@@ -62,8 +61,8 @@ class Position(Base):
     __tablename__ = "project_positions"
 
     id: Mapped[uuid.UUID] = mapped_column(default=uuid.uuid4, primary_key=True, unique=True)
-    name = Mapped[str]
     project_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("projects.id"), primary_key=True)
+    specialization_id: Mapped[uuid.UUID]
     is_deleted: Mapped[bool] = mapped_column(default=False)
     closed_at: Mapped[datetime | None]
     created_at: Mapped[datetime] = mapped_column(default=datetime.now)
@@ -72,6 +71,19 @@ class Position(Base):
     project: Mapped[Project] = relationship(back_populates="positions", lazy="joined")
     participants: Mapped[list["Participant"]] = relationship(back_populates="position",
                                                              lazy="joined")
+
+
+class PositionsSkills(Base):
+    __tablename__ = "project_positions_skills"
+
+    position_id: Mapped[str] = mapped_column(
+        ForeignKey("project_positions.id"), primary_key=True
+    )
+    skill_id: Mapped[uuid.UUID] = mapped_column(primary_key=True)
+    created_at: Mapped[datetime] = mapped_column(default=datetime.now)
+    updated_at: Mapped[datetime] = mapped_column(
+        default=datetime.now, onupdate=datetime.now
+    )
 
 
 class Participant(Base):
