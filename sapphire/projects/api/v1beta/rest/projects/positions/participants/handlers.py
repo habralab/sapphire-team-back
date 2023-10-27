@@ -60,6 +60,7 @@ async def update_participant(
         # New expected status : Required current statuses
         ParticipantStatusEnum.DECLINED: [ParticipantStatusEnum.REQUEST],
         ParticipantStatusEnum.JOINED: [ParticipantStatusEnum.REQUEST],
+        ParticipantStatusEnum.LEFT: [ParticipantStatusEnum.JOINED],
     }
     participant_nodes = {
         # New expected status : Required current statuses

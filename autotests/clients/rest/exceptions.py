@@ -3,4 +3,4 @@ class ResponseException(Exception):
         self.status_code = status_code
         self.body = body
 
-        super().__init__(f"Response exception [{status_code}]: {body[:20]}")
+        super().__init__(f"Response exception [{status_code}]: {body}")

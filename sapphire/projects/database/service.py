@@ -123,9 +123,8 @@ class ProjectsDatabaseService(BaseDatabaseService):
             self,
             session: AsyncSession,
             project: Project,
-            name: str,
     ) -> Position:
-        position = Position(project=project, name=name)
+        position = Position(project=project)
 
         session.add(position)
 
