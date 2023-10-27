@@ -12,59 +12,105 @@ from sapphire.projects.settings import ProjectsSettings
 
 
 class ProjectsBrokerService(BaseBrokerProducerService):
-    async def send_participant_notification(
-        self,
-        initiator_id: uuid.UUID,
+    async def send_participant_requested(self,
         project: Project,
         participant: Participant,
         status: ParticipantStatusEnum
     ) -> None:
-        participant_notification_data = ParticipantNotificationData(
-            user_id=participant.user_id,
-            position_id=participant.position_id,
-            project_id=project.id,
+        # RECIPIENTS: ONLY OWNER
+        await self._send_notification_to_recipients(
+            notification_type=ParticipantNotificationType.REQUESTED,
+            recipients=[project.owner_id],
+            notification_data=await self._create_participant_notification_data(project, participant),
         )
 
-        if status == ParticipantStatusEnum.REQUEST:
-            notification_type = ParticipantNotificationType.REQUEST
-            recipients = [project.owner_id]
+    async def send_participant_joined(self,
+        project: Project,
+        participant: Participant,
+        status: ParticipantStatusEnum,
+    ) -> None:
+        # RECIPIENTS: PROJECT OWNER AND PARTICIPANTS
+        await self._send_notification_to_recipients(
+            notification_type=ParticipantNotificationType.JOINED,
+            recipients=[project.owner_id] + [p.user_id for p in project.participants],
+            notification_data=await self._create_participant_notification_data(project, participant),
+        )
 
-        elif status == ParticipantStatusEnum.JOINED:
-            notification_type = ParticipantNotificationType.JOINED
-            recipients = [project.owner_id] + [p.user_id for p in project.participants]
+    async def send_participant_declined(self,
+        project: Project,
+        participant: Participant,
+        status: ParticipantStatusEnum,
+    ) -> None:
+        # RECIPIENTS: ONLY OWNER
+        await self._send_notification_to_recipients(
+            notification_type=ParticipantNotificationType.PARTICIPANT_DECLINED,
+            recipients=[project.owner_id],
+            notification_data=await self._create_participant_notification_data(project, participant),
+        )
 
-        elif status == ParticipantStatusEnum.DECLINED:
-            # The Participant withdrew an application
-            if initiator_id == participant.user_id:
-                notification_type = ParticipantNotificationType.PARTICIPANT_DECLINED
-                recipients = [project.owner_id]
-            # The Owner declined the participant
-            elif initiator_id == project.owner_id:
-                notification_type = ParticipantNotificationType.OWNER_DECLINED
-                recipients = [participant.user_id]
+    async def send_owner_declined(self,
+        project: Project,
+        participant: Participant,
+        status: ParticipantStatusEnum,
+    ) -> None:
+        # RECIPIENTS: ONLY PARTICIPANT
+        await self._send_notification_to_recipients(
+            notification_type=ParticipantNotificationType.OWNER_DECLINED,
+            recipients=[participant.user_id],
+            notification_data=await self._create_participant_notification_data(project, participant),
+        )
 
-        elif status == ParticipantStatusEnum.LEFT:
-            if initiator_id == participant.user_id:
-                notification_type = ParticipantNotificationType.PARTICIPANT_LEFT
-                recipients = [project.owner_id] + [p.user_id for p in project.participants]
-            elif initiator_id == project.owner_id:
-                notification_type = ParticipantNotificationType.OWNER_EXCLUDED
-                recipients = [project.owner_id] + [p.user_id for p in project.participants]
+    async def send_participant_left(self,
+        project: Project,
+        participant: Participant,
+        status: ParticipantStatusEnum,
+    ) -> None:
+        # RECIPIENTS: PROJECT OWNER AND PARTICIPANTS
+        await self._send_notification_to_recipients(
+            notification_type=ParticipantNotificationType.PARTICIPANT_LEFT,
+            recipients=[project.owner_id] + [p.user_id for p in project.participants],
+            notification_data=await self._create_participant_notification_data(project, participant),
+        )
 
-        broker_tasks = []
+    async def send_owner_exluded(self,
+        project: Project,
+        participant: Participant,
+        status: ParticipantStatusEnum,
+    ) -> None:
+        # RECIPIENTS: PROJECT OWNER AND PARTICIPANTS
+        await self._send_notification_to_recipients(
+            notification_type=ParticipantNotificationType.OWNER_EXCLUDED,
+            recipients=[project.owner_id] + [p.user_id for p in project.participants],
+            notification_data=await self._create_participant_notification_data(project, participant),
+        )
+
+    @staticmethod
+    async def _send_notification_to_recipients(self,
+        notification_type: ParticipantNotificationType,
+        recipients: list[uuid.UUID],
+        notification_data: ParticipantNotificationData,
+        topic: str = "ParticipantNotification"
+    ) -> None:
+        send_tasks = []
         for recipient_id in recipients:
             notification = Notification(
-                type=notification_type,
-                data=ParticipantNotificationData.model_validate(participant_notification_data),
-                recipient_id=recipient_id,
+                type = notification_type,
+                data = ParticipantNotificationData.model_validate(participant_notification_data),
+                recipient_id = recipient_id,
             )
-            broker_tasks.append(self.send(
+            send_tasks.append(self.send(
                     topic="ParticipantNotification", message=notification
                 )
             )
-
-        await asyncio.gather(*broker_tasks)
-
+        await asyncio.gather(*send_tasks)
+    
+    @staticmethod
+    async def _create_participant_notification_data(participant: Participant, project: Project):
+        return ParticipantNotificationData(
+            user_id=participant.user_id,
+            position_id=participant.position_id,
+            project_id=project.id
+        )
 
 def get_service(
         loop: asyncio.AbstractEventLoop,

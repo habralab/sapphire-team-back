@@ -76,25 +76,38 @@ async def update_participant(
     participant_status_nodes[participant.user_id].update(participant_nodes)
 
     required_statuses = participant_status_nodes.get(request_user_id, {}).get(data.status, ())
-    if participant.status in required_statuses:
-        async with database_service.transaction() as session:
-            updated_participant_db = await database_service.update_participant_status(
-                session=session,
-                participant=participant,
-                status=data.status,
-            )
 
-            await broker_service.send_participant_notification(
-                initiator_id=request_user_id,
-                project=project,
-                participant=participant,
-                status=data.status
-            )
-
-    else:
+    if participant.status not in required_statuses:
         raise fastapi.HTTPException(
             status_code=fastapi.status.HTTP_403_FORBIDDEN,
             detail="Forbidden.",
         )
+
+    async with database_service.transaction() as session:
+        updated_participant_db = await database_service.update_participant_status(
+            session=session,
+            participant=participant,
+            status=data.status,
+        )
+        notification_data = {
+            project: project,
+            participant: participant,
+            status: data.status
+        }
+        if data.status == ParticipantStatusEnum.REQUEST:
+            await broker_service.send_participant_requested(**notification_data)
+        elif data.status == ParticipantStatusEnum.JOINED:
+            await broker_service.send_participant_joined(**notification_data)
+        elif data.status == ParticipantStatusEnum.DECLINED:
+            if request_user_id == participant.user_id:
+                await broker_service.send_participant_declined(**notification_data)
+            elif request_user_id == project.owner_id:
+                await broker_service.send_owner_declined(**notification_data)
+        elif data.status == ParticipantStatusEnum.LEFT:
+            if request_user_id == participant.user_id:
+                await broker_service.send_participant_left(**notification_data)
+            elif request_user_id == project.owner_id:
+                await broker_service.send_owner_exluded(**notification_data)
+
 
     return ProjectParticipantResponse.model_validate(updated_participant_db)

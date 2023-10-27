@@ -13,7 +13,7 @@ class ParticipantNotificationData(BaseModel):
 
 
 class ParticipantNotificationType(str, enum.Enum):
-    REQUEST = "participant_requested"
+    REQUESTED = "participant_requested"
     JOINED = "participant_joined"
     OWNER_DECLINED = "owner_declined"
     PARTICIPANT_DECLINED = "participant_declined"
