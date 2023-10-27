@@ -90,9 +90,9 @@ async def update_participant(
             status=data.status,
         )
         notification_data = {
-            project: project,
-            participant: participant,
-            status: data.status
+            "project": project,
+            "participant": participant,
+            "status": data.status
         }
         participant_status_function_map = {
             ParticipantStatusEnum.REQUEST: broker_service.send_participant_requested,
@@ -107,7 +107,7 @@ async def update_participant(
             }
         }
 
-        send_func = status_function_map.get(data.status)
+        send_func = participant_status_function_map.get(data.status)
         if callable(send_func):
             await send_func(**notification_data)
         elif isinstance(send_func, dict):

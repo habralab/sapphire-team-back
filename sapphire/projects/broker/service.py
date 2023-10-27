@@ -21,7 +21,9 @@ class ProjectsBrokerService(BaseBrokerProducerService):
         await self._send_notification_to_recipients(
             notification_type=ParticipantNotificationType.REQUESTED,
             recipients=[project.owner_id],
-            notification_data=await self._create_participant_notification_data(project, participant),
+            notification_data=await self._create_participant_notification_data(
+                project, participant
+            ),
         )
 
     async def send_participant_joined(self,
@@ -33,7 +35,9 @@ class ProjectsBrokerService(BaseBrokerProducerService):
         await self._send_notification_to_recipients(
             notification_type=ParticipantNotificationType.JOINED,
             recipients=[project.owner_id] + [p.user_id for p in project.participants],
-            notification_data=await self._create_participant_notification_data(project, participant),
+            notification_data=await self._create_participant_notification_data(
+                project, participant
+            ),
         )
 
     async def send_participant_declined(self,
@@ -45,7 +49,9 @@ class ProjectsBrokerService(BaseBrokerProducerService):
         await self._send_notification_to_recipients(
             notification_type=ParticipantNotificationType.PARTICIPANT_DECLINED,
             recipients=[project.owner_id],
-            notification_data=await self._create_participant_notification_data(project, participant),
+            notification_data=await self._create_participant_notification_data(
+                project, participant
+            ),
         )
 
     async def send_owner_declined(self,
@@ -57,7 +63,9 @@ class ProjectsBrokerService(BaseBrokerProducerService):
         await self._send_notification_to_recipients(
             notification_type=ParticipantNotificationType.OWNER_DECLINED,
             recipients=[participant.user_id],
-            notification_data=await self._create_participant_notification_data(project, participant),
+            notification_data=await self._create_participant_notification_data(
+                project, participant
+            ),
         )
 
     async def send_participant_left(self,
@@ -69,7 +77,9 @@ class ProjectsBrokerService(BaseBrokerProducerService):
         await self._send_notification_to_recipients(
             notification_type=ParticipantNotificationType.PARTICIPANT_LEFT,
             recipients=[project.owner_id] + [p.user_id for p in project.participants],
-            notification_data=await self._create_participant_notification_data(project, participant),
+            notification_data=await self._create_participant_notification_data(
+                project, participant
+            ),
         )
 
     async def send_owner_exluded(self,
@@ -81,11 +91,13 @@ class ProjectsBrokerService(BaseBrokerProducerService):
         await self._send_notification_to_recipients(
             notification_type=ParticipantNotificationType.OWNER_EXCLUDED,
             recipients=[project.owner_id] + [p.user_id for p in project.participants],
-            notification_data=await self._create_participant_notification_data(project, participant),
+            notification_data=await self._create_participant_notification_data(
+                project, participant
+            ),
         )
 
     @staticmethod
-    async def _send_notification_to_recipients(self,
+    async def _send_notification_to_recipients(
         notification_type: ParticipantNotificationType,
         recipients: list[uuid.UUID],
         notification_data: ParticipantNotificationData,
@@ -95,7 +107,7 @@ class ProjectsBrokerService(BaseBrokerProducerService):
         for recipient_id in recipients:
             notification = Notification(
                 type = notification_type,
-                data = ParticipantNotificationData.model_validate(participant_notification_data),
+                data = ParticipantNotificationData.model_validate(notification_data),
                 recipient_id = recipient_id,
             )
             send_tasks.append(self.send(
