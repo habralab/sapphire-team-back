@@ -35,19 +35,19 @@ class ProjectsBrokerService(BaseBrokerProducerService):
 
         elif status == ParticipantStatusEnum.DECLINED:
             # The Participant withdrew an application
-            if request_user_id == participant.user_id:
+            if initiator_id == participant.user_id:
                 notification_type = ParticipantNotificationType.PARTICIPANT_DECLINED
                 recipients = [project.owner_id]
             # The Owner declined the participant
-            elif request_user_id == project.owner_id:
+            elif initiator_id == project.owner_id:
                 notification_type = ParticipantNotificationType.OWNER_DECLINED
                 recipients = [participant.user_id]
 
         elif status == ParticipantStatusEnum.LEFT:
-            if request_user_id == participant.user_id:
+            if initiator_id == participant.user_id:
                 notification_type = ParticipantNotificationType.PARTICIPANT_LEFT
                 recipients = [project.owner_id] + [p.user_id for p in project.participants]
-            elif request_user_id == project.owner_id:
+            elif initiator_id == project.owner_id:
                 notification_type = ParticipantNotificationType.OWNER_EXCLUDED
                 recipients = [project.owner_id] + [p.user_id for p in project.participants]
 
