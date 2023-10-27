@@ -3,7 +3,7 @@ import math
 import fastapi
 
 from sapphire.common.api.dependencies.pagination import Pagination, pagination
-from sapphire.projects.api.v1beta.rest.projects.dependencies import (
+from sapphire.projects.api.rest.projects.dependencies import (
     get_path_project,
     path_project_is_owner,
 )
