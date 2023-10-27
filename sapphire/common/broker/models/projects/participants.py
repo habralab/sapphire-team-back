@@ -17,4 +17,5 @@ class ParticipantNotificationType(str, enum.Enum):
     JOINED = "participant_joined"
     OWNER_DECLINED = "owner_declined"
     PARTICIPANT_DECLINED = "participant_declined"
-    LEFT = "participant_left"
+    PARTICIPANT_LEFT = "participant_left"
+    OWNER_EXCLUDED = "owner_excluded"

@@ -14,7 +14,7 @@ from sapphire.projects.settings import ProjectsSettings
 class ProjectsBrokerService(BaseBrokerProducerService):
     async def send_participant_notification(
         self,
-        request_user_id: uuid.UUID,
+        initiator_id: uuid.UUID,
         project: Project,
         participant: Participant,
         status: ParticipantStatusEnum
@@ -44,8 +44,12 @@ class ProjectsBrokerService(BaseBrokerProducerService):
                 recipients = [participant.user_id]
 
         elif status == ParticipantStatusEnum.LEFT:
-            notification_type = ParticipantNotificationType.LEFT
-            recipients = [project.owner_id] + [p.user_id for p in project.participants]
+            if request_user_id == participant.user_id:
+                notification_type = ParticipantNotificationType.PARTICIPANT_LEFT
+                recipients = [project.owner_id] + [p.user_id for p in project.participants]
+            elif request_user_id == project.owner_id:
+                notification_type = ParticipantNotificationType.OWNER_EXCLUDED
+                recipients = [project.owner_id] + [p.user_id for p in project.participants]
 
         broker_tasks = []
         for recipient_id in recipients:
@@ -54,7 +58,7 @@ class ProjectsBrokerService(BaseBrokerProducerService):
                 data=ParticipantNotificationData.model_validate(participant_notification_data),
                 recipient_id=recipient_id,
             )
-            broker_tasks.append(super().send(
+            broker_tasks.append(self.send(
                     topic="ParticipantNotification", message=notification
                 )
             )

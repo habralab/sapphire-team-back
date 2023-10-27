@@ -85,7 +85,7 @@ async def update_participant(
             )
 
             await broker_service.send_participant_notification(
-                request_user_id=request_user_id,
+                initiator_id=request_user_id,
                 project=project,
                 participant=participant,
                 status=data.status
