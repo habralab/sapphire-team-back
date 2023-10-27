@@ -10,21 +10,21 @@ from .models import (
 
 class StorageRestClient(BaseRestClient):
     async def get_health(self) -> HealthResponse:
-        path = "/api/v1beta/rest/health"
+        path = "/api/rest/health"
 
         return await self.rest_get(path=path, response_model=HealthResponse)
 
     async def get_specialization_groups(self) -> SpecializationGroupListResponse:
-        path = "/api/v1beta/rest/spec-groups/"
+        path = "/api/rest/spec-groups/"
 
         return await self.rest_get(path=path, response_model=SpecializationGroupListResponse)
 
     async def get_specializations(self) -> SpecializationListResponse:
-        path = "/api/v1beta/rest/specializations/"
+        path = "/api/rest/specializations/"
 
         return await self.rest_get(path=path, response_model=SpecializationListResponse)
 
     async def get_skills(self) -> SkillListResponse:
-        path = "/api/v1beta/rest/skills/"
+        path = "/api/rest/skills/"
 
         return await self.rest_get(path=path, response_model=SkillListResponse)

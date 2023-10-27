@@ -8,7 +8,7 @@ from sapphire.common.utils.package import get_version
 from sapphire.storage.database.service import StorageDatabaseService
 from sapphire.storage.settings import StorageSettings
 
-from . import router
+from . import health, router
 
 
 class StorageAPIService(BaseAPIService):
@@ -33,6 +33,7 @@ class StorageAPIService(BaseAPIService):
         )
 
     def setup_app(self, app: fastapi.FastAPI):
+        app.add_api_route(path="/health", endpoint=health.health)
         app.include_router(router.router, prefix="/api")
 
     @property
