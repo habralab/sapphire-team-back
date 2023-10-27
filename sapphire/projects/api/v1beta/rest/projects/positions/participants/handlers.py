@@ -94,20 +94,26 @@ async def update_participant(
             participant: participant,
             status: data.status
         }
-        if data.status == ParticipantStatusEnum.REQUEST:
-            await broker_service.send_participant_requested(**notification_data)
-        elif data.status == ParticipantStatusEnum.JOINED:
-            await broker_service.send_participant_joined(**notification_data)
-        elif data.status == ParticipantStatusEnum.DECLINED:
-            if request_user_id == participant.user_id:
-                await broker_service.send_participant_declined(**notification_data)
-            elif request_user_id == project.owner_id:
-                await broker_service.send_owner_declined(**notification_data)
-        elif data.status == ParticipantStatusEnum.LEFT:
-            if request_user_id == participant.user_id:
-                await broker_service.send_participant_left(**notification_data)
-            elif request_user_id == project.owner_id:
-                await broker_service.send_owner_exluded(**notification_data)
+        participant_status_function_map = {
+            ParticipantStatusEnum.REQUEST: broker_service.send_participant_requested,
+            ParticipantStatusEnum.JOINED: broker_service.send_participant_joined,
+            ParticipantStatusEnum.DECLINED: {
+                participant.user_id: broker_service.send_participant_declined,
+                project.owner_id: broker_service.send_owner_declined
+            },
+            ParticipantStatusEnum.LEFT: {
+                participant.user_id: broker_service.send_participant_left,
+                project.owner_id: broker_service.send_owner_exluded
+            }
+        }
+
+        send_func = status_function_map.get(data.status)
+        if callable(send_func):
+            await send_func(**notification_data)
+        elif isinstance(send_func, dict):
+            send_func = send_func.get(request_user_id)
+            if callable(send_func):
+                await send_func(**notification_data)
 
 
     return ProjectParticipantResponse.model_validate(updated_participant_db)
