@@ -7,7 +7,7 @@ from sapphire.common.broker.models.projects.participants import (
     ParticipantNotificationType,
 )
 from sapphire.common.broker.service import BaseBrokerProducerService
-from sapphire.projects.database.models import Participant, ParticipantStatusEnum, Project
+from sapphire.projects.database.models import Participant, Project
 from sapphire.projects.settings import ProjectsSettings
 
 
@@ -112,7 +112,7 @@ class ProjectsBrokerService(BaseBrokerProducerService):
 
     @staticmethod
     async def _create_participant_notification_data(
-        participant: Participant, project: Project
+         project: Project, participant: Participant,
     ) -> ParticipantNotificationData:
         return ParticipantNotificationData(
             user_id=participant.user_id,
