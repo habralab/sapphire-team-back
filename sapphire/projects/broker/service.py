@@ -14,8 +14,7 @@ from sapphire.projects.settings import ProjectsSettings
 class ProjectsBrokerService(BaseBrokerProducerService):
     async def send_participant_requested(self,
         project: Project,
-        participant: Participant,
-        status: ParticipantStatusEnum
+        participant: Participant
     ) -> None:
         # RECIPIENTS: ONLY OWNER
         await self._send_notification_to_recipients(
@@ -29,7 +28,6 @@ class ProjectsBrokerService(BaseBrokerProducerService):
     async def send_participant_joined(self,
         project: Project,
         participant: Participant,
-        status: ParticipantStatusEnum,
     ) -> None:
         # RECIPIENTS: PROJECT OWNER AND PARTICIPANTS
         await self._send_notification_to_recipients(
@@ -43,7 +41,6 @@ class ProjectsBrokerService(BaseBrokerProducerService):
     async def send_participant_declined(self,
         project: Project,
         participant: Participant,
-        status: ParticipantStatusEnum,
     ) -> None:
         # RECIPIENTS: ONLY OWNER
         await self._send_notification_to_recipients(
@@ -57,7 +54,6 @@ class ProjectsBrokerService(BaseBrokerProducerService):
     async def send_owner_declined(self,
         project: Project,
         participant: Participant,
-        status: ParticipantStatusEnum,
     ) -> None:
         # RECIPIENTS: ONLY PARTICIPANT
         await self._send_notification_to_recipients(
@@ -71,7 +67,6 @@ class ProjectsBrokerService(BaseBrokerProducerService):
     async def send_participant_left(self,
         project: Project,
         participant: Participant,
-        status: ParticipantStatusEnum,
     ) -> None:
         # RECIPIENTS: PROJECT OWNER AND PARTICIPANTS
         await self._send_notification_to_recipients(
@@ -82,10 +77,9 @@ class ProjectsBrokerService(BaseBrokerProducerService):
             ),
         )
 
-    async def send_owner_exluded(self,
+    async def send_owner_excluded(self,
         project: Project,
         participant: Participant,
-        status: ParticipantStatusEnum,
     ) -> None:
         # RECIPIENTS: PROJECT OWNER AND PARTICIPANTS
         await self._send_notification_to_recipients(
@@ -96,28 +90,30 @@ class ProjectsBrokerService(BaseBrokerProducerService):
             ),
         )
 
-    @staticmethod
-    async def _send_notification_to_recipients(
+    async def _send_notification_to_recipients(self,
         notification_type: ParticipantNotificationType,
         recipients: list[uuid.UUID],
         notification_data: ParticipantNotificationData,
         topic: str = "ParticipantNotification"
     ) -> None:
         send_tasks = []
+        validated_data = ParticipantNotificationData.model_validate(notification_data)
         for recipient_id in recipients:
             notification = Notification(
                 type = notification_type,
-                data = ParticipantNotificationData.model_validate(notification_data),
+                data = validated_data,
                 recipient_id = recipient_id,
             )
             send_tasks.append(self.send(
-                    topic="ParticipantNotification", message=notification
+                    topic=topic, message=notification
                 )
             )
         await asyncio.gather(*send_tasks)
-    
+
     @staticmethod
-    async def _create_participant_notification_data(participant: Participant, project: Project):
+    async def _create_participant_notification_data(
+        participant: Participant, project: Project
+    ) -> ParticipantNotificationData:
         return ParticipantNotificationData(
             user_id=participant.user_id,
             position_id=participant.position_id,
