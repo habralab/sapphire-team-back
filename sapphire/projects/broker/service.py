@@ -1,6 +1,7 @@
 import asyncio
 import uuid
 
+from sapphire.common.broker.models.notification import Notification
 from sapphire.common.broker.models.projects.participants import (
     ParticipantNotificationData,
     ParticipantNotificationType,

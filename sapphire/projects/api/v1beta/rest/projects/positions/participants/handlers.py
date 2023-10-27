@@ -1,10 +1,8 @@
-import asyncio
 import uuid
 from collections import defaultdict
 
 import fastapi
 
-from sapphire.common.broker.models.notification import Notification
 from sapphire.common.jwt.dependencies.rest import auth_user_id
 from sapphire.projects.api.v1beta.rest.projects.dependencies import get_path_project
 from sapphire.projects.api.v1beta.rest.projects.positions.dependencies import get_path_position
