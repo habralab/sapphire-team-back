@@ -36,14 +36,9 @@ class ProjectListResponse(PaginatedResponse):
     data: list[ProjectResponse]
 
 
-class CreatePositionRequest(BaseModel):
-    name: str
-
-
 class PositionResponse(BaseModel):
     id: uuid.UUID
     project_id: uuid.UUID
-    name: str
     is_deleted: bool
     closed_at: datetime | None
     created_at: datetime
