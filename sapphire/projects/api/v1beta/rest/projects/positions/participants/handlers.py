@@ -13,11 +13,7 @@ from sapphire.projects.database.models import Participant, ParticipantStatusEnum
 from sapphire.projects.database.service import ProjectsDatabaseService
 
 from .dependencies import get_path_participant
-from .schemas import (
-    ParticipantNotificationData,
-    ProjectParticipantResponse,
-    UpdateParticipantRequest,
-)
+from .schemas import ProjectParticipantResponse, UpdateParticipantRequest
 
 
 async def create_participant(
@@ -90,44 +86,11 @@ async def update_participant(
                 status=data.status,
             )
 
-            participant_notification_data = ParticipantNotificationData(
-                user_id=participant.user_id,
-                position_id=participant.position_id,
-                project_id=project.id,
+            broker_service.send_participant_notification(
+                project=project,
+                participant=participant,
+                status=data.status
             )
-
-            if data.status == ParticipantStatusEnum.REQUEST:
-                notification_type = ""
-                recipients = [project.owner_id]
-
-            if data.status == ParticipantStatusEnum.JOINED:
-                notification_type = ""
-                recipients = [project.owner_id] + [p.user_id for p in project.participants]
-
-            if data.status == ParticipantStatusEnum.DECLINED:
-                # The Participant withdrew an application
-                if request_user_id == participant.user_id:
-                    notification_type = ""
-                    recipients = [project.owner_id]
-                # The Owner declined the participant
-                if request_user_id == project.owner_id:
-                    notification_type = ""
-                    recipients = [participant.user_id]
-
-            if data.status == ParticipantStatusEnum.LEFT:
-                notification_type = ""
-                recipients = [project.owner_id] + [p.user_id for p in project.participants]
-
-            broker_tasks = []
-            for recipient_id in recipients:
-                notification = Notification(
-                    type=notification_type,
-                    data=ParticipantNotificationData.model_validate(participant_notification_data),
-                    recipient_id=recipient_id,
-                )
-                broker_tasks.append(broker_service.send(message=notification))
-
-            await asyncio.gather(*broker_tasks)
 
     else:
         raise fastapi.HTTPException(
