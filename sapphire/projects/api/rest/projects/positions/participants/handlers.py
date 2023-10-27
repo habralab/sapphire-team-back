@@ -4,9 +4,8 @@ from collections import defaultdict
 import fastapi
 
 from sapphire.common.jwt.dependencies.rest import auth_user_id
-from sapphire.projects.api.v1beta.rest.projects.dependencies import get_path_project
-from sapphire.projects.api.v1beta.rest.projects.positions.dependencies import get_path_position
-from sapphire.projects.broker.service import ProjectsBrokerService
+from sapphire.projects.api.rest.projects.dependencies import get_path_project
+from sapphire.projects.api.rest.projects.positions.dependencies import get_path_position
 from sapphire.projects.database.models import Participant, ParticipantStatusEnum, Position, Project
 from sapphire.projects.database.service import ProjectsDatabaseService
 
@@ -109,6 +108,5 @@ async def update_participant(
             broker_send = broker_send.get(request_user_id)
             if callable(broker_send):
                 await broker_send(project=project, participant=participant)
-
 
     return ProjectParticipantResponse.model_validate(updated_participant_db)

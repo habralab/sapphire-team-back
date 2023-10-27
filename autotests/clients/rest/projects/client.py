@@ -19,12 +19,12 @@ from .models import (
 
 class ProjectsRestClient(BaseRestClient):
     async def get_health(self) -> HealthResponse:
-        path = "/api/v1beta/rest/health"
+        path = "/api/rest/health"
 
         return await self.rest_get(path=path, response_model=HealthResponse)
 
     async def get_projects(self) -> ProjectListResponse:
-        path = "/api/v1beta/rest/projects/"
+        path = "/api/rest/projects/"
 
         return await self.rest_get(path=path, response_model=ProjectListResponse)
 
@@ -35,7 +35,7 @@ class ProjectsRestClient(BaseRestClient):
             description: str | None = None,
             deadline: datetime | None = None,
     ) -> ProjectResponse:
-        path = "/api/v1beta/rest/projects/"
+        path = "/api/rest/projects/"
         request = CreateProjectRequest(
             name=name,
             description=description,
@@ -57,7 +57,7 @@ class ProjectsRestClient(BaseRestClient):
         raise NotImplementedError
 
     async def create_project_position(self, project_id: uuid.UUID) -> PositionResponse:
-        path = f"/api/v1beta/rest/projects/{project_id}/positions/"
+        path = f"/api/rest/projects/{project_id}/positions/"
 
         return await self.rest_post(path=path, response_model=PositionResponse)
 
@@ -66,7 +66,7 @@ class ProjectsRestClient(BaseRestClient):
             project_id: uuid.UUID,
             position_id: uuid.UUID,
     ) -> PositionResponse:
-        path = f"/api/v1beta/rest/projects/{project_id}/positions/{position_id}"
+        path = f"/api/rest/projects/{project_id}/positions/{position_id}"
 
         return await self.rest_delete(path=path, response_model=PositionResponse)
 
@@ -75,7 +75,7 @@ class ProjectsRestClient(BaseRestClient):
             project_id: uuid.UUID,
             position_id: uuid.UUID,
     ) -> ParticipantResponse:
-        path = f"/api/v1beta/rest/projects/{project_id}/positions/{position_id}/participants/"
+        path = f"/api/rest/projects/{project_id}/positions/{position_id}/participants/"
         
         return await self.rest_post(path=path, response_model=ParticipantResponse)
 
@@ -87,7 +87,7 @@ class ProjectsRestClient(BaseRestClient):
             status: ParticipantStatusEnum,
     ) -> ParticipantResponse:
         path = (
-            f"/api/v1beta/rest/projects/{project_id}/positions/{position_id}/participants"
+            f"/api/rest/projects/{project_id}/positions/{position_id}/participants"
             f"/{participant_id}"
         )
         request = UpdateParticipantRequest(status=status)
