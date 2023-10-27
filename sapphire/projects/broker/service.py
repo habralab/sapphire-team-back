@@ -13,6 +13,7 @@ from sapphire.projects.settings import ProjectsSettings
 class ProjectsBrokerService(BaseBrokerProducerService):
     async def send_participant_notification(
         self,
+        request_user_id: uuid.UUID,
         project: Project,
         participant: Participant,
         status: ParticipantStatusEnum
