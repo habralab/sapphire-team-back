@@ -11,7 +11,7 @@ from sapphire.projects.database.models import Position, Project
 from sapphire.projects.database.service import ProjectsDatabaseService
 
 from .dependencies import get_path_position
-from .schemas import CreateProjectPositionRequest, ProjectPositionResponse, ProjectPositionsResponse
+from .schemas import ProjectPositionResponse, ProjectPositionsResponse
 
 
 async def get_project_positions(
@@ -45,7 +45,6 @@ async def get_project_positions(
 async def create_project_position(
         request: fastapi.Request,
         project: Project = fastapi.Depends(path_project_is_owner),
-        data: CreateProjectPositionRequest = fastapi.Body(embed=False),
 ) -> ProjectPositionResponse:
     database_service: ProjectsDatabaseService = request.app.service.database
 
@@ -53,7 +52,6 @@ async def create_project_position(
         db_position = await database_service.create_project_position(
             session=session,
             project=project,
-            name=data.name,
         )
 
     return ProjectPositionResponse.model_validate(db_position)

@@ -62,7 +62,6 @@ class Position(Base):
     __tablename__ = "project_positions"
 
     id: Mapped[uuid.UUID] = mapped_column(default=uuid.uuid4, primary_key=True, unique=True)
-    name = Mapped[str]
     project_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("projects.id"), primary_key=True)
     closed_at: Mapped[datetime | None]
     created_at: Mapped[datetime] = mapped_column(default=datetime.now)
