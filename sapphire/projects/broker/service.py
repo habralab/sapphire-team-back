@@ -54,7 +54,10 @@ class ProjectsBrokerService(BaseBrokerProducerService):
                 data=ParticipantNotificationData.model_validate(participant_notification_data),
                 recipient_id=recipient_id,
             )
-            broker_tasks.append(super().send(message=notification))
+            broker_tasks.append(super().send(
+                    topic="ParticipantNotification", message=notification
+                )
+            )
 
         await asyncio.gather(*broker_tasks)
 
