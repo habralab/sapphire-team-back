@@ -3,9 +3,8 @@ import uuid
 from datetime import datetime
 from typing import Type
 
-from sqlalchemy import or_
+from sqlalchemy import func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.future import select
 
 from sapphire.common.database.service import BaseDatabaseService
 from sapphire.common.utils.empty import Empty
@@ -219,18 +218,16 @@ class ProjectsDatabaseService(BaseDatabaseService):
             filters.append(Project.deadline <= deadline)
         if status is not Empty:
             history_query = (
-                select(ProjectHistory.status)
-                .order_by(ProjectHistory.created_at.desc())
-                .group_by(ProjectHistory.project_id)
-                .where(ProjectHistory.status == status)
-                .limit(1)
+                select(
+                    ProjectHistory.project_id,
+                    ProjectHistory.status,
+                    func.max(ProjectHistory.created_at)  # pylint: disable=not-callable
+                ).group_by(ProjectHistory.project_id)
             )
-            result = await session.execute(history_query)
-            project_ids = []
-            for history in result.unique().scalars().all():
-                if history.status == status:
-                    project_ids.append(history.project_id)
-            filters.append(Project.id.in_(project_ids))
+            filters.extend([
+                Project.id == history_query.c.project_id,
+                status == history_query.c.status,
+            ])
 
         if any(
             x is not Empty

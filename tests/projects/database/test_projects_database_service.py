@@ -8,13 +8,7 @@ import pytest
 from sqlalchemy import desc
 from sqlalchemy.future import select
 
-from sapphire.projects.database.models import (
-    Participant,
-    ParticipantStatusEnum,
-    Position,
-    Project,
-    ProjectHistory,
-)
+from sapphire.projects.database.models import Participant, ParticipantStatusEnum, Position, Project
 from sapphire.projects.database.service import ProjectsDatabaseService
 
 
@@ -301,8 +295,7 @@ async def test_get_projects_with_all_query_params(database_service: ProjectsData
     position_skill_ids = [uuid.uuid4(), uuid.uuid4()]
     position_specialization_ids = [uuid.uuid4(), uuid.uuid4()]
     expected_projects = [Project(id=project_id, name="test", owner_id=owner_id)]
-    expected_histories = [ProjectHistory(project_id=project_id, status=ParticipantStatusEnum.REQUEST)]
-    result.unique.return_value.scalars.return_value.all.side_effect = [expected_histories, expected_projects]
+    result.unique.return_value.scalars.return_value.all.return_value = expected_projects
     session.execute = AsyncMock()
     session.execute.return_value = result
 
