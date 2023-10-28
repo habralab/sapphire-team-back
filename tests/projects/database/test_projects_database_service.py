@@ -23,6 +23,8 @@ def test_get_alembic_config_path(database_service: ProjectsDatabaseService):
     assert path == expected_path
 
 
+# Project
+
 @pytest.mark.asyncio
 async def test_create_project(database_service: ProjectsDatabaseService):
     session = MagicMock()
@@ -74,9 +76,86 @@ async def test_get_project(database_service: ProjectsDatabaseService):
 
 
 @pytest.mark.asyncio
+async def test_get_projects_without_pagination(database_service: ProjectsDatabaseService):
+    session = MagicMock()
+    result = MagicMock()
+    project_id = uuid.uuid4()
+    expected_projects = [Project(id=project_id, name="test", owner_id=uuid.uuid4())]
+    expected_query = select(Project).order_by(desc(Project.created_at))
+    result.unique.return_value.scalars.return_value.all.return_value = expected_projects
+    session.execute = AsyncMock()
+    session.execute.return_value = result
+
+    projects = await database_service.get_projects(session=session)
+
+    assert projects == expected_projects
+
+    query = session.execute.call_args_list[0].args[0]
+    assert expected_query.compare(query)
+
+
+@pytest.mark.asyncio
+async def test_get_projects_with_pagination(database_service: ProjectsDatabaseService):
+    session = MagicMock()
+    result = MagicMock()
+    project_id = uuid.uuid4()
+    expected_projects = [Project(id=project_id, name="test", owner_id=uuid.uuid4())]
+    page = 1
+    per_page = 10
+    offset = (page - 1) * per_page
+    expected_query = (
+        select(Project)
+        .order_by(desc(Project.created_at))
+        .limit(per_page)
+        .offset(offset)
+    )
+    result.unique.return_value.scalars.return_value.all.return_value = expected_projects
+    session.execute = AsyncMock()
+    session.execute.return_value = result
+
+    projects = await database_service.get_projects(session=session, page=page, per_page=per_page)
+
+    assert projects == expected_projects
+
+    query = session.execute.call_args_list[0].args[0]
+    assert expected_query.compare(query)
+
+
+@pytest.mark.asyncio
+async def test_get_projects_with_all_query_params(database_service: ProjectsDatabaseService):
+    session = MagicMock()
+    result = MagicMock()
+    project_id = uuid.uuid4()
+    owner_id = uuid.uuid4()
+    deadline = datetime.now()
+    query_text = "query_text"
+    position_skill_ids = [uuid.uuid4(), uuid.uuid4()]
+    position_specialization_ids = [uuid.uuid4(), uuid.uuid4()]
+    expected_projects = [Project(id=project_id, name="test", owner_id=owner_id)]
+    result.unique.return_value.scalars.return_value.all.return_value = expected_projects
+    session.execute = AsyncMock()
+    session.execute.return_value = result
+
+    projects = await database_service.get_projects(
+        session=session,
+        query_text=query_text,
+        owner_id=owner_id,
+        deadline=deadline,
+        status=ParticipantStatusEnum.REQUEST,
+        position_is_deleted=False,
+        position_is_closed=False,
+        position_skill_ids=position_skill_ids,
+        position_specialization_ids=position_specialization_ids,
+    )
+
+    assert projects == expected_projects
+
+
+# Project position
+
+@pytest.mark.asyncio
 async def test_create_project_position(database_service: ProjectsDatabaseService):
     session = MagicMock()
-    name = "Position"
     project = MagicMock()
     specialization_id = uuid.uuid4()
 
@@ -124,6 +203,31 @@ async def test_get_project_position(database_service: ProjectsDatabaseService):
 
     assert result_position is position
 
+
+@pytest.mark.asyncio
+async def test_get_project_positions(database_service: ProjectsDatabaseService):
+    session = MagicMock()
+    result = MagicMock()
+    project_id = uuid.uuid4()
+    specialization_id = uuid.uuid4()
+    expected_positions = [
+        Position(id=uuid.uuid4(), specialization_id=specialization_id, project_id=project_id)
+    ]
+    expected_query = select(Position).where(Position.project_id == project_id)
+    result.scalars.return_value.all.return_value = expected_positions
+    session.execute = AsyncMock()
+    session.execute.return_value = result
+
+    positions = await database_service.get_project_positions(
+        session=session,
+        project_id=project_id,
+    )
+
+    assert positions == expected_positions
+    assert expected_query.compare(session.execute.call_args_list[0].args[0])
+
+
+# Project participant
 
 @pytest.mark.asyncio
 async def test_get_participant_with_participant_id(
@@ -213,102 +317,3 @@ async def test_update_participant_status(database_service: ProjectsDatabaseServi
     assert update_participant.status == ParticipantStatusEnum.DECLINED
     assert update_participant.position_id == position_id
     assert update_participant.user_id == user_id
-
-
-@pytest.mark.asyncio
-async def test_get_projects_without_pagination(database_service: ProjectsDatabaseService):
-    session = MagicMock()
-    result = MagicMock()
-    project_id = uuid.uuid4()
-    expected_projects = [Project(id=project_id, name="test", owner_id=uuid.uuid4())]
-    expected_query = select(Project).order_by(desc(Project.created_at))
-    result.unique.return_value.scalars.return_value.all.return_value = expected_projects
-    session.execute = AsyncMock()
-    session.execute.return_value = result
-
-    projects = await database_service.get_projects(session=session)
-
-    assert projects == expected_projects
-
-    query = session.execute.call_args_list[0].args[0]
-    assert expected_query.compare(query)
-
-
-@pytest.mark.asyncio
-async def test_get_projects_with_pagination(database_service: ProjectsDatabaseService):
-    session = MagicMock()
-    result = MagicMock()
-    project_id = uuid.uuid4()
-    expected_projects = [Project(id=project_id, name="test", owner_id=uuid.uuid4())]
-    page = 1
-    per_page = 10
-    offset = (page - 1) * per_page
-    expected_query = (
-        select(Project)
-        .order_by(desc(Project.created_at))
-        .limit(per_page)
-        .offset(offset)
-    )
-    result.unique.return_value.scalars.return_value.all.return_value = expected_projects
-    session.execute = AsyncMock()
-    session.execute.return_value = result
-
-    projects = await database_service.get_projects(session=session, page=page, per_page=per_page)
-
-    assert projects == expected_projects
-
-    query = session.execute.call_args_list[0].args[0]
-    assert expected_query.compare(query)
-
-
-@pytest.mark.asyncio
-async def test_get_project_positions(database_service: ProjectsDatabaseService):
-    session = MagicMock()
-    result = MagicMock()
-    project_id = uuid.uuid4()
-    specialization_id = uuid.uuid4()
-    expected_positions = [
-        Position(id=uuid.uuid4(), specialization_id=specialization_id, project_id=project_id)
-    ]
-    expected_query = select(Position).where(Position.project_id == project_id)
-    result.scalars.return_value.all.return_value = expected_positions
-    session.execute = AsyncMock()
-    session.execute.return_value = result
-
-    positions = await database_service.get_project_positions(
-        session=session,
-        project_id=project_id,
-    )
-
-    assert positions == expected_positions
-    assert expected_query.compare(session.execute.call_args_list[0].args[0])
-
-
-@pytest.mark.asyncio
-async def test_get_projects_with_all_query_params(database_service: ProjectsDatabaseService):
-    session = MagicMock()
-    result = MagicMock()
-    project_id = uuid.uuid4()
-    owner_id = uuid.uuid4()
-    deadline = datetime.now()
-    query_text = "query_text"
-    position_skill_ids = [uuid.uuid4(), uuid.uuid4()]
-    position_specialization_ids = [uuid.uuid4(), uuid.uuid4()]
-    expected_projects = [Project(id=project_id, name="test", owner_id=owner_id)]
-    result.unique.return_value.scalars.return_value.all.return_value = expected_projects
-    session.execute = AsyncMock()
-    session.execute.return_value = result
-
-    projects = await database_service.get_projects(
-        session=session,
-        query_text=query_text,
-        owner_id=owner_id,
-        deadline=deadline,
-        status=ParticipantStatusEnum.REQUEST,
-        position_is_deleted=False,
-        position_is_closed=False,
-        position_skill_ids=position_skill_ids,
-        position_specialization_ids=position_specialization_ids,
-    )
-
-    assert projects == expected_projects
