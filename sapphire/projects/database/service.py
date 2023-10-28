@@ -229,15 +229,14 @@ class ProjectsDatabaseService(BaseDatabaseService):
                 status == history_query.c.status,
             ])
 
-        if any(
-            x is not Empty
-            for x in [
-                position_is_deleted,
-                position_is_closed,
-                position_skill_ids,
-                position_specialization_ids,
-            ]
-        ):
+        position_params = [
+            position_is_deleted,
+            position_is_closed,
+            position_skill_ids,
+            position_specialization_ids,
+        ]
+
+        if any(x is not Empty for x in position_params):
             position_filters = []
             if position_is_deleted is not Empty:
                 position_filters.append(Position.is_deleted == position_is_deleted)
@@ -252,13 +251,11 @@ class ProjectsDatabaseService(BaseDatabaseService):
                     Position.specialization_id.in_(position_specialization_ids)
                 )
             if position_skill_ids is not Empty:
-                position_filters.append(
-                    Position.id.in_(
-                        select(PositionsSkills.position_id).where(
-                            PositionsSkills.skill_id.in_(position_skill_ids)
-                        )
-                    )
+                position_skill_query = (
+                    select(PositionsSkills.position_id)
+                    .where(PositionsSkills.skill_id.in_(position_skill_ids))
                 )
+                position_filters.append(Position.id.in_(position_skill_query))
             filters.append(
                 Project.id.in_(select(Position.project_id).where(*position_filters))
             )
