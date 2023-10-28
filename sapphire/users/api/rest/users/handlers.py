@@ -23,6 +23,17 @@ async def get_user(
     return UserResponse.from_db_model(path_user, with_email=with_email)
 
 
+async def get_me(
+    request_user_id: uuid.UUID| None = fastapi.Depends(get_request_user_id),
+) -> UserResponse:
+    if request_user_id:
+        return UserResponse(id=request_user_id)
+    raise fastapi.HTTPException(
+        status_code=fastapi.status.HTTP_404_NOT_FOUND,
+        detail="Avatar not found.",
+    )
+
+
 async def update_user(
         request: fastapi.Request,
         request_user_id: uuid.UUID = fastapi.Depends(auth_user_id),
