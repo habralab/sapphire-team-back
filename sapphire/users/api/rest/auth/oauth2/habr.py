@@ -21,8 +21,6 @@ async def authorize(request: fastapi.Request):
         redirect_url=str(redirect_url),
     )
 
-    print(authorization_url)
-
     return authorization_url
 
 
