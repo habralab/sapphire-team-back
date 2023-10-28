@@ -1,5 +1,4 @@
 import fastapi
-import yarl
 from fastapi.responses import RedirectResponse
 
 from sapphire.common.jwt import JWTMethods
@@ -22,8 +21,6 @@ async def authorize(request: fastapi.Request):
     )
 
     return authorization_url
-
-
 
 
 @router.get("/callback", name="callback")
