@@ -12,7 +12,7 @@ from sapphire.users.database.service import UsersDatabaseService
 from sapphire.users.oauth2.habr import OAuth2HabrBackend
 from sapphire.users.settings import UsersSettings
 
-from .router import router
+from . import health, router
 
 
 class UsersAPIService(BaseAPIService):
@@ -26,12 +26,14 @@ class UsersAPIService(BaseAPIService):
         load_file_chunk_size: int = 1024 * 1024,
         version: str = "0.0.0",
         root_url: str = "http://localhost",
+        habr_oauth2_callback_url: str = "",
         root_path: str = "",
         allowed_origins: Iterable[str] = (),
         port: int = 8000,
     ):
         self._database = database
         self._habr_oauth2 = habr_oauth2
+        self._habr_oauth2_callback_url = habr_oauth2_callback_url
         self._habr_client = habr_client
         self._jwt_methods = jwt_methods
         self._media_dir_path = media_dir_path
@@ -47,7 +49,8 @@ class UsersAPIService(BaseAPIService):
         )
 
     def setup_app(self, app: fastapi.FastAPI):
-        app.include_router(router, prefix="/api")
+        app.add_api_route(path="/health", endpoint=health.health)
+        app.include_router(router.router, prefix="/api")
 
     @property
     def dependencies(self) -> list[ServiceMixin]:
@@ -64,6 +67,10 @@ class UsersAPIService(BaseAPIService):
     @property
     def habr_oauth2(self) -> OAuth2HabrBackend:
         return self._habr_oauth2
+
+    @property
+    def habr_oauth2_callback_url(self) -> str:
+        return self._habr_oauth2_callback_url
 
     @property
     def habr_client(self) -> HabrClient:
@@ -93,6 +100,7 @@ def get_service(
         database=database,
         habr_oauth2=habr_oauth2,
         habr_client=habr_client,
+        habr_oauth2_callback_url=settings.habr_oauth2_callback_url,
         jwt_methods=jwt_methods,
         version=get_version() or "0.0.0",
         root_url=str(settings.root_url),

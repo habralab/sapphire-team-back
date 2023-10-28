@@ -12,19 +12,19 @@ from .models import HealthResponse, UserResponse, UserUpdateRequest
 
 class UsersRestClient(BaseRestClient):
     async def get_health(self) -> HealthResponse:
-        path = "/api/v1beta/rest/health"
+        path = "/api/rest/health"
 
         return await self.rest_get(path=path, response_model=HealthResponse)
 
     async def oauth2_habr_authorize(self) -> httpx.Response:
-        path = "/api/v1beta/rest/auth/oauth2/habr/authorize"
+        path = "/api/rest/auth/oauth2/habr/authorize"
 
         response = await self.get(url=path, follow_redirects=False)
 
         return response
 
     async def logout(self) -> httpx.Response:
-        path = "/api/v1beta/rest/auth/logout"
+        path = "/api/rest/auth/logout"
 
         response = await self.delete(url=path)
         if response.status_code // 100 != 2:
@@ -33,7 +33,7 @@ class UsersRestClient(BaseRestClient):
         return response
 
     async def get_user(self, user_id: uuid.UUID) -> UserResponse:
-        path = f"/api/v1beta/rest/users/{user_id}"
+        path = f"/api/rest/users/{user_id}"
 
         return await self.rest_get(path=path, response_model=UserResponse)
 
@@ -46,7 +46,7 @@ class UsersRestClient(BaseRestClient):
             main_specialization_id: uuid.UUID | None = None,
             secondary_specialization_id: uuid.UUID | None = None,
     ) -> UserResponse:
-        path = f"/api/v1beta/rest/users/{user_id}"
+        path = f"/api/rest/users/{user_id}"
         request = UserUpdateRequest(
             first_name=first_name,
             last_name=last_name,
@@ -58,7 +58,7 @@ class UsersRestClient(BaseRestClient):
         return await self.rest_post(path=path, response_model=UserResponse, data=request)
 
     async def get_user_avatar(self, user_id: uuid.UUID) -> io.BytesIO:
-        path = f"/api/v1beta/rest/users/{user_id}/avatar"
+        path = f"/api/rest/users/{user_id}/avatar"
 
         response = await self.get(url=path)
         if response.status_code // 100 != 2:
@@ -67,17 +67,17 @@ class UsersRestClient(BaseRestClient):
         return io.BytesIO(response.content)
 
     async def update_user_avatar(self, user_id: uuid.UUID, avatar: io.BytesIO) -> UserResponse:
-        path = f"/api/v1beta/rest/users/{user_id}/avatar"
+        path = f"/api/rest/users/{user_id}/avatar"
 
         return await self.rest_post(path=path, response_model=UserResponse, files={"avatar": avatar})
 
     async def remove_user_avatar(self, user_id: uuid.UUID) -> UserResponse:
-        path = f"/api/v1beta/rest/users/{user_id}/avatar"
+        path = f"/api/rest/users/{user_id}/avatar"
 
         return await self.rest_delete(path=path, response_model=UserResponse)
 
     async def get_user_skills(self, user_id: uuid.UUID) -> set[uuid.UUID]:
-        path = f"/api/v1beta/rest/users/{user_id}/skills"
+        path = f"/api/rest/users/{user_id}/skills"
 
         response = await self.get(url=path)
         if response.status_code // 100 != 2:
@@ -90,7 +90,7 @@ class UsersRestClient(BaseRestClient):
             user_id: uuid.UUID,
             skills: Set[uuid.UUID],
     ) -> set[uuid.UUID]:
-        path = f"/api/v1beta/rest/users/{user_id}/skills"
+        path = f"/api/rest/users/{user_id}/skills"
 
         response = await self.post(url=path, json=list(map(str, skills)))
         if response.status_code // 100 != 2:
