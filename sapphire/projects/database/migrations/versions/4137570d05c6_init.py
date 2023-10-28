@@ -36,6 +36,7 @@ def upgrade() -> None:
     op.create_table('project_positions',
     sa.Column('id', sa.Uuid(), nullable=False),
     sa.Column('project_id', sa.Uuid(), nullable=False),
+    sa.Column('specialization_id', sa.Uuid(), nullable=False),
     sa.Column('is_deleted', sa.Boolean(), nullable=False),
     sa.Column('closed_at', sa.DateTime(), nullable=True),
     sa.Column('created_at', sa.DateTime(), nullable=False),
@@ -63,7 +64,15 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['position_id'], ['project_positions.id'], ),
     sa.PrimaryKeyConstraint('id', 'position_id')
     )
-    # ### end Alembic commands ###
+    op.create_table('project_positions_skills',
+    sa.Column('position_id', sa.Uuid(), nullable=False),
+    sa.Column('skill_id', sa.Uuid(), nullable=False),
+    sa.Column('created_at', sa.DateTime(), nullable=False),
+    sa.Column('updated_at', sa.DateTime(), nullable=False),
+    sa.ForeignKeyConstraint(['position_id'], ['project_positions.id'], ),
+    sa.PrimaryKeyConstraint('position_id', 'skill_id')
+    )
+    ### end Alembic commands ###
 
 
 def downgrade() -> None:
@@ -72,4 +81,5 @@ def downgrade() -> None:
     op.drop_table('projects_history')
     op.drop_table('project_positions')
     op.drop_table('projects')
+    op.drop_table('project_positions_skills')
     # ### end Alembic commands ###

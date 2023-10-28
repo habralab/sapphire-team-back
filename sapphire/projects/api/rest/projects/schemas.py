@@ -1,9 +1,12 @@
 import uuid
 from datetime import datetime
+from typing import Type
 
-from pydantic import BaseModel, ConfigDict
+import fastapi
+from pydantic import BaseModel, ConfigDict, Field
 
 from sapphire.common.api.schemas.paginated import PaginatedResponse
+from sapphire.common.utils.empty import Empty
 from sapphire.projects.database.models import ProjectStatusEnum
 
 
@@ -42,3 +45,14 @@ class ProjectHistoryListResponse(PaginatedResponse):
 
 class ProjectListResponse(PaginatedResponse):
     data: list[ProjectResponse]
+
+
+class ProjectFiltersRequest(BaseModel):
+    query_text: str | Type[Empty] = Empty
+    owner_id: uuid.UUID | Type[Empty] = Empty
+    deadline: datetime | Type[Empty] = Empty
+    status: ProjectStatusEnum | Type[Empty] = Empty
+    position_is_deleted: bool | Type[Empty] = Empty
+    position_is_closed: bool | Type[Empty] = Empty
+    position_skill_ids: list[str] | Type[Empty] = Field(fastapi.Query(Empty))
+    position_specialization_ids: list[uuid.UUID] | Type[Empty] = Field(fastapi.Query(Empty))

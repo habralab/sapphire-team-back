@@ -19,3 +19,7 @@ class ProjectPositionResponse(BaseModel):
 
 class ProjectPositionsResponse(PaginatedResponse):
     data: list[ProjectPositionResponse]
+
+
+class CreateProjectPositionRequest(BaseModel):
+    specialization_id: uuid.UUID

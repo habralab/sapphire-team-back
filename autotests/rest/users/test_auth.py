@@ -10,10 +10,7 @@ async def test_oauth2_habr_authorize_redirect(
         settings: AutotestsSettings,
         users_rest_client: UsersRestClient,
 ):
-    expected_redirect_uri = (
-        yarl.URL(str(settings.users_base_url)) / "api" / "v1beta" / "rest" / "auth" / "oauth2" /
-        "habr" / "callback"
-    )
+    expected_redirect_uri = yarl.URL(str(settings.users_base_url)).with_path("")
 
     response = await users_rest_client.oauth2_habr_authorize()
 

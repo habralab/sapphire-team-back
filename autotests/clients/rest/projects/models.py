@@ -45,6 +45,10 @@ class PositionResponse(BaseModel):
     updated_at: datetime
 
 
+class CreatePositionRequest(BaseModel):
+    specialization_id: uuid.UUID
+
+
 class UpdateParticipantRequest(BaseModel):
     status: ParticipantStatusEnum
 
