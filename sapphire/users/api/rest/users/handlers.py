@@ -30,7 +30,7 @@ async def get_me(
         return UserResponse(id=request_user_id)
     raise fastapi.HTTPException(
         status_code=fastapi.status.HTTP_404_NOT_FOUND,
-        detail="Avatar not found.",
+        detail="User not found.",
     )
 
 
