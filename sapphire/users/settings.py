@@ -20,6 +20,7 @@ class UsersSettings(BaseAPISettings, BaseDatabaseSettings, JWTSettings, HabrSett
 
     habr_oauth2_client_id: str = ""
     habr_oauth2_client_secret: str = ""
+    habr_oauth2_callback: str = ""
 
     media_dir_path: pathlib.Path = pathlib.Path("/media")
     load_file_chunk_size: PositiveInt = 1024 * 1024 # 1 Mb
