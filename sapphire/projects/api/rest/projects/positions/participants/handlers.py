@@ -2,6 +2,7 @@ import uuid
 from collections import defaultdict
 
 import fastapi
+from loguru import logger
 
 from sapphire.common.jwt.dependencies.rest import auth_user_id
 from sapphire.projects.api.rest.projects.dependencies import get_path_project
@@ -107,11 +108,16 @@ async def update_participant(
             }
         }
         participant_notification_send = (notification_send_map
-            .get(data.status)
-            .get(request_user_id)
+            .get(data.status, {})
+            .get(request_user_id, {})
         )
-        await participant_notification_send(
-            project=project, participant=participant
-        )
+        try:
+            await participant_notification_send(
+                project=project, participant=participant
+            )
+        except Exception as e:
+            logger.warning(
+                "Unmapped notification status or user {}", [data.status, request_user_id]
+            )
 
     return ProjectParticipantResponse.model_validate(updated_participant_db)
