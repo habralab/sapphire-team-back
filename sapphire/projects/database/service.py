@@ -219,8 +219,10 @@ class ProjectsDatabaseService(BaseDatabaseService):
             filters.append(Project.deadline <= deadline)
         if status is not Empty:
             history_query = (
-                select(ProjectHistory)
+                select(ProjectHistory.status)
                 .order_by(ProjectHistory.created_at.desc())
+                .group_by(ProjectHistory.project_id)
+                .where(ProjectHistory.status == status)
                 .limit(1)
             )
             result = await session.execute(history_query)
