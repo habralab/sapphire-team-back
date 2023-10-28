@@ -8,11 +8,7 @@ from sapphire.projects.database.models import Position, Project
 from sapphire.projects.database.service import ProjectsDatabaseService
 
 from .dependencies import get_path_position
-from .schemas import (
-    CreateProjectPositionRequest,
-    ProjectPositionResponse,
-    ProjectPositionsResponse,
-)
+from .schemas import CreateProjectPositionRequest, ProjectPositionResponse, ProjectPositionsResponse
 
 
 async def get_project_positions(
