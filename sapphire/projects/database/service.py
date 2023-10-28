@@ -8,10 +8,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
 from sapphire.common.database.service import BaseDatabaseService
-from sapphire.common.database.utils import Empty
+from sapphire.common.utils.empty import Empty
 from sapphire.projects.settings import ProjectsSettings
 
 from .models import (
+    Base,
     Participant,
     ParticipantStatusEnum,
     Position,
@@ -25,6 +26,12 @@ from .models import (
 class ProjectsDatabaseService(BaseDatabaseService):
     def get_alembic_config_path(self) -> pathlib.Path:
         return pathlib.Path(__file__).parent / "migrations"
+
+    def get_fixtures_directory_path(self) -> pathlib.Path:
+        return pathlib.Path(__file__).parent / "fixtures"
+
+    def get_models(self) -> list[Type[Base]]:
+        return [Participant, Position, Project, ProjectHistory]
 
     async def create_project(
         self,
@@ -55,6 +62,33 @@ class ProjectsDatabaseService(BaseDatabaseService):
         statement = select(Project).where(*filters)
         result = await session.execute(statement)
         return result.unique().scalar_one_or_none()
+
+    async def update_project(
+        self,
+        session: AsyncSession,
+        project: Project,
+        name: str | None | Type[Empty] = Empty,
+        owner_id: uuid.UUID | None | Type[Empty] = Empty,
+        description: str | None | Type[Empty] = Empty,
+        deadline: datetime | None | Type[Empty] = Empty,
+        avatar: str | None | Type[Empty] = Empty,
+    ) -> Project:
+        query = select(Project).where(Project.id == project.id)
+        result = await session.execute(query)
+        project = result.scalar_one()
+
+        if name is not Empty:
+            project.name = name
+        if owner_id is not Empty:
+            project.owner_id = owner_id
+        if description is not Empty:
+            project.description = description
+        if deadline is not Empty:
+            project.deadline = deadline
+        if avatar is not Empty:
+            project.avatar = avatar
+
+        return project
 
     async def get_project_positions(
         self,

@@ -9,7 +9,7 @@ from sapphire.common.utils.package import get_version
 from sapphire.messenger.database.service import MessengerDatabaseService
 from sapphire.messenger.settings import MessengerSettings
 
-from .router import router
+from . import health, router
 
 
 class MessengerAPIService(BaseAPIService):
@@ -36,7 +36,8 @@ class MessengerAPIService(BaseAPIService):
         )
 
     def setup_app(self, app: fastapi.FastAPI):
-        app.include_router(router, prefix="/api")
+        app.add_api_route(path="/health", endpoint=health.health)
+        app.include_router(router.router, prefix="/api")
 
     @property
     def dependencies(self) -> list[ServiceMixin]:

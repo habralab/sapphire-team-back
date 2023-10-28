@@ -9,5 +9,4 @@ class SkillResponse(BaseModel):
 
     id: uuid.UUID
     name: str | None
-    migrate_to: str | None
     created_at: datetime

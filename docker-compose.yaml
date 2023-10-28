@@ -65,6 +65,7 @@ services:
       ROOT_URL: ${USERS_ROOT_URL:-http://localhost:3000}
       ROOT_PATH: ${USERS_ROOT_PATH}
       ALLOWED_ORIGINS: ${USERS_ALLOWED_ORIGINS:-["http://localhost:3050"]}
+      HABR_OAUTH2_CALLBACK_URL: ${USERS_HABR_OAUTH2_CALLBACK_URL:-http://localhost:3000/api/rest/auth/oauth2/habr/callback}
     secrets:
       - source: habr_oauth2_client_id
         target: habr_oauth2_client_id
@@ -139,6 +140,8 @@ services:
         target: jwt_refresh_token_public_key
       - source: jwt_refresh_token_private_key
         target: jwt_refresh_token_private_key
+    volumes:
+      - ${PROJECTS_MEDIA_DIR_PATH:-./projects_data/media}:/media
     ports:
       - target: 8000
         published: ${PROJECTS_PORT:-3020}

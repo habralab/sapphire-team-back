@@ -11,7 +11,6 @@ class SpecializationResponse(BaseModel):
     name: str | None
     is_other: bool
     group_id: str | None
-    migrate_to: str | None
     created_at: datetime
 
 
@@ -20,5 +19,4 @@ class SpecializationGroupResponse(BaseModel):
 
     id: uuid.UUID
     name: str | None
-    migrate_to: str | None
     created_at: datetime
