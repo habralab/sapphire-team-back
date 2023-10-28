@@ -115,7 +115,7 @@ async def update_participant(
             await participant_notification_send(
                 project=project, participant=participant
             )
-        except Exception as e:
+        except TypeError:
             logger.warning(
                 "Unmapped notification status or user {}", [data.status, request_user_id]
             )
