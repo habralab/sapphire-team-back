@@ -12,12 +12,11 @@ router = fastapi.APIRouter()
 @router.get("/authorize", response_class=RedirectResponse)
 async def authorize(request: fastapi.Request):
     habr_oauth2: OAuth2HabrBackend = request.app.service.habr_oauth2
-
-    habr_oauth2_callback_url = request.app.service.habr_oauth2_callback
+    habr_oauth2_callback_url: str = request.app.service.habr_oauth2_callback
 
     redirect_url = habr_oauth2_callback_url
     authorization_url = habr_oauth2.get_authorization_url(
-        redirect_url=str(redirect_url),
+        redirect_url=redirect_url,
     )
 
     return authorization_url
