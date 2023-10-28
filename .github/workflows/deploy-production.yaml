@@ -15,7 +15,6 @@ jobs:
   deploy:
     needs: [build]
     runs-on: self-hosted
-    if: jobs.up-postgres.result == "success"
     steps:
       - name: Set environment variables
         run: |
@@ -37,6 +36,7 @@ jobs:
           echo "USERS_ROOT_PATH=${USERS_ROOT_PATH_PRODUCTION}" >> $GITHUB_ENV
           echo "USERS_ALLOWED_ORIGINS=${USERS_ALLOWED_ORIGINS_PRODUCTION}" >> $GITHUB_ENV
           echo "USERS_MEDIA_DIR_PATH=${USERS_MEDIA_DIR_PATH_PRODUCTION}" >> $GITHUB_ENV
+          echo "USERS_HABR_OAUTH2_CALLBACK_URL=${USERS_HABR_OAUTH2_CALLBACK_URL_PRODUCTION}" >> $GITHUB_ENV
           echo "STORAGE_PORT=2010" >> $GITHUB_ENV
           echo "STORAGE_DB_DSN=${STORAGE_DB_DSN_PRODUCTION}" >> $GITHUB_ENV
           echo "STORAGE_ROOT_URL=${STORAGE_ROOT_URL_PRODUCTION}" >> $GITHUB_ENV
