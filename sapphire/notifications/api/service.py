@@ -10,7 +10,7 @@ from sapphire.common.utils.package import get_version
 from sapphire.notifications.database.service import NotificationsDatabaseService
 from sapphire.notifications.settings import NotificationsSettings
 
-from .router import router
+from . import health, router
 
 
 class NotificationsAPIService(BaseAPIService):
@@ -39,7 +39,8 @@ class NotificationsAPIService(BaseAPIService):
         )
 
     def setup_app(self, app: fastapi.FastAPI):
-        app.include_router(router, prefix="/api")
+        app.add_api_route(path="/health", endpoint=health.health)
+        app.include_router(router.router, prefix="/api")
 
     @property
     def dependencies(self) -> list[ServiceMixin]:

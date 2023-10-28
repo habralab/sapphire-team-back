@@ -4,8 +4,8 @@ from collections import defaultdict
 import fastapi
 
 from sapphire.common.jwt.dependencies.rest import auth_user_id
-from sapphire.projects.api.v1beta.rest.projects.dependencies import get_path_project
-from sapphire.projects.api.v1beta.rest.projects.positions.dependencies import get_path_position
+from sapphire.projects.api.rest.projects.dependencies import get_path_project
+from sapphire.projects.api.rest.projects.positions.dependencies import get_path_position
 from sapphire.projects.database.models import Participant, ParticipantStatusEnum, Position, Project
 from sapphire.projects.database.service import ProjectsDatabaseService
 

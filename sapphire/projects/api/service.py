@@ -9,7 +9,7 @@ from sapphire.common.utils.package import get_version
 from sapphire.projects.database.service import ProjectsDatabaseService
 from sapphire.projects.settings import ProjectsSettings
 
-from . import router
+from . import health, router
 
 
 class ProjectsAPIService(BaseAPIService):
@@ -36,6 +36,7 @@ class ProjectsAPIService(BaseAPIService):
         )
 
     def setup_app(self, app: fastapi.FastAPI):
+        app.add_api_route(path="/health", endpoint=health.health)
         app.include_router(router.router, prefix="/api")
 
     @property

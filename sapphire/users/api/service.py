@@ -12,7 +12,7 @@ from sapphire.users.database.service import UsersDatabaseService
 from sapphire.users.oauth2.habr import OAuth2HabrBackend
 from sapphire.users.settings import UsersSettings
 
-from .router import router
+from . import health, router
 
 
 class UsersAPIService(BaseAPIService):
@@ -47,7 +47,8 @@ class UsersAPIService(BaseAPIService):
         )
 
     def setup_app(self, app: fastapi.FastAPI):
-        app.include_router(router, prefix="/api")
+        app.add_api_route(path="/health", endpoint=health.health)
+        app.include_router(router.router, prefix="/api")
 
     @property
     def dependencies(self) -> list[ServiceMixin]:

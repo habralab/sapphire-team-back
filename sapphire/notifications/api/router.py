@@ -1,7 +1,8 @@
 import fastapi
 
-from . import v1beta
+from . import rest, websocket
 
 router = fastapi.APIRouter()
 
-router.include_router(v1beta.router, prefix="/v1beta")
+router.include_router(rest.router, prefix="/rest")
+router.include_router(websocket.router, prefix="/websocket")
