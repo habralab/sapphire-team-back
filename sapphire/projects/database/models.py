@@ -41,6 +41,7 @@ class Project(Base):
         lazy="joined",
     )
     positions: Mapped[list["Position"]] = relationship(back_populates="project", lazy="joined")
+    reviews: Mapped[list["Review"]] = relationship(back_populates="project", lazy="joined")
 
     @property
     def status(self):
@@ -108,3 +109,21 @@ class Participant(Base):
     joined_at: Mapped[datetime | None]
 
     position: Mapped[Position] = relationship(back_populates="participants", lazy="joined")
+    reviews: Mapped[list["Review"]] = relationship(back_populates="participant", lazy="joined")
+
+
+class Review(Base):
+    __tablename__ = "project_reviews"
+
+    id: Mapped[uuid.UUID] = mapped_column(default=uuid.uuid4, primary_key=True)
+    project_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("projects.id"))
+    participant_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("project_participants.id"))
+    from_user_id: Mapped[uuid.UUID]
+    to_user_id: Mapped[uuid.UUID]
+    rate: Mapped[int]
+    text: Mapped[str]
+    created_at: Mapped[datetime] = mapped_column(default=datetime.now)
+    updated_at: Mapped[datetime] = mapped_column(default=datetime.now, onupdate=datetime.now)
+
+    participant: Mapped[Participant] = relationship(back_populates="reviews", lazy="joined")
+    project: Mapped[Project] = relationship(back_populates="reviews", lazy="joined")

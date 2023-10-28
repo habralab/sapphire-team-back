@@ -3,7 +3,8 @@ import uuid
 from datetime import datetime
 from typing import Type
 
-from sqlalchemy import desc, or_, select
+from pydantic import conint
+from sqlalchemy import desc, func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
 
@@ -20,6 +21,7 @@ from .models import (
     Project,
     ProjectHistory,
     ProjectStatusEnum,
+    Review,
 )
 
 
@@ -286,6 +288,54 @@ class ProjectsDatabaseService(BaseDatabaseService):
         result = await session.execute(query)
 
         return list(result.unique().scalars().all())
+
+
+    async def create_review(
+        self,
+        session: AsyncSession,
+        project: Project,
+        participant: Participant,
+        from_user_id: uuid.UUID,
+        to_user_id: uuid.UUID,
+        rate: conint(ge=1, le=5),
+        text: str,
+    ) -> Review:
+        review = Review(
+            project_id=project.id,
+            participant_id=participant.id,
+            from_user_id=from_user_id,
+            to_user_id=to_user_id,
+            rate=rate,
+            text=text,
+        )
+
+        session.add(review)
+        return review
+
+
+    async def get_review(
+        self,
+        session: AsyncSession,
+        project_id: Project | Type[Empty] = Empty,
+        participant_id: Participant | Type[Empty] = Empty,
+        from_user_id: uuid.UUID | Type[Empty] = Empty,
+        to_user_id: uuid.UUID | Type[Empty] = Empty,
+    ) -> Review | None:
+        filters = []
+
+        if project_id is not Empty:
+            filters.append(Review.project_id == project_id)
+        if participant_id is not Empty:
+            filters.append(Review.participant_id == participant_id)
+        if from_user_id is not Empty:
+            filters.append(Review.from_user_id == from_user_id)
+        if to_user_id is not Empty:
+            filters.append(Review.to_user_id == to_user_id)
+
+        query = select(Review).where(*filters)
+        result = await session.execute(query)
+
+        return result.unique().scalar_one_or_none()
 
 
 def get_service(settings: ProjectsSettings) -> ProjectsDatabaseService:
