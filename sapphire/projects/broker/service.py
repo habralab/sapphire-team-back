@@ -16,7 +16,7 @@ class ProjectsBrokerService(BaseBrokerProducerService):
         project: Project,
         participant: Participant
     ) -> None:
-        # RECIPIENTS: ONLY OWNER
+        """RECIPIENTS: ONLY OWNER"""
         await self._send_notification_to_recipients(
             notification_type=ParticipantNotificationType.REQUESTED,
             recipients=[project.owner_id],
@@ -29,7 +29,7 @@ class ProjectsBrokerService(BaseBrokerProducerService):
         project: Project,
         participant: Participant,
     ) -> None:
-        # RECIPIENTS: PROJECT OWNER AND PARTICIPANTS
+        """RECIPIENTS: PROJECT OWNER AND PARTICIPANTS"""
         await self._send_notification_to_recipients(
             notification_type=ParticipantNotificationType.JOINED,
             recipients=[project.owner_id] + [p.user_id for p in project.participants],
@@ -42,7 +42,7 @@ class ProjectsBrokerService(BaseBrokerProducerService):
         project: Project,
         participant: Participant,
     ) -> None:
-        # RECIPIENTS: ONLY OWNER
+        """RECIPIENTS: ONLY OWNER"""
         await self._send_notification_to_recipients(
             notification_type=ParticipantNotificationType.PARTICIPANT_DECLINED,
             recipients=[project.owner_id],
@@ -55,7 +55,7 @@ class ProjectsBrokerService(BaseBrokerProducerService):
         project: Project,
         participant: Participant,
     ) -> None:
-        # RECIPIENTS: ONLY PARTICIPANT
+        """RECIPIENTS: ONLY PARTICIPANT"""
         await self._send_notification_to_recipients(
             notification_type=ParticipantNotificationType.OWNER_DECLINED,
             recipients=[participant.user_id],
@@ -68,7 +68,7 @@ class ProjectsBrokerService(BaseBrokerProducerService):
         project: Project,
         participant: Participant,
     ) -> None:
-        # RECIPIENTS: PROJECT OWNER AND PARTICIPANTS
+        """RECIPIENTS: PROJECT OWNER AND PARTICIPANTS"""
         await self._send_notification_to_recipients(
             notification_type=ParticipantNotificationType.PARTICIPANT_LEFT,
             recipients=[project.owner_id] + [p.user_id for p in project.participants],
@@ -81,7 +81,7 @@ class ProjectsBrokerService(BaseBrokerProducerService):
         project: Project,
         participant: Participant,
     ) -> None:
-        # RECIPIENTS: PROJECT OWNER AND PARTICIPANTS
+        """RECIPIENTS: PROJECT OWNER AND PARTICIPANTS"""
         await self._send_notification_to_recipients(
             notification_type=ParticipantNotificationType.OWNER_EXCLUDED,
             recipients=[project.owner_id] + [p.user_id for p in project.participants],
