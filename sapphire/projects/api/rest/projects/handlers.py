@@ -13,6 +13,7 @@ from sapphire.projects.database.service import ProjectsDatabaseService
 from .dependencies import get_path_project, path_project_is_owner
 from .schemas import (
     CreateProjectRequest,
+    ProjectFiltersRequest,
     ProjectHistoryListResponse,
     ProjectHistoryResponse,
     ProjectListResponse,
@@ -45,6 +46,26 @@ async def create_project(
     return ProjectResponse.model_validate(project_db)
 
 
+async def get_projects(
+    request: fastapi.Request,
+    pagination: Pagination = fastapi.Depends(pagination),
+    filters: ProjectFiltersRequest = fastapi.Depends(ProjectFiltersRequest),
+) -> ProjectListResponse:
+    database_service: ProjectsDatabaseService = request.app.service.database
+
+    async with database_service.transaction() as session:
+        projects_db = await database_service.get_projects(
+            session=session,
+            page=pagination.page,
+            per_page=pagination.per_page,
+            **filters.model_dump(),
+        )
+
+    projects = [ProjectResponse.model_validate(project_db) for project_db in projects_db]
+
+    return ProjectListResponse(data=projects, page=pagination.page, per_page=pagination.per_page)
+
+
 async def get_project(
     project: Project = fastapi.Depends(get_path_project),
 ) -> ProjectResponse:
@@ -69,24 +90,6 @@ async def history(
         total_pages=total_pages,
         total_items=total_items,
     )
-
-
-async def get_projects(
-    request: fastapi.Request,
-    pagination: Pagination = fastapi.Depends(pagination),
-) -> ProjectListResponse:
-    database_service: ProjectsDatabaseService = request.app.service.database
-
-    async with database_service.transaction() as session:
-        projects_db = await database_service.get_projects(
-            session=session,
-            page=pagination.page,
-            per_page=pagination.per_page,
-        )
-
-    projects = [ProjectResponse.model_validate(project_db) for project_db in projects_db]
-
-    return ProjectListResponse(data=projects, page=pagination.page, per_page=pagination.per_page)
 
 
 async def upload_project_avatar(

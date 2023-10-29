@@ -12,7 +12,7 @@ from .models import HealthResponse, UserResponse, UserUpdateRequest
 
 class UsersRestClient(BaseRestClient):
     async def get_health(self) -> HealthResponse:
-        path = "/api/rest/health"
+        path = "/health"
 
         return await self.rest_get(path=path, response_model=HealthResponse)
 
