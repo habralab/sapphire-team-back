@@ -24,10 +24,35 @@ class ProjectsRestClient(BaseRestClient):
 
         return await self.rest_get(path=path, response_model=HealthResponse)
 
-    async def get_projects(self) -> ProjectListResponse:
+    async def get_projects(
+            self,
+            text: str | Type[Empty] = Empty,
+            owner_id: uuid.UUID | Type[Empty] = Empty,
+            deadline: datetime | Type[Empty] = Empty,
+            status: ProjectStatusEnum | Type[Empty] = Empty,
+            position_is_deleted: bool | Type[Empty] = Empty,
+            position_is_closed: bool | Type[Empty] = Empty,
+            position_skill_ids: list[uuid.UUID] | Type[Empty] = Empty,
+            position_specialization_ids: list[uuid.UUID] | Type[Empty] = Empty,
+            page: int = 1,
+            per_page: int = 10,
+    ) -> ProjectListResponse:
         path = "/api/rest/projects/"
+        params = {
+            "query_text": text,
+            "owner_id": owner_id,
+            "deadline": deadline,
+            "status": status.value if status is not Empty else Empty,
+            "position_is_deleted": position_is_deleted,
+            "position_is_closed": position_is_closed,
+            "position_skill_ids": position_skill_ids,
+            "position_specialization_ids": position_specialization_ids,
+            "page": page,
+            "per_page": per_page,
+        }
+        params = {key: value for key, value in params.items() if value is not Empty}
 
-        return await self.rest_get(path=path, response_model=ProjectListResponse)
+        return await self.rest_get(path=path, params=filters, response_model=ProjectListResponse)
 
     async def create_project(
             self,
@@ -45,6 +70,11 @@ class ProjectsRestClient(BaseRestClient):
         )
 
         return await self.rest_post(path=path, data=request, response_model=ProjectResponse)
+
+    async def get_project(self, project_id: uuid.UUID) -> ProjectResponse:
+        path = f"/api/rest/projects/{project_id}"
+
+        return await self.rest_get(path=path, response_model=ProjectResponse)
 
     async def partial_update_project(
             self,
@@ -67,6 +97,15 @@ class ProjectsRestClient(BaseRestClient):
 
         return await self.rest_post(path=path, data=request, response_model=PositionResponse)
 
+    async def get_project_position(
+            self,
+            project_id: uuid.UUID,
+            position_id: uuid.UUID,
+    ) -> PositionResponse:
+        path = f"/api/rest/projects/{project_id}/positions/{position_id}"
+        
+        return await self.rest_get(path=path, response_model=PositionResponse)
+
     async def remove_project_position(
             self,
             project_id: uuid.UUID,
@@ -85,6 +124,18 @@ class ProjectsRestClient(BaseRestClient):
         
         return await self.rest_post(path=path, response_model=ParticipantResponse)
 
+    async def get_project_position_participant(
+            self,
+            project_id: uuid.UUID,
+            position_id: uuid.UUID,
+            participant_id: uuid.UUID,
+    ) -> ParticipantResponse:
+        path = (
+            f"/api/rest/projects/{project_id}/positions/{position_id}/participants/{participant_id}"
+        )
+
+        return await self.rest_get(path=path, response_model=ParticipantResponse)
+
     async def update_project_position_participant(
             self,
             project_id: uuid.UUID,
@@ -93,8 +144,7 @@ class ProjectsRestClient(BaseRestClient):
             status: ParticipantStatusEnum,
     ) -> ParticipantResponse:
         path = (
-            f"/api/rest/projects/{project_id}/positions/{position_id}/participants"
-            f"/{participant_id}"
+            f"/api/rest/projects/{project_id}/positions/{position_id}/participants/{participant_id}"
         )
         request = UpdateParticipantRequest(status=status)
 

@@ -1,0 +1,6 @@
+model: users
+data:
+- id: 03fe07b9-109c-4e11-a2a5-184921fbfc49
+  email: sapphire1user@gmail.com
+- id: 412f1c40-125f-47b9-aaef-1c079c12d63b
+  email: sapphire2user@gmail.com

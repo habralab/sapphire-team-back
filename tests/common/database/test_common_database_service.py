@@ -1,18 +1,24 @@
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import MagicMock, patch
 
 import pytest
 
 from sapphire.common.database.service import BaseDatabaseService
 
 
-@pytest.mark.skip("Implement in future")
 @pytest.mark.asyncio
 async def test_transaction(database_service: BaseDatabaseService):
-    sessionmaker_mock = AsyncMock() 
+    session_mock = MagicMock()
+    sessionmaker_mock_context = MagicMock()
+    sessionmaker_mock_context.__aenter__.return_value = session_mock
+    sessionmaker_mock = MagicMock(return_value=sessionmaker_mock_context)
 
     with patch.object(database_service, "_sessionmaker", sessionmaker_mock):
-        async with database_service.transaction():
-            sessionmaker_mock.assert_called_once_with()
+        async with database_service.transaction() as session:
+            pass
+
+    assert session is session_mock
+    sessionmaker_mock.assert_called_once_with()
+    sessionmaker_mock_context.__aenter__.assert_called_once_with()
 
 
 @patch("sapphire.common.database.service.alembic_command")

@@ -2,7 +2,7 @@ import uuid
 from datetime import datetime
 from typing import Literal
 
-from pydantic import BaseModel, constr
+from pydantic import BaseModel, Field, PositiveInt, constr
 
 from autotests.rest.models import PaginatedResponse
 
@@ -39,6 +39,8 @@ class ProjectListResponse(PaginatedResponse):
 class PositionResponse(BaseModel):
     id: uuid.UUID
     project_id: uuid.UUID
+    # TODO: Uncomment after implement specialization_id
+    # specialization_id: uuid.UUID
     is_deleted: bool
     closed_at: datetime | None
     created_at: datetime
