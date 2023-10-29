@@ -5,6 +5,6 @@ from .models import HealthResponse
 
 class NotificationsRestClient(BaseRestClient):
     async def get_health(self) -> HealthResponse:
-        path = "/api/rest/health"
+        path = "/health"
 
         return await self.rest_get(path=path, response_model=HealthResponse)

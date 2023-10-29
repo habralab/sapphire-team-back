@@ -66,6 +66,7 @@ class TestProjectFlow:
 
         position = await oleg_projects_rest_client.create_project_position(
             project_id=project_id,
+            specialization_id=uuid.uuid4(),
         )
 
         self.CONTEXT["position_id"] = position.id
@@ -514,4 +515,4 @@ class TestProjectFlow:
         del self.CONTEXT["project_id"]
 
         assert project.id == project_id
-        assert project.sttus == ProjectStatusEnum.FINISHED
+        assert project.status == ProjectStatusEnum.FINISHED
