@@ -131,10 +131,8 @@ class ProjectsDatabaseService(BaseDatabaseService):
 
         return position
 
-    async def remove_project_position(
-        self, session: AsyncSession, position: Position
-    ) -> Position:
-        position.is_deleted = True
+    async def remove_project_position(self, session: AsyncSession, position: Position) -> Position:
+        position.closed_at = datetime.now()
 
         session.add(position)
 
@@ -195,7 +193,6 @@ class ProjectsDatabaseService(BaseDatabaseService):
         owner_id: uuid.UUID | Type[Empty] = Empty,
         deadline: datetime | Type[Empty] = Empty,
         status: ProjectStatusEnum | Type[Empty] = Empty,
-        position_is_deleted: bool | Type[Empty] = Empty,
         position_is_closed: bool | Type[Empty] = Empty,
         position_skill_ids: list[uuid.UUID] | Type[Empty] = Empty,
         position_specialization_ids: list[uuid.UUID] | Type[Empty] = Empty,
@@ -230,7 +227,6 @@ class ProjectsDatabaseService(BaseDatabaseService):
             ])
 
         position_params = [
-            position_is_deleted,
             position_is_closed,
             position_skill_ids,
             position_specialization_ids,
@@ -238,8 +234,6 @@ class ProjectsDatabaseService(BaseDatabaseService):
 
         if any(x is not Empty for x in position_params):
             position_filters = []
-            if position_is_deleted is not Empty:
-                position_filters.append(Position.is_deleted == position_is_deleted)
             if position_is_closed is not Empty:
                 position_filters.append(
                     Position.closed_at.is_(None)

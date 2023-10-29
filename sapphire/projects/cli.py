@@ -17,12 +17,13 @@ def run(ctx: typer.Context):
     loop = asyncio.get_event_loop()
     database_service = database.get_service(settings=settings)
     jwt_methods = get_jwt_methods(settings=settings)
+    broker_service = broker.get_service(loop=loop, settings=settings)
     api_service = api.get_service(
         database=database_service,
         jwt_methods=jwt_methods,
         settings=settings,
+        broker_service=broker_service
     )
-    broker_service = broker.get_service(loop=loop, settings=settings)
     projects_service = get_service(api=api_service, broker=broker_service)
 
     loop.run_until_complete(projects_service.run())

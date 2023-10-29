@@ -6,6 +6,7 @@ import fastapi
 from sapphire.common.jwt.dependencies.rest import auth_user_id
 from sapphire.projects.api.rest.projects.dependencies import get_path_project
 from sapphire.projects.api.rest.projects.positions.dependencies import get_path_position
+from sapphire.projects.broker.service import ProjectsBrokerService
 from sapphire.projects.database.models import Participant, ParticipantStatusEnum, Position, Project
 from sapphire.projects.database.service import ProjectsDatabaseService
 
@@ -55,6 +56,7 @@ async def update_participant(
     participant: Participant = fastapi.Depends(get_path_participant),
 ) -> ProjectParticipantResponse:
     database_service: ProjectsDatabaseService = request.app.service.database
+    broker_service: ProjectsBrokerService = request.app.service.broker_service
 
     project_owner_nodes = {
         # New expected status : Required current statuses
@@ -74,17 +76,43 @@ async def update_participant(
     participant_status_nodes[participant.user_id].update(participant_nodes)
 
     required_statuses = participant_status_nodes.get(request_user_id, {}).get(data.status, ())
-    if participant.status in required_statuses:
-        async with database_service.transaction() as session:
-            updated_participant_db = await database_service.update_participant_status(
-                session=session,
-                participant=participant,
-                status=data.status,
-            )
-    else:
+
+    if participant.status not in required_statuses:
         raise fastapi.HTTPException(
             status_code=fastapi.status.HTTP_403_FORBIDDEN,
             detail="Forbidden.",
         )
+
+    async with database_service.transaction() as session:
+        updated_participant_db = await database_service.update_participant_status(
+            session=session,
+            participant=participant,
+            status=data.status,
+        )
+
+        notification_send_map = {
+            ParticipantStatusEnum.REQUEST: {
+                participant.user_id: broker_service.send_participant_requested
+            },
+            ParticipantStatusEnum.JOINED: {
+                participant.user_id: broker_service.send_participant_joined
+            },
+            ParticipantStatusEnum.DECLINED: {
+                participant.user_id: broker_service.send_participant_declined,
+                project.owner_id: broker_service.send_owner_declined
+            },
+            ParticipantStatusEnum.LEFT: {
+                participant.user_id: broker_service.send_participant_left,
+                project.owner_id: broker_service.send_owner_excluded
+            }
+        }
+        participant_notification_send = (notification_send_map
+            .get(data.status, {})
+            .get(request_user_id, None)
+        )
+        if participant_notification_send:
+            await participant_notification_send(
+                project=project, participant=participant
+            )
 
     return ProjectParticipantResponse.model_validate(updated_participant_db)
