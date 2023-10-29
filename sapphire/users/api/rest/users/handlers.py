@@ -10,7 +10,7 @@ from sapphire.common.jwt.dependencies.rest import auth_user_id, get_request_user
 from sapphire.users.database.models import User
 from sapphire.users.database.service import UsersDatabaseService
 
-from .dependencies import get_path_user
+from .dependencies import auth_user, get_path_user
 from .schemas import UserResponse, UserUpdateRequest
 
 
@@ -21,6 +21,12 @@ async def get_user(
     with_email = request_user_id == path_user.id
 
     return UserResponse.from_db_model(path_user, with_email=with_email)
+
+
+async def get_me(
+    user: User = fastapi.Depends(auth_user)
+) -> UserResponse:
+    return UserResponse.from_db_model(user)
 
 
 async def update_user(
