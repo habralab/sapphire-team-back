@@ -10,7 +10,7 @@ from sapphire.common.jwt.dependencies.rest import auth_user_id, get_request_user
 from sapphire.users.database.models import User
 from sapphire.users.database.service import UsersDatabaseService
 
-from .dependencies import get_path_user
+from .dependencies import get_path_user, auth_user
 from .schemas import UserResponse, UserUpdateRequest
 
 
@@ -24,14 +24,9 @@ async def get_user(
 
 
 async def get_me(
-    request_user_id: uuid.UUID| None = fastapi.Depends(get_request_user_id),
+    user: User = fastapi.Depends(auth_user)
 ) -> UserResponse:
-    if request_user_id:
-        return UserResponse(id=request_user_id)
-    raise fastapi.HTTPException(
-        status_code=fastapi.status.HTTP_404_NOT_FOUND,
-        detail="User not found.",
-    )
+    return UserResponse.from_db_model(user)
 
 
 async def update_user(

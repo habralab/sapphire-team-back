@@ -40,7 +40,7 @@ async def get_request_user(
 async def auth_user(
         request: fastapi.Request,
         request_user_id: uuid.UUID = fastapi.Depends(auth_user_id),
-):
+) -> User:
     database: UsersDatabaseService = request.app.service.database
 
     async with database.transaction() as session:
