@@ -71,6 +71,7 @@ class ProjectsDatabaseService(BaseDatabaseService):
         description: str | None | Type[Empty] = Empty,
         deadline: datetime | None | Type[Empty] = Empty,
         avatar: str | None | Type[Empty] = Empty,
+        status: str | None | Type[Empty] = Empty,
     ) -> Project:
         query = select(Project).where(Project.id == project.id)
         result = await session.execute(query)
@@ -86,8 +87,19 @@ class ProjectsDatabaseService(BaseDatabaseService):
             project.deadline = deadline
         if avatar is not Empty:
             project.avatar = avatar
+        if status is not Empty:
+            await self._change_project_status(session=session,
+                project=project, status=status,
+            )
 
         return project
+
+    async def _change_project_status(self,
+        session: AsyncSession,
+        project: Project,
+        status: ProjectStatusEnum,
+    ):
+        ...
 
     async def get_project_positions(
         self,

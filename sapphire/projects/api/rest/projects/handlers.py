@@ -18,6 +18,7 @@ from .schemas import (
     ProjectHistoryResponse,
     ProjectListResponse,
     ProjectResponse,
+    UpdateProjectStatusRequest,
 )
 
 
@@ -90,6 +91,21 @@ async def history(
         total_pages=total_pages,
         total_items=total_items,
     )
+
+
+async def update_project_status(
+    request: fastapi.Request,
+    project: Project = fastapi.Depends(path_project_is_owner),
+    status: UpdateProjectStatusRequest = fastapi.Body,
+) -> ProjectResponse:
+    database_service: ProjectsDatabaseService = request.app.service.database
+
+    async with database_service.transaction() as session:
+        project = database_service.update_project(
+            session=session,
+            project=project,
+            status=status,
+        )
 
 
 async def upload_project_avatar(
