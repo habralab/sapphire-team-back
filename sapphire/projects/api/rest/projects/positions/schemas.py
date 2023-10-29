@@ -11,7 +11,6 @@ class ProjectPositionResponse(BaseModel):
 
     id: uuid.UUID
     project_id: uuid.UUID
-    name: str
     closed_at: datetime | None
     created_at: datetime
     updated_at: datetime

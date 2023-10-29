@@ -97,11 +97,11 @@ class ProjectsBrokerService(BaseBrokerProducerService):
         topic: str = "ParticipantNotification"
     ) -> None:
         send_tasks = []
-        validated_data = ParticipantNotificationData.model_validate(notification_data)
+        data = ParticipantNotificationData.model_dump(notification_data)
         for recipient_id in recipients:
             notification = Notification(
                 type = notification_type,
-                data = validated_data,
+                data = data,
                 recipient_id = recipient_id,
             )
             send_tasks.append(self.send(
