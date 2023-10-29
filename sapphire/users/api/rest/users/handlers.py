@@ -10,7 +10,7 @@ from sapphire.common.jwt.dependencies.rest import auth_user_id, get_request_user
 from sapphire.users.database.models import User
 from sapphire.users.database.service import UsersDatabaseService
 
-from .dependencies import get_path_user, auth_user
+from .dependencies import auth_user, get_path_user
 from .schemas import UserResponse, UserUpdateRequest
 
 
