@@ -11,17 +11,16 @@ from autotests.utils import Empty
 
 @pytest.mark.parametrize(
     (
-        "text", "owner_id", "deadline", "status", "position_is_deleted", "position_is_closed",
+        "text", "owner_id", "deadline", "status", "position_is_closed",
         "position_skill_ids", "position_specialization_ids", "page", "per_page",
     ),
     (
-        (Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, 1, 10),
+        (Empty, Empty, Empty, Empty, Empty, Empty, Empty, 1, 10),
         (
             "test",
             uuid.uuid4(),
             datetime.now(),
             ProjectStatusEnum.PREPARATION,
-            False,
             False,
             [],
             [],
@@ -37,7 +36,6 @@ async def test_get_projects(
         owner_id: uuid.UUID | Type[Empty],
         deadline: datetime | Type[Empty],
         status: ProjectStatusEnum | Type[Empty],
-        position_is_deleted: bool | Type[Empty],
         position_is_closed: bool | Type[Empty],
         position_skill_ids: list[uuid.UUID] | Type[Empty],
         position_specialization_ids: list[uuid.UUID] | Type[Empty],
@@ -49,7 +47,6 @@ async def test_get_projects(
         owner_id=owner_id,
         deadline=deadline,
         status=status,
-        position_is_deleted=position_is_deleted,
         position_is_closed=position_is_closed,
         position_skill_ids=position_skill_ids,
         position_specialization_ids=position_specialization_ids,
