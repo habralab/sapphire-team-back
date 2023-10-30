@@ -59,7 +59,7 @@ class BaseBrokerProducerService(ServiceMixin):
         self._producer = aiokafka.AIOKafkaProducer(loop=loop, bootstrap_servers=",".join(servers))
 
     async def send(self, topic: str, message: BaseModel):
-        payload = message.model_dump_json()
+        payload = message.model_dump_json().encode()
 
         await self._producer.send_and_wait(topic=topic, value=payload)
 
