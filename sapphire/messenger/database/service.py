@@ -28,8 +28,8 @@ class MessengerDatabaseService(BaseDatabaseService):
     ) -> Chat:
         chat = Chat(is_personal=is_personal)
 
-        for id in members_id:
-            member = Member(user_id=id)
+        for member_id in members_id:
+            member = Member(user_id=member_id)
             chat.member.append(member)
 
         session.add(chat)

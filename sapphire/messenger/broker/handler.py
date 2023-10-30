@@ -25,7 +25,6 @@ class MessengerBrokerHandler(BaseBrokerHandler):
                 is_personal=chat.is_personal,
                 members_id=chat.members_id
                 )
-        chat = Chat.model_validate(db_chat)
 
     @property
     def database(self) -> MessengerDatabaseService:
