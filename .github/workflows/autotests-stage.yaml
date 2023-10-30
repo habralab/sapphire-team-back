@@ -17,12 +17,6 @@ jobs:
     needs: [build]
     runs-on: self-hosted
     steps:
-      - name: Debug 1
-        run: env
-      - name: Debug 2
-        run: echo ${MESSENGER_WEBSOCKET_URL_STAGE}
-      - name: Debug 3
-        run echo ${NOTIFICATIONS_WEBSOCKET_URL_STAGE}
       - name: Autotests
         run: >
           docker run --rm
