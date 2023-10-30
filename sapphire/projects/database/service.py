@@ -218,8 +218,9 @@ class ProjectsDatabaseService(BaseDatabaseService):
                 select(
                     ProjectHistory.project_id,
                     ProjectHistory.status,
-                    func.max(ProjectHistory.created_at)  # pylint: disable=not-callable
+                    func.max(ProjectHistory.created_at),  # pylint: disable=not-callable
                 ).group_by(ProjectHistory.project_id)
+                .subquery()
             )
             filters.extend([
                 Project.id == history_query.c.project_id,

@@ -5,9 +5,12 @@ from datetime import datetime, timedelta
 import backoff
 import pytest
 
+from autotests.clients.email import EmailClient
 from autotests.clients.rest.exceptions import ResponseException
+from autotests.clients.rest.messenger.client import MessengerRestClient
 from autotests.clients.rest.projects.client import ProjectsRestClient
 from autotests.clients.rest.projects.enums import ParticipantStatusEnum, ProjectStatusEnum
+from autotests.clients.websocket import WebsocketClient
 
 
 class TestProjectFlow:
@@ -20,13 +23,7 @@ class TestProjectFlow:
             oleg_projects_rest_client: ProjectsRestClient,
     ):
         project_id = self.CONTEXT.get("project_id")
-        position_id = self.CONTEXT.get("position_id")
 
-        if position_id is not None and project_id is not None:
-            event_loop.run_until_complete(oleg_projects_rest_client.remove_project_position(
-                project_id=project_id,
-                position_id=position_id,
-            ))
         if project_id is not None:
             event_loop.run_until_complete(oleg_projects_rest_client.partial_update_project(
                 project_id=project_id,
@@ -40,8 +37,8 @@ class TestProjectFlow:
             oleg_id: uuid.UUID,
             oleg_projects_rest_client: ProjectsRestClient,
     ):
-        name = "Oleg Test Project"
-        description = "Oleg Test Description"
+        name = "Oleg Autotest Project"
+        description = "Oleg Autotest Project Description"
         deadline = datetime.now() + timedelta(days=90)
 
         project = await oleg_projects_rest_client.create_project(
@@ -52,6 +49,9 @@ class TestProjectFlow:
         )
 
         self.CONTEXT["project_id"] = project.id
+        self.CONTEXT["project_name"] = name
+        self.CONTEXT["project_description"] = description
+        self.CONTEXT["project_deadline"] = deadline
 
         assert project.name == name
         assert project.description == description
@@ -61,23 +61,66 @@ class TestProjectFlow:
 
     @pytest.mark.dependency(depends=["TestProjectFlow::test_create_project"])
     @pytest.mark.asyncio
+    async def test_get_project(self, projects_rest_client: ProjectsRestClient):
+        project_id: uuid.UUID = self.CONTEXT["project_id"]
+        project_name: str = self.CONTEXT["project_name"]
+        project_description: str = self.CONTEXT["project_description"]
+        project_deadline: datetime = self.CONTEXT["project_deadline"]
+
+        project = await projects_rest_client.get_project(project_id=project_id)
+
+        assert project.id == project_id
+        assert project.name == project_name
+        assert project.description == project_description
+        assert project.deadline == project_deadline
+        assert project.status == ProjectStatusEnum.PREPARATION
+
+    @pytest.mark.dependency(depends=["TestProjectFlow::test_get_project"])
+    @pytest.mark.asyncio
     async def test_create_position(self, oleg_projects_rest_client: ProjectsRestClient):
         project_id: uuid.UUID = self.CONTEXT["project_id"]
-
+        
+        specialization_id = uuid.uuid4()
         position = await oleg_projects_rest_client.create_project_position(
             project_id=project_id,
-            specialization_id=uuid.uuid4(),
+            specialization_id=specialization_id,
         )
 
         self.CONTEXT["position_id"] = position.id
+        self.CONTEXT["position_specialization_id"] = specialization_id
 
         assert position.project_id == project_id
+        # TODO: Uncomment after implement specialization_id in PositionResponse
+        # assert position.specialization_id == specialization_id
         assert position.is_deleted is False
         assert position.closed_at is None
-        
+
     @pytest.mark.dependency(depends=["TestProjectFlow::test_create_position"])
+    @pytest.mark.skip("Not implemented")
     @pytest.mark.asyncio
-    async def test_create_first_request_to_join_position(
+    async def test_get_position(self, projects_rest_client: ProjectsRestClient):
+        project_id: uuid.UUID = self.CONTEXT["project_id"]
+        position_id: uuid.UUID = self.CONTEXT["position_id"]
+        position_specialization_id: uuid.UUID = self.CONTEXT["position_specialization_id"]
+
+        position = await projects_rest_client.get_project_position(
+            project_id=project_id,
+            position_id=position_id,
+        )
+
+        assert position.id == position_id
+        assert position.project_id == project_id
+        # TODO: Uncomment after implement specialization_id in PositionResponse
+        # assert position.specialization_id == position_specialization_id
+        assert position.is_deleted is False
+        assert position.closed_at is None
+
+    @pytest.mark.dependency(depends=[
+        "TestProjectFlow::test_create_position",
+        # TODO: Replace to: "TestProjectFlow::test_get_position",
+    ])
+    @pytest.mark.asyncio
+    async def test_create_first_request_to_join(
             self,
             matvey_id: uuid.UUID,
             matvey_projects_rest_client: ProjectsRestClient,
@@ -96,9 +139,35 @@ class TestProjectFlow:
         assert participant.user_id == matvey_id
         assert participant.status == ParticipantStatusEnum.REQUEST
 
-    @pytest.mark.dependency(depends=["TestProjectFlow::test_create_first_request_to_join_position"])
+    @pytest.mark.dependency(depends=["TestProjectFlow::test_create_first_request_to_join"])
+    @pytest.mark.skip("Not implemented")
     @pytest.mark.asyncio
-    async def test_create_duplicate_request_to_join_position(
+    async def test_get_first_request_to_join(
+            self,
+            matvey_id: uuid.UUID,
+            projects_rest_client: ProjectsRestClient,
+    ):
+        project_id: uuid.UUID = self.CONTEXT["project_id"]
+        position_id: uuid.UUID = self.CONTEXT["position_id"]
+        participant_id: uuid.UUID = self.CONTEXT["participant_id"]
+
+        participant = await projects_rest_client.get_project_position_participant(
+            project_id=project_id,
+            position_id=position_id,
+            participant_id=participant_id,
+        )
+
+        assert participant.id == participant_id
+        assert participant.position_id == position_id
+        assert participant.user_id == matvey_id
+        assert participant.status == ParticipantStatusEnum.REQUEST
+
+    @pytest.mark.dependency(depends=[
+        "TestProjectFlow::test_create_first_request_to_join",
+        # TODO: Replace to: "TestProjectFlow::test_get_first_request_to_join",
+    ])
+    @pytest.mark.asyncio
+    async def test_create_duplicate_request_to_join(
             self,
             matvey_projects_rest_client: ProjectsRestClient,
     ):
@@ -116,34 +185,53 @@ class TestProjectFlow:
             b'{"detail":"Participant already send request to project or joined in project"}'
         )
 
-    @pytest.mark.dependency(depends=["TestProjectFlow::test_create_first_request_to_join_position"])
+    @pytest.mark.dependency(depends=["TestProjectFlow::test_get_first_request_to_join"])
     @pytest.mark.skip("Not implemented")
     @pytest.mark.asyncio
-    @backoff.on_exception(backoff.constant, Exception, max_time=60)
-    async def test_waiting_notification_about_first_request_to_join_position(
+    async def test_waiting_notification_about_request_to_join(
             self,
+            oleg_notifications_websocket_client: WebsocketClient,
     ):
-        pass
+        notification = oleg_notifications_websocket_client.get(timeout=60)
 
-    @pytest.mark.dependency(depends=["TestProjectFlow::test_create_first_request_to_join_position"])
+        assert notification is not None
+
+    @pytest.mark.dependency(depends=["TestProjectFlow::test_get_first_request_to_join"])
     @pytest.mark.skip("Not implemented")
     @pytest.mark.asyncio
     @backoff.on_exception(backoff.constant, Exception, max_time=600)
-    async def test_waiting_email_about_first_request_to_join_position(
+    async def test_waiting_email_about_request_to_join(
             self,
+            oleg_email_client: EmailClient,
     ):
         pass
 
-    @pytest.mark.dependency(depends=["TestProjectFlow::test_create_first_request_to_join_position"])
+    @pytest.mark.dependency(depends=["TestProjectFlow::test_get_first_request_to_join"])
     @pytest.mark.skip("Not implemented")
     @pytest.mark.asyncio
     @backoff.on_exception(backoff.constant, Exception, max_time=60)
-    async def test_chat_opened(self):
+    async def test_oleg_chat_opened(
+            self,
+            oleg_messenger_rest_client: MessengerRestClient,
+    ):
         pass
 
-    @pytest.mark.dependency(depends=["TestProjectFlow::test_create_first_request_to_join_position"])
+    @pytest.mark.dependency(depends=["TestProjectFlow::test_get_first_request_participant"])
+    @pytest.mark.skip("Not implemented")
     @pytest.mark.asyncio
-    async def test_cancel_first_request_to_join_position(
+    @backoff.on_exception(backoff.constant, Exception, max_time=60)
+    async def test_matvey_chat_opened(
+            self,
+            matvey_messenger_rest_client: MessengerRestClient,
+    ):
+        pass
+
+    @pytest.mark.dependency(depends=[
+        "TestProjectFlow::test_create_first_request_to_join",
+        # TODO: Replace to: "TestProjectFlow::test_get_first_request_to_join",
+    ])
+    @pytest.mark.asyncio
+    async def test_cancel_first_request_to_join(
             self,
             matvey_id: uuid.UUID,
             matvey_projects_rest_client: ProjectsRestClient,
@@ -159,6 +247,7 @@ class TestProjectFlow:
             status=ParticipantStatusEnum.DECLINED,
         )
 
+        # TODO: Remove after implement next test
         del self.CONTEXT["participant_id"]
 
         assert participant.id == participant_id
@@ -166,27 +255,58 @@ class TestProjectFlow:
         assert participant.user_id == matvey_id
         assert participant.status == ParticipantStatusEnum.DECLINED
 
-    @pytest.mark.dependency(depends=["TestProjectFlow::test_cancel_first_request_to_join_position"])
+    @pytest.mark.dependency(depends=["TestProjectFlow::test_cancel_first_request_to_join"])
     @pytest.mark.skip("Not implemented")
     @pytest.mark.asyncio
-    @backoff.on_exception(backoff.constant, Exception, max_time=60)
-    async def test_waiting_notification_about_cancel_first_request_to_join_position(
+    async def test_get_first_cancelled_request_to_join(
             self,
+            matvey_id: uuid.UUID,
+            projects_rest_client: ProjectsRestClient,
     ):
-        pass
+        project_id: uuid.UUID = self.CONTEXT["project_id"]
+        position_id: uuid.UUID = self.CONTEXT["position_id"]
+        participant_id: uuid.UUID = self.CONTEXT["participant_id"]
 
-    @pytest.mark.dependency(depends=["TestProjectFlow::test_cancel_first_request_to_join_position"])
+        participant = await projects_rest_client.get_project_position_participant(
+            project_id=project_id,
+            position_id=position_id,
+            participant_id=participant_id,
+        )
+
+        del self.CONTEXT["participant_id"]
+
+        assert participant.id == participant_id
+        assert participant.position_id == position_id
+        assert participant.user_id == matvey_id
+        assert participant.status == ParticipantStatusEnum.DECLINED
+
+    @pytest.mark.dependency(depends=["TestProjectFlow::test_get_first_cancelled_request_to_join"])
+    @pytest.mark.skip("Not implemented")
+    @pytest.mark.asyncio
+    async def test_waiting_notification_about_cancel_request_to_join(
+            self,
+            oleg_notifications_websocket_client: WebsocketClient,
+    ):
+        notification = oleg_notifications_websocket_client.get(timeout=60)
+
+        assert notification is not None
+
+    @pytest.mark.dependency(depends=["TestProjectFlow::test_get_first_cancelled_request_to_join"])
     @pytest.mark.skip("Not implemented")
     @pytest.mark.asyncio
     @backoff.on_exception(backoff.constant, Exception, max_time=600)
-    async def test_waiting_email_about_cancel_first_request_to_join_position(
+    async def test_waiting_email_about_cancel_request_to_join(
             self,
+            oleg_email_client: EmailClient,
     ):
         pass
 
-    @pytest.mark.dependency(depends=["TestProjectFlow::test_cancel_first_request_to_join_position"])
+    @pytest.mark.dependency(depends=[
+        "TestProjectFlow::test_cancel_first_request_to_join",
+        # TODO: Replace to: "TestProjectFlow::test_get_first_cancelled_request_to_join",
+    ])
     @pytest.mark.asyncio
-    async def test_create_second_request_to_join_position(
+    async def test_create_second_request_to_join(
             self,
             matvey_id: uuid.UUID,
             matvey_projects_rest_client: ProjectsRestClient,
@@ -205,11 +325,9 @@ class TestProjectFlow:
         assert participant.user_id == matvey_id
         assert participant.status == ParticipantStatusEnum.REQUEST
 
-    @pytest.mark.dependency(depends=[
-        "TestProjectFlow::test_create_second_request_to_join_position",
-    ])
+    @pytest.mark.dependency(depends=["TestProjectFlow::test_create_second_request_to_join"])
     @pytest.mark.asyncio
-    async def test_decline_second_request_to_join_position(
+    async def test_decline_second_request_to_join(
             self,
             matvey_id: uuid.UUID,
             oleg_projects_rest_client: ProjectsRestClient,
@@ -225,6 +343,7 @@ class TestProjectFlow:
             status=ParticipantStatusEnum.DECLINED,
         )
 
+        # TODO: Remove after implement next test
         del self.CONTEXT["participant_id"]
 
         assert participant.id == participant_id
@@ -232,33 +351,58 @@ class TestProjectFlow:
         assert participant.user_id == matvey_id
         assert participant.status == ParticipantStatusEnum.DECLINED
 
-    @pytest.mark.dependency(depends=[
-        "TestProjectFlow::test_decline_second_request_to_join_position",
-    ])
+    @pytest.mark.dependency(depends=["TestProjectFlow::test_decline_second_request_to_join"])
     @pytest.mark.skip("Not implemented")
     @pytest.mark.asyncio
-    @backoff.on_exception(backoff.constant, Exception, max_time=60)
-    async def test_waiting_notification_about_decline_second_request_to_join_position(
+    async def test_get_second_declined_request_to_join(
             self,
+            matvey_id: uuid.UUID,
+            projects_rest_client: ProjectsRestClient,
     ):
-        pass
+        project_id: uuid.UUID = self.CONTEXT["project_id"]
+        position_id: uuid.UUID = self.CONTEXT["position_id"]
+        participant_id: uuid.UUID = self.CONTEXT["participant_id"]
 
-    @pytest.mark.dependency(depends=[
-        "TestProjectFlow::test_decline_second_request_to_join_position",
-    ])
+        participant = await projects_rest_client.get_project_position_participant(
+            project_id=project_id,
+            position_id=position_id,
+            participant_id=participant_id,
+        )
+
+        del self.CONTEXT["participant_id"]
+
+        assert participant.id == participant_id
+        assert participant.position_id == position_id
+        assert participant.user_id == matvey_id
+        assert participant.status == ParticipantStatusEnum.DECLINED
+
+    @pytest.mark.dependency(depends=["TestProjectFlow::test_get_second_declined_request_to_join"])
+    @pytest.mark.skip("Not implemented")
+    @pytest.mark.asyncio
+    async def test_waiting_notification_about_decline_second_request_to_join(
+            self,
+            matvey_notifications_websocket_client: WebsocketClient,
+    ):
+        notification = matvey_notifications_websocket_client.get(timeout=60)
+
+        assert notification is not None
+
+    @pytest.mark.dependency(depends=["TestProjectFlow::test_get_second_declined_request_to_join"])
     @pytest.mark.skip("Not implemented")
     @pytest.mark.asyncio
     @backoff.on_exception(backoff.constant, Exception, max_time=600)
-    async def test_waiting_email_about_decline_second_request_to_join_position(
+    async def test_waiting_email_about_decline_second_request_to_join(
             self,
+            matvey_email_client: EmailClient,
     ):
         pass
 
     @pytest.mark.dependency(depends=[
-        "TestProjectFlow::test_decline_second_request_to_join_position",
+        "TestProjectFlow::test_decline_second_request_to_join",
+        # TODO: Replace to: "TestProjectFlow::test_get_second_declined_request_to_join",
     ])
     @pytest.mark.asyncio
-    async def test_create_third_request_to_join_position(
+    async def test_create_third_request_to_join(
             self,
             matvey_id: uuid.UUID,
             matvey_projects_rest_client: ProjectsRestClient,
@@ -277,27 +421,9 @@ class TestProjectFlow:
         assert participant.user_id == matvey_id
         assert participant.status == ParticipantStatusEnum.REQUEST
 
-    @pytest.mark.dependency(depends=["TestProjectFlow::test_create_third_request_to_join_position"])
-    @pytest.mark.skip("Not implemented")
+    @pytest.mark.dependency(depends=["TestProjectFlow::test_create_third_request_to_join"])
     @pytest.mark.asyncio
-    @backoff.on_exception(backoff.constant, Exception, max_time=60)
-    async def test_waiting_notification_about_third_request_to_join_position(
-            self,
-    ):
-        pass
-
-    @pytest.mark.dependency(depends=["TestProjectFlow::test_create_third_request_to_join_position"])
-    @pytest.mark.skip("Not implemented")
-    @pytest.mark.asyncio
-    @backoff.on_exception(backoff.constant, Exception, max_time=600)
-    async def test_waiting_email_about_third_request_to_join_position(
-            self,
-    ):
-        pass
-
-    @pytest.mark.dependency(depends=["TestProjectFlow::test_create_third_request_to_join_position"])
-    @pytest.mark.asyncio
-    async def test_accept_third_request_to_join_position(
+    async def test_accept_third_request_to_join(
             self,
             matvey_id: uuid.UUID,
             oleg_projects_rest_client: ProjectsRestClient,
@@ -314,29 +440,58 @@ class TestProjectFlow:
         )
 
         assert participant.id == participant_id
-        assert participant.position_id == participant.position_id
+        assert participant.position_id == position_id
         assert participant.user_id == matvey_id
         assert participant.status == ParticipantStatusEnum.JOINED
 
-    @pytest.mark.dependency(depends=["TestProjectFlow::test_accept_third_request_to_join_position"])
+    @pytest.mark.dependency(depends=["TestProjectFlow::test_accept_third_request_to_join"])
     @pytest.mark.skip("Not implemented")
     @pytest.mark.asyncio
-    @backoff.on_exception(backoff.constant, Exception, max_time=60)
-    async def test_waiting_notification_about_accept_third_request_to_join_position(
+    async def test_get_third_accepted_request_to_join(
             self,
+            matvey_id: uuid.UUID,
+            projects_rest_client: ProjectsRestClient,
     ):
-        pass
+        project_id: uuid.UUID = self.CONTEXT["project_id"]
+        position_id: uuid.UUID = self.CONTEXT["position_id"]
+        participant_id: uuid.UUID = self.CONTEXT["participant_id"]
 
-    @pytest.mark.dependency(depends=["TestProjectFlow::test_accept_third_request_to_join_position"])
+        participant = await projects_rest_client.get_project_position_participant(
+            project_id=project_id,
+            position_id=position_id,
+            participant_id=participant_id,
+        )
+
+        assert participant.id == participant_id
+        assert participant.position_id == position_id
+        assert participant.user_id == matvey_id
+        assert participant.status == ParticipantStatusEnum.JOINED
+
+    @pytest.mark.dependency(depends=["TestProjectFlow::test_get_third_accepted_request_to_join"])
+    @pytest.mark.skip("Not implemented")
+    @pytest.mark.asyncio
+    async def test_waiting_notification_about_accept_third_request_to_join(
+            self,
+            matvey_notifications_websocket_client: WebsocketClient,
+    ):
+        notification = matvey_notifications_websocket_client.get(timeout=60)
+
+        assert notification is not None
+
+    @pytest.mark.dependency(depends=["TestProjectFlow::test_get_third_accepted_request_to_join"])
     @pytest.mark.skip("Not implemented")
     @pytest.mark.asyncio
     @backoff.on_exception(backoff.constant, Exception, max_time=600)
-    async def test_waiting_email_about_accept_third_request_to_join_position(
+    async def test_waiting_email_about_accept_third_request_to_join(
             self,
+            matvey_email_client: EmailClient,
     ):
         pass
 
-    @pytest.mark.dependency(depends=["TestProjectFlow::test_accept_third_request_to_join_position"])
+    @pytest.mark.dependency(depends=[
+        "TestProjectFlow::test_accept_third_request_to_join",
+        # TODO: Replace to: "TestProjectFlow::test_get_third_accepted_request_to_join",
+    ])
     @pytest.mark.asyncio
     async def test_leave_position_by_participant(
             self,
@@ -354,6 +509,7 @@ class TestProjectFlow:
             status=ParticipantStatusEnum.LEFT,
         )
 
+        # TODO: Remove after implement next test
         del self.CONTEXT["participant_id"]
 
         assert participant.id == participant_id
@@ -364,24 +520,53 @@ class TestProjectFlow:
     @pytest.mark.dependency(depends=["TestProjectFlow::test_leave_position_by_participant"])
     @pytest.mark.skip("Not implemented")
     @pytest.mark.asyncio
-    @backoff.on_exception(backoff.constant, Exception, max_time=60)
+    async def test_get_third_left_participant(
+            self,
+            matvey_id: uuid.UUID,
+            projects_rest_client: ProjectsRestClient,
+    ):
+        project_id: uuid.UUID = self.CONTEXT["project_id"]
+        position_id: uuid.UUID = self.CONTEXT["position_id"]
+        participant_id: uuid.UUID = self.CONTEXT["participant_id"]
+
+        participant = await projects_rest_client.get_project_position_participant(
+            project_id=project_id,
+            position_id=position_id,
+            participant_id=participant_id,
+        )
+
+        assert participant.id == participant_id
+        assert participant.position_id == position_id
+        assert participant.user_id == matvey_id
+        assert participant.status == ParticipantStatusEnum.LEFT
+
+    @pytest.mark.dependency(depends=["TestProjectFlow::test_get_third_left_participant"])
+    @pytest.mark.skip("Not implemented")
+    @pytest.mark.asyncio
     async def test_waiting_notification_about_leave_position_by_participant(
             self,
+            oleg_notifications_websocket_client: WebsocketClient,
     ):
-        pass
+        notification = oleg_notifications_websocket_client.get(timeout=60)
 
-    @pytest.mark.dependency(depends=["TestProjectFlow::test_leave_position_by_participant"])
+        assert notification is not None
+
+    @pytest.mark.dependency(depends=["TestProjectFlow::test_get_third_left_participant"])
     @pytest.mark.skip("Not implemented")
     @pytest.mark.asyncio
     @backoff.on_exception(backoff.constant, Exception, max_time=60)
     async def test_waiting_email_about_leave_position_by_participant(
             self,
+            oleg_email_client: EmailClient,
     ):
         pass
 
-    @pytest.mark.dependency(depends=["TestProjectFlow::test_leave_position_by_participant"])
+    @pytest.mark.dependency(depends=[
+        "TestProjectFlow::test_leave_position_by_participant",
+        # TODO: Replace to: "TestProjectFlow::test_get_third_left_participant",
+    ])
     @pytest.mark.asyncio
-    async def test_create_fourth_request_to_join_position(
+    async def test_create_fourth_request_to_join(
             self,
             matvey_id: uuid.UUID,
             matvey_projects_rest_client: ProjectsRestClient,
@@ -400,11 +585,9 @@ class TestProjectFlow:
         assert participant.user_id == matvey_id
         assert participant.status == ParticipantStatusEnum.REQUEST
 
-    @pytest.mark.dependency(depends=[
-        "TestProjectFlow::test_create_fourth_request_to_join_position",
-    ])
+    @pytest.mark.dependency(depends=["TestProjectFlow::test_create_fourth_request_to_join"])
     @pytest.mark.asyncio
-    async def test_accept_fourth_request_to_join_position(
+    async def test_accept_fourth_request_to_join(
             self,
             matvey_id: uuid.UUID,
             oleg_projects_rest_client: ProjectsRestClient,
@@ -425,9 +608,7 @@ class TestProjectFlow:
         assert participant.user_id == matvey_id
         assert participant.status == ParticipantStatusEnum.JOINED
 
-    @pytest.mark.dependency(depends=[
-        "TestProjectFlow::test_accept_fourth_request_to_join_position",
-    ])
+    @pytest.mark.dependency(depends=["TestProjectFlow::test_accept_fourth_request_to_join"])
     @pytest.mark.asyncio
     async def test_leave_position_by_manager(
             self,
@@ -445,6 +626,7 @@ class TestProjectFlow:
             status=ParticipantStatusEnum.LEFT,
         )
 
+        # TODO: Remove after implement next test
         del self.CONTEXT["participant_id"]
 
         assert participant.id == participant_id
@@ -455,11 +637,38 @@ class TestProjectFlow:
     @pytest.mark.dependency(depends=["TestProjectFlow::test_leave_position_by_manager"])
     @pytest.mark.skip("Not implemented")
     @pytest.mark.asyncio
-    @backoff.on_exception(backoff.constant, Exception, max_time=60)
+    async def test_get_fourth_left_participant(
+            self,
+            matvey_id: uuid.UUID,
+            projects_rest_client: ProjectsRestClient,
+    ):
+        project_id: uuid.UUID = self.CONTEXT["project_id"]
+        position_id: uuid.UUID = self.CONTEXT["position_id"]
+        participant_id: uuid.UUID = self.CONTEXT["participant_id"]
+
+        participant = await projects_rest_client.get_project_position_participant(
+            project_id=project_id,
+            position_id=position_id,
+            participant_id=participant_id,
+        )
+
+        del self.CONTEXT["participant_id"]
+
+        assert participant.id == participant_id
+        assert participant.position_id == position_id
+        assert participant.user_id == matvey_id
+        assert participant.status == ParticipantStatusEnum.LEFT
+
+    @pytest.mark.dependency(depends=["TestProjectFlow::test_leave_position_by_manager"])
+    @pytest.mark.skip("Not implemented")
+    @pytest.mark.asyncio
     async def test_waiting_notification_about_leave_position_by_manager(
             self,
+            matvey_notifications_websocket_client: WebsocketClient,
     ):
-        pass
+        notification = matvey_notifications_websocket_client.get(timeout=60)
+
+        assert notification is not None
 
     @pytest.mark.dependency(depends=["TestProjectFlow::test_leave_position_by_manager"])
     @pytest.mark.skip("Not implemented")
@@ -467,10 +676,12 @@ class TestProjectFlow:
     @backoff.on_exception(backoff.constant, Exception, max_time=600)
     async def test_waiting_email_about_leave_position_by_manager(
             self,
+            matvey_email_client: EmailClient,
     ):
         pass
 
-    @pytest.mark.dependency(depends=["TestProjectFlow::test_close_position"])
+    @pytest.mark.dependency(depends=["TestProjectFlow::test_get_fourth_left_participant"])
+    @pytest.mark.skip("Not implemented")
     @pytest.mark.asyncio
     async def test_move_project_to_work(self, oleg_projects_rest_client: ProjectsRestClient):
         project_id: uuid.UUID = self.CONTEXT["project_id"]
@@ -483,7 +694,17 @@ class TestProjectFlow:
         assert project.id == project_id
         assert project.status == ProjectStatusEnum.IN_WORK
 
-    @pytest.mark.dependency(depends=["TestProjectFlow::test_leave_position_by_manager"])
+    @pytest.mark.dependency(depends=["TestProjectFlow::test_move_project_to_work"])
+    @pytest.mark.asyncio
+    async def test_get_moved_to_work_project(self, projects_rest_client: ProjectsRestClient):
+        project_id: uuid.UUID = self.CONTEXT["project_id"]
+
+        project = await projects_rest_client.get_project(project_id=project_id)
+
+        assert project.id == project_id
+        assert project.status == ProjectStatusEnum.IN_WORK
+
+    @pytest.mark.dependency(depends=["TestProjectFlow::test_moved_to_work_project"])
     @pytest.mark.asyncio
     async def test_close_position(self, oleg_projects_rest_client: ProjectsRestClient):
         project_id: uuid.UUID = self.CONTEXT["project_id"]
@@ -498,10 +719,28 @@ class TestProjectFlow:
 
         assert position.id == position_id
         assert position.project_id == project_id
+        # TODO: Remove check for is_deleted and add check for closed_at
         assert position.is_deleted is True
         # assert position.closed_at is not None
 
     @pytest.mark.dependency(depends=["TestProjectFlow::test_close_position"])
+    @pytest.mark.asyncio
+    async def test_get_closed_position(self, projects_rest_client: ProjectsRestClient):
+        project_id: uuid.UUID = self.CONTEXT["project_id"]
+        position_id: uuid.UUID = self.CONTEXT["position_id"]
+
+        position = await projects_rest_client.get_project_position(
+            project_id=project_id,
+            position_id=position_id,
+        )
+
+        assert position.id == position_id
+        assert position.project_id == project_id
+        # TODO: Remove check for is_deleted and add check for closed_at
+        assert position.is_deleted is True
+        # assert position.closed_at is not None
+
+    @pytest.mark.dependency(depends=["TestProjectFlow::test_get_closed_position"])
     @pytest.mark.skip("Not implemented")
     @pytest.mark.asyncio
     async def test_close_project(self, oleg_projects_rest_client: ProjectsRestClient):
@@ -510,6 +749,18 @@ class TestProjectFlow:
         project = await oleg_projects_rest_client.partial_update_project(
             project_id=project_id,
             status=ProjectStatusEnum.FINISHED,
+        )
+
+        assert project.id == project_id
+        assert project.status == ProjectStatusEnum.FINISHED
+
+    @pytest.mark.dependency(depends=["TestProjectFlow::test_close_project"])
+    @pytest.mark.asyncio
+    async def test_get_closed_project(self, projects_rest_client: ProjectsRestClient):
+        project_id: uuid.UUID = self.CONTEXT["project_id"]
+
+        project = await projects_rest_client.get_project(
+            project_id=project_id,
         )
 
         del self.CONTEXT["project_id"]
