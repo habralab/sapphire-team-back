@@ -23,10 +23,17 @@ class MessengerDatabaseService(BaseDatabaseService):
     async def create_chat(
             self,
             session: AsyncSession,
-            chat_id: uuid.UUID,
-            is_personal: bool
+            is_personal: bool,
+            requester_id: uuid.UUID,
+            recipient_id: uuid.UUID,
     ) -> Chat:
-        chat = Chat(id=chat_id, is_personal=is_personal)
+        chat = Chat(is_personal=is_personal)
+
+        requester_id = Member(user_id=requester_id, chat=chat)
+        recipient_id = Member(user_id=recipient_id, chat=chat)
+
+        chat.member.append(requester_id)
+        chat.member.append(recipient_id)
 
         session.add(chat)
 
