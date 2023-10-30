@@ -303,6 +303,17 @@ files = [
 pycparser = "*"
 
 [[package]]
+name = "chardet"
+version = "5.2.0"
+description = "Universal encoding detector for Python 3"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "chardet-5.2.0-py3-none-any.whl", hash = "sha256:e1cf59446890a00105fe7b7912492ea04b6e6f06d4b742b2c788469e34c82970"},
+    {file = "chardet-5.2.0.tar.gz", hash = "sha256:1b3b6ff479a8c414bc3fa2c0852995695c4a026dcd6d0633b2dd092ca39c1cf7"},
+]
+
+[[package]]
 name = "click"
 version = "8.1.7"
 description = "Composable command line interface toolkit"
@@ -622,6 +633,19 @@ files = [
     {file = "idna-3.4-py3-none-any.whl", hash = "sha256:90b77e79eaa3eba6de819a0c442c0b4ceefc341a7a2ab77d7562bf49f425c5c2"},
     {file = "idna-3.4.tar.gz", hash = "sha256:814f528e8dead7d329833b91c5faa87d60bf71824cd12a7530b5526063d02cb4"},
 ]
+
+[[package]]
+name = "imbox"
+version = "0.9.8"
+description = "Python IMAP for Human beings"
+optional = false
+python-versions = ">=3.3"
+files = [
+    {file = "imbox-0.9.8.tar.gz", hash = "sha256:b0bdfc76b10caa9b0f903c532894c58af4d4cee182ec35700d0048047b7ec9bb"},
+]
+
+[package.dependencies]
+chardet = "*"
 
 [[package]]
 name = "iniconfig"
@@ -1846,4 +1870,4 @@ sqlite = ["aiosqlite"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "72e129663f9d5b4509173580ce64338349248901317fa827e75671b9977b2690"
+content-hash = "b2dc2bec08d30cc482c983800150eaccd05e6922768e1085a4343bd430753afd"

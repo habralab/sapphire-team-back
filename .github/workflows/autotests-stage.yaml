@@ -25,5 +25,13 @@ jobs:
           -e "PROJECTS_BASE_URL=${PROJECTS_ROOT_URL_STAGE}${PROJECTS_ROOT_PATH_STAGE}"
           -e "STORAGE_BASE_URL=${STORAGE_ROOT_URL_STAGE}${STORAGE_ROOT_PATH_STAGE}"
           -e "USERS_BASE_URL=${USERS_ROOT_URL_STAGE}${USERS_ROOT_PATH_STAGE}"
+          -e "MESSENGER_WEBSOCKET_URL=${MESSENGER_WEBSOCKET_URL_STAGE}"
+          -e "NOTIFICATIONS_WEBSOCKET_URL=${NOTIFICATIONS_WEBSOCKET_URL_STAGE}"
+          -e "OLEG_ID=${OLEG_ID}"
+          -e "OLEG_EMAIL=${OLEG_EMAIL}"
+          -e "OLEG_EMAIL_PASSWORD=${OLEG_EMAIL_PASSWORD}"
+          -e "MATVEY_ID=${MATVEY_ID}"
+          -e "MATVEY_EMAIL=${MATVEY_EMAIL}"
+          -e "MATVEY_EMAIL_PASSWORD=${MATVEY_EMAIL_PASSWORD}"
           -v /sapphire/stage/secrets:/run/secrets
           sapphire:test-${{ github.sha }} pytest autotests

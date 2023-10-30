@@ -32,6 +32,11 @@ class UsersRestClient(BaseRestClient):
 
         return response
 
+    async def get_me(self) -> UserResponse:
+        path = f"/api/rest/users/me"
+
+        return await self.rest_get(path=path, response_model=UserResponse)
+
     async def get_user(self, user_id: uuid.UUID) -> UserResponse:
         path = f"/api/rest/users/{user_id}"
 

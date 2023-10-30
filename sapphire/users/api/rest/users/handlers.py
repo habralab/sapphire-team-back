@@ -129,7 +129,7 @@ async def update_user_skills(
         request: fastapi.Request,
         data: set[uuid.UUID] = fastapi.Body(embed=False),
         request_user_id: uuid.UUID = fastapi.Depends(auth_user_id),
-        user: User = fastapi.Depends(get_path_user)
+        user: User = fastapi.Depends(get_path_user),
 ):
     if user.id != request_user_id:
         raise fastapi.HTTPException(

@@ -142,7 +142,6 @@ async def test_get_projects_with_all_query_params(database_service: ProjectsData
         owner_id=owner_id,
         deadline=deadline,
         status=ParticipantStatusEnum.REQUEST,
-        position_is_deleted=False,
         position_is_closed=False,
         position_skill_ids=position_skill_ids,
         position_specialization_ids=position_specialization_ids,
@@ -181,7 +180,7 @@ async def test_remove_project_position(database_service: ProjectsDatabaseService
     )
 
     session.add.assert_called_once_with(result_position)
-    assert result_position.is_deleted is True
+    assert result_position.closed_at is not None
     assert result_position is position
 
 
