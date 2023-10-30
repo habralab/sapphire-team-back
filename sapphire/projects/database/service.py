@@ -217,7 +217,7 @@ class ProjectsDatabaseService(BaseDatabaseService):
             history_query = (
                 select(ProjectHistory)
                 .distinct(ProjectHistory.project_id)
-                .order_by(desc(ProjectHistory.created_at), ProjectHistory.project_id)
+                .order_by(ProjectHistory.project_id, desc(ProjectHistory.created_at))
                 .subquery()
             )
             filters.extend([
