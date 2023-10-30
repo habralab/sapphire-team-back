@@ -41,7 +41,6 @@ class PositionResponse(BaseModel):
     project_id: uuid.UUID
     # TODO: Uncomment after implement specialization_id
     # specialization_id: uuid.UUID
-    is_deleted: bool
     closed_at: datetime | None
     created_at: datetime
     updated_at: datetime

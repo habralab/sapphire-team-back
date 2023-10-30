@@ -8,9 +8,9 @@ from pydantic import BaseModel, ConfigDict
 class Notification(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
-    id: uuid.UUID | None
+    id: uuid.UUID | None = None
     type: str
     recipient_id: uuid.UUID
     data: dict[str, Any]
-    created_at: datetime | None
-    updated_at: datetime | None
+    created_at: datetime | None = None
+    updated_at: datetime | None = None

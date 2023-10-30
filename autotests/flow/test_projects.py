@@ -92,7 +92,6 @@ class TestProjectFlow:
         assert position.project_id == project_id
         # TODO: Uncomment after implement specialization_id in PositionResponse
         # assert position.specialization_id == specialization_id
-        assert position.is_deleted is False
         assert position.closed_at is None
 
     @pytest.mark.dependency(depends=["TestProjectFlow::test_create_position"])
