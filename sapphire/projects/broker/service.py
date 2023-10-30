@@ -1,6 +1,8 @@
 import asyncio
 import uuid
 
+from pydantic import BaseModel
+
 from sapphire.common.broker.models.notification import Notification
 from sapphire.common.broker.models.projects.participants import (
     ParticipantNotificationData,
@@ -32,7 +34,7 @@ class ProjectsBrokerService(BaseBrokerProducerService):
         """RECIPIENTS: PROJECT OWNER AND PARTICIPANTS"""
         await self._send_notification_to_recipients(
             notification_type=ParticipantNotificationType.JOINED,
-            recipients=[project.owner_id] + [p.user_id for p in project.participants],
+            recipients=[project.owner_id] + [p.user_id for p in project.joined_participants],
             notification_data=await self._create_participant_notification_data(
                 project, participant
             ),
@@ -71,7 +73,7 @@ class ProjectsBrokerService(BaseBrokerProducerService):
         """RECIPIENTS: PROJECT OWNER AND PARTICIPANTS"""
         await self._send_notification_to_recipients(
             notification_type=ParticipantNotificationType.PARTICIPANT_LEFT,
-            recipients=[project.owner_id] + [p.user_id for p in project.participants],
+            recipients=[project.owner_id] + [p.user_id for p in project.joined_participants],
             notification_data=await self._create_participant_notification_data(
                 project, participant
             ),
@@ -84,7 +86,7 @@ class ProjectsBrokerService(BaseBrokerProducerService):
         """RECIPIENTS: PROJECT OWNER AND PARTICIPANTS"""
         await self._send_notification_to_recipients(
             notification_type=ParticipantNotificationType.OWNER_EXCLUDED,
-            recipients=[project.owner_id] + [p.user_id for p in project.participants],
+            recipients=[project.owner_id] + [p.user_id for p in project.joined_participants],
             notification_data=await self._create_participant_notification_data(
                 project, participant
             ),
@@ -93,15 +95,14 @@ class ProjectsBrokerService(BaseBrokerProducerService):
     async def _send_notification_to_recipients(self,
         notification_type: ParticipantNotificationType,
         recipients: list[uuid.UUID],
-        notification_data: ParticipantNotificationData,
-        topic: str = "ParticipantNotification"
+        notification_data: BaseModel,
+        topic: str = "notifications",
     ) -> None:
         send_tasks = []
-        data = ParticipantNotificationData.model_dump(notification_data)
         for recipient_id in recipients:
             notification = Notification(
                 type=notification_type,
-                data=data,
+                data=notification_data.model_dump(),
                 recipient_id=recipient_id,
             )
             send_tasks.append(self.send(topic=topic, message=notification))
