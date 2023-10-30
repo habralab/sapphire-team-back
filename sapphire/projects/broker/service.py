@@ -34,7 +34,7 @@ class ProjectsBrokerService(BaseBrokerProducerService):
         """RECIPIENTS: PROJECT OWNER AND PARTICIPANTS"""
         await self._send_notification_to_recipients(
             notification_type=ParticipantNotificationType.JOINED,
-            recipients=[project.owner_id] + [p.user_id for p in project.participants],
+            recipients=[project.owner_id] + [p.user_id for p in project.joined_participants],
             notification_data=await self._create_participant_notification_data(
                 project, participant
             ),
@@ -73,7 +73,7 @@ class ProjectsBrokerService(BaseBrokerProducerService):
         """RECIPIENTS: PROJECT OWNER AND PARTICIPANTS"""
         await self._send_notification_to_recipients(
             notification_type=ParticipantNotificationType.PARTICIPANT_LEFT,
-            recipients=[project.owner_id] + [p.user_id for p in project.participants],
+            recipients=[project.owner_id] + [p.user_id for p in project.joined_participants],
             notification_data=await self._create_participant_notification_data(
                 project, participant
             ),
@@ -86,7 +86,7 @@ class ProjectsBrokerService(BaseBrokerProducerService):
         """RECIPIENTS: PROJECT OWNER AND PARTICIPANTS"""
         await self._send_notification_to_recipients(
             notification_type=ParticipantNotificationType.OWNER_EXCLUDED,
-            recipients=[project.owner_id] + [p.user_id for p in project.participants],
+            recipients=[project.owner_id] + [p.user_id for p in project.joined_participants],
             notification_data=await self._create_participant_notification_data(
                 project, participant
             ),
