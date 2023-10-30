@@ -1,15 +1,19 @@
 import asyncio
 import datetime
+import pathlib
 import uuid
+from typing import Any
 
 import jwt
 import pytest
 
+from autotests.clients.email import EmailClient
 from autotests.clients.rest.messenger.client import MessengerRestClient
 from autotests.clients.rest.notifications.client import NotificationsRestClient
 from autotests.clients.rest.projects.client import ProjectsRestClient
 from autotests.clients.rest.storage.client import StorageRestClient
 from autotests.clients.rest.users.client import UsersRestClient
+from autotests.clients.websocket import WebsocketClient
 
 from .settings import AutotestsSettings
 
@@ -30,13 +34,51 @@ def settings() -> AutotestsSettings:
 
 
 @pytest.fixture(scope="session")
-def oleg_id() -> uuid.UUID:
-    return uuid.UUID("e23dfa16-6d0f-4de2-a1b1-a42f8a5bfd94")
+def oleg_id(settings: AutotestsSettings) -> uuid.UUID:
+    return settings.oleg_id
 
 
 @pytest.fixture(scope="session")
-def matvey_id() -> uuid.UUID:
-    return uuid.UUID("07dcf2a2-0a9e-4674-a5d5-8103eddcf68e")
+def matvey_id(settings: AutotestsSettings) -> uuid.UUID:
+    return settings.matvey_id
+
+
+@pytest.fixture(scope="session")
+def oleg_email(settings: AutotestsSettings) -> str:
+    return settings.oleg_email
+
+
+@pytest.fixture(scope="session")
+def matvey_email(settings: AutotestsSettings) -> str:
+    return settings.matvey_email
+
+
+@pytest.fixture(scope="session")
+def oleg_initial_user_data() -> dict[str, Any]:
+    return {
+        "first_name": "Oleg",
+        "last_name": "Yurchik",
+        "about": None,
+        "main_specialization_id": None,
+        "secondary_specialization_id": None,
+    }
+
+
+@pytest.fixture(scope="session")
+def matvey_initial_user_data() -> dict[str, Any]:
+    return {
+        "first_name": "Matvey",
+        "last_name": "Tulaev",
+        "about": None,
+        "main_specialization_id": None,
+        "secondary_specialization_id": None,
+    }
+
+
+@pytest.fixture(scope="function")
+def avatar_file():
+    with open(pathlib.Path(__file__).parent / "static" / "avatar.png", "rb") as avatar_file:
+        yield avatar_file
 
 
 @pytest.fixture(scope="session")
@@ -178,7 +220,6 @@ def matvey_notifications_rest_client(
     )
 
 
-
 @pytest.fixture(scope="session")
 def oleg_messenger_rest_client(
         settings: AutotestsSettings,
@@ -201,3 +242,110 @@ def matvey_messenger_rest_client(
         headers={"Authorization": f"Bearer {matvey_access_token}"},
         verify=True,
     )
+
+
+@pytest.fixture(scope="session")
+def oleg_messenger_websocket_client(
+        settings: AutotestsSettings,
+        oleg_access_token: str,
+) -> WebsocketClient:
+    return WebsocketClient(
+        str(settings.messenger_websocket_url),
+        headers={"Authorization": f"Bearer {oleg_access_token}"},
+        verify=True,
+    )
+
+
+@pytest.fixture(scope="session")
+def matvey_messenger_websocket_client(
+        settings: AutotestsSettings,
+        matvey_access_token: str,
+) -> WebsocketClient:
+    return WebsocketClient(
+        str(settings.messenger_websocket_url),
+        headers={"Authorization": f"Bearer {matvey_access_token}"},
+        verify=True,
+    )
+
+
+@pytest.fixture(scope="session")
+def oleg_notifications_websocket_client(
+        settings: AutotestsSettings,
+        oleg_access_token: str,
+) -> WebsocketClient:
+    return WebsocketClient(
+        str(settings.notifications_websocket_url),
+        headers={"Authorization": f"Bearer {oleg_access_token}"},
+        verify=True,
+    )
+
+
+@pytest.fixture(scope="session")
+def matvey_notifications_websocket_client(
+        settings: AutotestsSettings,
+        matvey_access_token: str,
+) -> WebsocketClient:
+    return WebsocketClient(
+        str(settings.notifications_websocket_url),
+        headers={"Authorization": f"Bearer {matvey_access_token}"},
+        verify=True,
+    )
+
+
+@pytest.fixture(scope="session")
+def oleg_email_client(settings: AutotestsSettings) -> EmailClient:
+    return EmailClient(
+        hostname=settings.imap_server,
+        ssl=settings.imap_ssl,
+        starttls=settings.imap_starttls,
+        username=settings.oleg_email,
+        password=settings.oleg_email_password,
+    )
+
+
+@pytest.fixture(scope="session")
+def matvey_email_client(settings: AutotestsSettings) -> EmailClient:
+    return EmailClient(
+        hostname=settings.imap_server,
+        ssl=settings.imap_ssl,
+        starttls=settings.imap_starttls,
+        username=settings.matvey_email,
+        password=settings.matvey_email_password,
+    )
+
+
+@pytest.fixture(scope="class")
+def oleg_revert_user_data(
+        event_loop: asyncio.AbstractEventLoop,
+        oleg_initial_user_data: dict[str, Any],
+        oleg_users_rest_client: UsersRestClient,
+        oleg_id: uuid.UUID,
+):
+    yield
+    event_loop.run_until_complete(oleg_users_rest_client.update_user(
+        user_id=oleg_id,
+        **oleg_initial_user_data,
+    ))
+
+
+@pytest.fixture(scope="class")
+def oleg_revert_user_avatar(
+        event_loop: asyncio.AbstractEventLoop,
+        oleg_users_rest_client: UsersRestClient,
+        oleg_id: uuid.UUID,
+):
+    yield
+    event_loop.run_until_complete(oleg_users_rest_client.remove_user_avatar(user_id=oleg_id))
+
+
+@pytest.fixture(scope="class")
+def oleg_revert_user_skills(
+        event_loop: asyncio.AbstractEventLoop,
+        oleg_users_rest_client: UsersRestClient,
+        oleg_id: uuid.UUID,
+):
+    yield
+    event_loop.run_until_complete(oleg_users_rest_client.update_user_skills(
+        user_id=oleg_id,
+        skills=set(),
+    ))
