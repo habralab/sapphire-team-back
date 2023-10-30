@@ -1,6 +1,8 @@
 import asyncio
 import uuid
 
+from pydantic import BaseModel
+
 from sapphire.common.broker.models.notification import Notification
 from sapphire.common.broker.models.projects.participants import (
     ParticipantNotificationData,
@@ -93,15 +95,14 @@ class ProjectsBrokerService(BaseBrokerProducerService):
     async def _send_notification_to_recipients(self,
         notification_type: ParticipantNotificationType,
         recipients: list[uuid.UUID],
-        notification_data: ParticipantNotificationData,
-        topic: str = "ParticipantNotification"
+        notification_data: BaseModel,
+        topic: str = "notifications",
     ) -> None:
         send_tasks = []
-        data = ParticipantNotificationData.model_dump(notification_data)
         for recipient_id in recipients:
             notification = Notification(
                 type=notification_type,
-                data=data,
+                data=notification_data.model_dump(),
                 recipient_id=recipient_id,
             )
             send_tasks.append(self.send(topic=topic, message=notification))
