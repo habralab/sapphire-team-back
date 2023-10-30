@@ -46,6 +46,15 @@ class Project(Base):
     def status(self):
         return self.history[0].status
 
+    @property
+    def joined_participants(self) -> list["Participant"]:
+        return [
+            participant
+            for position in self.positions
+            for participant in position.participants
+            if participant.status == ParticipantStatusEnum.JOINED
+        ]
+
 
 class ProjectHistory(Base):
     __tablename__ = "projects_history"

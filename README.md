@@ -103,7 +103,7 @@ echo "any_password" | docker secret create postgresql_password -
 echo "any_access_private_key" | docker secret create jwt_access_token_private_key -
 echo "any_access_public_key" | docker secret create jwt_access_token_public_key -
 echo "any_refresh_private_key" | docker secret create jwt_refresh_token_private_key -
-echo "eny_refresh_public_key" | docker secret create jwt_refresh_token_public_key -
+echo "any_refresh_public_key" | docker secret create jwt_refresh_token_public_key -
 ```
 
 Prepare storages
