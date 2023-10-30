@@ -1,4 +1,5 @@
 import io
+import json
 from typing import Any, Type, TypeVar
 
 import httpx
@@ -30,26 +31,45 @@ class BaseRestClient(httpx.AsyncClient, ServiceMixin):
             method: str,
             path: str,
             response_model: Type[ResponseModel],
-            data: BaseModel | None = None,
+            data: BaseModel | dict[str, Any] | None = None,
+            params: BaseModel | dict[str, Any] | None = None,
             files: dict[str, io.BytesIO] | None = None,
             headers: dict[str, Any] | None = None,
     ) -> ResponseModel:
         headers = headers or {}
         request_data = None
+        request_params = None
         if isinstance(data, BaseModel):
             request_data = data.model_dump_json()
             headers["Content-Type"] = "application/json"
+        elif isinstance(data, dict):
+            request_data = json.dumps(data)
+            headers["Content-Type"] = "application/json"
+        if isinstance(params, BaseModel):
+            request_params = params.model_dump()
+        elif isinstance(params, dict):
+            request_params = params
 
         response = await self.request(method=method, url=path, content=request_data, files=files,
-                                      headers=headers)
+                                      params=request_params, headers=headers)
 
         if response.status_code // 100 != 2:
             raise ResponseException(status_code=response.status_code, body=response.read())
 
         return response_model.model_validate(response.json())
 
-    async def rest_get(self, path: str, response_model: Type[ResponseModel]) -> ResponseModel:
-        return await self.rest_request(method="GET", path=path, response_model=response_model)
+    async def rest_get(
+            self,
+            path: str,
+            response_model: Type[ResponseModel],
+            params: BaseModel | dict[str, Any] | None = None,
+    ) -> ResponseModel:
+        return await self.rest_request(
+            method="GET",
+            path=path,
+            params=params,
+            response_model=response_model,
+        )
 
     async def rest_post(
             self,

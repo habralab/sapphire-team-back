@@ -1,4 +1,6 @@
-from pydantic import AnyHttpUrl
+import uuid
+
+from pydantic import AnyHttpUrl, AnyUrl
 from pydantic_settings import SettingsConfigDict
 
 from sapphire.common.jwt.settings import JWTSettings
@@ -12,3 +14,17 @@ class AutotestsSettings(JWTSettings):
     projects_base_url: AnyHttpUrl
     storage_base_url: AnyHttpUrl
     users_base_url: AnyHttpUrl
+
+    messenger_websocket_url: AnyUrl
+    notifications_websocket_url: AnyUrl
+
+    imap_server: str = "imap.gmail.com"
+    imap_ssl: bool = True
+    imap_starttls: bool = False
+
+    oleg_id: uuid.UUID
+    oleg_email: str
+    oleg_email_password: str
+    matvey_id: uuid.UUID
+    matvey_email: str
+    matvey_email_password: str
