@@ -104,7 +104,7 @@ class ProjectsBrokerService(BaseBrokerProducerService):
                 data=data,
                 recipient_id=recipient_id,
             )
-            send_tasks.append(self.send(topic=topic, message=notification.model_dump()))
+            send_tasks.append(self.send(topic=topic, message=notification))
         await asyncio.gather(*send_tasks)
 
     @staticmethod

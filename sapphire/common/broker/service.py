@@ -1,11 +1,11 @@
 import asyncio
-import json
-from typing import Any, Iterable
+from typing import Iterable
 
 import aiokafka
 import backoff
 from facet import ServiceMixin
 from loguru import logger
+from pydantic import BaseModel
 
 from .handler import BaseBrokerHandler
 
@@ -58,8 +58,8 @@ class BaseBrokerProducerService(ServiceMixin):
     def __init__(self, loop: asyncio.AbstractEventLoop, servers: Iterable[str]):
         self._producer = aiokafka.AIOKafkaProducer(loop=loop, bootstrap_servers=",".join(servers))
 
-    async def send(self, topic: str, message: dict[str, Any]):
-        payload = json.dumps(message).encode()
+    async def send(self, topic: str, message: BaseModel):
+        payload = message.model_dump_json()
 
         await self._producer.send_and_wait(topic=topic, value=payload)
 
