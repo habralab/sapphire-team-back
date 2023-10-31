@@ -17,8 +17,8 @@ from .schemas import (
     ProjectHistoryListResponse,
     ProjectHistoryResponse,
     ProjectListResponse,
+    ProjectPartialUpdateRequest,
     ProjectResponse,
-    UpdateProjectStatusRequest,
 )
 
 
