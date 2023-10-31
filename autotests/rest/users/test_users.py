@@ -19,7 +19,6 @@ from autotests.clients.rest.users.client import UsersRestClient
         pytest.lazy_fixture("matvey_users_rest_client"),
     ),
 ))
-@pytest.mark.skip("Not implemented")
 @pytest.mark.asyncio
 async def test_get_me(user_id: uuid.UUID, user_email: str, client: UsersRestClient):
     user = await client.get_me()
