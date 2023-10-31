@@ -88,7 +88,7 @@ class ProjectsDatabaseService(BaseDatabaseService):
         if avatar is not Empty:
             project.avatar = avatar
         if status is not Empty:
-            await self._change_project_status(session=session,
+            status = await self._change_project_status(session=session,
                 project=project, status=status,
             )
 
@@ -104,8 +104,6 @@ class ProjectsDatabaseService(BaseDatabaseService):
             status=status,
         )
         session.add(new_history_entry)
-
-        await session.commit()
 
     async def get_project_positions(
         self,
