@@ -37,7 +37,6 @@ def upgrade() -> None:
     sa.Column('id', sa.Uuid(), nullable=False),
     sa.Column('project_id', sa.Uuid(), nullable=False),
     sa.Column('specialization_id', sa.Uuid(), nullable=False),
-    sa.Column('is_deleted', sa.Boolean(), nullable=False),
     sa.Column('closed_at', sa.DateTime(), nullable=True),
     sa.Column('created_at', sa.DateTime(), nullable=False),
     sa.Column('updated_at', sa.DateTime(), nullable=False),

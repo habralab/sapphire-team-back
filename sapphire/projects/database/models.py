@@ -46,6 +46,15 @@ class Project(Base):
     def status(self):
         return self.history[0].status
 
+    @property
+    def joined_participants(self) -> list["Participant"]:
+        return [
+            participant
+            for position in self.positions
+            for participant in position.participants
+            if participant.status == ParticipantStatusEnum.JOINED
+        ]
+
 
 class ProjectHistory(Base):
     __tablename__ = "projects_history"
@@ -64,7 +73,6 @@ class Position(Base):
     id: Mapped[uuid.UUID] = mapped_column(default=uuid.uuid4, primary_key=True, unique=True)
     project_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("projects.id"), primary_key=True)
     specialization_id: Mapped[uuid.UUID]
-    is_deleted: Mapped[bool] = mapped_column(default=False)
     closed_at: Mapped[datetime | None]
     created_at: Mapped[datetime] = mapped_column(default=datetime.now)
     updated_at: Mapped[datetime] = mapped_column(default=datetime.now, onupdate=datetime.now)

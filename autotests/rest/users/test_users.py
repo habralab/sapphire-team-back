@@ -20,6 +20,26 @@ from autotests.clients.rest.users.client import UsersRestClient
     ),
 ))
 @pytest.mark.asyncio
+async def test_get_me(user_id: uuid.UUID, user_email: str, client: UsersRestClient):
+    user = await client.get_me()
+
+    assert user.id == user_id
+    assert user.email == user_email
+
+
+@pytest.mark.parametrize(("user_id", "user_email", "client"), (
+    (
+        pytest.lazy_fixture("oleg_id"),
+        pytest.lazy_fixture("oleg_email"),
+        pytest.lazy_fixture("oleg_users_rest_client"),
+    ),
+    (
+        pytest.lazy_fixture("matvey_id"),
+        pytest.lazy_fixture("matvey_email"),
+        pytest.lazy_fixture("matvey_users_rest_client"),
+    ),
+))
+@pytest.mark.asyncio
 async def test_get_user_full(user_id: uuid.UUID, user_email: str, client: UsersRestClient):
     user = await client.get_user(user_id=user_id)
 
