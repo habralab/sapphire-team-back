@@ -93,10 +93,10 @@ async def history(
     )
 
 
-async def update_project_status(
+async def partial_update_project(
     request: fastapi.Request,
     project: Project = fastapi.Depends(path_project_is_owner),
-    status: UpdateProjectStatusRequest = fastapi.Body,
+    data: ProjectPartialUpdateRequest = fastapi.Body(embed=False)
 ) -> ProjectResponse:
     database_service: ProjectsDatabaseService = request.app.service.database
 
@@ -104,8 +104,10 @@ async def update_project_status(
         project = database_service.update_project(
             session=session,
             project=project,
-            status=status,
+            status=data.status,
         )
+
+    return ProjectResponse.model_validate(project)
 
 
 async def upload_project_avatar(

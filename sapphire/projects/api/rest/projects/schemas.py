@@ -57,5 +57,5 @@ class ProjectFiltersRequest(BaseModel):
     position_specialization_ids: list[uuid.UUID] | Type[Empty] = Field(fastapi.Query(Empty))
 
 
-class UpdateProjectStatusRequest(BaseModel):
-    status: ProjectStatusEnum | Type[Empty]
+class ProjectPartialUpdateRequest(BaseModel):
+    status: ProjectStatusEnum | Type[Empty] = Empty

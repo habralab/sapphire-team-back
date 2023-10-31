@@ -99,7 +99,13 @@ class ProjectsDatabaseService(BaseDatabaseService):
         project: Project,
         status: ProjectStatusEnum,
     ):
-        ...
+        new_history_entry = ProjectHistory(
+            project_id = project.id,
+            status=status,
+        )
+        session.add(new_history_entry)
+
+        await session.commit()
 
     async def get_project_positions(
         self,
