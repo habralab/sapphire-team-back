@@ -680,7 +680,6 @@ class TestProjectFlow:
         pass
 
     @pytest.mark.dependency(depends=["TestProjectFlow::test_get_fourth_left_participant"])
-    @pytest.mark.skip("Not implemented")
     @pytest.mark.asyncio
     async def test_move_project_to_work(self, oleg_projects_rest_client: ProjectsRestClient):
         project_id: uuid.UUID = self.CONTEXT["project_id"]
@@ -740,7 +739,6 @@ class TestProjectFlow:
         # assert position.closed_at is not None
 
     @pytest.mark.dependency(depends=["TestProjectFlow::test_get_closed_position"])
-    @pytest.mark.skip("Not implemented")
     @pytest.mark.asyncio
     async def test_close_project(self, oleg_projects_rest_client: ProjectsRestClient):
         project_id: uuid.UUID = self.CONTEXT["project_id"]
