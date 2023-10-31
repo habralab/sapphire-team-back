@@ -88,7 +88,7 @@ class ProjectsDatabaseService(BaseDatabaseService):
         if avatar is not Empty:
             project.avatar = avatar
         if status is not Empty:
-            status = await self._change_project_status(session=session,
+            await self._change_project_status(session=session,
                 project=project, status=status,
             )
 
