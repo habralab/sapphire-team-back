@@ -19,7 +19,7 @@ def migrations_list(ctx: typer.Context):
 
 
 @logger.catch
-def migrations_migrate(ctx: typer.Context):
+def migrations_apply(ctx: typer.Context):
     database_service: BaseDatabaseService = ctx.obj["database"]
 
     database_service.migrate()
@@ -55,7 +55,7 @@ def migrations_create(
 def get_migrations_cli() -> typer.Typer:
     cli = typer.Typer(name="Migration")
 
-    cli.command(name="migrate")(migrations_migrate)
+    cli.command(name="apply")(migrations_apply)
     cli.command(name="rollback")(migrations_rollback)
     cli.command(name="create")(migrations_create)
     cli.command(name="list")(migrations_list)
@@ -78,7 +78,7 @@ def fixtures_list(ctx: typer.Context):
 @logger.catch
 def fixtures_apply(
     ctx: typer.Context,
-    name: str = typer.Argument(..., help="Fixture name"),
+    names: list[str] = typer.Argument(..., help="Fixtures names"),
     fixture_format: FixtureFormatEnum = typer.Option(
         FixtureFormatEnum.YAML,
         "-f", "--format",
@@ -87,7 +87,12 @@ def fixtures_apply(
 ):
     database_service = ctx.obj["database"]
 
-    asyncio.run(database_service.apply_fixture(name=name, fixture_format=fixture_format))
+    loop = asyncio.get_event_loop()
+    for name in names:
+        loop.run_until_complete(database_service.apply_fixture(
+            name=name,
+            fixture_format=fixture_format,
+        ))
 
 
 def get_fixtures_cli() -> typer.Typer:
