@@ -1,7 +1,21 @@
 # Sapphire Users App
 
+## Preparation
+
+### Migrate
+
+```shell
+python -m sapphire users database migrations apply 
+```
+
+### Fixtures
+
+```shell
+python -m sapphire users database fixtures apply users profiles
+```
+
 ## Run
 
 ```shell
-python -m users run
+python -m sapphire users run
 ```

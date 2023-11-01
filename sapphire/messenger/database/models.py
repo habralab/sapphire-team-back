@@ -36,8 +36,9 @@ class Message(Base):
 class Member(Base):
     __tablename__ = "chat_members"
 
+    id: Mapped[uuid.UUID] = mapped_column(default=uuid.uuid4, primary_key=True)
     user_id: Mapped[uuid.UUID]
-    chat_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("chats.id"), primary_key=True)
+    chat_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("chats.id"))
     leave_at: Mapped[datetime | None]
     join_at: Mapped[datetime] = mapped_column(default=datetime.now)
 

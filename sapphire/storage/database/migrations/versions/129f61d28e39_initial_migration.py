@@ -55,7 +55,7 @@ def upgrade() -> None:
 def downgrade() -> None:
     # ### adjusted ###
     op.drop_table("specializations_skills")
+    op.drop_table("skills")
     op.drop_table("specializations")
     op.drop_table("specialization_groups")
-    op.drop_table("skills")
     # ### end Alembic commands ###

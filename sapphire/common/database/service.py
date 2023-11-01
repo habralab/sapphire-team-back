@@ -49,7 +49,7 @@ class BaseDatabaseService(ServiceMixin):
 
         config = AlembicConfig()
         config.set_main_option("script_location", str(migrations_path))
-        config.set_main_option("sqlalchemy.url", self._dsn)
+        config.set_main_option("sqlalchemy.url", self._dsn.replace("%", "%%"))
 
         return config
 
@@ -65,10 +65,11 @@ class BaseDatabaseService(ServiceMixin):
 
     def prepare_fixture_fields_for_model(self, fields: dict[str, Any]) -> dict[str, Any]:
         for name, value in fields.items():
-            try:
-                fields[name] = uuid.UUID(value)
-            except ValueError:
-                pass
+            if isinstance(value, str):
+                try:
+                    fields[name] = uuid.UUID(value)
+                except ValueError:
+                    pass
 
         return fields
 
@@ -118,7 +119,7 @@ class BaseDatabaseService(ServiceMixin):
         fixtures_directory_path = self.get_fixtures_directory_path()
         models_mapping = {model.__tablename__: model for model in self.get_models()}
 
-        fixture_file_path = fixtures_directory_path / f"{name}.{format.value}"
+        fixture_file_path = fixtures_directory_path / f"{name}.{fixture_format.value}"
         fixture_file_loader = self.FIXTURES_FORMATS_MAPPING[fixture_format]
         with open(fixture_file_path, "rt", encoding="utf-8") as fixture_file:
             fixture_payload = fixture_file_loader(fixture_file)

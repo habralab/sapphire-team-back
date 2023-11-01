@@ -89,12 +89,17 @@ pytest /app/autotests
 
 ### Run: Docker
 
+Copy `.env.example` to `.env`
+```shell
+cp .env.example .env
+```
+
 For running you should build app image
 ```shell
 docker build -t sapphire --target slim .
 ```
 
-Create secrets
+Create secrets (you can get any values from `.env.example`)
 ```shell
 echo "any_client_id" | docker secret create habr_oauth2_client_id -
 echo "any_client_secret" | docker secret create habr_oauth2_client_secret -
@@ -114,11 +119,25 @@ mkdir -p broker_data/kafka/data
 mkdir -p broker_data/zookeeper/data
 mkdir -p broker_data/zookeeper/log
 mkdir -p users_data/media
+mkdir -p projects_data/media
 ```
 
 And run
 ```shell
 docker stack deploy -c docker-compose.yaml sapphire
+```
+
+Join to database service
+```shell
+docker exec -it -u postgres $(docker ps -q -f name=sapphire_database) psql
+```
+
+Create database for every service: `storage`, `users`, `projects`, `notifications` and `messenger`
+```shell
+CREATE ROLE service_name WITH LOGIN ENCRYPTED PASSWORD 'P@ssw0rd';
+CREATE DATABASE service_name;
+GRANT ALL PRIVILEGES ON DATABASE service_name TO service_name;
+ALTER DATABASE service_name OWNER TO service_name;
 ```
 
 ### Run: Python
