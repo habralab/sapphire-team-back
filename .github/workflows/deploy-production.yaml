@@ -30,7 +30,6 @@ jobs:
           echo "DATABASE_DIR=${DATABASE_DIR_PRODUCTION}" >> $GITHUB_ENV
           echo "REDIS_DIR=${REDIS_DIR_PRODUCTION}" >> $GITHUB_ENV
           echo "BROKER_DIR=${BROKER_DIR_PRODUCTION}" >> $GITHUB_ENV
-          echo "SAPPHIRE_IMAGE=sapphire:${GITHUB_SHA}" >> $GITHUB_ENV
           echo "USERS_DB_DSN=${USERS_DB_DSN_PRODUCTION}" >> $GITHUB_ENV
           echo "USERS_ROOT_URL=${USERS_ROOT_URL_PRODUCTION}" >> $GITHUB_ENV
           echo "USERS_ROOT_PATH=${USERS_ROOT_PATH_PRODUCTION}" >> $GITHUB_ENV
@@ -54,5 +53,6 @@ jobs:
           echo "MESSENGER_ROOT_URL=${MESSENGER_ROOT_URL_PRODUCTION}" >> $GITHUB_ENV
           echo "MESSENGER_ROOT_PATH=${MESSENGER_ROOT_PATH_PRODUCTION}" >> $GITHUB_ENV
           echo "MESSENGER_ALLOWED_ORIGINS=${MESSENGER_ALLOWED_ORIGINS_PRODUCTION}" >> $GITHUB_ENV
+          echo "SAPPHIRE_IMAGE=sapphire:${GITHUB_SHA}" >> $GITHUB_ENV
       - name: Deploy
         run: docker stack deploy -c docker-compose.yaml sapphire-production
