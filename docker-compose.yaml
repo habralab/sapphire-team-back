@@ -59,6 +59,9 @@ services:
       KAFKA_CLUSTERS_0_NAME: local
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9091
       SERVER_SERVLET_CONTEXT_PATH: /kafka 
+      AUTH_TYPE: LOGIN_FORM
+      SPRING_SECURITY_USER_NAME: admin
+      SPRING_SECURITY_USER_PASSWORD: ${KAFKA_UI_PASSWORD:-admin}
     healthcheck:
       test: wget --spider -q http://localhost:8080/kafka/actuator/health
     deploy:
@@ -241,6 +244,7 @@ services:
             "name": "Messenger",
           },
         ]
+      BASE_URL: ${SWAGGER_ROOT_PATH:-/swagger}
     healthcheck:
       test: curl --fail http://localhost:8080
     deploy:
@@ -261,7 +265,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     ports:
       - target: 80
-        published: {PORT:-3000}
+        published: ${PORT:-3000}
         mode: host
     command:
       - "--log.level=DEBUG"
