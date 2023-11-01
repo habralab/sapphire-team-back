@@ -71,7 +71,7 @@ class ProjectsDatabaseService(BaseDatabaseService):
         description: str | None | Type[Empty] = Empty,
         deadline: datetime | None | Type[Empty] = Empty,
         avatar: str | None | Type[Empty] = Empty,
-        status: str | None | Type[Empty] = Empty,
+        status: ProjectStatusEnum | None | Type[Empty] = Empty,
     ) -> Project:
         query = select(Project).where(Project.id == project.id)
         result = await session.execute(query)
