@@ -1,6 +1,6 @@
 import fastapi
 
-from . import handlers, reviews
+from . import handlers
 
 router = fastapi.APIRouter()
 
@@ -13,4 +13,3 @@ router.add_api_route(
 router.add_api_route(
     path="/{participant_id}", methods=["POST"], endpoint=handlers.update_participant,
 )
-router.include_router(reviews.router, prefix="/{participant_id}/reviews")

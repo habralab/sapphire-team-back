@@ -147,6 +147,24 @@ class TestProjectFlow:
         # assert position.specialization_id == position_specialization_id
         assert position.closed_at is None
 
+    @pytest.mark.dependency(depends=["TestProjectFlow::test_create_project"])
+    @pytest.mark.asyncio
+    async def test_create_review(self, oleg_projects_rest_client: ProjectsRestClient):
+        project_id: uuid.UUID = self.CONTEXT["project_id"]
+
+        review = await oleg_projects_rest_client.create_project_review(
+            project_id=project_id,
+            user_id=uuid.uuid4(),
+            rate=5,
+            text="test",
+        )
+
+        self.CONTEXT["review_id"] = review.id
+
+        assert review.project_id == project_id
+        assert review.rate == 5
+        assert review.text == "test"
+
     @pytest.mark.dependency(depends=[
         "TestProjectFlow::test_create_position",
         # TODO: Replace to :"TestProjectFlow::test_get_position"

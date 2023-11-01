@@ -284,6 +284,69 @@ async def test_get_participant_with_position_and_user_ids(
 
 
 @pytest.mark.asyncio
+async def test_get_participant_without_filters(
+    database_service: ProjectsDatabaseService,
+):
+    session = MagicMock()
+    position = MagicMock()
+    user_id = uuid.uuid4()
+    expected_participants = [Participant(position_id=position.id, user_id=user_id)]
+    mock_participant = MagicMock()
+    mock_participant.unique.return_value.scalars.return_value.all.return_value = expected_participants
+
+    session.execute = AsyncMock(return_value=mock_participant)
+
+    expected_query = select(Participant)
+
+    participants = await database_service.get_participants(session=session)
+
+    assert participants is expected_participants
+    
+    query = session.execute.call_args_list[0].args[0]
+    assert expected_query.compare(query)
+
+
+
+
+@pytest.mark.asyncio
+async def test_get_participant_with_all_filters(
+    database_service: ProjectsDatabaseService,
+):
+    session = MagicMock()
+    project = MagicMock()
+    position = MagicMock()
+    user_id = uuid.uuid4()
+    expected_participants = [Participant(position_id=position.id, user_id=user_id)]
+    mock_participant = MagicMock()
+    mock_participant.unique.return_value.scalars.return_value.all.return_value = expected_participants
+
+    session.execute = AsyncMock(return_value=mock_participant)
+
+    expected_query = (
+        select(Participant)
+        .where(
+            Participant.position_id == position.id,
+            Participant.user_id == user_id,
+            Participant.position_id.in_(
+                select(Position.id).where(Position.project_id == project.id)
+            ),
+        )
+    )
+
+    participants = await database_service.get_participants(
+        session=session,
+        project=project,
+        position=position,
+        user_id=user_id,
+    )
+
+    assert participants is expected_participants
+    
+    query = session.execute.call_args_list[0].args[0]
+    assert expected_query.compare(query)
+
+
+@pytest.mark.asyncio
 async def test_create_participant(database_service: ProjectsDatabaseService):
     session = MagicMock()
     position_id = uuid.uuid4()
@@ -329,7 +392,6 @@ async def test_update_participant_status(database_service: ProjectsDatabaseServi
 async def test_create_review(database_service: ProjectsDatabaseService):
     session = MagicMock()
     project = MagicMock()
-    participant = MagicMock()
     from_user_id = uuid.uuid4()
     to_user_id = uuid.uuid4()
     rate = 5
@@ -338,7 +400,6 @@ async def test_create_review(database_service: ProjectsDatabaseService):
     review = await database_service.create_review(
         session=session,
         project=project,
-        participant=participant,
         from_user_id=from_user_id,
         to_user_id=to_user_id,
         rate=rate,
@@ -358,13 +419,11 @@ async def test_get_review(
     database_service: ProjectsDatabaseService,
 ):
     session = MagicMock()
-    project_id = uuid.uuid4()
-    participant_id = uuid.uuid4()
+    project = MagicMock()
     from_user_id = uuid.uuid4()
     to_user_id = uuid.uuid4()
     expected_review = Review(
-        project_id=project_id,
-        participant_id=participant_id,
+        project_id=project.id,
         from_user_id=from_user_id,
         to_user_id=to_user_id,
     )
@@ -372,8 +431,7 @@ async def test_get_review(
     mock_review.unique.return_value.scalar_one_or_none.return_value = expected_review
 
     expected_query = select(Review).where(
-        Review.project_id == project_id,
-        Review.participant_id == participant_id,
+        Review.project_id == project.id,
         Review.from_user_id == from_user_id,
         Review.to_user_id == to_user_id,
     )
@@ -382,8 +440,7 @@ async def test_get_review(
 
     participant = await database_service.get_review(
         session=session,
-        project_id=project_id,
-        participant_id=participant_id,
+        project=project,
         from_user_id=from_user_id,
         to_user_id=to_user_id,
     )

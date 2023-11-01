@@ -184,6 +184,25 @@ class ProjectsDatabaseService(BaseDatabaseService):
         result = await session.execute(stmt)
         return result.scalars().first()
 
+    async def get_participants(
+        self,
+        session: AsyncSession,
+        position: Position | Type[Empty] = Empty,
+        user_id: uuid.UUID | Type[Empty] = Empty,
+        project: Project | Type[Empty] = Empty,
+    ) -> list[Participant]:
+        filters = []
+        if position is not Empty:
+            filters.append(Participant.position_id == position.id)
+        if user_id is not Empty:
+            filters.append(Participant.user_id == user_id)
+        if project is not Empty:
+            position_query = select(Position.id).where(Position.project_id == project.id)
+            filters.append(Participant.position_id.in_(position_query))
+        query = select(Participant).where(*filters)
+        result = await session.execute(query)
+        return result.unique().scalars().all()
+
     async def create_participant(
         self,
         session: AsyncSession,
@@ -294,7 +313,6 @@ class ProjectsDatabaseService(BaseDatabaseService):
         self,
         session: AsyncSession,
         project: Project,
-        participant: Participant,
         from_user_id: uuid.UUID,
         to_user_id: uuid.UUID,
         rate: conint(ge=1, le=5),
@@ -302,7 +320,6 @@ class ProjectsDatabaseService(BaseDatabaseService):
     ) -> Review:
         review = Review(
             project_id=project.id,
-            participant_id=participant.id,
             from_user_id=from_user_id,
             to_user_id=to_user_id,
             rate=rate,
@@ -316,17 +333,14 @@ class ProjectsDatabaseService(BaseDatabaseService):
     async def get_review(
         self,
         session: AsyncSession,
-        project_id: Project | Type[Empty] = Empty,
-        participant_id: Participant | Type[Empty] = Empty,
+        project: Project | Type[Empty] = Empty,
         from_user_id: uuid.UUID | Type[Empty] = Empty,
         to_user_id: uuid.UUID | Type[Empty] = Empty,
     ) -> Review | None:
         filters = []
 
-        if project_id is not Empty:
-            filters.append(Review.project_id == project_id)
-        if participant_id is not Empty:
-            filters.append(Review.participant_id == participant_id)
+        if project is not Empty:
+            filters.append(Review.project_id == project.id)
         if from_user_id is not Empty:
             filters.append(Review.from_user_id == from_user_id)
         if to_user_id is not Empty:
