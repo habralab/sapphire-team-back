@@ -261,7 +261,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     ports:
       - target: 80
-        published: 3000
+        published: {PORT:-3000}
         mode: host
     command:
       - "--log.level=DEBUG"
