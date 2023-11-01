@@ -91,6 +91,7 @@ class ProjectsDatabaseService(BaseDatabaseService):
             await self._change_project_status(session=session,
                 project=project, status=status,
             )
+            await session.refresh(project)
 
         return project
 
