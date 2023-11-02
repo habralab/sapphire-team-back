@@ -19,3 +19,6 @@ class ParticipantNotificationType(str, enum.Enum):
     PARTICIPANT_DECLINED = "participant_declined"
     PARTICIPANT_LEFT = "participant_left"
     OWNER_EXCLUDED = "owner_excluded"
+    CHAT_PARTICIPANT = "chat_created"
+class ChatCreatedData(BaseModel):
+    chat_id: uuid.UUID

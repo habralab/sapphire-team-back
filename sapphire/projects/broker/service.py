@@ -6,7 +6,7 @@ from pydantic import BaseModel
 from sapphire.common.broker.models.notification import Notification
 from sapphire.common.broker.models.projects import (
     ParticipantNotificationData,
-    ParticipantNotificationType,
+    ParticipantNotificationType, ChatCreatedData,
 )
 from sapphire.common.broker.service import BaseBrokerProducerService
 from sapphire.projects.database.models import Participant, Project
@@ -116,6 +116,15 @@ class ProjectsBrokerService(BaseBrokerProducerService):
             user_id=participant.user_id,
             position_id=participant.position_id,
             project_id=project.id
+        )
+
+    async def send_chat_created(self, chat_id: uuid.UUID) -> None:
+        chat_data = ChatCreatedData(chat_id=chat_id)
+        await self._send_notification_to_recipients(
+            notification_type=ParticipantNotificationType.CHAT_PARTICIPANT,
+            recipients=[],
+            notification_data=chat_data,
+            topic="chat_created",
         )
 
 def get_service(
