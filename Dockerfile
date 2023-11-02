@@ -20,6 +20,8 @@ ENTRYPOINT ["poetry", "run"]
 # Only application
 FROM core as slim
 
+RUN apt update -y && apt install -y curl
+
 RUN poetry install --only main --all-extras
 COPY ./sapphire /app/sapphire
 ENTRYPOINT ["poetry", "run", "python", "-m", "sapphire"]

@@ -1,0 +1,8 @@
+model: chat_members
+data:
+- user_id: 03fe07b9-109c-4e11-a2a5-184921fbfc49  # sapphire1user@gmail.com
+  chat_id: 3d6a466a-5165-4299-b2be-86f7d400abd5  # Fixture Chat
+  join_at: 2023-01-01T00:00:00.000000
+- user_id: 412f1c40-125f-47b9-aaef-1c079c12d63b  # sapphire2user@gmail.com
+  chat_id: 3d6a466a-5165-4299-b2be-86f7d400abd5  # Fixture Chat
+  join_at: 2023-01-01T00:00:00.000000
