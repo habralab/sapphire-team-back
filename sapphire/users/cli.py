@@ -4,6 +4,7 @@ import typer
 from loguru import logger
 
 from sapphire.common.habr.client import get_habr_client
+from sapphire.common.habr_career.client import get_habr_career_client
 from sapphire.common.jwt.methods import get_jwt_methods
 
 from . import api, database
@@ -19,11 +20,13 @@ def run(ctx: typer.Context):
     database_service = database.get_service(settings=settings)
     habr_oauth2 = get_oauth2_backend(settings=settings)
     habr_client = get_habr_client(settings=settings)
+    habr_career_client = get_habr_career_client(settings=settings)
     jwt_methods = get_jwt_methods(settings=settings)
     api_service = api.get_service(
         database=database_service,
         habr_oauth2=habr_oauth2,
         habr_client=habr_client,
+        habr_career_client=habr_career_client,
         jwt_methods=jwt_methods,
         settings=settings,
     )
