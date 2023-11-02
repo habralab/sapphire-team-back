@@ -3,7 +3,7 @@ from typing import Iterable
 import aiokafka
 
 from sapphire.common.broker.handler import BaseBrokerHandler
-from sapphire.common.broker.models.messenger import Chat
+from sapphire.common.broker.models.messenger import CreateChat
 from sapphire.messenger.database.service import MessengerDatabaseService
 
 
@@ -17,13 +17,13 @@ class MessengerBrokerHandler(BaseBrokerHandler):
         super().__init__(topics=topics)
 
     async def handle(self, message: aiokafka.ConsumerRecord):
-        chat = Chat.model_validate_json(json_data=message.value)
+        chat = CreateChat.model_validate_json(json_data=message.value)
 
         async with self._database.transaction() as session:
             db_chat = self._database.create_chat(
                 session=session,
                 is_personal=chat.is_personal,
-                members_id=chat.members_id
+                members_ids=chat.members_ids
                 )
 
     @property

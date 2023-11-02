@@ -24,11 +24,11 @@ class MessengerDatabaseService(BaseDatabaseService):
             self,
             session: AsyncSession,
             is_personal: bool,
-            members_id: list[uuid.UUID]
+            members_ids: list[uuid.UUID]
     ) -> Chat:
         chat = Chat(is_personal=is_personal)
 
-        for member_id in members_id:
+        for member_id in members_ids:
             member = Member(user_id=member_id)
             chat.member.append(member)
 
