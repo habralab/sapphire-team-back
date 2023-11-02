@@ -1,1 +1,1 @@
-from .client import get_habr_client
+from .client import HabrClient, get_habr_client

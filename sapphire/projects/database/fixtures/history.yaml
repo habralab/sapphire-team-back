@@ -1,0 +1,5 @@
+model: projects_history
+data:
+- id: 4d6aefe2-c6b5-44c8-99c8-199627208efc
+  project_id: cd8bad95-2585-421a-bef8-1ca18353caa6  # Fixture Project
+  status: PREPARATION

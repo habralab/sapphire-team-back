@@ -6,6 +6,7 @@ from facet import ServiceMixin
 
 from sapphire.common.api.service import BaseAPIService
 from sapphire.common.habr.client import HabrClient
+from sapphire.common.habr_career.client import HabrCareerClient
 from sapphire.common.jwt import JWTMethods
 from sapphire.common.utils.package import get_version
 from sapphire.users.database.service import UsersDatabaseService
@@ -21,6 +22,7 @@ class UsersAPIService(BaseAPIService):
         database: UsersDatabaseService,
         habr_oauth2: OAuth2HabrBackend,
         habr_client: HabrClient,
+        habr_career_client: HabrCareerClient,
         jwt_methods: JWTMethods,
         media_dir_path: pathlib.Path = pathlib.Path("/media"),
         load_file_chunk_size: int = 1024 * 1024,
@@ -35,6 +37,7 @@ class UsersAPIService(BaseAPIService):
         self._habr_oauth2 = habr_oauth2
         self._habr_oauth2_callback_url = habr_oauth2_callback_url
         self._habr_client = habr_client
+        self._habr_career_client = habr_career_client
         self._jwt_methods = jwt_methods
         self._media_dir_path = media_dir_path
         self._load_file_chunk_size = load_file_chunk_size
@@ -77,6 +80,10 @@ class UsersAPIService(BaseAPIService):
         return self._habr_client
 
     @property
+    def habr_career_client(self) -> HabrCareerClient:
+        return self._habr_career_client
+
+    @property
     def jwt_methods(self) -> JWTMethods:
         return self._jwt_methods
 
@@ -93,6 +100,7 @@ def get_service(
     database: UsersDatabaseService,
     habr_oauth2: OAuth2HabrBackend,
     habr_client: HabrClient,
+    habr_career_client: HabrCareerClient,
     jwt_methods: JWTMethods,
     settings: UsersSettings,
 ) -> UsersAPIService:
@@ -100,6 +108,7 @@ def get_service(
         database=database,
         habr_oauth2=habr_oauth2,
         habr_client=habr_client,
+        habr_career_client=habr_career_client,
         habr_oauth2_callback_url=settings.habr_oauth2_callback_url,
         jwt_methods=jwt_methods,
         version=get_version() or "0.0.0",
