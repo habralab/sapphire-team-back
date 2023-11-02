@@ -88,10 +88,9 @@ class ProjectsDatabaseService(BaseDatabaseService):
         if avatar is not Empty:
             project.avatar = avatar
         if status is not Empty:
-            await self._change_project_status(session=session,
+            project = await self._change_project_status(session=session,
                 project=project, status=status,
             )
-            await session.refresh(project)
 
         return project
 
@@ -99,12 +98,16 @@ class ProjectsDatabaseService(BaseDatabaseService):
         session: AsyncSession,
         project: Project,
         status: ProjectStatusEnum,
-    ):
+    ) -> Project:
         new_history_entry = ProjectHistory(
             project_id = project.id,
             status=status,
         )
         session.add(new_history_entry)
+
+        project.status.insert(0, new_history_entry)
+
+        return project
 
     async def get_project_positions(
         self,
