@@ -14,7 +14,8 @@ from sapphire.projects.settings import ProjectsSettings
 
 
 class ProjectsBrokerService(BaseBrokerProducerService):
-    async def send_participant_requested(self,
+    async def send_participant_requested(
+        self,
         project: Project,
         participant: Participant
     ) -> None:
