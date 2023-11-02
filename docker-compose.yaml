@@ -3,13 +3,14 @@ services:
   database:
     image: postgres:16.0-bookworm
     secrets:
-      - source: postgresql_password
-        target: postgresql_password
-    user: postgres:postgres
+      - postgresql_password
+    user: 0:0
     environment:
       POSTGRES_PASSWORD_FILE: /run/secrets/postgresql_password
     volumes:
       - ${DATABASE_DIR:-./database_data}:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
     deploy:
       replicas: 1
 
@@ -17,6 +18,8 @@ services:
     image: redis:7.2.1-bookworm
     volumes:
       - ${REDIS_DIR:-./redis_data}:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
     deploy:
       replicas: 1
 
@@ -31,17 +34,11 @@ services:
       - ${BROKER_DIR:-./broker_data}/zookeeper/log:/var/lib/zookeeper/log
     healthcheck:
       test: nc -z localhost 2181 || exit -1
-      interval: 10s
-      timeout: 5s
-      retries: 3
-      start_period: 10s
     deploy:
       replicas: 1
 
   kafka:
     image: confluentinc/cp-kafka:7.5.0
-    depends_on:
-      - zookeeper
     user: 0:0
     environment:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
@@ -51,198 +48,234 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     volumes:
       - ${BROKER_DIR:-./broker_data}/kafka/data:/var/lib/kafka/data
+    healthcheck:
+      test: nc -z localhost 9091 || exit -1
     deploy:
+      replicas: 1
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9091
+      SERVER_SERVLET_CONTEXT_PATH: ${KAFKA_UI_ROOT_PATH:-/kafka}
+      AUTH_TYPE: LOGIN_FORM
+      SPRING_SECURITY_USER_NAME: admin
+      SPRING_SECURITY_USER_PASSWORD: ${KAFKA_UI_PASSWORD:-admin}
+    healthcheck:
+      test: wget --spider -q http://localhost:8080/kafka/actuator/health
+    deploy:
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.kafka.rule=PathPrefix(`/kafka`)"
+        - "traefik.http.routers.kafka.entrypoints=web" 
+        - "traefik.http.services.kafka.loadbalancer.server.port=8080"
       replicas: 1
 
   users:
     image: ${SAPPHIRE_IMAGE:-sapphire}
-    depends_on:
-      - redis
-      - database
-      - kafka
     environment:
-      DB_DSN: ${USERS_DB_DSN:-sqlite+aiosqlite:///users.db}
-      ROOT_URL: ${USERS_ROOT_URL:-http://localhost:3000}
-      ROOT_PATH: ${USERS_ROOT_PATH}
-      ALLOWED_ORIGINS: ${USERS_ALLOWED_ORIGINS:-["http://localhost:3050"]}
-      HABR_OAUTH2_CALLBACK_URL: ${USERS_HABR_OAUTH2_CALLBACK_URL:-http://localhost:3000/api/rest/auth/oauth2/habr/callback}
+      DB_DSN: ${USERS_DB_DSN:-postgresql+asyncpg://users:P%40ssw0rd@database:5432/users}
+      ROOT_URL: ${USERS_ROOT_URL:-http://localhost:3000/users}
+      ROOT_PATH: ${USERS_ROOT_PATH:-/users}
+      ALLOWED_ORIGINS: ${USERS_ALLOWED_ORIGINS:-["http://localhost:3000"]}
+      HABR_OAUTH2_CALLBACK_URL: ${USERS_HABR_OAUTH2_CALLBACK_URL:-http://localhost:3000/users/api/rest/auth/oauth2/habr/callback}
     secrets:
-      - source: habr_oauth2_client_id
-        target: habr_oauth2_client_id
-      - source: habr_oauth2_client_secret
-        target: habr_oauth2_client_secret
-      - source: habr_api_key
-        target: habr_api_key
-      - source: jwt_access_token_public_key
-        target: jwt_access_token_public_key
-      - source: jwt_access_token_private_key
-        target: jwt_access_token_private_key
-      - source: jwt_refresh_token_public_key
-        target: jwt_refresh_token_public_key
-      - source: jwt_refresh_token_private_key
-        target: jwt_refresh_token_private_key
+      - habr_oauth2_client_id
+      - habr_oauth2_client_secret
+      - habr_api_key
+      - jwt_access_token_public_key
+      - jwt_access_token_private_key
+      - jwt_refresh_token_public_key
+      - jwt_refresh_token_private_key
     volumes:
       - ${USERS_MEDIA_DIR_PATH:-./users_data/media}:/media
-    ports:
-      - target: 8000
-        published: ${USERS_PORT:-3000}
-        mode: host
     command: ["users", "run"]
+    healthcheck:
+      test: curl --fail http://localhost:8000/health
     deploy:
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.middlewares.users-stripprefix.stripprefix.prefixes=/users"
+        - "traefik.http.routers.users.rule=PathPrefix(`/users`)"
+        - "traefik.http.routers.users.middlewares=users-stripprefix"
+        - "traefik.http.routers.users.entrypoints=web" 
+        - "traefik.http.services.users.loadbalancer.server.port=8000"
+      update_config:
+        order: start-first
       replicas: 1
 
   storage:
     image: ${SAPPHIRE_IMAGE:-sapphire}
-    depends_on:
-      - redis
-      - database
-      - kafka
     environment:
-      DB_DSN: ${STORAGE_DB_DSN:-sqlite+aiosqlite:///storage.db}
-      ROOT_URL: ${STORAGE_ROOT_URL:-http://localhost:3010}
-      ROOT_PATH: ${STORAGE_ROOT_PATH}
-      ALLOWED_ORIGINS: ${STORAGE_ALLOWED_ORIGINS:-["http://localhost:3050"]}
+      DB_DSN: ${STORAGE_DB_DSN:-postgresql+asyncpg://storage:P%40ssw0rd@database:5432/storage}
+      ROOT_URL: ${STORAGE_ROOT_URL:-http://localhost:3000/storage}
+      ROOT_PATH: ${STORAGE_ROOT_PATH:-/storage}
+      ALLOWED_ORIGINS: ${STORAGE_ALLOWED_ORIGINS:-["http://localhost:3000"]}
     secrets:
-      - source: jwt_access_token_public_key
-        target: jwt_access_token_public_key
-      - source: jwt_access_token_private_key
-        target: jwt_access_token_private_key
-      - source: jwt_refresh_token_public_key
-        target: jwt_refresh_token_public_key
+      - jwt_access_token_public_key
+      - jwt_access_token_private_key
+      - jwt_refresh_token_public_key
       - source: jwt_refresh_token_private_key
-        target: jwt_refresh_token_private_key
-    ports:
-      - target: 8000
-        published: ${STORAGE_PORT:-3010}
-        mode: host
     command: ["storage", "run"]
+    healthcheck:
+      test: curl --fail http://localhost:8000/health
     deploy:
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.middlewares.storage-stripprefix.stripprefix.prefixes=/storage"
+        - "traefik.http.routers.storage.rule=PathPrefix(`/storage`)"
+        - "traefik.http.routers.storage.middlewares=storage-stripprefix"
+        - "traefik.http.routers.storage.entrypoints=web" 
+        - "traefik.http.services.storage.loadbalancer.server.port=8000"
+      update_config:
+        order: start-first
       replicas: 1
 
   projects:
     image: ${SAPPHIRE_IMAGE:-sapphire}
-    depends_on:
-      - redis
-      - database
-      - kafka
     environment:
-      DB_DSN: ${PROJECTS_DB_DSN:-sqlite+aiosqlite:///projects.db}
-      ROOT_URL: ${PROJECTS_ROOT_URL:-http://localhost:3020}
-      ROOT_PATH: ${PROJECTS_ROOT_PATH}
-      ALLOWED_ORIGINS: ${PROJECTS_ALLOWED_ORIGINS:-["http://localhost:3050"]}
+      DB_DSN: ${PROJECTS_DB_DSN:-postgresql+asyncpg://projects:P%40ssw0rd@database:5432/projects}
+      ROOT_URL: ${PROJECTS_ROOT_URL:-http://localhost:3000/projects}
+      ROOT_PATH: ${PROJECTS_ROOT_PATH:-/projects}
+      ALLOWED_ORIGINS: ${PROJECTS_ALLOWED_ORIGINS:-["http://localhost:3000"]}
       PRODUCER_SERVERS: '["kafka:9091"]'
     secrets:
-      - source: jwt_access_token_public_key
-        target: jwt_access_token_public_key
-      - source: jwt_access_token_private_key
-        target: jwt_access_token_private_key
-      - source: jwt_refresh_token_public_key
-        target: jwt_refresh_token_public_key
-      - source: jwt_refresh_token_private_key
-        target: jwt_refresh_token_private_key
+      - jwt_access_token_public_key
+      - jwt_access_token_private_key
+      - jwt_refresh_token_public_key
+      - jwt_refresh_token_private_key
     volumes:
       - ${PROJECTS_MEDIA_DIR_PATH:-./projects_data/media}:/media
-    ports:
-      - target: 8000
-        published: ${PROJECTS_PORT:-3020}
-        mode: host
     command: ["projects", "run"]
+    healthcheck:
+      test: curl --fail http://localhost:8000/health
     deploy:
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.middlewares.projects-stripprefix.stripprefix.prefixes=/projects"
+        - "traefik.http.routers.projects.rule=PathPrefix(`/projects`)"
+        - "traefik.http.routers.projects.middlewares=projects-stripprefix"
+        - "traefik.http.routers.projects.entrypoints=web" 
+        - "traefik.http.services.projects.loadbalancer.server.port=8000"
+      update_config:
+        order: start-first
       replicas: 1
 
   notifications:
     image: ${SAPPHIRE_IMAGE:-sapphire}
-    depends_on:
-      - redis
-      - database
-      - kafka
     environment:
-      DB_DSN: ${NOTIFICATIONS_DB_DSN:-sqlite+aiosqlite:///notifications.db}
-      ROOT_URL: ${NOTIFICATIONS_ROOT_URL:-http://localhost:3030}
-      ROOT_PATH: ${NOTIFICATIONS_ROOT_PATH}
-      ALLOWED_ORIGINS: ${NOTIFICATIONS_ALLOWED_ORIGINS:-["http://localhost:3050"]}
+      DB_DSN: ${NOTIFICATIONS_DB_DSN:-postgresql+asyncpg://notifications:P%40ssw0rd@database:5432/notifications}
+      ROOT_URL: ${NOTIFICATIONS_ROOT_URL:-http://localhost:3000/notifications}
+      ROOT_PATH: ${NOTIFICATIONS_ROOT_PATH:-/notifications}
+      ALLOWED_ORIGINS: ${NOTIFICATIONS_ALLOWED_ORIGINS:-["http://localhost:3000"]}
       CONSUMER_SERVERS: '["kafka:9091"]'
       TOPICS: '["notifications"]'
     secrets:
-      - source: jwt_access_token_public_key
-        target: jwt_access_token_public_key
-      - source: jwt_access_token_private_key
-        target: jwt_access_token_private_key
-      - source: jwt_refresh_token_public_key
-        target: jwt_refresh_token_public_key
-      - source: jwt_refresh_token_private_key
-        target: jwt_refresh_token_private_key
-    ports:
-      - target: 8000
-        published: ${NOTIFICATIONS_PORT:-3030}
-        mode: host
+      - jwt_access_token_public_key
+      - jwt_access_token_private_key
+      - jwt_refresh_token_public_key
+      - jwt_refresh_token_private_key
     command: ["notifications", "run"]
+    healthcheck:
+      test: curl --fail http://localhost:8000/health
     deploy:
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.middlewares.notifications-stripprefix.stripprefix.prefixes=/notifications"
+        - "traefik.http.routers.notifications.rule=PathPrefix(`/notifications`)"
+        - "traefik.http.routers.notifications.middlewares=notifications-stripprefix"
+        - "traefik.http.routers.notifications.entrypoints=web" 
+        - "traefik.http.services.notifications.loadbalancer.server.port=8000"
+      update_config:
+        order: start-first
       replicas: 1
 
   messenger:
     image: ${SAPPHIRE_IMAGE:-sapphire}
-    depends_on:
-      - redis
-      - database
-      - kafka
     environment:
-      DB_DSN: ${MESSENGER_DB_DSN:-sqlite+aiosqlite:///messenger.db}
-      ROOT_URL: ${MESSENGER_ROOT_URL:-http://localhost:3040}
-      ROOT_PATH: ${MESSENGER_ROOT_PATH}
-      ALLOWED_ORIGINS: ${MESSENGER_ALLOWED_ORIGINS:-["http://localhost:3050"]}
+      DB_DSN: ${MESSENGER_DB_DSN:-postgresql+asyncpg://messenger:P%40ssw0rd@database:5432/messenger}
+      ROOT_URL: ${MESSENGER_ROOT_URL:-http://localhost:3000/messenger}
+      ROOT_PATH: ${MESSENGER_ROOT_PATH:-/messenger}
+      ALLOWED_ORIGINS: ${MESSENGER_ALLOWED_ORIGINS:-["http://localhost:3000"]}
     secrets:
-      - source: jwt_access_token_public_key
-        target: jwt_access_token_public_key
-      - source: jwt_access_token_private_key
-        target: jwt_access_token_private_key
-      - source: jwt_refresh_token_public_key
-        target: jwt_refresh_token_public_key
-      - source: jwt_refresh_token_private_key
-        target: jwt_refresh_token_private_key
-    ports:
-      - target: 8000
-        published: ${MESSENGER_PORT:-3040}
-        mode: host
+      - jwt_access_token_public_key
+      - jwt_access_token_private_key
+      - jwt_refresh_token_public_key
+      - jwt_refresh_token_private_key
     command: ["messenger", "run"]
+    healthcheck:
+      test: curl --fail http://localhost:8000/health
     deploy:
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.middlewares.messenger-stripprefix.stripprefix.prefixes=/messenger"
+        - "traefik.http.routers.messenger.rule=PathPrefix(`/messenger`)"
+        - "traefik.http.routers.messenger.middlewares=messenger-stripprefix"
+        - "traefik.http.routers.messenger.entrypoints=web" 
+        - "traefik.http.services.messenger.loadbalancer.server.port=8000"
+      update_config:
+        order: start-first
       replicas: 1
 
   swagger:
     image: swaggerapi/swagger-ui
-    depends_on:
-      - projects
-      - users
-      - notifications
     environment:
       URLS: >
         [
           {
-            "url": "${USERS_ROOT_URL:-http://localhost:3000}${USERS_ROOT_PATH}/openapi.json",
+            "url": "${USERS_ROOT_URL:-http://localhost:3000/users}${USERS_ROOT_PATH}/openapi.json",
             "name": "Users",
           },
           {
-            "url": "${STORAGE_ROOT_URL:-http://localhost:3010}${STORAGE_ROOT_PATH}/openapi.json",
+            "url": "${STORAGE_ROOT_URL:-http://localhost:3000/storage}${STORAGE_ROOT_PATH}/openapi.json",
             "name": "Storage",
           },
           {
-            "url": "${PROJECTS_ROOT_URL:-http://localhost:3020}${PROJECTS_ROOT_PATH}/openapi.json",
+            "url": "${PROJECTS_ROOT_URL:-http://localhost:3000/projects}${PROJECTS_ROOT_PATH}/openapi.json",
             "name": "Projects",
           },
           {
-            "url": "${NOTIFICATIONS_ROOT_URL:-http://localhost:3030}${NOTIFICATIONS_ROOT_PATH}/openapi.json",
+            "url": "${NOTIFICATIONS_ROOT_URL:-http://localhost:3000/notifications}${NOTIFICATIONS_ROOT_PATH}/openapi.json",
             "name": "Notifications",
           },
           {
-            "url": "${MESSENGER_ROOT_URL:-http://localhost:3040}${MESSENGER_ROOT_PATH}/openapi.json",
+            "url": "${MESSENGER_ROOT_URL:-http://localhost:3000/messenger}${MESSENGER_ROOT_PATH}/openapi.json",
             "name": "Messenger",
           },
         ]
-    ports:
-      - target: 8080
-        published: ${SWAGGER_PORT:-3050}
-        mode: host
+      BASE_URL: ${SWAGGER_ROOT_PATH:-/swagger}
+    healthcheck:
+      test: curl --fail http://localhost:8080
     deploy:
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.middlewares.swagger-stripprefix.stripprefix.prefixes=/swagger"
+        - "traefik.http.routers.swagger.rule=PathPrefix(`/swagger`)"
+        - "traefik.http.routers.swagger.middlewares=swagger-stripprefix"
+        - "traefik.http.routers.swagger.entrypoints=web" 
+        - "traefik.http.services.swagger.loadbalancer.server.port=8080"
+      update_config:
+        order: start-first
+      replicas: 1
+
+  proxy:
+    image: traefik:v2.10
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    ports:
+      - target: 80
+        published: ${PORT:-3000}
+        mode: host
+    command:
+      - "--log.level=DEBUG"
+      - "--providers.docker=true"
+      - "--providers.docker.swarmMode=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+    deploy:
+      update_config:
+        order: start-first
       replicas: 1
 
 secrets:

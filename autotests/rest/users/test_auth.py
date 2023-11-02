@@ -10,8 +10,6 @@ async def test_oauth2_habr_authorize_redirect(
         settings: AutotestsSettings,
         users_rest_client: UsersRestClient,
 ):
-    expected_redirect_uri = yarl.URL(str(settings.users_base_url)).with_path("")
-
     response = await users_rest_client.oauth2_habr_authorize()
 
     location = response.headers.get("Location")
@@ -22,7 +20,7 @@ async def test_oauth2_habr_authorize_redirect(
     assert location_url.host == "account.habr.com"
     assert location_url.path == "/oauth/authorize/"
     assert set(location_url.query.keys()) == {"client_id", "state", "redirect_uri", "response_type"}
-    assert location_url.query["redirect_uri"] == str(expected_redirect_uri)
+    assert location_url.query["redirect_uri"] == str(settings.habr_oauth2_callback_url)
     assert location_url.query["response_type"] == "code"
 
 

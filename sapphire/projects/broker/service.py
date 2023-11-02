@@ -4,7 +4,7 @@ import uuid
 from pydantic import BaseModel
 
 from sapphire.common.broker.models.notification import Notification
-from sapphire.common.broker.models.projects.participants import (
+from sapphire.common.broker.models.projects import (
     ParticipantNotificationData,
     ParticipantNotificationType,
 )
