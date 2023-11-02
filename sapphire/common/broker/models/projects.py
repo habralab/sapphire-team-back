@@ -1,5 +1,6 @@
 import enum
 import uuid
+from typing import List
 
 from pydantic import BaseModel, ConfigDict
 
@@ -23,4 +24,5 @@ class ParticipantNotificationType(str, enum.Enum):
 
 
 class ChatCreatedData(BaseModel):
-    chat_id: uuid.UUID
+    is_personal: bool
+    members_ids: List[uuid.UUID]

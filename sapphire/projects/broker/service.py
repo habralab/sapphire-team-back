@@ -1,12 +1,14 @@
 import asyncio
 import uuid
+from typing import List
 
 from pydantic import BaseModel
 
 from sapphire.common.broker.models.notification import Notification
 from sapphire.common.broker.models.projects import (
+    ChatCreatedData,
     ParticipantNotificationData,
-    ParticipantNotificationType, ChatCreatedData,
+    ParticipantNotificationType,
 )
 from sapphire.common.broker.service import BaseBrokerProducerService
 from sapphire.projects.database.models import Participant, Project
@@ -119,14 +121,13 @@ class ProjectsBrokerService(BaseBrokerProducerService):
             project_id=project.id
         )
 
-    async def send_chat_created(self, chat_id: uuid.UUID) -> None:
-        chat_data = ChatCreatedData(chat_id=chat_id)
-        await self._send_notification_to_recipients(
-            notification_type=ParticipantNotificationType.CHAT_PARTICIPANT,
-            recipients=[],
-            notification_data=chat_data,
-            topic="chat_created",
-        )
+    async def send_create_chat(
+            self,
+            is_personal: bool,
+            members_ids: List[uuid.UUID]
+    ) -> None:
+        chat_data = ChatCreatedData(is_personal=is_personal, members_ids=members_ids)
+        await self.send(topic="create_chat", message=chat_data)
 
 def get_service(
         loop: asyncio.AbstractEventLoop,
