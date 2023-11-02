@@ -23,6 +23,15 @@ class UsersRestClient(BaseRestClient):
 
         return response
 
+    async def check_auth(self) -> bool:
+        path = "/api/rest/auth/check"
+
+        response = await self.get(url=path)
+        if response.status_code // 100 != 2:
+            raise ResponseException(status_code=response.status_code, body=response.content)
+
+        return response.json()
+
     async def logout(self) -> httpx.Response:
         path = "/api/rest/auth/logout"
 
