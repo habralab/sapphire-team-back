@@ -63,7 +63,7 @@ services:
       SPRING_SECURITY_USER_NAME: admin
       SPRING_SECURITY_USER_PASSWORD: ${KAFKA_UI_PASSWORD:-admin}
     healthcheck:
-      test: wget --spider -q http://localhost:8080/kafka/actuator/health
+      test: wget --spider -q http://localhost:8080${KAFKA_UI_ROOT_PATH:-/kafka}/actuator/health
     deploy:
       labels:
         - "traefik.enable=true"
@@ -246,13 +246,11 @@ services:
         ]
       BASE_URL: ${SWAGGER_ROOT_PATH:-/swagger}
     healthcheck:
-      test: curl --fail http://localhost:8080
+      test: curl --fail http://localhost:8080/${SWAGGER_ROOT_PATH:-/swagger}
     deploy:
       labels:
         - "traefik.enable=true"
-        - "traefik.http.middlewares.swagger-stripprefix.stripprefix.prefixes=/swagger"
         - "traefik.http.routers.swagger.rule=PathPrefix(`/swagger`)"
-        - "traefik.http.routers.swagger.middlewares=swagger-stripprefix"
         - "traefik.http.routers.swagger.entrypoints=web" 
         - "traefik.http.services.swagger.loadbalancer.server.port=8080"
       update_config:
