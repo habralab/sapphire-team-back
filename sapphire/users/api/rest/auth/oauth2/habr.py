@@ -54,10 +54,10 @@ async def callback(
         )
 
     if db_user is None:
-        habr_user_card = await habr_client.get_user_card(username=habr_user.login)
-        habr_career_card = await habr_career_client.get_career_track(user_id=habr_user.id)
+        habr_user_info = await habr_client.get_user_card(username=habr_user.login)
+        habr_career_user_info = await habr_career_client.get_career_track(user_id=habr_user.id)
 
-        habr_user_full_name = habr_user_card.full_name or habr_career_card.full_name
+        habr_user_full_name = habr_career_user_info.full_name or habr_user_info.full_name
         first_name, last_name = None, None
         if habr_user_full_name is not None:
             first_name, *last_name = habr_user_full_name.split(maxsplit=1)
