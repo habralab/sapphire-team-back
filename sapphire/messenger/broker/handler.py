@@ -18,13 +18,12 @@ class MessengerBrokerHandler(BaseBrokerHandler):
 
     async def handle(self, message: aiokafka.ConsumerRecord):
         chat = CreateChat.model_validate_json(json_data=message.value)
-
         async with self._database.transaction() as session:
-            db_chat = self._database.create_chat(
+            await self._database.create_chat(
                 session=session,
                 is_personal=chat.is_personal,
                 members_ids=chat.members_ids
-                )
+            )
 
     @property
     def database(self) -> MessengerDatabaseService:
