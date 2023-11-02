@@ -27,7 +27,7 @@ def upgrade() -> None:
         sa.Column("is_read", sa.Boolean(), nullable=False),
         sa.Column("created_at", sa.DateTime(), nullable=False),
         sa.Column("updated_at", sa.DateTime(), nullable=False),
-        sa.PrimaryKeyConstraint("id")
+        sa.PrimaryKeyConstraint("id"),
     )
     # ### end Alembic commands ###
 
