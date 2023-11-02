@@ -18,7 +18,7 @@ class AutotestsSettings(JWTSettings):
     messenger_websocket_url: AnyUrl
     notifications_websocket_url: AnyUrl
 
-    habr_oauth2_callback_url: AnyHttpUrl
+    habr_oauth2_callback_url: str = ""
 
     imap_server: str = "imap.gmail.com"
     imap_ssl: bool = True
