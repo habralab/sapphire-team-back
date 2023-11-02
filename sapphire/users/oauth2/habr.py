@@ -7,7 +7,7 @@ from .base import OAuth2BaseBackend
 
 
 class HabrUser(pydantic.BaseModel):
-    id: int
+    id: str
     login: str
     email: pydantic.EmailStr
     is_active: bool
@@ -27,7 +27,7 @@ class OAuth2HabrBackend(OAuth2BaseBackend):
         user_data = data["user"]
 
         return HabrUser(
-            id=int(user_data["id"]),
+            id=user_data["id"],
             login=user_data["login"],
             email=user_data["email"],
             is_active=(user_data["is_active"] == "1"),
