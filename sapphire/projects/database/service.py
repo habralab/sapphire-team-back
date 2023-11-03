@@ -5,6 +5,7 @@ from typing import Type
 
 from sqlalchemy import desc, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import joinedload
 
 from sapphire.common.database.service import BaseDatabaseService
 from sapphire.common.utils.empty import Empty
@@ -71,10 +72,13 @@ class ProjectsDatabaseService(BaseDatabaseService):
         description: str | None | Type[Empty] = Empty,
         deadline: datetime | None | Type[Empty] = Empty,
         avatar: str | None | Type[Empty] = Empty,
+        status: ProjectStatusEnum | None | Type[Empty] = Empty,
     ) -> Project:
-        query = select(Project).where(Project.id == project.id)
+        query = select(Project).where(Project.id == project.id).options(
+            joinedload(Project.history),
+        )
         result = await session.execute(query)
-        project = result.scalar_one()
+        project = result.unique().scalar_one()
 
         if name is not Empty:
             project.name = name
@@ -86,6 +90,26 @@ class ProjectsDatabaseService(BaseDatabaseService):
             project.deadline = deadline
         if avatar is not Empty:
             project.avatar = avatar
+        if status is not Empty:
+            project = await self._change_project_status(session=session,
+                project=project, status=status,
+            )
+
+        session.add(project)
+
+        return project
+
+    async def _change_project_status(self,
+        session: AsyncSession,
+        project: Project,
+        status: ProjectStatusEnum,
+    ) -> Project:
+        new_history_entry = ProjectHistory(
+            project_id = project.id,
+            status=status,
+        )
+        session.add(new_history_entry)
+        project.history.insert(0, new_history_entry)
 
         return project
 

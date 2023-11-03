@@ -77,6 +77,40 @@ class TestProjectFlow:
 
     @pytest.mark.dependency(depends=["TestProjectFlow::test_get_project"])
     @pytest.mark.asyncio
+    async def test_finish_project_from_preparation(self, oleg_projects_rest_client: ProjectsRestClient):
+        project_id: uuid.UUID = self.CONTEXT["project_id"]
+        project = await oleg_projects_rest_client.partial_update_project(
+            project_id=project_id,
+            status=ProjectStatusEnum.FINISHED,
+        )
+
+        assert project.id == project_id
+        assert project.status == ProjectStatusEnum.FINISHED
+
+    @pytest.mark.dependency(depends=["TestProjectFlow::test_finish_project_from_preparation"])
+    @pytest.mark.asyncio
+    async def test_get_finished_project(self, oleg_projects_rest_client: ProjectsRestClient):
+        project_id: uuid.UUID = self.CONTEXT["project_id"]
+        project = await oleg_projects_rest_client.get_project(
+            project_id=project_id,
+        )
+
+        assert project.status == ProjectStatusEnum.FINISHED
+
+    @pytest.mark.dependency(depends=["TestProjectFlow::test_get_finished_project"])
+    @pytest.mark.asyncio
+    async def test_return_finished_project_to_preparation(self, oleg_projects_rest_client: ProjectsRestClient):
+        project_id: uuid.UUID = self.CONTEXT["project_id"]
+        project = await oleg_projects_rest_client.partial_update_project(
+            project_id=project_id,
+            status=ProjectStatusEnum.PREPARATION,
+        )
+
+        assert project.id == project_id
+        assert project.status == ProjectStatusEnum.PREPARATION
+
+    @pytest.mark.dependency(depends=["TestProjectFlow::test_return_finished_project_to_preparation"])
+    @pytest.mark.asyncio
     async def test_create_position(self, oleg_projects_rest_client: ProjectsRestClient):
         project_id: uuid.UUID = self.CONTEXT["project_id"]
         
@@ -680,7 +714,6 @@ class TestProjectFlow:
         pass
 
     @pytest.mark.dependency(depends=["TestProjectFlow::test_get_fourth_left_participant"])
-    @pytest.mark.skip("Not implemented")
     @pytest.mark.asyncio
     async def test_move_project_to_work(self, oleg_projects_rest_client: ProjectsRestClient):
         project_id: uuid.UUID = self.CONTEXT["project_id"]
@@ -703,7 +736,7 @@ class TestProjectFlow:
         assert project.id == project_id
         assert project.status == ProjectStatusEnum.IN_WORK
 
-    @pytest.mark.dependency(depends=["TestProjectFlow::test_moved_to_work_project"])
+    @pytest.mark.dependency(depends=["TestProjectFlow::test_get_moved_to_work_project"])
     @pytest.mark.asyncio
     async def test_close_position(self, oleg_projects_rest_client: ProjectsRestClient):
         project_id: uuid.UUID = self.CONTEXT["project_id"]
@@ -740,7 +773,6 @@ class TestProjectFlow:
         # assert position.closed_at is not None
 
     @pytest.mark.dependency(depends=["TestProjectFlow::test_get_closed_position"])
-    @pytest.mark.skip("Not implemented")
     @pytest.mark.asyncio
     async def test_close_project(self, oleg_projects_rest_client: ProjectsRestClient):
         project_id: uuid.UUID = self.CONTEXT["project_id"]

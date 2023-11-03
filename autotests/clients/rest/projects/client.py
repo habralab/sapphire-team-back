@@ -13,6 +13,7 @@ from .models import (
     ParticipantResponse,
     PositionResponse,
     ProjectListResponse,
+    ProjectPartialUpdateRequest,
     ProjectResponse,
     UpdateParticipantRequest,
 )
@@ -82,8 +83,11 @@ class ProjectsRestClient(BaseRestClient):
             description: str | None | Type[Empty] = Empty,
             deadline: datetime | None | Type[Empty] = Empty,
             status: ProjectStatusEnum | Type[Empty] = Empty,
-    ):
-        raise NotImplementedError
+    ) -> ProjectResponse:
+        path = f"/api/rest/projects/{project_id}"
+        request = ProjectPartialUpdateRequest(status=status)
+
+        return await self.rest_patch(path=path, data=request, response_model=ProjectResponse)
 
     async def create_project_position(
             self,
