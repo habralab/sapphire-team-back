@@ -11,7 +11,7 @@ from sapphire.users.database.models import User
 from sapphire.users.database.service import UsersDatabaseService
 
 from .dependencies import auth_user, get_path_user
-from .schemas import UserResponse, UserUpdateRequest
+from .schemas import UserResponse, UserSkillsResponse, UserUpdateRequest
 
 
 async def get_user(
@@ -146,6 +146,7 @@ async def update_user_skills(
     return skills
 
 async def get_user_skills(
+    request: fastapi.Request,
     request_user_id: uuid.UUID = fastapi.Depends(auth_user_id),
     user: User = fastapi.Depends(get_path_user),
 ) -> UserSkillsResponse:
