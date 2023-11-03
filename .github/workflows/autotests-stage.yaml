@@ -36,3 +36,13 @@ jobs:
           -e "MATVEY_EMAIL_PASSWORD=${MATVEY_EMAIL_PASSWORD}"
           -v /sapphire/stage/secrets:/run/secrets
           sapphire:test-${{ github.sha }} pytest autotests
+      - name: Notification
+        if: failure()
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            @WainsCat @vanvanich9 @brulitsan @OlegYurchik
+            Autotests Failed
+            Last commit: https://github.com/${{ github.repository }}/commit/${{github.sha}}

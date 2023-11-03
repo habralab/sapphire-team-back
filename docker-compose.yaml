@@ -247,7 +247,7 @@ services:
         ]
       BASE_URL: ${SWAGGER_ROOT_PATH:-/swagger}
     healthcheck:
-      test: curl --fail http://localhost:8080/${SWAGGER_ROOT_PATH:-/swagger}
+      test: curl --fail http://localhost:8080${SWAGGER_ROOT_PATH:-/swagger}
     deploy:
       labels:
         - "traefik.enable=true"
