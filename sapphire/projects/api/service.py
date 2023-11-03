@@ -57,7 +57,7 @@ class ProjectsAPIService(BaseAPIService):
         return self._jwt_methods
 
     @property
-    def broker_service(self) -> ProjectsBrokerService:
+    def broker(self) -> ProjectsBrokerService:
         return self._broker_service
 
 

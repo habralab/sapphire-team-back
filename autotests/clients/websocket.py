@@ -6,10 +6,9 @@ from facet import ServiceMixin
 
 
 class WebsocketClient(ServiceMixin):
-    def __init__(self, *urls: str, headers: dict[str, Any] | None = None, verify: bool = True):
+    def __init__(self, *urls: str, headers: dict[str, Any] | None = None):
         self._urls = urls
         self._headers = headers or {}
-        self._verify = verify
         self._queue = Queue()
 
     async def start(self):
@@ -17,7 +16,7 @@ class WebsocketClient(ServiceMixin):
             self.add_task(self.listener(url))
 
     async def listener(self, url: str):
-        for websocket in websockets.connect(url, extra_headers=self._headers, ssl=self._verify):
+        async for websocket in websockets.connect(url, extra_headers=self._headers):
             try:
                 message = await websocket.recv()
             except websockets.ConnectionClosed:
