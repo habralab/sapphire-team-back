@@ -17,6 +17,7 @@ from .schemas import (
     ProjectHistoryListResponse,
     ProjectHistoryResponse,
     ProjectListResponse,
+    ProjectPartialUpdateRequest,
     ProjectResponse,
 )
 
@@ -90,6 +91,23 @@ async def history(
         total_pages=total_pages,
         total_items=total_items,
     )
+
+
+async def partial_update_project(
+    request: fastapi.Request,
+    project: Project = fastapi.Depends(path_project_is_owner),
+    data: ProjectPartialUpdateRequest = fastapi.Body(embed=False)
+) -> ProjectResponse:
+    database_service: ProjectsDatabaseService = request.app.service.database
+
+    async with database_service.transaction() as session:
+        project = await database_service.update_project(
+            session=session,
+            project=project,
+            status=data.status,
+        )
+
+    return ProjectResponse.model_validate(project)
 
 
 async def upload_project_avatar(

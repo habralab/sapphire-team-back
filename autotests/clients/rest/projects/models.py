@@ -61,3 +61,6 @@ class ParticipantResponse(BaseModel):
     status: ParticipantStatusEnum
     created_at: datetime
     updated_at: datetime
+
+class ProjectPartialUpdateRequest(BaseModel):
+    status: ProjectStatusEnum | None
