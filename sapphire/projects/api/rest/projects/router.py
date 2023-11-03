@@ -10,6 +10,9 @@ router.add_api_route(path="/{project_id}", methods=["GET"], endpoint=handlers.ge
 router.add_api_route(
     path="/{project_id}/history", methods=["GET"], endpoint=handlers.history
 )
+router.add_api_route(
+    path="/{project_id}", methods=["PATCH"], endpoint=handlers.partial_update_project
+)
 router.add_api_route(path="/", methods=["GET"], endpoint=handlers.get_projects)
 router.add_api_route(
     path="/{project_id}/avatar",
