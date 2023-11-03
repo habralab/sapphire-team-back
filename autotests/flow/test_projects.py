@@ -79,7 +79,6 @@ class TestProjectFlow:
     @pytest.mark.asyncio
     async def test_finish_project_from_preparation(self, oleg_projects_rest_client: ProjectsRestClient):
         project_id: uuid.UUID = self.CONTEXT["project_id"]
-
         project = await oleg_projects_rest_client.partial_update_project(
             project_id=project_id,
             status=ProjectStatusEnum.FINISHED,
@@ -92,7 +91,6 @@ class TestProjectFlow:
     @pytest.mark.asyncio
     async def test_return_finished_project_to_preparation(self, oleg_projects_rest_client: ProjectsRestClient):
         project_id: uuid.UUID = self.CONTEXT["project_id"]
-
         project = await oleg_projects_rest_client.partial_update_project(
             project_id=project_id,
             status=ProjectStatusEnum.PREPARATION,

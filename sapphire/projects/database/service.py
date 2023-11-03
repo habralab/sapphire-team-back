@@ -92,6 +92,8 @@ class ProjectsDatabaseService(BaseDatabaseService):
                 project=project, status=status,
             )
 
+        session.add(project)
+
         return project
 
     async def _change_project_status(self,
@@ -104,8 +106,7 @@ class ProjectsDatabaseService(BaseDatabaseService):
             status=status,
         )
         session.add(new_history_entry)
-
-        project.status = status
+        project.history.insert(0, new_history_entry)
 
         return project
 
