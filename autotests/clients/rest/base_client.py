@@ -83,3 +83,13 @@ class BaseRestClient(httpx.AsyncClient, ServiceMixin):
 
     async def rest_delete(self, path: str, response_model: Type[ResponseModel]) -> ResponseModel:
         return await self.rest_request(method="DELETE", path=path, response_model=response_model)
+
+    async def rest_patch(
+            self,
+            path: str,
+            response_model: Type[ResponseModel],
+            data: BaseModel | None = None,
+            files: dict[str, io.BytesIO] | None = None,
+    ) -> ResponseModel:
+        return await self.rest_request(method="PATCH", path=path, response_model=response_model,
+                                       data=data, files=files)

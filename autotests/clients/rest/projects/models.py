@@ -1,6 +1,6 @@
 import uuid
 from datetime import datetime
-from typing import Literal
+from typing import Literal, Type
 
 from pydantic import BaseModel, Field, PositiveInt, constr
 
@@ -61,3 +61,6 @@ class ParticipantResponse(BaseModel):
     status: ParticipantStatusEnum
     created_at: datetime
     updated_at: datetime
+
+class ProjectPartialUpdateRequest(BaseModel):
+    status: ProjectStatusEnum | None

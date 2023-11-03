@@ -105,7 +105,7 @@ class ProjectsDatabaseService(BaseDatabaseService):
         )
         session.add(new_history_entry)
 
-        project.status.insert(0, new_history_entry)
+        project.status = status
 
         return project
 
