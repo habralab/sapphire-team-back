@@ -18,18 +18,20 @@ async def create_participant(
     request: fastapi.Request,
     position_id: uuid.UUID,
     user_id: uuid.UUID = fastapi.Depends(auth_user_id),
+    project: Project = fastapi.Depends(get_path_project),
     position: Position = fastapi.Depends(get_path_position),
 ) -> ProjectParticipantResponse:
+    broker_service: ProjectsBrokerService = request.app.service.broker
     database_service: ProjectsDatabaseService = request.app.service.database
 
     async with database_service.transaction() as session:
-        participant_db = await database_service.get_participant(
+        participant = await database_service.get_participant(
             session=session,
             position_id=position.id,
             user_id=user_id,
         )
 
-    if participant_db and participant_db.status in (
+    if participant and participant.status in (
         ParticipantStatusEnum.REQUEST,
         ParticipantStatusEnum.JOINED,
     ):
@@ -39,13 +41,17 @@ async def create_participant(
         )
 
     async with database_service.transaction() as session:
-        created_participant_db = await database_service.create_participant(
+        participant = await database_service.create_participant(
             session=session,
             position_id=position_id,
             user_id=user_id,
         )
+        await broker_service.send_participant_requested(
+            project=project,
+            participant=participant,
+        )
 
-    return ProjectParticipantResponse.model_validate(created_participant_db)
+    return ProjectParticipantResponse.model_validate(participant)
 
 
 async def update_participant(
@@ -55,8 +61,8 @@ async def update_participant(
     project: Project = fastapi.Depends(get_path_project),
     participant: Participant = fastapi.Depends(get_path_participant),
 ) -> ProjectParticipantResponse:
+    broker_service: ProjectsBrokerService = request.app.service.broker
     database_service: ProjectsDatabaseService = request.app.service.database
-    broker_service: ProjectsBrokerService = request.app.service.broker_service
 
     project_owner_nodes = {
         # New expected status : Required current statuses
@@ -91,9 +97,6 @@ async def update_participant(
         )
 
         notification_send_map = {
-            ParticipantStatusEnum.REQUEST: {
-                participant.user_id: broker_service.send_participant_requested
-            },
             ParticipantStatusEnum.JOINED: {
                 participant.user_id: broker_service.send_participant_joined
             },

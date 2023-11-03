@@ -145,12 +145,32 @@ class TestProjectFlow:
         assert position.project_id == project_id
         # TODO: Uncomment after implement specialization_id in PositionResponse
         # assert position.specialization_id == position_specialization_id
-        assert position.is_deleted is False
         assert position.closed_at is None
 
     @pytest.mark.dependency(depends=[
         "TestProjectFlow::test_create_position",
-        # TODO: Replace to: "TestProjectFlow::test_get_position",
+        # TODO: Replace to :"TestProjectFlow::test_get_position"
+    ])
+    @pytest.mark.asyncio
+    async def test_get_positions(self, projects_rest_client: ProjectsRestClient):
+        project_id: uuid.UUID = self.CONTEXT["project_id"]
+        position_id: uuid.UUID = self.CONTEXT["position_id"]
+        position_specialization_id: uuid.UUID = self.CONTEXT["position_specialization_id"]
+
+        positions = await projects_rest_client.get_project_positions(
+            project_id=project_id,
+        )
+
+        assert len(positions.data) == 1
+        assert positions.data[0].id == position_id
+        assert positions.data[0].project_id == project_id
+        # TODO: Uncomment after implement specialization_id in PositionResponse
+        # assert positions.data[0].specialization_id == position_specialization_id
+        assert positions.data[0].closed_at is None
+
+    @pytest.mark.dependency(depends=[
+        "TestProjectFlow::test_create_position",
+        # TODO: Replace to: "TestProjectFlow::test_get_positions",
     ])
     @pytest.mark.asyncio
     async def test_create_first_request_to_join(
@@ -751,9 +771,7 @@ class TestProjectFlow:
 
         assert position.id == position_id
         assert position.project_id == project_id
-        # TODO: Remove check for is_deleted and add check for closed_at
-        assert position.is_deleted is True
-        # assert position.closed_at is not None
+        assert position.closed_at is not None
 
     @pytest.mark.dependency(depends=["TestProjectFlow::test_close_position"])
     @pytest.mark.asyncio
@@ -768,9 +786,7 @@ class TestProjectFlow:
 
         assert position.id == position_id
         assert position.project_id == project_id
-        # TODO: Remove check for is_deleted and add check for closed_at
-        assert position.is_deleted is True
-        # assert position.closed_at is not None
+        assert position.closed_at is not None
 
     @pytest.mark.dependency(depends=["TestProjectFlow::test_get_closed_position"])
     @pytest.mark.asyncio
