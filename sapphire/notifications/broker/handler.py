@@ -40,7 +40,7 @@ class NotificationsBrokerHandler(BaseBrokerHandler):
         coros = [
             logger.catch(
                 ws_connection.send_json
-            )(data=notification.model_dump())
+            )(data=notification.model_dump_json())
             for ws_connection in ws_connections
         ]
         await asyncio.gather(*coros)

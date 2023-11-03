@@ -46,6 +46,10 @@ class PositionResponse(BaseModel):
     updated_at: datetime
 
 
+class PositionListResponse(PaginatedResponse):
+    data: list[PositionResponse]
+
+
 class CreatePositionRequest(BaseModel):
     specialization_id: uuid.UUID
 

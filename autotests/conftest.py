@@ -252,7 +252,6 @@ def oleg_messenger_websocket_client(
     return WebsocketClient(
         str(settings.messenger_websocket_url),
         headers={"Authorization": f"Bearer {oleg_access_token}"},
-        verify=True,
     )
 
 
@@ -264,7 +263,6 @@ def matvey_messenger_websocket_client(
     return WebsocketClient(
         str(settings.messenger_websocket_url),
         headers={"Authorization": f"Bearer {matvey_access_token}"},
-        verify=True,
     )
 
 
@@ -276,7 +274,6 @@ def oleg_notifications_websocket_client(
     return WebsocketClient(
         str(settings.notifications_websocket_url),
         headers={"Authorization": f"Bearer {oleg_access_token}"},
-        verify=True,
     )
 
 
@@ -288,7 +285,6 @@ def matvey_notifications_websocket_client(
     return WebsocketClient(
         str(settings.notifications_websocket_url),
         headers={"Authorization": f"Bearer {matvey_access_token}"},
-        verify=True,
     )
 
 
