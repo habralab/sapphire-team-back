@@ -1,6 +1,7 @@
 import uuid
 
 import fastapi
+from loguru import logger
 
 from sapphire.common.api.websocket.connection_storage.storage import WebsocketConnectionStorage
 from sapphire.common.jwt.dependencies.websocket import auth_user_id
