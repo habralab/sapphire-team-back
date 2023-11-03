@@ -11,6 +11,7 @@ from .models import (
     CreateProjectRequest,
     HealthResponse,
     ParticipantResponse,
+    PositionListResponse,
     PositionResponse,
     ProjectListResponse,
     ProjectResponse,
@@ -85,6 +86,14 @@ class ProjectsRestClient(BaseRestClient):
     ):
         raise NotImplementedError
 
+    async def get_project_positions(
+            self,
+            project_id: uuid.UUID,
+    ) -> PositionListResponse:
+        path = f"/api/rest/projects/{project_id}/positions/"
+
+        return await self.rest_get(path=path, response_model=PositionListResponse)
+
     async def create_project_position(
             self,
             project_id: uuid.UUID,
@@ -101,7 +110,7 @@ class ProjectsRestClient(BaseRestClient):
             position_id: uuid.UUID,
     ) -> PositionResponse:
         path = f"/api/rest/projects/{project_id}/positions/{position_id}"
-        
+
         return await self.rest_get(path=path, response_model=PositionResponse)
 
     async def remove_project_position(

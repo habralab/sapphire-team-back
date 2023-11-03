@@ -14,7 +14,7 @@ class BaseBrokerHandler:
         return await self.custom_check(message=message)
 
     async def custom_check(self, message: aiokafka.ConsumerRecord) -> bool:
-        return False
+        return True
 
     async def handle(self, message: aiokafka.ConsumerRecord):
         pass

@@ -100,7 +100,7 @@ class ProjectsDatabaseService(BaseDatabaseService):
 
         statement = select(Position).where(*filters)
         result = await session.execute(statement)
-        return list(result.scalars().all())
+        return list(result.unique().scalars().all())
 
     async def get_project_position(
         self,
