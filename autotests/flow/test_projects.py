@@ -702,7 +702,7 @@ class TestProjectFlow:
         assert project.id == project_id
         assert project.status == ProjectStatusEnum.IN_WORK
 
-    @pytest.mark.dependency(depends=["TestProjectFlow::test_moved_to_work_project"])
+    @pytest.mark.dependency(depends=["TestProjectFlow::test_get_moved_to_work_project"])
     @pytest.mark.asyncio
     async def test_close_position(self, oleg_projects_rest_client: ProjectsRestClient):
         project_id: uuid.UUID = self.CONTEXT["project_id"]
