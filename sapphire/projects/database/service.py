@@ -5,6 +5,7 @@ from typing import Type
 
 from sqlalchemy import desc, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import joinedload
 
 from sapphire.common.database.service import BaseDatabaseService
 from sapphire.common.utils.empty import Empty
@@ -73,9 +74,11 @@ class ProjectsDatabaseService(BaseDatabaseService):
         avatar: str | None | Type[Empty] = Empty,
         status: ProjectStatusEnum | None | Type[Empty] = Empty,
     ) -> Project:
-        query = select(Project).where(Project.id == project.id)
+        query = select(Project).where(Project.id == project.id).options(
+            joinedload(Project.history),
+        )
         result = await session.execute(query)
-        project = result.scalar_one()
+        project = result.unique().scalar_one()
 
         if name is not Empty:
             project.name = name

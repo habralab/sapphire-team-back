@@ -13,8 +13,8 @@ from .models import (
     ParticipantResponse,
     PositionResponse,
     ProjectListResponse,
-    ProjectResponse,
     ProjectPartialUpdateRequest,
+    ProjectResponse,
     UpdateParticipantRequest,
 )
 

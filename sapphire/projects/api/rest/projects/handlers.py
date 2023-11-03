@@ -101,7 +101,7 @@ async def partial_update_project(
     database_service: ProjectsDatabaseService = request.app.service.database
 
     async with database_service.transaction() as session:
-        project = database_service.update_project(
+        project = await database_service.update_project(
             session=session,
             project=project,
             status=data.status,
