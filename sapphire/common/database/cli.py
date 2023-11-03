@@ -97,7 +97,6 @@ def fixtures_apply(
 
 def get_fixtures_cli() -> typer.Typer:
     cli = typer.Typer()
-
     cli.command(name="list")(fixtures_list)
     cli.command(name="apply")(fixtures_apply)
 

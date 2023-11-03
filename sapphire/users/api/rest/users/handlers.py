@@ -68,9 +68,9 @@ async def get_user_avatar(user: User = fastapi.Depends(get_path_user)) -> FileRe
 
 async def upload_user_avatar(
         request: fastapi.Request,
-        avatar: fastapi.UploadFile = fastapi.File(...),
         request_user_id: uuid.UUID = fastapi.Depends(auth_user_id),
         user: User = fastapi.Depends(get_path_user),
+        avatar: fastapi.UploadFile = fastapi.File(...),
 ) -> UserResponse:
     if request_user_id != user.id:
         raise fastapi.HTTPException(
