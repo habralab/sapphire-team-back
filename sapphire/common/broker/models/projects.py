@@ -22,7 +22,3 @@ class ParticipantNotificationType(str, enum.Enum):
     OWNER_EXCLUDED = "owner_excluded"
     CHAT_PARTICIPANT = "chat_created"
 
-
-class ChatCreatedData(BaseModel):
-    is_personal: bool
-    members_ids: List[uuid.UUID]

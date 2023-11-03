@@ -4,9 +4,9 @@ from typing import List
 
 from pydantic import BaseModel
 
+from sapphire.common.broker.models.messenger import CreateChat
 from sapphire.common.broker.models.notification import Notification
 from sapphire.common.broker.models.projects import (
-    ChatCreatedData,
     ParticipantNotificationData,
     ParticipantNotificationType,
 )
@@ -126,8 +126,8 @@ class ProjectsBrokerService(BaseBrokerProducerService):
             is_personal: bool,
             members_ids: List[uuid.UUID]
     ) -> None:
-        chat_data = ChatCreatedData(is_personal=is_personal, members_ids=members_ids)
-        await self.send(topic="create_chat", message=chat_data)
+        chat_data = CreateChat(is_personal=is_personal, members_ids=members_ids)
+        await self.send(topic="chats", message=chat_data)
 
 def get_service(
         loop: asyncio.AbstractEventLoop,

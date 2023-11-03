@@ -8,5 +8,5 @@ class CreateChat(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     members_ids: list[uuid.UUID]
-    type: str
     is_personal: bool
+
