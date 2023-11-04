@@ -2,8 +2,7 @@ import fastapi
 
 from sapphire.common.api.schemas.paginated import PaginatedResponse
 from sapphire.storage.api.rest.dependencies import Pagination, pagination
-from sapphire.storage.api.rest.skills.schemas import SkillsFiltersRequest
-from sapphire.storage.api.schemas.skills import SkillResponse
+from sapphire.storage.api.rest.skills.schemas import SkillsFiltersRequest, SkillResponse
 from sapphire.storage.database.service import StorageDatabaseService
 
 
@@ -18,7 +17,11 @@ async def get_skills(
 
     async with database_service.transaction() as session:
         paginated_skills = await database_service.get_skills(
-            session=session, query_text=filters.query_text, page=page, per_page=per_page,
+            session=session,
+            query_text=filters.query_text,
+            skill_ids=filters.id,
+            page=page,
+            per_page=per_page,
         )
 
     skills = [SkillResponse.model_validate(s) for s in paginated_skills]

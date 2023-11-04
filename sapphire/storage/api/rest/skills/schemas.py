@@ -1,9 +1,21 @@
+import uuid
+from datetime import datetime
 from typing import Type
 
-from pydantic import BaseModel
+import fastapi
+from pydantic import BaseModel, ConfigDict, Field
 
 from sapphire.common.utils.empty import Empty
 
 
+class SkillResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: uuid.UUID
+    name: str | None
+    created_at: datetime
+
+
 class SkillsFiltersRequest(BaseModel):
     query_text: str | Type[Empty] = Empty
+    id: list[uuid.UUID] | Type[Empty] = Field(fastapi.Query(Empty))
