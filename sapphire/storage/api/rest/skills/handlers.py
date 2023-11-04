@@ -2,7 +2,7 @@ import fastapi
 
 from sapphire.common.api.schemas.paginated import PaginatedResponse
 from sapphire.storage.api.rest.dependencies import Pagination, pagination
-from sapphire.storage.api.rest.skills.schemas import SkillsFiltersRequest, SkillResponse
+from sapphire.storage.api.rest.skills.schemas import SkillResponse, SkillsFiltersRequest
 from sapphire.storage.database.service import StorageDatabaseService
 
 

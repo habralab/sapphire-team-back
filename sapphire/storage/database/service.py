@@ -2,7 +2,7 @@ import pathlib
 import uuid
 from typing import Type
 
-from sqlalchemy import desc, select, or_
+from sqlalchemy import desc, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from sapphire.common.database.service import BaseDatabaseService
