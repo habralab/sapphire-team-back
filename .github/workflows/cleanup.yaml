@@ -8,4 +8,4 @@ jobs:
     runs-on: self-hosted
     steps:
       - name: Cleanup
-        run: docker system prune --force
+        run: docker system prune --all --force

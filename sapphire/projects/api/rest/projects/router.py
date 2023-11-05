@@ -1,6 +1,6 @@
 import fastapi
 
-from . import handlers, positions
+from . import handlers, positions, reviews
 
 router = fastapi.APIRouter()
 
@@ -23,3 +23,4 @@ router.add_api_route(
     methods=["DELETE"], endpoint=handlers.delete_project_avatar
 )
 router.include_router(positions.router, prefix="/{project_id}/positions")
+router.include_router(reviews.router, prefix="/{project_id}/reviews")

@@ -13,6 +13,7 @@ class ProjectParticipantResponse(BaseModel):
     position_id: uuid.UUID
     user_id: uuid.UUID
     status: ParticipantStatusEnum
+    joined_at: datetime | None
     created_at: datetime
     updated_at: datetime
 
