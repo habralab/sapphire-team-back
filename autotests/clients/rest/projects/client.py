@@ -165,7 +165,6 @@ class ProjectsRestClient(BaseRestClient):
 
         return await self.rest_post(path=path, data=request, response_model=ParticipantResponse)
 
-
     async def create_project_review(
             self,
             project_id: uuid.UUID,

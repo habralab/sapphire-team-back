@@ -329,7 +329,6 @@ class ProjectsDatabaseService(BaseDatabaseService):
         session.add(review)
         return review
 
-
     async def get_review(
         self,
         session: AsyncSession,

@@ -26,38 +26,38 @@ async def create_review(
             detail="Not found.",
         )
     if (
-        project.status == ProjectStatusEnum.FINISHED
-        and any(
+        project.status != ProjectStatusEnum.FINISHED
+        or not any(
             participant.status in [ParticipantStatusEnum.JOINED, ParticipantStatusEnum.LEFT]
             for participant in participants
         )
     ):
-        async with database_service.transaction() as session:
-            review = await database_service.get_review(
-                session=session,
-                project=project,
-                from_user_id=project.owner_id,
-                to_user_id=data.user_id,
-            )
-
-            if review is not None:
-                raise fastapi.HTTPException(
-                    status_code=fastapi.status.HTTP_400_BAD_REQUEST,
-                    detail="There is already such a review",
-                )
-
-            review = await database_service.create_review(
-                session=session,
-                project=project,
-                from_user_id=project.owner_id,
-                to_user_id=data.user_id,
-                rate=data.rate,
-                text=data.text,
-            )
-    else:
         raise fastapi.HTTPException(
             status_code=fastapi.status.HTTP_400_BAD_REQUEST,
             detail="The project is not yet finished or participant did not joined to the project.",
+        )
+
+    async with database_service.transaction() as session:
+        review = await database_service.get_review(
+            session=session,
+            project=project,
+            from_user_id=project.owner_id,
+            to_user_id=data.user_id,
+        )
+
+        if review is not None:
+            raise fastapi.HTTPException(
+                status_code=fastapi.status.HTTP_400_BAD_REQUEST,
+                detail="There is already such a review",
+            )
+
+        review = await database_service.create_review(
+            session=session,
+            project=project,
+            from_user_id=project.owner_id,
+            to_user_id=data.user_id,
+            rate=data.rate,
+            text=data.text,
         )
 
     return ReviewResponse.model_validate(review)

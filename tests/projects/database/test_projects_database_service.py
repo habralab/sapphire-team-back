@@ -306,8 +306,6 @@ async def test_get_participant_without_filters(
     assert expected_query.compare(query)
 
 
-
-
 @pytest.mark.asyncio
 async def test_get_participant_with_all_filters(
     database_service: ProjectsDatabaseService,
