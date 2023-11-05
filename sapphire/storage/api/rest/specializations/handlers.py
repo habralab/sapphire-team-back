@@ -4,11 +4,13 @@ from sapphire.common.api.dependencies.pagination import pagination
 from sapphire.common.api.schemas.paginated import PaginatedResponse
 from sapphire.storage.api.schemas.specializations import SpecializationResponse
 from sapphire.storage.database.service import StorageDatabaseService
+from sapphire.storage.api.rest.specializations.schemas import SpicializationFiltersRequest
 
 
 async def get_specializations(
     request: fastapi.Request,
     pagination: dict = fastapi.Depends(pagination),
+    filters: SpicializationFiltersRequest = fastapi.Depends(SpicializationFiltersRequest),
 ) -> PaginatedResponse:
 
     database_service: StorageDatabaseService = request.app.service.database
@@ -17,7 +19,7 @@ async def get_specializations(
 
     async with database_service.transaction() as session:
         paginated_specializations = await database_service.get_specializations(
-            session=session, page=page, per_page=per_page,
+            session=session, page=page, per_page=per_page, query_text=filters.query_data,
         )
 
     specializations = [
