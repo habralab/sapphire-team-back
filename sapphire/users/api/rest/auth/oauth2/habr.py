@@ -1,6 +1,5 @@
 import fastapi
 from fastapi.responses import RedirectResponse
-from loguru import logger
 
 from sapphire.common.habr import HabrClient
 from sapphire.common.habr_career import HabrCareerClient
@@ -75,11 +74,11 @@ async def callback(
     access_token = jwt_methods.issue_access_token(db_user.id)
     refresh_token = jwt_methods.issue_refresh_token(db_user.id)
 
-    add_to_cookies = [
-        ("access_token", access_token, jwt_methods.access_token_expires),
-        ("refresh_token", refresh_token, jwt_methods.refresh_token_expires),
+    cookies = [
+        ("access_token", access_token, jwt_methods.access_token_expires_utc),
+        ("refresh_token", refresh_token, jwt_methods.refresh_token_expires_utc),
     ]
-    for name, token, expires in add_to_cookies:
+    for name, token, expires in cookies:
         response.set_cookie(
             key=name,
             value=token,

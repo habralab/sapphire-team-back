@@ -23,6 +23,18 @@ class JWTMethods:
         self.access_token_expires: datetime.timedelta = access_token_expires
         self.refresh_token_expires: datetime.timedelta = refresh_token_expires
 
+    @property
+    def access_token_expires_utc(self) -> str:
+        return (
+            datetime.datetime.utcnow() + self.access_token_expires
+        ).strftime("%Y-%m-%d %H:%M:%S %Z")
+
+    @property
+    def refresh_token_expires_utc(self) -> str:
+        return (
+            datetime.datetime.utcnow() + self.refresh_token_expires
+        ).strftime("%Y-%m-%d %H:%M:%S %Z")
+
     def issue_access_token(self, user_id: uuid.UUID) -> str:
         return jwt.encode(
             {

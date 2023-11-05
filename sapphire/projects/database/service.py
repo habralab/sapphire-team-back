@@ -2,8 +2,8 @@ import pathlib
 import uuid
 from datetime import datetime
 from typing import Type
-from pydantic import BaseModel, NonNegativeInt, conint, confloat
 
+from pydantic import BaseModel, NonNegativeInt, conint, confloat
 from sqlalchemy import desc, func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
@@ -315,11 +315,14 @@ class ProjectsDatabaseService(BaseDatabaseService):
         return list(result.unique().scalars().all())
 
     async def get_user_statistic(self, session: AsyncSession, user_id: uuid.UUID) -> UserStatistic:
-        stmt = select(func.count(Project.id)).where(Project.owner_id == user_id)
+        stmt = select(
+            func.count(Project.id),  # pylint: disabel=not-callable
+        ).where(Project.owner_id == user_id)
         result = await session.execute(stmt)
         ownership_projects_count = result.scalar_one()
 
-        stmt = select(func.count(Project.id)).where(
+        stmt = select(func.count(Project.id)).where(  # pylint: disable=not-callable
+            Participant.user_id == user_id,
             Participant.status == ParticipantStatusEnum.JOINED,
             Participant.position_id == Position.id,
             Position.project_id == Project.id,
