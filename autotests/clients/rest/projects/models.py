@@ -2,7 +2,7 @@ import uuid
 from datetime import datetime
 from typing import Literal
 
-from pydantic import BaseModel, Field, PositiveInt, constr
+from pydantic import BaseModel, NonNegativeInt, confloat, constr
 
 from autotests.rest.models import PaginatedResponse
 
@@ -81,5 +81,12 @@ class ParticipantResponse(BaseModel):
     created_at: datetime
     updated_at: datetime
 
+
 class ProjectPartialUpdateRequest(BaseModel):
     status: ProjectStatusEnum | None
+
+
+class UserStatisticResponse(BaseModel):
+    ownership_projects_count: NonNegativeInt
+    participant_projects_count: NonNegativeInt
+    rate: confloat(ge=1, le=5)
