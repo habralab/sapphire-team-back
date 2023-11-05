@@ -778,8 +778,6 @@ class TestProjectFlow:
             project_id=project_id,
         )
 
-        del self.CONTEXT["project_id"]
-
         assert project.id == project_id
         assert project.status == ProjectStatusEnum.FINISHED
 
@@ -800,7 +798,7 @@ class TestProjectFlow:
             text="test",
         )
 
-        self.CONTEXT["review_id"] = review.id
+        del self.CONTEXT["project_id"]
 
         assert review.project_id == project_id
         assert review.from_user_id == oleg_id

@@ -172,7 +172,7 @@ class ProjectsRestClient(BaseRestClient):
             rate: conint(ge=1, le=5),
             text: str,
     ) -> ReviewResponse:
-        path = f"/api/rest/projects/{project_id}/reviews"
+        path = f"/api/rest/projects/{project_id}/reviews/"
         request = CreateReviewRequest(
             user_id=user_id,
             rate=rate,
