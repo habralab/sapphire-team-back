@@ -77,14 +77,12 @@ def upgrade() -> None:
     op.create_table("project_reviews",
         sa.Column("id", sa.Uuid(), nullable=False),
         sa.Column("project_id", sa.Uuid(), nullable=False),
-        sa.Column("participant_id", sa.Uuid(), nullable=False),
         sa.Column("from_user_id", sa.Uuid(), nullable=False),
         sa.Column("to_user_id", sa.Uuid(), nullable=False),
         sa.Column("rate", sa.Integer(), nullable=False),
         sa.Column("text", sa.String(), nullable=False),
         sa.Column("created_at", sa.DateTime(), nullable=False),
         sa.Column("updated_at", sa.DateTime(), nullable=False),
-        sa.ForeignKeyConstraint(["participant_id"], ["project_participants.id"], ),
         sa.ForeignKeyConstraint(["project_id"], ["projects.id"], ),
         sa.PrimaryKeyConstraint("id")
     )
