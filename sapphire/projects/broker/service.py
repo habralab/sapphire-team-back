@@ -3,6 +3,7 @@ import uuid
 
 from pydantic import BaseModel
 
+from sapphire.common.broker.models.messenger import CreateChat
 from sapphire.common.broker.models.notification import Notification
 from sapphire.common.broker.models.projects import (
     ParticipantNotificationData,
@@ -118,6 +119,14 @@ class ProjectsBrokerService(BaseBrokerProducerService):
             position_id=participant.position_id,
             project_id=project.id
         )
+
+    async def send_create_chat(
+            self,
+            is_personal: bool,
+            members_ids: list[uuid.UUID]
+    ) -> None:
+        chat_data = CreateChat(is_personal=is_personal, members_ids=members_ids)
+        await self.send(topic="chats", message=chat_data)
 
 def get_service(
         loop: asyncio.AbstractEventLoop,

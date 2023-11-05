@@ -11,6 +11,10 @@ class MessengerSettings(BaseAPISettings, BaseDatabaseSettings, JWTSettings):
 
     db_dsn: AnyUrl = AnyUrl("sqlite+aiosqlite:///messenger.sqlite3")
 
+    consumer_servers: list[str] = ["localhost:9091"]
+
+    topics: list[str] = ["chats"]
+
 
 def get_settings() -> MessengerSettings:
     return MessengerSettings()
