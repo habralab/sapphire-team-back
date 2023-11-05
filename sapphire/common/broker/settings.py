@@ -8,3 +8,4 @@ class BaseBrokerConsumerSettings(BaseSettings):
 
 class BaseBrokerProducerSettings(BaseSettings):
     producer_servers: list[str] = []
+    topics: list[str] = []
