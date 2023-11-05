@@ -1,7 +1,7 @@
 import pathlib
 import uuid
 from datetime import datetime
-from typing import Type
+from typing import Set, Type
 
 from pydantic import BaseModel, NonNegativeInt, confloat, conint
 from sqlalchemy import desc, func, or_, select
@@ -17,7 +17,7 @@ from .models import (
     Participant,
     ParticipantStatusEnum,
     Position,
-    PositionsSkills,
+    PositionSkill,
     Project,
     ProjectHistory,
     ProjectStatusEnum,
@@ -164,11 +164,25 @@ class ProjectsDatabaseService(BaseDatabaseService):
         return position
 
     async def remove_project_position(self, session: AsyncSession, position: Position) -> Position:
-        position.closed_at = datetime.now()
+        position.closed_at = datetime.utcnow()
 
         session.add(position)
 
         return position
+
+    async def update_project_position_skills(
+            self,
+            session: AsyncSession,
+            position: Position,
+            skills: Set[uuid.UUID] = frozenset(),
+    ):
+        stmt = delete(PositionsSkills).where(PositionsSkills.position_id == position.id)
+        await session.execute(stmt)
+
+        new_skills = [PositionSkill(user=user, skill_id=skill) for skill in skills]
+        user.skills = new_skills
+        return skills
+
 
     async def get_participant(
         self,
@@ -188,7 +202,7 @@ class ProjectsDatabaseService(BaseDatabaseService):
             select(Participant).where(*filters).order_by(Participant.created_at.desc())
         )
         result = await session.execute(stmt)
-        return result.scalars().first()
+        return result.scalar_one_or_none()
 
     async def get_participants(
         self,
@@ -207,7 +221,7 @@ class ProjectsDatabaseService(BaseDatabaseService):
             filters.append(Participant.position_id.in_(position_query))
         query = select(Participant).where(*filters)
         result = await session.execute(query)
-        return result.unique().scalars().all()
+        return list(result.unique().scalars().all())
 
     async def create_participant(
         self,
@@ -232,7 +246,7 @@ class ProjectsDatabaseService(BaseDatabaseService):
     ) -> Participant:
         participant.status = status
         if status == ParticipantStatusEnum.JOINED:
-            participant.joined_at = datetime.now()
+            participant.joined_at = datetime.utcnow()
         session.add(participant)
 
         return participant
@@ -296,8 +310,8 @@ class ProjectsDatabaseService(BaseDatabaseService):
                 )
             if position_skill_ids is not Empty:
                 position_skill_query = (
-                    select(PositionsSkills.position_id)
-                    .where(PositionsSkills.skill_id.in_(position_skill_ids))
+                    select(PositionSkill.position_id)
+                    .where(PositionSkill.skill_id.in_(position_skill_ids))
                 )
                 position_filters.append(Position.id.in_(position_skill_query))
             filters.append(

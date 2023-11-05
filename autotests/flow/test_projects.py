@@ -39,7 +39,7 @@ class TestProjectFlow:
     ):
         name = "Oleg Autotest Project"
         description = "Oleg Autotest Project Description"
-        deadline = datetime.now() + timedelta(days=90)
+        deadline = datetime.utcnow() + timedelta(days=90)
 
         project = await oleg_projects_rest_client.create_project(
             name=name,

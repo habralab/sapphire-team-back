@@ -37,7 +37,7 @@ async def test_create_project(database_service: ProjectsDatabaseService):
     name = "Any name"
     owner_id = uuid.uuid4()
     description = "Any description"
-    deadline = datetime.now()
+    deadline = datetime.utcnow()
 
     project = await database_service.create_project(
         session=session,
@@ -133,7 +133,7 @@ async def test_get_projects_with_all_query_params(database_service: ProjectsData
     result = MagicMock()
     project_id = uuid.uuid4()
     owner_id = uuid.uuid4()
-    deadline = datetime.now()
+    deadline = datetime.utcnow()
     query_text = "query_text"
     position_skill_ids = [uuid.uuid4(), uuid.uuid4()]
     position_specialization_ids = [uuid.uuid4(), uuid.uuid4()]

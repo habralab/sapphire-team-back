@@ -56,7 +56,6 @@ class ProjectsRestClient(BaseRestClient):
             "per_page": per_page,
         }
         params = {key: value for key, value in params.items() if value is not Empty}
-
         return await self.rest_get(path=path, params=params, response_model=ProjectListResponse)
 
     async def create_project(

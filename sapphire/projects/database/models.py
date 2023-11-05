@@ -31,8 +31,8 @@ class Project(Base):
     description: Mapped[str | None]
     owner_id: Mapped[uuid.UUID]
     deadline: Mapped[datetime | None]
-    created_at: Mapped[datetime] = mapped_column(default=datetime.now)
-    updated_at: Mapped[datetime] = mapped_column(default=datetime.now, onupdate=datetime.now)
+    created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
+    updated_at: Mapped[datetime] = mapped_column(default=datetime.utcnow, onupdate=datetime.utcnow)
     avatar: Mapped[str | None]
 
     history: Mapped[list["ProjectHistory"]] = relationship(
@@ -63,7 +63,7 @@ class ProjectHistory(Base):
     id: Mapped[uuid.UUID] = mapped_column(default=uuid.uuid4, primary_key=True)
     project_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("projects.id"), primary_key=True)
     status: Mapped[ProjectStatusEnum] = mapped_column(Enum(ProjectStatusEnum))
-    created_at: Mapped[datetime] = mapped_column(default=datetime.now)
+    created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
 
     project: Mapped[Project] = relationship(back_populates="history", lazy="joined")
 
@@ -75,25 +75,21 @@ class Position(Base):
     project_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("projects.id"), primary_key=True)
     specialization_id: Mapped[uuid.UUID]
     closed_at: Mapped[datetime | None]
-    created_at: Mapped[datetime] = mapped_column(default=datetime.now)
-    updated_at: Mapped[datetime] = mapped_column(default=datetime.now, onupdate=datetime.now)
+    created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
+    updated_at: Mapped[datetime] = mapped_column(default=datetime.utcnow, onupdate=datetime.utcnow)
 
     project: Mapped[Project] = relationship(back_populates="positions", lazy="joined")
     participants: Mapped[list["Participant"]] = relationship(back_populates="position",
                                                              lazy="joined")
 
 
-class PositionsSkills(Base):
+class PositionSkill(Base):
     __tablename__ = "project_positions_skills"
 
-    position_id: Mapped[str] = mapped_column(
-        ForeignKey("project_positions.id"), primary_key=True
-    )
+    position_id: Mapped[str] = mapped_column(ForeignKey("project_positions.id"), primary_key=True)
     skill_id: Mapped[uuid.UUID] = mapped_column(primary_key=True)
-    created_at: Mapped[datetime] = mapped_column(default=datetime.now)
-    updated_at: Mapped[datetime] = mapped_column(
-        default=datetime.now, onupdate=datetime.now
-    )
+    created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
+    updated_at: Mapped[datetime] = mapped_column(default=datetime.utcnow, onupdate=datetime.utcnow)
 
 
 class Participant(Base):
@@ -104,8 +100,8 @@ class Participant(Base):
                                                    primary_key=True)
     user_id: Mapped[uuid.UUID]
     status: Mapped[ParticipantStatusEnum] = mapped_column(Enum(ParticipantStatusEnum))
-    created_at: Mapped[datetime] = mapped_column(default=datetime.now)
-    updated_at: Mapped[datetime] = mapped_column(default=datetime.now, onupdate=datetime.now)
+    created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
+    updated_at: Mapped[datetime] = mapped_column(default=datetime.utcnow, onupdate=datetime.utcnow)
     joined_at: Mapped[datetime | None]
 
     position: Mapped[Position] = relationship(back_populates="participants", lazy="joined")
@@ -120,7 +116,7 @@ class Review(Base):
     to_user_id: Mapped[uuid.UUID]
     rate: Mapped[int]
     text: Mapped[str]
-    created_at: Mapped[datetime] = mapped_column(default=datetime.now)
-    updated_at: Mapped[datetime] = mapped_column(default=datetime.now, onupdate=datetime.now)
+    created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
+    updated_at: Mapped[datetime] = mapped_column(default=datetime.utcnow, onupdate=datetime.utcnow)
 
     project: Mapped[Project] = relationship(back_populates="reviews", lazy="joined")
