@@ -19,8 +19,6 @@ class ProjectsSettings(BaseAPISettings, BaseBrokerProducerSettings, BaseDatabase
 
     producer_servers: list[str] = ["localhost:9091"]
 
-    topics = list[str] = ["chats"]
-
 
 def get_settings() -> ProjectsSettings:
     return ProjectsSettings()

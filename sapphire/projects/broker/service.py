@@ -1,6 +1,5 @@
 import asyncio
 import uuid
-from typing import List
 
 from pydantic import BaseModel
 
@@ -124,7 +123,7 @@ class ProjectsBrokerService(BaseBrokerProducerService):
     async def send_create_chat(
             self,
             is_personal: bool,
-            members_ids: List[uuid.UUID]
+            members_ids: list[uuid.UUID]
     ) -> None:
         chat_data = CreateChat(is_personal=is_personal, members_ids=members_ids)
         await self.send(topic="chats", message=chat_data)
