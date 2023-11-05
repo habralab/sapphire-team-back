@@ -27,12 +27,19 @@ class StorageDatabaseService(BaseDatabaseService):
         return [Skill, Specialization, SpecializationGroup, SpecializationsSkills]
 
     async def get_specializations(
-        self,
-        session: AsyncSession,
-        page: int | Type[Empty] = Empty,
-        per_page: int | Type[Empty] = Empty,
+            self,
+            session: AsyncSession,
+            query_data: str | Type[Empty] = Empty,
+            page: int | Type[Empty] = Empty,
+            per_page: int | Type[Empty] = Empty,
     ) -> list[Specialization]:
         query = select(Specialization).order_by(desc(Specialization.created_at))
+
+        filters = []
+        if query_data is not Empty:
+            filters.append(Skill.name.contains(query_data))
+
+        query = query.where(*filters)
 
         if page is not None and per_page is not None:
             offset = (page - 1) * per_page
@@ -43,10 +50,10 @@ class StorageDatabaseService(BaseDatabaseService):
         return list(specializations.scalars().all())
 
     async def get_specialization_groups(
-        self,
-        session: AsyncSession,
-        page: int | Type[Empty] = Empty,
-        per_page: int | Type[Empty] = Empty,
+            self,
+            session: AsyncSession,
+            page: int | Type[Empty] = Empty,
+            per_page: int | Type[Empty] = Empty,
     ) -> list[SpecializationGroup]:
         query = select(SpecializationGroup).order_by(desc(SpecializationGroup.created_at))
 
@@ -59,11 +66,11 @@ class StorageDatabaseService(BaseDatabaseService):
         return list(specialization_groups.scalars().all())
 
     async def get_skills(
-        self,
-        session: AsyncSession,
-        query_text: str | Type[Empty] = Empty,
-        page: int | Type[Empty] = Empty,
-        per_page: int | Type[Empty] = Empty,
+            self,
+            session: AsyncSession,
+            query_text: str | Type[Empty] = Empty,
+            page: int | Type[Empty] = Empty,
+            per_page: int | Type[Empty] = Empty,
     ) -> list[Skill]:
         query = select(Skill).order_by(desc(Skill.created_at))
 
