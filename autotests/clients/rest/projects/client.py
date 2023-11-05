@@ -21,6 +21,7 @@ from .models import (
     ProjectResponse,
     ReviewResponse,
     UpdateParticipantRequest,
+    UserStatisticResponse,
 )
 
 
@@ -180,3 +181,8 @@ class ProjectsRestClient(BaseRestClient):
         )
 
         return await self.rest_post(path=path, data=request, response_model=ReviewResponse)
+
+    async def get_user_statistic(self, user_id: uuid.UUID) -> UserStatisticResponse:
+        path = f"/api/rest/users/{user_id}/statistic"
+
+        return await self.rest_get(path=path, response_model=UserStatisticResponse)

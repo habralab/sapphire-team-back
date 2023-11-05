@@ -1,5 +1,6 @@
 import fastapi
 from fastapi.responses import RedirectResponse
+from loguru import logger
 
 from sapphire.common.habr import HabrClient
 from sapphire.common.habr_career import HabrCareerClient
@@ -86,7 +87,7 @@ async def callback(
             path="/",
             secure=True,
             httponly=True,
-            samesite="none",
+            samesite="strict",
         )
 
     return JWTTokensResponse(

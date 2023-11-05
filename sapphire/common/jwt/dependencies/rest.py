@@ -43,7 +43,7 @@ async def get_request_user_id(
             path="/",
             secure=True,
             httponly=True,
-            samesite="none",
+            samesite="strict",
         )
         response.set_cookie(
             key="refresh_token",
@@ -52,7 +52,7 @@ async def get_request_user_id(
             path="/",
             secure=True,
             httponly=True,
-            samesite="none",
+            samesite="strict",
         )
 
     return user_id

@@ -59,3 +59,12 @@ async def test_get_projects(
             assert project.owner_id == owner_id
         if status is not Empty:
             assert project.status == status
+
+
+@pytest.mark.parametrize("user_id", (
+    pytest.lazy_fixture("oleg_id"),
+    pytest.lazy_fixture("matvey_id"),
+))
+@pytest.mark.asyncio
+async def test_get_user_statistic(projects_rest_client: ProjectsRestClient, user_id: uuid.UUID):
+    await projects_rest_client.get_user_statistic(user_id=user_id)

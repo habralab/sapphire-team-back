@@ -16,7 +16,7 @@ refresh_token = generate_rsa_keys()
 
 class UsersSettings(BaseAPISettings, BaseDatabaseSettings, JWTSettings, HabrSettings,
                     HabrCareerSettings):
-    model_config = SettingsConfigDict(secrets_dir="/run/secrets")
+    model_config = SettingsConfigDict(env_file=".env", extra="allow", secrets_dir="/run/secrets")
 
     db_dsn: AnyUrl = AnyUrl("sqlite+aiosqlite:///users.sqlite3")
 

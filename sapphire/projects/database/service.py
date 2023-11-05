@@ -2,9 +2,9 @@ import pathlib
 import uuid
 from datetime import datetime
 from typing import Type
+from pydantic import BaseModel, NonNegativeInt, conint, confloat
 
-from pydantic import conint
-from sqlalchemy import desc, or_, select
+from sqlalchemy import desc, func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
 
@@ -23,6 +23,12 @@ from .models import (
     ProjectStatusEnum,
     Review,
 )
+
+
+class UserStatistic(BaseModel):
+    ownership_projects_count: NonNegativeInt
+    participant_projects_count: NonNegativeInt
+    rate: confloat(ge=1, le=5)
 
 
 class ProjectsDatabaseService(BaseDatabaseService):
@@ -308,6 +314,26 @@ class ProjectsDatabaseService(BaseDatabaseService):
 
         return list(result.unique().scalars().all())
 
+    async def get_user_statistic(self, session: AsyncSession, user_id: uuid.UUID) -> UserStatistic:
+        stmt = select(func.count(Project.id)).where(Project.owner_id == user_id)
+        result = await session.execute(stmt)
+        ownership_projects_count = result.scalar_one()
+
+        stmt = select(func.count(Project.id)).where(
+            Participant.status == ParticipantStatusEnum.JOINED,
+            Participant.position_id == Position.id,
+            Position.project_id == Project.id,
+        )
+        result = await session.execute(stmt)
+        participant_projects_count = result.scalar_one()
+
+        rate = 5.0
+
+        return UserStatistic(
+            ownership_projects_count=ownership_projects_count,
+            participant_projects_count=participant_projects_count,
+            rate=rate,
+        )
 
     async def create_review(
         self,
