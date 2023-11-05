@@ -1,4 +1,7 @@
+from typing import Type
+
 from autotests.clients.rest.base_client import BaseRestClient
+from autotests.utils import Empty
 
 from .models import (
     HealthResponse,
@@ -24,7 +27,9 @@ class StorageRestClient(BaseRestClient):
 
         return await self.rest_get(path=path, response_model=SpecializationListResponse)
 
-    async def get_skills(self) -> SkillListResponse:
+    async def get_skills(self, query_text: str | Type[Empty] = Empty) -> SkillListResponse:
         path = "/api/rest/skills/"
+        params = {"query_text": query_text}
+        params = {key: value for key, value in params.items() if value is not Empty}
 
-        return await self.rest_get(path=path, response_model=SkillListResponse)
+        return await self.rest_get(path=path, response_model=SkillListResponse, params=params)

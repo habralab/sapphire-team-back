@@ -54,6 +54,12 @@ async def create_participant(
     return ProjectParticipantResponse.model_validate(participant)
 
 
+async def get_participant(
+    participant: Participant = fastapi.Depends(get_path_participant),
+) -> ProjectParticipantResponse:
+    return ProjectParticipantResponse.model_validate(participant)
+
+
 async def update_participant(
     request: fastapi.Request,
     data: UpdateParticipantRequest = fastapi.Body(...),

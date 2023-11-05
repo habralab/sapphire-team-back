@@ -9,4 +9,3 @@ class CreateChat(BaseModel):
 
     members_ids: list[uuid.UUID]
     is_personal: bool
-
