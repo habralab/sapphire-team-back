@@ -2,6 +2,8 @@ import uuid
 from datetime import datetime
 from typing import Type
 
+from pydantic import conint
+
 from autotests.clients.rest.base_client import BaseRestClient
 from autotests.clients.rest.projects.enums import ParticipantStatusEnum, ProjectStatusEnum
 from autotests.utils import Empty
@@ -9,6 +11,7 @@ from autotests.utils import Empty
 from .models import (
     CreatePositionRequest,
     CreateProjectRequest,
+    CreateReviewRequest,
     HealthResponse,
     ParticipantResponse,
     PositionListResponse,
@@ -16,6 +19,7 @@ from .models import (
     ProjectListResponse,
     ProjectPartialUpdateRequest,
     ProjectResponse,
+    ReviewResponse,
     UpdateParticipantRequest,
 )
 
@@ -160,3 +164,19 @@ class ProjectsRestClient(BaseRestClient):
         request = UpdateParticipantRequest(status=status)
 
         return await self.rest_post(path=path, data=request, response_model=ParticipantResponse)
+
+    async def create_project_review(
+            self,
+            project_id: uuid.UUID,
+            user_id: uuid.UUID,
+            rate: conint(ge=1, le=5),
+            text: str,
+    ) -> ReviewResponse:
+        path = f"/api/rest/projects/{project_id}/reviews"
+        request = CreateReviewRequest(
+            user_id=user_id,
+            rate=rate,
+            text=text,
+        )
+
+        return await self.rest_post(path=path, data=request, response_model=ReviewResponse)

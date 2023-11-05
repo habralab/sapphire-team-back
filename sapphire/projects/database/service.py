@@ -3,6 +3,7 @@ import uuid
 from datetime import datetime
 from typing import Type
 
+from pydantic import conint
 from sqlalchemy import desc, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
@@ -20,6 +21,7 @@ from .models import (
     Project,
     ProjectHistory,
     ProjectStatusEnum,
+    Review,
 )
 
 
@@ -182,6 +184,25 @@ class ProjectsDatabaseService(BaseDatabaseService):
         result = await session.execute(stmt)
         return result.scalars().first()
 
+    async def get_participants(
+        self,
+        session: AsyncSession,
+        position: Position | Type[Empty] = Empty,
+        user_id: uuid.UUID | Type[Empty] = Empty,
+        project: Project | Type[Empty] = Empty,
+    ) -> list[Participant]:
+        filters = []
+        if position is not Empty:
+            filters.append(Participant.position_id == position.id)
+        if user_id is not Empty:
+            filters.append(Participant.user_id == user_id)
+        if project is not Empty:
+            position_query = select(Position.id).where(Position.project_id == project.id)
+            filters.append(Participant.position_id.in_(position_query))
+        query = select(Participant).where(*filters)
+        result = await session.execute(query)
+        return result.unique().scalars().all()
+
     async def create_participant(
         self,
         session: AsyncSession,
@@ -286,6 +307,48 @@ class ProjectsDatabaseService(BaseDatabaseService):
         result = await session.execute(query)
 
         return list(result.unique().scalars().all())
+
+
+    async def create_review(
+        self,
+        session: AsyncSession,
+        project: Project,
+        from_user_id: uuid.UUID,
+        to_user_id: uuid.UUID,
+        rate: conint(ge=1, le=5),
+        text: str,
+    ) -> Review:
+        review = Review(
+            project_id=project.id,
+            from_user_id=from_user_id,
+            to_user_id=to_user_id,
+            rate=rate,
+            text=text,
+        )
+
+        session.add(review)
+        return review
+
+    async def get_review(
+        self,
+        session: AsyncSession,
+        project: Project | Type[Empty] = Empty,
+        from_user_id: uuid.UUID | Type[Empty] = Empty,
+        to_user_id: uuid.UUID | Type[Empty] = Empty,
+    ) -> Review | None:
+        filters = []
+
+        if project is not Empty:
+            filters.append(Review.project_id == project.id)
+        if from_user_id is not Empty:
+            filters.append(Review.from_user_id == from_user_id)
+        if to_user_id is not Empty:
+            filters.append(Review.to_user_id == to_user_id)
+
+        query = select(Review).where(*filters)
+        result = await session.execute(query)
+
+        return result.unique().scalar_one_or_none()
 
 
 def get_service(settings: ProjectsSettings) -> ProjectsDatabaseService:
