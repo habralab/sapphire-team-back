@@ -108,7 +108,7 @@ class UsersDatabaseService(BaseDatabaseService):
 
         new_skills = [UserSkill(user=user, skill_id=skill) for skill in skills]
         user.skills = new_skills
-        return user.skills
+        return skills
 
 
 def get_service(settings: UsersSettings) -> UsersDatabaseService:
