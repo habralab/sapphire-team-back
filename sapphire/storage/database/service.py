@@ -43,10 +43,10 @@ class StorageDatabaseService(BaseDatabaseService):
             filters.append(Specialization.name.contains(query_text))
 
         if is_other is not Empty:
-            filters.append(Specialization.is_other.contains(is_other))
+            filters.append(Specialization.is_other == is_other)
 
         if group_id is not Empty:
-            filters.append(Specialization.group_id.contains(group_id))
+            filters.append(Specialization.group_id == group_id)
 
         query = query.where(*filters)
 

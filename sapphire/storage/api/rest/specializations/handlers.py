@@ -1,7 +1,10 @@
 import fastapi
 
 from sapphire.common.api.dependencies.pagination import pagination
-from sapphire.storage.api.rest.specializations.schemas import SpecializationFiltersRequest, SpecializationListResponce
+from sapphire.storage.api.rest.specializations.schemas import (
+    SpecializationFiltersRequest,
+    SpecializationListResponce,
+)
 from sapphire.storage.api.schemas.specializations import SpecializationResponse
 from sapphire.storage.database.service import StorageDatabaseService
 

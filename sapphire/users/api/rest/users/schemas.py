@@ -41,7 +41,8 @@ class UserResponse(BaseModel):
             updated_at=user.updated_at,
         )
 
-class UserSkillsResponse:
+
+class UserSkillsResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     user_id: uuid
