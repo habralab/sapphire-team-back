@@ -13,6 +13,7 @@ class ProjectPositionResponse(BaseModel):
     closed_at: NaiveDatetime | None
     created_at: NaiveDatetime
     updated_at: NaiveDatetime
+    specialization_id: uuid.UUID
 
 
 class ProjectPositionsResponse(PaginatedResponse):

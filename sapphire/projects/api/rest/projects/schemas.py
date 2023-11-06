@@ -27,7 +27,6 @@ class ProjectResponse(BaseModel):
     created_at: NaiveDatetime
     updated_at: NaiveDatetime
     status: ProjectStatusEnum
-    specialization_id: uuid.UUID
 
 
 class ProjectHistoryResponse(BaseModel):
