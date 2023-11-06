@@ -4,7 +4,7 @@ from datetime import datetime
 from typing import Set, Type
 
 from pydantic import BaseModel, NonNegativeInt, confloat, conint
-from sqlalchemy import delete, desc, func, or_, select
+from sqlalchemy import delete, desc, func, or_, select, distinct
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
 
@@ -334,11 +334,15 @@ class ProjectsDatabaseService(BaseDatabaseService):
         result = await session.execute(stmt)
         ownership_projects_count = result.scalar_one()
 
-        stmt = select(func.count(Project.id)).where(  # pylint: disable=not-callable
-            Participant.user_id == user_id,
-            Participant.status == ParticipantStatusEnum.JOINED,
-            Participant.position_id == Position.id,
-            Position.project_id == Project.id,
+        stmt_position_ids = (
+            select(Participant.position_id)
+            .where(
+                Participant.user_id == user_id, Participant.status == ParticipantStatusEnum.JOINED
+            )
+        )
+        stmt = (
+            select(func.count(distinct(Position.project_id)))
+            .where(Position.id.in_(stmt_position_ids))
         )
         result = await session.execute(stmt)
         participant_projects_count = result.scalar_one()
