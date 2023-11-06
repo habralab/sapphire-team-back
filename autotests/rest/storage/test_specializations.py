@@ -8,17 +8,10 @@ from autotests.utils import Empty
 
 
 @pytest.mark.parametrize(
-    (
-        "query_text", "is_other", "group_id",
-    ),
+    ("query_text", "is_other", "group_id",),
     (
         (Empty, Empty, Empty),
-
-        (
-            "Developer",
-            True,
-            uuid.uuid4()
-        ),
+        ("Developer", True, uuid.uuid4()),
     )
 )
 @pytest.mark.asyncio
