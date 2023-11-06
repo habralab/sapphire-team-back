@@ -1,7 +1,6 @@
 import uuid
-from datetime import datetime
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, NaiveDatetime
 
 
 class SpecializationResponse(BaseModel):
@@ -11,7 +10,7 @@ class SpecializationResponse(BaseModel):
     name: str | None
     is_other: bool
     group_id: uuid.UUID | None
-    created_at: datetime
+    created_at: NaiveDatetime
 
 
 class SpecializationGroupResponse(BaseModel):
@@ -19,4 +18,4 @@ class SpecializationGroupResponse(BaseModel):
 
     id: uuid.UUID
     name: str | None
-    created_at: datetime
+    created_at: NaiveDatetime
