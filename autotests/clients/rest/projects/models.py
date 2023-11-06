@@ -54,8 +54,7 @@ class ReviewResponse(BaseModel):
 class PositionResponse(BaseModel):
     id: uuid.UUID
     project_id: uuid.UUID
-    # TODO: Uncomment after implement specialization_id
-    # specialization_id: uuid.UUID
+    specialization_id: uuid.UUID
     closed_at: datetime | None
     created_at: datetime
     updated_at: datetime
