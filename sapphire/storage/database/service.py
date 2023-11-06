@@ -2,7 +2,7 @@ import pathlib
 import uuid
 from typing import Type
 
-from sqlalchemy import desc, select
+from sqlalchemy import desc, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from sapphire.common.database.service import BaseDatabaseService
@@ -82,17 +82,20 @@ class StorageDatabaseService(BaseDatabaseService):
         return list(specialization_groups.scalars().all())
 
     async def get_skills(
-            self,
-            session: AsyncSession,
-            query_text: str | Type[Empty] = Empty,
-            page: int | Type[Empty] = Empty,
-            per_page: int | Type[Empty] = Empty,
+        self,
+        session: AsyncSession,
+        query_text: str | Type[Empty] = Empty,
+        skill_ids: list[uuid.UUID] | Type[Empty] = Empty,
+        page: int | Type[Empty] = Empty,
+        per_page: int | Type[Empty] = Empty,
     ) -> list[Skill]:
         query = select(Skill).order_by(desc(Skill.created_at))
 
         filters = []
         if query_text is not Empty:
             filters.append(Skill.name.contains(query_text))
+        if skill_ids is not Empty:
+            filters.append(or_(*(Skill.id == id_ for id_ in skill_ids)))
 
         query = query.where(*filters)
         skills = await session.execute(query)
