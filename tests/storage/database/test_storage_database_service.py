@@ -1,12 +1,65 @@
-import uuid
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
+from sqlalchemy import desc, select
 
-from sapphire.storage.database.models import Specialization
+from sapphire.storage.database.models import SpecializationGroup
 from sapphire.storage.database.service import StorageDatabaseService
 
 
 @pytest.mark.asyncio
-async def test_get_specializations_paginated(database_service:StorageDatabaseService):
-    ...
+async def test_get_specialization_groups_without_filters(database_service: StorageDatabaseService):
+    session = MagicMock()
+    name = "Developer"
+
+    expected_specialization_groups = [SpecializationGroup(name=name)]
+    mock_specialization_group = MagicMock()
+    mock_specialization_group.scalars.return_value.all.return_value = expected_specialization_groups
+
+    session.execute = AsyncMock(return_value=mock_specialization_group)
+
+    expected_query = select(SpecializationGroup).order_by(desc(SpecializationGroup.created_at))
+
+    specialization_groups = await database_service.get_specialization_groups(session=session)
+
+    assert specialization_groups == expected_specialization_groups
+    
+    query = session.execute.call_args_list[0].args[0]
+    assert expected_query.compare(query)
+
+
+@pytest.mark.asyncio
+async def test_get_specialization_groups_with_all_filters(
+    database_service: StorageDatabaseService
+):
+    session = MagicMock()
+    name = "Developer"
+    page = 1
+    per_page = 10
+    offset = (page - 1) * per_page
+
+    expected_specialization_groups = [SpecializationGroup(name=name)]
+    mock_specialization_group = MagicMock()
+    mock_specialization_group.scalars.return_value.all.return_value = expected_specialization_groups
+
+    session.execute = AsyncMock(return_value=mock_specialization_group)
+
+    expected_query = (
+        select(SpecializationGroup)
+        .order_by(desc(SpecializationGroup.created_at))
+        .where(SpecializationGroup.name.contains(name))
+        .limit(per_page)
+        .offset(offset)
+    )
+
+    specialization_groups = await database_service.get_specialization_groups(
+        session=session,
+        query_text=name,
+        page=page,
+        per_page=per_page,
+    )
+
+    assert specialization_groups == expected_specialization_groups
+    
+    query = session.execute.call_args_list[0].args[0]
+    assert expected_query.compare(query)
