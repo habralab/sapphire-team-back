@@ -7,7 +7,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from sapphire.common.api.schemas.paginated import PaginatedResponse
 from sapphire.common.utils.empty import Empty
-from sapphire.projects.database.models import Participant, ProjectStatusEnum
+from sapphire.projects.database.models import ProjectStatusEnum
 
 
 class CreateProjectRequest(BaseModel):
@@ -28,7 +28,7 @@ class ProjectResponse(BaseModel):
     created_at: datetime
     updated_at: datetime
     status: ProjectStatusEnum
-    joined_participants: list[Participant] | None
+    joined_participants: list["Participant"] | None
 
 
 class ProjectHistoryResponse(BaseModel):
