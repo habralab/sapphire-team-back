@@ -13,7 +13,7 @@ class Chat(Base):
     __tablename__ = "chats"
 
     id: Mapped[uuid.UUID] = mapped_column(default=uuid.uuid4, primary_key=True)
-    created_at: Mapped[datetime] = mapped_column(default=datetime.now)
+    created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
     is_personal: Mapped[bool]
 
     messages: Mapped[list["Message"]] = relationship(back_populates="chat")
@@ -26,8 +26,8 @@ class Message(Base):
     id: Mapped[uuid.UUID] = mapped_column(default=uuid.uuid4, primary_key=True)
     chat_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("chats.id"))
     text: Mapped[str] = mapped_column(String(2048))
-    created_at: Mapped[datetime] = mapped_column(default=datetime.now)
-    updated_at: Mapped[datetime] = mapped_column(default=datetime.now, onupdate=datetime.now)
+    created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
+    updated_at: Mapped[datetime] = mapped_column(default=datetime.utcnow, onupdate=datetime.utcnow)
 
     chat: Mapped[Chat] = relationship(Chat, back_populates="messages")
 
@@ -39,6 +39,6 @@ class Member(Base):
     user_id: Mapped[uuid.UUID]
     chat_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("chats.id"))
     leave_at: Mapped[datetime | None]
-    join_at: Mapped[datetime] = mapped_column(default=datetime.now)
+    join_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
 
     chat: Mapped[Chat] = relationship(Chat, back_populates="member")

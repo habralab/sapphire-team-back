@@ -1,7 +1,6 @@
 import uuid
-from datetime import datetime
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, NaiveDatetime
 
 from sapphire.projects.database.models import ParticipantStatusEnum
 
@@ -13,9 +12,9 @@ class ProjectParticipantResponse(BaseModel):
     position_id: uuid.UUID
     user_id: uuid.UUID
     status: ParticipantStatusEnum
-    joined_at: datetime | None
-    created_at: datetime
-    updated_at: datetime
+    joined_at: NaiveDatetime | None
+    created_at: NaiveDatetime
+    updated_at: NaiveDatetime
 
 
 class UpdateParticipantRequest(BaseModel):
