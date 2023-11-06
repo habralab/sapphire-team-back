@@ -149,6 +149,41 @@ class TestProjectFlow:
 
     @pytest.mark.dependency(depends=[
         "TestProjectFlow::test_create_position",
+        # TODO: Replace to: "TestProjectFlow::test_get_position",
+    ])
+    @pytest.mark.asyncio
+    async def test_update_position_skills(self, oleg_projects_rest_client: ProjectsRestClient):
+        project_id: uuid.UUID = self.CONTEXT["project_id"]
+        position_id: uuid.UUID = self.CONTEXT["position_id"]
+        
+        new_skills = {uuid.uuid4() for _ in range(10)}
+
+        skills = await oleg_projects_rest_client.update_project_position_skills(
+            project_id=project_id,
+            position_id=position_id,
+            skills=new_skills,
+        )
+
+        self.CONTEXT["position_skills"] = skills
+
+        assert skills == new_skills
+
+    @pytest.mark.dependency(depends=["TestProjectFlow::test_update_position_skills"])
+    @pytest.mark.asyncio
+    async def test_get_position_skills(self, oleg_projects_rest_client: ProjectsRestClient):
+        project_id: uuid.UUID = self.CONTEXT["project_id"]
+        position_id: uuid.UUID = self.CONTEXT["position_id"]
+        position_skills: set[uuid.UUID] = self.CONTEXT["position_skills"]
+
+        skills = await oleg_projects_rest_client.get_project_position_skills(
+            project_id=project_id,
+            position_id=position_id,
+        )
+
+        assert skills == position_skills
+
+    @pytest.mark.dependency(depends=[
+        "TestProjectFlow::test_create_position",
         # TODO: Replace to :"TestProjectFlow::test_get_position"
     ])
     @pytest.mark.asyncio

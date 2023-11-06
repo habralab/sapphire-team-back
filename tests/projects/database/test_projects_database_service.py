@@ -5,6 +5,7 @@ from datetime import datetime
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
+import timezone
 from sqlalchemy import desc
 from sqlalchemy.future import select
 
@@ -37,7 +38,7 @@ async def test_create_project(database_service: ProjectsDatabaseService):
     name = "Any name"
     owner_id = uuid.uuid4()
     description = "Any description"
-    deadline = datetime.utcnow()
+    deadline = datetime.now(tz=timezone.utc)
 
     project = await database_service.create_project(
         session=session,

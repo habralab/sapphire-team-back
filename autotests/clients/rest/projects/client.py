@@ -5,6 +5,7 @@ from typing import Type
 from pydantic import conint
 
 from autotests.clients.rest.base_client import BaseRestClient
+from autotests.clients.rest.exceptions import ResponseException
 from autotests.clients.rest.projects.enums import ParticipantStatusEnum, ProjectStatusEnum
 from autotests.utils import Empty
 
@@ -129,6 +130,29 @@ class ProjectsRestClient(BaseRestClient):
         path = f"/api/rest/projects/{project_id}/positions/{position_id}"
 
         return await self.rest_delete(path=path, response_model=PositionResponse)
+
+    async def get_project_position_skills(self, project_id: uuid.UUID, position_id: uuid.UUID):
+        path = f"/api/rest/projects/{project_id}/positions/{position_id}/skills"
+        
+        response = await self.get(url=path)
+        if response.status_code // 100 != 2:
+            raise ResponseException(status_code=response.status_code, body=response.content)
+
+        return {uuid.UUID(skill) for skill in response.json()}
+
+    async def update_project_position_skills(
+            self,
+            project_id: uuid.UUID,
+            position_id: uuid.UUID,
+            skills: set[uuid.UUID] = frozenset(),
+    ) -> set[uuid.UUID]:
+        path = f"/api/rest/projects/{project_id}/positions/{position_id}/skills"
+
+        response = await self.post(url=path, json=list(map(str, skills)))
+        if response.status_code // 100 != 2:
+            raise ResponseException(status_code=response.status_code, body=response.content)
+
+        return {uuid.UUID(skill) for skill in response.json()}
 
     async def create_request_to_join_project_position(
             self,

@@ -81,6 +81,7 @@ class Position(Base):
     project: Mapped[Project] = relationship(back_populates="positions", lazy="joined")
     participants: Mapped[list["Participant"]] = relationship(back_populates="position",
                                                              lazy="joined")
+    skills: Mapped[list["PositionSkill"]] = relationship(back_populates="position", lazy="joined")
 
 
 class PositionSkill(Base):
@@ -90,6 +91,8 @@ class PositionSkill(Base):
     skill_id: Mapped[uuid.UUID] = mapped_column(primary_key=True)
     created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
     updated_at: Mapped[datetime] = mapped_column(default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    position: Mapped[Position] = relationship(back_populates="skills", lazy="joined")
 
 
 class Participant(Base):

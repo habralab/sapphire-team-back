@@ -1,6 +1,6 @@
 import fastapi
 
-from . import handlers, participants
+from . import handlers, participants, skills
 
 router = fastapi.APIRouter()
 
@@ -9,3 +9,4 @@ router.add_api_route(path="/", methods=["POST"], endpoint=handlers.create_projec
 router.add_api_route(path="/{position_id}", methods=["DELETE"],
                      endpoint=handlers.remove_project_position)
 router.include_router(participants.router, prefix="/{position_id}/participants")
+router.include_router(skills.router, prefix="/{position_id}/skills")

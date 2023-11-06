@@ -4,7 +4,7 @@ from datetime import datetime
 from typing import Set, Type
 
 from pydantic import BaseModel, NonNegativeInt, confloat, conint
-from sqlalchemy import desc, func, or_, select
+from sqlalchemy import delete, desc, func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
 
@@ -176,13 +176,12 @@ class ProjectsDatabaseService(BaseDatabaseService):
             position: Position,
             skills: Set[uuid.UUID] = frozenset(),
     ):
-        stmt = delete(PositionsSkills).where(PositionsSkills.position_id == position.id)
+        stmt = delete(PositionSkill).where(PositionSkill.position_id == position.id)
         await session.execute(stmt)
 
-        new_skills = [PositionSkill(user=user, skill_id=skill) for skill in skills]
-        user.skills = new_skills
+        new_skills = [PositionSkill(position=position, skill_id=skill_id) for skill_id in skills]
+        position.skills = new_skills
         return skills
-
 
     async def get_participant(
         self,
@@ -202,7 +201,7 @@ class ProjectsDatabaseService(BaseDatabaseService):
             select(Participant).where(*filters).order_by(Participant.created_at.desc())
         )
         result = await session.execute(stmt)
-        return result.scalar_one_or_none()
+        return result.scalars().first()
 
     async def get_participants(
         self,

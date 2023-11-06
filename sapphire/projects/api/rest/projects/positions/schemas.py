@@ -1,7 +1,6 @@
 import uuid
-from datetime import datetime
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, NaiveDatetime
 
 from sapphire.common.api.schemas.paginated import PaginatedResponse
 
@@ -11,9 +10,9 @@ class ProjectPositionResponse(BaseModel):
 
     id: uuid.UUID
     project_id: uuid.UUID
-    closed_at: datetime | None
-    created_at: datetime
-    updated_at: datetime
+    closed_at: NaiveDatetime | None
+    created_at: NaiveDatetime
+    updated_at: NaiveDatetime
 
 
 class ProjectPositionsResponse(PaginatedResponse):
