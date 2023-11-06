@@ -181,6 +181,8 @@ class ProjectsDatabaseService(BaseDatabaseService):
 
         new_skills = [PositionSkill(position=position, skill_id=skill_id) for skill_id in skills]
         position.skills = new_skills
+
+        session.add(position)
         return skills
 
     async def get_participant(
