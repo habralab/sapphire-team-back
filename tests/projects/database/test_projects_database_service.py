@@ -8,7 +8,13 @@ import pytest
 from sqlalchemy import desc
 from sqlalchemy.future import select
 
-from sapphire.projects.database.models import Participant, ParticipantStatusEnum, Position, Project
+from sapphire.projects.database.models import (
+    Participant,
+    ParticipantStatusEnum,
+    Position,
+    Project,
+    Review,
+)
 from sapphire.projects.database.service import ProjectsDatabaseService
 
 
@@ -278,6 +284,67 @@ async def test_get_participant_with_position_and_user_ids(
 
 
 @pytest.mark.asyncio
+async def test_get_participant_without_filters(
+    database_service: ProjectsDatabaseService,
+):
+    session = MagicMock()
+    position = MagicMock()
+    user_id = uuid.uuid4()
+    expected_participants = [Participant(position_id=position.id, user_id=user_id)]
+    mock_participant = MagicMock()
+    mock_participant.unique.return_value.scalars.return_value.all.return_value = expected_participants
+
+    session.execute = AsyncMock(return_value=mock_participant)
+
+    expected_query = select(Participant)
+
+    participants = await database_service.get_participants(session=session)
+
+    assert participants is expected_participants
+    
+    query = session.execute.call_args_list[0].args[0]
+    assert expected_query.compare(query)
+
+
+@pytest.mark.asyncio
+async def test_get_participant_with_all_filters(
+    database_service: ProjectsDatabaseService,
+):
+    session = MagicMock()
+    project = MagicMock()
+    position = MagicMock()
+    user_id = uuid.uuid4()
+    expected_participants = [Participant(position_id=position.id, user_id=user_id)]
+    mock_participant = MagicMock()
+    mock_participant.unique.return_value.scalars.return_value.all.return_value = expected_participants
+
+    session.execute = AsyncMock(return_value=mock_participant)
+
+    expected_query = (
+        select(Participant)
+        .where(
+            Participant.position_id == position.id,
+            Participant.user_id == user_id,
+            Participant.position_id.in_(
+                select(Position.id).where(Position.project_id == project.id)
+            ),
+        )
+    )
+
+    participants = await database_service.get_participants(
+        session=session,
+        project=project,
+        position=position,
+        user_id=user_id,
+    )
+
+    assert participants is expected_participants
+    
+    query = session.execute.call_args_list[0].args[0]
+    assert expected_query.compare(query)
+
+
+@pytest.mark.asyncio
 async def test_create_participant(database_service: ProjectsDatabaseService):
     session = MagicMock()
     position_id = uuid.uuid4()
@@ -316,3 +383,67 @@ async def test_update_participant_status(database_service: ProjectsDatabaseServi
     assert update_participant.status == ParticipantStatusEnum.DECLINED
     assert update_participant.position_id == position_id
     assert update_participant.user_id == user_id
+
+
+# Reviews
+
+async def test_create_review(database_service: ProjectsDatabaseService):
+    session = MagicMock()
+    project = MagicMock()
+    from_user_id = uuid.uuid4()
+    to_user_id = uuid.uuid4()
+    rate = 5
+    text = "text"
+
+    review = await database_service.create_review(
+        session=session,
+        project=project,
+        from_user_id=from_user_id,
+        to_user_id=to_user_id,
+        rate=rate,
+        text=text,
+    )
+
+    session.add.assert_called_once_with(review)
+
+    assert review.from_user_id == from_user_id
+    assert review.to_user_id == to_user_id
+    assert review.rate == rate
+    assert review.text == text
+
+
+@pytest.mark.asyncio
+async def test_get_review(
+    database_service: ProjectsDatabaseService,
+):
+    session = MagicMock()
+    project = MagicMock()
+    from_user_id = uuid.uuid4()
+    to_user_id = uuid.uuid4()
+    expected_review = Review(
+        project_id=project.id,
+        from_user_id=from_user_id,
+        to_user_id=to_user_id,
+    )
+    mock_review = MagicMock()
+    mock_review.unique.return_value.scalar_one_or_none.return_value = expected_review
+
+    expected_query = select(Review).where(
+        Review.project_id == project.id,
+        Review.from_user_id == from_user_id,
+        Review.to_user_id == to_user_id,
+    )
+
+    session.execute = AsyncMock(return_value=mock_review)
+
+    participant = await database_service.get_review(
+        session=session,
+        project=project,
+        from_user_id=from_user_id,
+        to_user_id=to_user_id,
+    )
+
+    assert participant is expected_review
+
+    query = session.execute.call_args_list[0].args[0]
+    assert expected_query.compare(query)

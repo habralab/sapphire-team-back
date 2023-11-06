@@ -50,6 +50,10 @@ async def create_participant(
             project=project,
             participant=participant,
         )
+        await broker_service.send_create_chat(
+            is_personal=True,
+            members_ids=[project.owner_id, participant.user_id],
+        )
 
     return ProjectParticipantResponse.model_validate(participant)
 

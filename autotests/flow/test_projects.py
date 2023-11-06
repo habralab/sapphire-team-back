@@ -778,7 +778,30 @@ class TestProjectFlow:
             project_id=project_id,
         )
 
-        del self.CONTEXT["project_id"]
-
         assert project.id == project_id
         assert project.status == ProjectStatusEnum.FINISHED
+
+    @pytest.mark.dependency(depends=["TestProjectFlow::test_close_project"])
+    @pytest.mark.asyncio
+    async def test_create_review(
+        self,
+        oleg_id: uuid.UUID,
+        matvey_id: uuid.UUID, 
+        oleg_projects_rest_client: ProjectsRestClient
+    ):
+        project_id: uuid.UUID = self.CONTEXT["project_id"]
+
+        review = await oleg_projects_rest_client.create_project_review(
+            project_id=project_id,
+            user_id=matvey_id,
+            rate=5,
+            text="test",
+        )
+
+        del self.CONTEXT["project_id"]
+
+        assert review.project_id == project_id
+        assert review.from_user_id == oleg_id
+        assert review.to_user_id == matvey_id
+        assert review.rate == 5
+        assert review.text == "test"

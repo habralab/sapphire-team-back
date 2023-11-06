@@ -46,10 +46,17 @@ class StorageDatabaseService(BaseDatabaseService):
     async def get_specialization_groups(
         self,
         session: AsyncSession,
+        query_text: str | Type[Empty] = Empty,
         page: int | Type[Empty] = Empty,
         per_page: int | Type[Empty] = Empty,
     ) -> list[SpecializationGroup]:
         query = select(SpecializationGroup).order_by(desc(SpecializationGroup.created_at))
+
+        filters = []
+        if query_text is not Empty:
+            filters.append(SpecializationGroup.name.contains(query_text))
+
+        query = query.where(*filters)
 
         if page is not Empty and per_page is not Empty:
             offset = (page - 1) * per_page
