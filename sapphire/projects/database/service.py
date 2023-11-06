@@ -341,7 +341,7 @@ class ProjectsDatabaseService(BaseDatabaseService):
             )
         )
         stmt = (
-            select(func.count(distinct(Position.project_id)))
+            select(func.count(distinct(Position.project_id))) # pylint: disable=not-callable
             .where(Position.id.in_(stmt_position_ids))
         )
         result = await session.execute(stmt)
