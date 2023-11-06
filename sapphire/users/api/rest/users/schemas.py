@@ -46,8 +46,8 @@ class UserSkillResponse(BaseModel):
 
     user_id: uuid.UUID
     skill_id: uuid.UUID
-    created_at: datetime
-    updated_at: datetime
+    created_at: NaiveDatetime
+    updated_at: NaiveDatetime
 
 
 class UserSkillsResponse(BaseModel):
