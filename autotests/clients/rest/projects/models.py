@@ -30,7 +30,7 @@ class ProjectResponse(BaseModel):
     created_at: NaiveDatetime
     updated_at: NaiveDatetime
     status: ProjectStatusEnum
-    joined_participants: list[ProjectParticipantResponse] | None
+    joined_participants: list["ProjectParticipantResponse"] | None
 
 
 class ProjectListResponse(PaginatedResponse):
@@ -91,3 +91,15 @@ class UserStatisticResponse(BaseModel):
     ownership_projects_count: NonNegativeInt
     participant_projects_count: NonNegativeInt
     rate: confloat(ge=1, le=5)
+
+
+class ProjectParticipantResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: uuid.UUID
+    position_id: uuid.UUID
+    user_id: uuid.UUID
+    status: ParticipantStatusEnum
+    joined_at: NaiveDatetime | None
+    created_at: NaiveDatetime
+    updated_at: NaiveDatetime
