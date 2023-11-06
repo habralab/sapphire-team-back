@@ -87,15 +87,14 @@ class UsersDatabaseService(BaseDatabaseService):
     async def get_user_skills(self,
                               session: AsyncSession,
                               user: User | Type[Empty] = Empty,
-                              ):
+    ) -> list[UserSkill]:
         filters = []
         if user is not Empty:
             filters.append(UserSkill.user_id == user.id)
         stmt = select(UserSkill.user_id).where(*filters)
         result = await session.execute(stmt)
-        current_skills = result.scalars().all()
 
-        return current_skills
+        return list(result.scalars().all())
 
     async def update_user_skills(self,
                                  session: AsyncSession,
