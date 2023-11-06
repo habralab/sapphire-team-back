@@ -53,4 +53,4 @@ class UserSkillResponse(BaseModel):
 class UserSkillsResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
-    user_skills: list[UserSkillResponse]
+    user_skill_ids: list[uuid.UUID]

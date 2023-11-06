@@ -159,7 +159,5 @@ async def get_user_skills(
         )
 
     return UserSkillsResponse(
-        user_skills=[
-            UserSkillResponse.model_validate(user_skill) for user_skill in skills
-        ]
+        user_skill_ids=skills
     )
