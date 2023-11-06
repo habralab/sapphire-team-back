@@ -5,7 +5,6 @@ from datetime import datetime
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
-import timezone
 from sqlalchemy import desc
 from sqlalchemy.future import select
 
@@ -38,7 +37,7 @@ async def test_create_project(database_service: ProjectsDatabaseService):
     name = "Any name"
     owner_id = uuid.uuid4()
     description = "Any description"
-    deadline = datetime.now(tz=timezone.utc)
+    deadline = datetime.now()
 
     project = await database_service.create_project(
         session=session,
@@ -134,7 +133,7 @@ async def test_get_projects_with_all_query_params(database_service: ProjectsData
     result = MagicMock()
     project_id = uuid.uuid4()
     owner_id = uuid.uuid4()
-    deadline = datetime.utcnow()
+    deadline = datetime.now()
     query_text = "query_text"
     position_skill_ids = [uuid.uuid4(), uuid.uuid4()]
     position_specialization_ids = [uuid.uuid4(), uuid.uuid4()]
@@ -301,14 +300,14 @@ async def test_get_participant_without_filters(
 
     participants = await database_service.get_participants(session=session)
 
-    assert participants is expected_participants
+    assert participants == expected_participants
     
     query = session.execute.call_args_list[0].args[0]
     assert expected_query.compare(query)
 
 
 @pytest.mark.asyncio
-async def test_get_participant_with_all_filters(
+async def test_get_participants_with_all_filters(
     database_service: ProjectsDatabaseService,
 ):
     session = MagicMock()
@@ -317,8 +316,9 @@ async def test_get_participant_with_all_filters(
     user_id = uuid.uuid4()
     expected_participants = [Participant(position_id=position.id, user_id=user_id)]
     mock_participant = MagicMock()
-    mock_participant.unique.return_value.scalars.return_value.all.return_value = expected_participants
-
+    mock_participant.unique.return_value.scalars.return_value.all.return_value = (
+        expected_participants
+    )
     session.execute = AsyncMock(return_value=mock_participant)
 
     expected_query = (
@@ -339,7 +339,7 @@ async def test_get_participant_with_all_filters(
         user_id=user_id,
     )
 
-    assert participants is expected_participants
+    assert participants == expected_participants
     
     query = session.execute.call_args_list[0].args[0]
     assert expected_query.compare(query)
@@ -388,6 +388,7 @@ async def test_update_participant_status(database_service: ProjectsDatabaseServi
 
 # Reviews
 
+@pytest.mark.asyncio
 async def test_create_review(database_service: ProjectsDatabaseService):
     session = MagicMock()
     project = MagicMock()

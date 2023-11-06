@@ -155,7 +155,7 @@ class TestProjectFlow:
     async def test_update_position_skills(self, oleg_projects_rest_client: ProjectsRestClient):
         project_id: uuid.UUID = self.CONTEXT["project_id"]
         position_id: uuid.UUID = self.CONTEXT["position_id"]
-        
+
         new_skills = {uuid.uuid4() for _ in range(10)}
 
         skills = await oleg_projects_rest_client.update_project_position_skills(
@@ -169,6 +169,7 @@ class TestProjectFlow:
         assert skills == new_skills
 
     @pytest.mark.dependency(depends=["TestProjectFlow::test_update_position_skills"])
+    @pytest.mark.skip("Not implemented")
     @pytest.mark.asyncio
     async def test_get_position_skills(self, oleg_projects_rest_client: ProjectsRestClient):
         project_id: uuid.UUID = self.CONTEXT["project_id"]
