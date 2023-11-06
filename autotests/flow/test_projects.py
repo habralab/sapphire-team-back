@@ -665,7 +665,7 @@ class TestProjectFlow:
         assert participant.user_id == matvey_id
         assert participant.status == ParticipantStatusEnum.JOINED
 
-    @pytest.mark.dependency(depends=["TestProjectFlow::test_get_joined_participant"])
+    @pytest.mark.dependency(depends=["TestProjectFlow::test_accept_fourth_request_to_join"])
     @pytest.mark.asyncio
     async def test_leave_position_by_manager(
             self,
