@@ -41,15 +41,6 @@ class UserResponse(BaseModel):
         )
 
 
-class UserSkillResponse(BaseModel):
-    model_config = ConfigDict(from_attributes=True)
-
-    user_id: uuid.UUID
-    skill_id: uuid.UUID
-    created_at: NaiveDatetime
-    updated_at: NaiveDatetime
-
-
 class UserSkillsResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 

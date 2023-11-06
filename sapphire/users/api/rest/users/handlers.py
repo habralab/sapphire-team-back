@@ -11,7 +11,7 @@ from sapphire.users.database.models import User
 from sapphire.users.database.service import UsersDatabaseService
 
 from .dependencies import auth_user, get_path_user
-from .schemas import UserResponse, UserSkillResponse, UserSkillsResponse, UserUpdateRequest
+from .schemas import UserResponse, UserSkillsResponse, UserUpdateRequest
 
 
 async def get_user(
