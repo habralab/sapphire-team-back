@@ -4,7 +4,7 @@ from datetime import datetime
 from typing import Set, Type
 
 from pydantic import BaseModel, NonNegativeInt, confloat, conint
-from sqlalchemy import delete, desc, func, or_, select, distinct
+from sqlalchemy import delete, desc, distinct, func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
 
