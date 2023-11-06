@@ -14,7 +14,7 @@ class Skill(Base):
 
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True)
     name: Mapped[str | None]
-    created_at: Mapped[datetime] = mapped_column(default=datetime.now)
+    created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
 
 
 class Specialization(Base):
@@ -24,7 +24,7 @@ class Specialization(Base):
     name: Mapped[str | None]
     is_other: Mapped[bool] = mapped_column(default=False)
     group_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("specialization_groups.id"))
-    created_at: Mapped[datetime] = mapped_column(default=datetime.now)
+    created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
 
 
 class SpecializationsSkills(Base):
@@ -34,10 +34,8 @@ class SpecializationsSkills(Base):
     specialization_id: Mapped[uuid.UUID] = mapped_column(
         ForeignKey("specializations.id"), primary_key=True
     )
-    created_at: Mapped[datetime] = mapped_column(default=datetime.now)
-    updated_at: Mapped[datetime] = mapped_column(
-        default=datetime.now, onupdate=datetime.now
-    )
+    created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
+    updated_at: Mapped[datetime] = mapped_column(default=datetime.utcnow, onupdate=datetime.utcnow)
 
 
 class SpecializationGroup(Base):
@@ -45,4 +43,4 @@ class SpecializationGroup(Base):
 
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True)
     name: Mapped[str | None]
-    created_at: Mapped[datetime] = mapped_column(default=datetime.now)
+    created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)

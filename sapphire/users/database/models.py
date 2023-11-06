@@ -17,8 +17,8 @@ class User(Base):
     first_name: Mapped[str | None]
     last_name: Mapped[str | None]
     avatar: Mapped[str | None] = mapped_column(unique=True)
-    created_at: Mapped[datetime] = mapped_column(default=datetime.now)
-    updated_at: Mapped[datetime] = mapped_column(default=datetime.now, onupdate=datetime.now)
+    created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
+    updated_at: Mapped[datetime] = mapped_column(default=datetime.utcnow, onupdate=datetime.utcnow)
 
     profile: Mapped["Profile"] = relationship("Profile", back_populates="user", lazy=False)
     skills: Mapped[list["UserSkill"]] = relationship("UserSkill", back_populates="user", lazy=False)
@@ -31,8 +31,8 @@ class Profile(Base):
     about: Mapped[str | None] = mapped_column(Text)
     main_specialization_id: Mapped[uuid.UUID | None]
     secondary_specialization_id: Mapped[uuid.UUID | None]
-    created_at: Mapped[datetime] = mapped_column(default=datetime.now)
-    updated_at: Mapped[datetime] = mapped_column(default=datetime.now, onupdate=datetime.now)
+    created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
+    updated_at: Mapped[datetime] = mapped_column(default=datetime.utcnow, onupdate=datetime.utcnow)
 
     user: Mapped[User] = relationship(User, back_populates="profile", lazy=False)
 
@@ -42,7 +42,7 @@ class UserSkill(Base):
 
     user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"), primary_key=True)
     skill_id: Mapped[uuid.UUID] = mapped_column(primary_key=True)
-    created_at: Mapped[datetime] = mapped_column(default=datetime.now)
-    updated_at: Mapped[datetime] = mapped_column(default=datetime.now, onupdate=datetime.now)
+    created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
+    updated_at: Mapped[datetime] = mapped_column(default=datetime.utcnow, onupdate=datetime.utcnow)
 
     user: Mapped[User] = relationship(User, back_populates="skills", lazy=False)

@@ -19,7 +19,7 @@ from autotests.utils import Empty
         (
             "test",
             uuid.uuid4(),
-            datetime.now(),
+            datetime.utcnow(),
             ProjectStatusEnum.PREPARATION,
             False,
             [],
