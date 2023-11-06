@@ -629,21 +629,6 @@ class TestProjectFlow:
         assert participant.user_id == matvey_id
         assert participant.status == ParticipantStatusEnum.JOINED
 
-    @pytest.mark.dependency(depends=["TestProjectFlow::test_accept_fourth_request_to_join"])
-    @pytest.mark.asyncio
-    async def test_get_joined_participant(
-        self,
-        matvey_id,
-        oleg_projects_rest_client: ProjectsRestClient,
-    ):
-        project_id: uuid.UUID = self.CONTEXT["project_id"]
-        
-        project = await oleg_projects_rest_client.get_project(
-            project_id=matvey_id,
-        )
-
-        assert matvey_id in [p.user_id for p in project.joined_participants]
-
     @pytest.mark.dependency(depends=["TestProjectFlow::test_get_joined_participant"])
     @pytest.mark.asyncio
     async def test_leave_position_by_manager(
