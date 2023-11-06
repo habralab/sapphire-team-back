@@ -1,4 +1,5 @@
 import pathlib
+import uuid
 from typing import Type
 
 from sqlalchemy import desc, select
@@ -29,15 +30,23 @@ class StorageDatabaseService(BaseDatabaseService):
     async def get_specializations(
             self,
             session: AsyncSession,
-            query_data: str | Type[Empty] = Empty,
+            query_text: str | Type[Empty] = Empty,
             page: int | Type[Empty] = Empty,
             per_page: int | Type[Empty] = Empty,
+            is_other: bool | Type[Empty] = Empty,
+            group_id: uuid.UUID | Type[Empty] = Empty,
     ) -> list[Specialization]:
         query = select(Specialization).order_by(desc(Specialization.created_at))
 
         filters = []
-        if query_data is not Empty:
-            filters.append(Skill.name.contains(query_data))
+        if query_text is not Empty:
+            filters.append(Specialization.name.contains(query_text))
+
+        if is_other is not Empty:
+            filters.append(Specialization.is_other.contains(is_other))
+
+        if group_id is not Empty:
+            filters.append(Specialization.group_id.contains(group_id))
 
         query = query.where(*filters)
 
