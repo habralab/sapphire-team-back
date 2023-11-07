@@ -109,7 +109,8 @@ class UsersDatabaseService(BaseDatabaseService):
         )
 
         new_skills = [UserSkill(user_id=user.id, skill_id=skill) for skill in skills]
-        
+        user.skills = new_skills
+
         session.add_all(new_skills)
 
         return skills
