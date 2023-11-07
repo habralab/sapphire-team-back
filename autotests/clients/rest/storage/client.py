@@ -29,10 +29,21 @@ class StorageRestClient(BaseRestClient):
             path=path, response_model=SpecializationGroupListResponse, params=params
         )
 
-    async def get_specializations(self) -> SpecializationListResponse:
+    async def get_specializations(
+        self,
+        query_text: str | type[Empty] = Empty,
+        group_id: uuid.UUID | Type[Empty] = Empty,
+    ) -> SpecializationListResponse:
         path = "/api/rest/specializations/"
+        params = {
+            "query_text": query_text,
+            "group_id": group_id
+        }
+        params = {key: value for key, value in params.items() if value is not Empty}
 
-        return await self.rest_get(path=path, response_model=SpecializationListResponse)
+        return await self.rest_get(
+            path=path, response_model=SpecializationListResponse, params=params
+        )
 
     async def get_skills(
             self,
