@@ -1,347 +1,577 @@
 model: specializations
 data:
-- group_id: f6fccd64-1df1-4355-8cbc-e02c347c464e
-  id: fc77a40c-1051-40d8-b671-48acfe9fc09b
-  name: Десктоп разработчик
-- group_id: f6fccd64-1df1-4355-8cbc-e02c347c464e
-  id: d7ad864b-094c-4db3-9b2e-b22fb3e89675
+- group_id: 9725158a-9c9f-416a-9c1b-9444559b3370
+  habr_id: 2
+  id: f9b5563c-d013-40ca-861c-a4b4e66391a5
   name: Бэкенд разработчик
-- group_id: f6fccd64-1df1-4355-8cbc-e02c347c464e
-  id: 113f22a7-a84b-4133-b9d4-19c11273377c
+  name_en: Backend Developer
+- group_id: 9725158a-9c9f-416a-9c1b-9444559b3370
+  habr_id: 3
+  id: 25fdf28e-c894-4eeb-ba18-64c77582883b
   name: Фронтенд разработчик
-- group_id: f6fccd64-1df1-4355-8cbc-e02c347c464e
-  id: f64f7f6c-23ac-4b00-b85a-bf2a54c01a43
-  name: Фулстек разработчик
-- group_id: f6fccd64-1df1-4355-8cbc-e02c347c464e
-  id: ea98c22f-ccdc-4812-b65b-2bb5ab4a462b
-  name: Разработчик мобильных приложений
-- group_id: f6fccd64-1df1-4355-8cbc-e02c347c464e
-  id: 3af0c885-18c2-4dbc-9b54-35cc7e889958
-  name: Разработчик игр
-- group_id: f6fccd64-1df1-4355-8cbc-e02c347c464e
-  id: 6b6b8424-b03c-4742-8e43-ea2f7beb1924
-  name: Инженер встраиваемых систем
-- group_id: f6fccd64-1df1-4355-8cbc-e02c347c464e
-  id: 77500708-8b63-4c99-b320-f55f381b7c92
-  name: Системный инженер
-- group_id: f6fccd64-1df1-4355-8cbc-e02c347c464e
-  id: 4b0e7be6-71de-4f37-b339-24f145c9dda3
-  name: Технический директор
-- group_id: f6fccd64-1df1-4355-8cbc-e02c347c464e
-  id: 4593a619-bae6-49e2-a7f6-cf87386760a6
-  name: Разработчик приложений
-- group_id: f6fccd64-1df1-4355-8cbc-e02c347c464e
-  id: 00cdf708-c35a-4ed3-928b-cc1249f6a0b3
-  name: Архитектор программного обеспечения
-- group_id: f6fccd64-1df1-4355-8cbc-e02c347c464e
-  id: 2fd2b592-7650-4904-a5d5-788451208ea2
-  name: Релиз менеджер
-- group_id: f6fccd64-1df1-4355-8cbc-e02c347c464e
-  id: 16b35e44-7262-4844-b71b-81f6a65aef9c
-  name: Разработчик баз данных
-- group_id: f6fccd64-1df1-4355-8cbc-e02c347c464e
-  id: da0f543a-a088-425f-b225-60e42a124176
+  name_en: Frontend Developer
+- group_id: 9725158a-9c9f-416a-9c1b-9444559b3370
+  habr_id: 82
+  id: adc8f81c-13d6-4afe-9e03-6dd032b3076b
   name: Веб-разработчик
-- group_id: f6fccd64-1df1-4355-8cbc-e02c347c464e
-  id: d49bddc1-294c-496f-95d9-9328efd3a402
+  name_en: Web Developer
+- group_id: 9725158a-9c9f-416a-9c1b-9444559b3370
+  habr_id: 4
+  id: c786a307-eb87-4f8e-87ea-7fe6cbf2ee68
+  name: Фулстек разработчик
+  name_en: Fullstack Developer
+- group_id: 9725158a-9c9f-416a-9c1b-9444559b3370
+  habr_id: 5
+  id: 472e2436-ed2b-4251-b914-4e04ba285064
+  name: Разработчик мобильных приложений
+  name_en: Mobile Application Developer
+- group_id: 9725158a-9c9f-416a-9c1b-9444559b3370
+  habr_id: 72
+  id: 1822261a-7058-4463-8436-8fa27fa2ec7a
+  name: Разработчик приложений
+  name_en: Application Developer
+- group_id: 9725158a-9c9f-416a-9c1b-9444559b3370
+  habr_id: 1
+  id: 82c49a83-0aa1-4110-928d-2f5e8188f722
+  name: Десктоп разработчик
+  name_en: Software Developer
+- group_id: 9725158a-9c9f-416a-9c1b-9444559b3370
+  habr_id: 75
+  id: c481b3b8-599c-4509-b742-3eb454f022f0
+  name: Релиз менеджер
+  name_en: Release Manager
+- group_id: 9725158a-9c9f-416a-9c1b-9444559b3370
+  habr_id: 6
+  id: 0c042748-fa10-4dc8-b7e0-362c6752ecac
+  name: Разработчик игр
+  name_en: Game Developer
+- group_id: 9725158a-9c9f-416a-9c1b-9444559b3370
+  habr_id: 77
+  id: 9d3a778d-0d7b-44d4-947a-60b1def22149
+  name: Разработчик баз данных
+  name_en: Database Developer
+- group_id: 9725158a-9c9f-416a-9c1b-9444559b3370
+  habr_id: 7
+  id: 77aba99b-3c27-4437-8c75-fb93a2336d0e
+  name: Инженер встраиваемых систем
+  name_en: Embedded Software Engineer
+- group_id: 9725158a-9c9f-416a-9c1b-9444559b3370
+  habr_id: 83
+  id: 144e0e75-a66a-4d62-b1db-f47efce20f41
   name: HTML-верстальщик
-- group_id: f6fccd64-1df1-4355-8cbc-e02c347c464e
-  id: 6baae721-2420-4e49-abbf-e32fc840019e
+  name_en: HTML Coding
+- group_id: 9725158a-9c9f-416a-9c1b-9444559b3370
+  habr_id: 84
+  id: f5c0cbf4-2729-4a62-9f95-da190cc9b504
   name: Программист 1С
-- group_id: f6fccd64-1df1-4355-8cbc-e02c347c464e
-  id: 047a99a1-9bb9-4ef0-a213-526607355a17
+  name_en: 1C Developer
+- group_id: 9725158a-9c9f-416a-9c1b-9444559b3370
+  habr_id: 8
+  id: 537eb334-41fe-4687-b5c9-3bdc19318624
+  name: Системный инженер
+  name_en: System Software Engineer
+- group_id: 9725158a-9c9f-416a-9c1b-9444559b3370
+  habr_id: 85
+  id: cfd2566a-82aa-474b-b665-02102c5221ae
   name: ERP-программист
-- group_id: f6fccd64-1df1-4355-8cbc-e02c347c464e
-  id: d7ad9e85-540e-481f-bf42-94ba5d7feaae
+  name_en: ERP Developer
+- group_id: 9725158a-9c9f-416a-9c1b-9444559b3370
+  habr_id: 73
+  id: bb72933e-ddfd-496a-91fb-bc14f2230ec7
+  name: Архитектор программного обеспечения
+  name_en: Software Architect
+- group_id: 9725158a-9c9f-416a-9c1b-9444559b3370
+  habr_id: 9
+  id: 33862212-3cfc-48c1-9060-b5bfbec1b9d3
+  name: Технический директор
+  name_en: Chief Technology Officer (CTO)
+- group_id: 9725158a-9c9f-416a-9c1b-9444559b3370
+  habr_id: 86
+  id: b96212ef-d77a-4712-8652-98f746439401
   name: Архитектор баз данных
-- group_id: af520dbd-08fc-4c85-9894-37c623a97d73
-  id: 839beb44-3d55-4d06-9381-65dac983b8ca
-  name: Инженер по автоматизации тестирования
-- group_id: af520dbd-08fc-4c85-9894-37c623a97d73
-  id: 534587b1-5ac9-4678-930b-e922a8d7947e
-  name: Инженер по производительности
-- group_id: af520dbd-08fc-4c85-9894-37c623a97d73
-  id: 04928819-d4ac-4ccc-a024-5149a6013a1b
+  name_en: Database Architect
+- group_id: b89484c8-8d74-4f06-860a-e096e40b2a0b
+  habr_id: 12
+  id: be3a8be3-dc23-4733-a3cb-d3c6852441a5
   name: Инженер по ручному тестированию
-- group_id: af520dbd-08fc-4c85-9894-37c623a97d73
-  id: e902c0c4-62ff-45a3-b65e-bac836ad00ba
+  name_en: Manual Test Engineer
+- group_id: b89484c8-8d74-4f06-860a-e096e40b2a0b
+  habr_id: 10
+  id: ff4462c6-f720-406c-b9f1-1316c358e8d7
+  name: Инженер по автоматизации тестирования
+  name_en: Test Automation Engineer
+- group_id: b89484c8-8d74-4f06-860a-e096e40b2a0b
+  habr_id: 13
+  id: b0707d8f-f0b9-4413-8bbe-46a77cad17c7
   name: Инженер по обеспечению качества
-- group_id: af520dbd-08fc-4c85-9894-37c623a97d73
-  id: a964a9f0-8fa4-4c42-b5e6-e7bd09539a5e
-  name: Аналитик по обеспечению качества
-- group_id: af520dbd-08fc-4c85-9894-37c623a97d73
-  id: 50470dfe-ad5f-471b-8b1f-1f0c0ecc0e07
-  name: Менеджер по обеспечению качества
-- group_id: af520dbd-08fc-4c85-9894-37c623a97d73
-  id: 6f99b94f-d4d5-4b4e-8aa4-471641d471c0
-  name: Директор по обеспечению качества
-- group_id: af520dbd-08fc-4c85-9894-37c623a97d73
-  id: 48c685e7-620f-4c67-85ca-f8b772a917e0
+  name_en: Quality Assurance Engineer
+- group_id: b89484c8-8d74-4f06-860a-e096e40b2a0b
+  habr_id: 11
+  id: 4c16f080-1098-4677-ae3c-0104f1822250
+  name: Инженер по производительности
+  name_en: Software Performance Engineer
+- group_id: b89484c8-8d74-4f06-860a-e096e40b2a0b
+  habr_id: 87
+  id: 2617fb87-9d0f-49e2-840a-12b407c0a257
   name: UX-тестировщик
-- group_id: 2046dc47-98d7-4c61-b55f-c250fbc65ad8
-  id: 44702f08-ef8f-4dc1-8d97-dfe6fc4286bd
-  name: Системный администратор
-- group_id: 2046dc47-98d7-4c61-b55f-c250fbc65ad8
-  id: 96465ed1-8f22-484b-88b5-a3df9b32bf82
-  name: Администратор серверов
-- group_id: 2046dc47-98d7-4c61-b55f-c250fbc65ad8
-  id: 28d2ce4a-c765-490d-9ef5-0be5af53b259
-  name: Администратор баз данных
-- group_id: 2046dc47-98d7-4c61-b55f-c250fbc65ad8
-  id: e0549fed-fd34-43f1-926e-2bcd134392b0
-  name: Сетевой инженер
-- group_id: 2046dc47-98d7-4c61-b55f-c250fbc65ad8
-  id: 9f44d216-28da-45cc-8205-5ca6cdeb31c8
-  name: DevOps-инженер
-- group_id: 2046dc47-98d7-4c61-b55f-c250fbc65ad8
-  id: 5693b948-a95c-4bd6-b10a-5d01c55e2be4
-  name: Администратор сайта
-- group_id: 2046dc47-98d7-4c61-b55f-c250fbc65ad8
-  id: fe5a1c3e-05ef-4b68-ab1b-2a0fde152703
-  name: MLOps-инженер
-- group_id: 2046dc47-98d7-4c61-b55f-c250fbc65ad8
-  id: 378d264e-1537-4413-a7c9-8dc9fc8b3685
-  name: Инженер по доступности сервисов
-- group_id: ec1a9abe-f21e-40d8-b83a-b152fa8145de
-  id: b839483a-a06f-4ee0-be7a-6ba779a98e94
-  name: UI/UX дизайнер
-- group_id: ec1a9abe-f21e-40d8-b83a-b152fa8145de
-  id: dd985188-40e9-4994-901a-82281f919c12
-  name: Веб дизайнер
-- group_id: ec1a9abe-f21e-40d8-b83a-b152fa8145de
-  id: f2ff6921-a6a1-4824-867b-3f1fa4beaab4
-  name: Дизайнер приложений
-- group_id: ec1a9abe-f21e-40d8-b83a-b152fa8145de
-  id: b5b19b2a-b951-4bf7-a602-a83f3ab09e09
-  name: Дизайнер игр
-- group_id: ec1a9abe-f21e-40d8-b83a-b152fa8145de
-  id: 43ca88cb-ad82-4712-8a1e-4bcd7697c4ef
-  name: Дизайнер иллюстратор
-- group_id: ec1a9abe-f21e-40d8-b83a-b152fa8145de
-  id: 6f6f6e96-3d26-4701-ad5d-62c144ed9b6b
-  name: Моушен дизайнер
-- group_id: ec1a9abe-f21e-40d8-b83a-b152fa8145de
-  id: c1eb30b3-5b1e-4c0b-a3a1-ea2fc433e806
-  name: 3d моделлер
-- group_id: ec1a9abe-f21e-40d8-b83a-b152fa8145de
-  id: 7a632698-9d4f-4032-ad1f-acd1723a4f62
-  name: Графический дизайнер
-- group_id: ec1a9abe-f21e-40d8-b83a-b152fa8145de
-  id: 6ca0010c-b207-4859-b127-3de394e39100
-  name: Арт директор
-- group_id: ec1a9abe-f21e-40d8-b83a-b152fa8145de
-  id: 4b6801cc-5f1e-493e-8f5b-5b1153c5efd3
-  name: Нарративный дизайнер
-- group_id: ec1a9abe-f21e-40d8-b83a-b152fa8145de
-  id: ca941f95-a9e1-420f-9912-e8e6a21d7979
-  name: 3d-аниматор
-- group_id: ec1a9abe-f21e-40d8-b83a-b152fa8145de
-  id: f67c7227-7e06-42f1-9333-28bfcfff8635
-  name: Flash-аниматор
-- group_id: ec1a9abe-f21e-40d8-b83a-b152fa8145de
-  id: 3091f909-5f82-4e7d-898e-4c2d573401ab
-  name: Художник компьютерной графики
-- group_id: ec1a9abe-f21e-40d8-b83a-b152fa8145de
-  id: 61a0d350-6256-4f48-a3f6-918ac3854a67
-  name: Продуктовый дизайнер
-- group_id: ec1a9abe-f21e-40d8-b83a-b152fa8145de
-  id: 8d4683b4-6b1e-47af-b897-aa9ad267f87b
-  name: VUI-дизайнер
-- group_id: 42f09815-393e-451a-bc64-a232062e3096
-  id: d421ad98-cdfa-4182-aecf-951d5362313a
-  name: Менеджер проекта
-- group_id: 42f09815-393e-451a-bc64-a232062e3096
-  id: da36b301-f02e-4b89-ad4d-33aba6e4cf4b
-  name: Директор проекта
-- group_id: 42f09815-393e-451a-bc64-a232062e3096
-  id: 1c6ae243-d120-42b3-9c70-ec95381a4c5f
-  name: Менеджер продукта
-- group_id: 42f09815-393e-451a-bc64-a232062e3096
-  id: b112120b-e0a7-482e-a7ba-a237b8e0e197
-  name: Директор по продукту
-- group_id: 42f09815-393e-451a-bc64-a232062e3096
-  id: 2e42a8ec-0c2f-453c-a16a-fd836e7c20c8
-  name: Менеджер сообщества
-- group_id: 42f09815-393e-451a-bc64-a232062e3096
-  id: 3c87ab87-ae94-4f89-8b14-3f126ba61cf8
-  name: Программный менеджер
-- group_id: 42f09815-393e-451a-bc64-a232062e3096
-  id: 7ee44330-a433-4ca0-a149-b83e1beb5c67
-  name: Исполнительный директор
-- group_id: 42f09815-393e-451a-bc64-a232062e3096
-  id: 0a3c2b95-04bb-4853-b7fe-93e3e0a8a763
-  name: Генеральный директор
-- group_id: 42f09815-393e-451a-bc64-a232062e3096
-  id: 17135ea3-3643-493e-b3a7-cbc519104345
-  name: Директор по информационным технологиям
-- group_id: 42f09815-393e-451a-bc64-a232062e3096
-  id: d36f3a47-ca0d-432c-97be-14857512bcb6
-  name: Финансовый директор
-- group_id: 42f09815-393e-451a-bc64-a232062e3096
-  id: 9e719abf-7f01-4f4c-b85f-47a365660fed
-  name: Scrum-мастер
-- group_id: a27bde68-c0e2-4acc-8321-5479c2fa293d
-  id: 1f6df5bd-5838-4256-904a-6df942fbb8b7
+  name_en: UX Tester
+- group_id: b89484c8-8d74-4f06-860a-e096e40b2a0b
+  habr_id: 14
+  id: 45600921-6ed7-4769-89cd-acfed5f2491c
+  name: Аналитик по обеспечению качества
+  name_en: Quality Assurance Analyst
+- group_id: b89484c8-8d74-4f06-860a-e096e40b2a0b
+  habr_id: 15
+  id: e07bb03a-1e76-4cdb-a0ae-ae6e160245c2
+  name: Менеджер по обеспечению качества
+  name_en: Quality Assurance Manager
+- group_id: b89484c8-8d74-4f06-860a-e096e40b2a0b
+  habr_id: 16
+  id: 567f0336-5f93-4976-bfef-d149b9751f07
+  name: Директор по обеспечению качества
+  name_en: Quality Assurance Director
+- group_id: 2c7574f8-c848-4e78-81b1-1cc08a957e9b
+  habr_id: 41
+  id: d76212bd-7069-4593-acbb-b1ece3b6c5ed
   name: Системный аналитик
-- group_id: a27bde68-c0e2-4acc-8321-5479c2fa293d
-  id: 323b615e-eaf8-49fe-a96d-4121b1d299dc
-  name: Бизнес-аналитик
-- group_id: a27bde68-c0e2-4acc-8321-5479c2fa293d
-  id: 7e1c3745-8ae8-4335-94aa-46b13673eb00
-  name: Аналитик по данным
-- group_id: a27bde68-c0e2-4acc-8321-5479c2fa293d
-  id: 36e5ce99-e873-4100-8d7e-26858f369e3c
-  name: Инженер по данным
-- group_id: a27bde68-c0e2-4acc-8321-5479c2fa293d
-  id: d66be88d-3884-4f62-96ad-8751a840faae
-  name: BI-разработчик
-- group_id: a27bde68-c0e2-4acc-8321-5479c2fa293d
-  id: 41469dfd-2806-43a2-b04c-3003402a3230
-  name: Программный аналитик
-- group_id: a27bde68-c0e2-4acc-8321-5479c2fa293d
-  id: 8a576587-bab9-4d61-a200-b338cbb22135
-  name: Продуктовый аналитик
-- group_id: a27bde68-c0e2-4acc-8321-5479c2fa293d
-  id: 186cee92-f220-4251-ab7b-8ca85488f993
+  name_en: Systems Analyst
+- group_id: 2c7574f8-c848-4e78-81b1-1cc08a957e9b
+  habr_id: 98
+  id: 61dbc38d-7a08-4760-803d-6d6396bd5330
   name: Аналитик мобильных приложений
-- group_id: a27bde68-c0e2-4acc-8321-5479c2fa293d
-  id: 2f59ffd8-e223-438e-966e-d3e25d539e2d
+  name_en: Mobile Analyst
+- group_id: 2c7574f8-c848-4e78-81b1-1cc08a957e9b
+  habr_id: 42
+  id: d3a80a55-5a8d-484d-af97-cf19bfb97419
+  name: Бизнес-аналитик
+  name_en: Business Analyst
+- group_id: 2c7574f8-c848-4e78-81b1-1cc08a957e9b
+  habr_id: 99
+  id: 85976d4c-9805-4ca3-8c2e-f14cfb0a5636
   name: Гейм-аналитик
-- group_id: a27bde68-c0e2-4acc-8321-5479c2fa293d
-  id: 0ab6d36e-03c9-4e75-b34c-b8c6d01ebca3
+  name_en: Game Analyst
+- group_id: 2c7574f8-c848-4e78-81b1-1cc08a957e9b
+  habr_id: 43
+  id: 34782ea8-3cf8-4b68-b96c-ba8c4150477a
+  name: Аналитик по данным
+  name_en: Data Analyst
+- group_id: 2c7574f8-c848-4e78-81b1-1cc08a957e9b
+  habr_id: 76
+  id: fe9d6c0e-39d9-4480-9d2e-1aecf0756c07
+  name: Инженер по данным
+  name_en: Data Engineer
+- group_id: 2c7574f8-c848-4e78-81b1-1cc08a957e9b
+  habr_id: 96
+  id: 91ef9654-d3a2-4faf-8dfd-ff9ec59a12ad
+  name: Программный аналитик
+  name_en: Software Analyst
+- group_id: 2c7574f8-c848-4e78-81b1-1cc08a957e9b
+  habr_id: 97
+  id: fcedf3df-6497-4ce1-84e7-cc6b2b9321c6
+  name: Продуктовый аналитик
+  name_en: Product Analyst
+- group_id: 2c7574f8-c848-4e78-81b1-1cc08a957e9b
+  habr_id: 95
+  id: 88b25ca4-089e-48d4-bbc7-4d18dcc33393
+  name: BI-разработчик
+  name_en: BI Developer
+- group_id: 2c7574f8-c848-4e78-81b1-1cc08a957e9b
+  habr_id: 100
+  id: 2ad506a4-fa55-4a76-ab1c-a8899339752f
   name: Веб-аналитик
-- group_id: 684c4d01-de1d-490a-b10e-f8a38c6cafe1
-  id: 20855e02-e6b3-4339-8cb7-8b79b82075e2
-  name: Менеджер технической поддержки
-- group_id: 684c4d01-de1d-490a-b10e-f8a38c6cafe1
-  id: 0896dbcb-8f45-4d7b-8470-8e23bd385c9a
-  name: Директор технической поддержки
-- group_id: 684c4d01-de1d-490a-b10e-f8a38c6cafe1
-  id: dd784b28-dcbc-45d2-84f1-14bba62998ce
-  name: Менеджер по обслуживанию клиентов
-- group_id: 684c4d01-de1d-490a-b10e-f8a38c6cafe1
-  id: cf65013c-34e3-4c16-94e7-5a35eeb8bf26
-  name: Директор по обслуживанию клиентов
-- group_id: 684c4d01-de1d-490a-b10e-f8a38c6cafe1
-  id: 638e2f41-2da7-47e1-af95-a70c4e1dd624
-  name: Инженер технической поддержки
-- group_id: 684c4d01-de1d-490a-b10e-f8a38c6cafe1
-  id: 82dcc1ec-e1dd-42c5-a18a-0eb1dadd8d74
-  name: Аналитик технической поддержки
-- group_id: 684c4d01-de1d-490a-b10e-f8a38c6cafe1
-  id: c95ea42a-164d-4fc3-a762-13c11024f6f0
-  name: Модератор
-- group_id: 536b02b4-077a-4e4f-a9a9-114aee4b539e
-  id: 087d717f-ed94-4116-8699-29c02ed6ee99
-  name: Менеджер по маркетингу
-- group_id: 536b02b4-077a-4e4f-a9a9-114aee4b539e
-  id: a91fef73-761c-475c-ab5e-e0d98643ba44
-  name: Директор по маркетингу
-- group_id: 536b02b4-077a-4e4f-a9a9-114aee4b539e
-  id: 2ec4e591-61ba-4a34-8c75-573c25e8f8f9
-  name: Маркетинговый аналитик
-- group_id: 536b02b4-077a-4e4f-a9a9-114aee4b539e
-  id: c1d6acd6-cb88-426b-9e9e-067417321320
-  name: SEO-специалист
-- group_id: 536b02b4-077a-4e4f-a9a9-114aee4b539e
-  id: d055634d-5356-4f29-97c5-04d8d9a7bf86
-  name: SMM-специалист
-- group_id: 536b02b4-077a-4e4f-a9a9-114aee4b539e
-  id: 07b0c766-f12a-448e-8efe-a66451c74b03
-  name: Таргетолог
-- group_id: 536b02b4-077a-4e4f-a9a9-114aee4b539e
-  id: 7dfbdd32-00e1-4601-b06f-066a020ea1c6
-  name: Деврел
-- group_id: 536b02b4-077a-4e4f-a9a9-114aee4b539e
-  id: f287e38b-af53-4bd2-a220-f9bc321c20ec
-  name: PR-менеджер
-- group_id: 536b02b4-077a-4e4f-a9a9-114aee4b539e
-  id: f27ad674-c73b-4ccb-89ab-fe9cbc53249f
-  name: Директолог
-- group_id: 536b02b4-077a-4e4f-a9a9-114aee4b539e
-  id: 6b545f79-26c0-4f4e-b37f-c0da9960faa8
-  name: Контекстолог
-- group_id: a97d0047-7914-4dfb-a35e-7c18328bfff9
-  id: 506168c2-f207-4553-8186-b3c895b5934a
-  name: Менеджер по работе с клиентами
-- group_id: a97d0047-7914-4dfb-a35e-7c18328bfff9
-  id: eaeb29e5-f8dd-47f9-9871-185d9f14dbd6
-  name: Директор по работе с клиентами
-- group_id: a97d0047-7914-4dfb-a35e-7c18328bfff9
-  id: 0d808606-321e-4431-80e9-90527d3ac7c9
-  name: Менеджер по продажам
-- group_id: a97d0047-7914-4dfb-a35e-7c18328bfff9
-  id: cf55570a-5c49-449b-b35c-099452ee4861
-  name: Директор по продажам
-- group_id: a97d0047-7914-4dfb-a35e-7c18328bfff9
-  id: 6edceb95-450e-4c4e-b322-42d623db4079
-  name: Аналитик продаж
-- group_id: baa5ece9-0392-490c-a8df-6ba9a87cf784
-  id: 532cf8f8-197c-4ba8-b979-37d34c63318a
-  name: Создатель контента
-- group_id: baa5ece9-0392-490c-a8df-6ba9a87cf784
-  id: dad16a33-4fba-4c38-98e9-aab8e4013256
-  name: Менеджер по контенту
-- group_id: baa5ece9-0392-490c-a8df-6ba9a87cf784
-  id: a98ced98-fff3-4d33-b777-fd9d115a27df
-  name: Директор по контенту
-- group_id: baa5ece9-0392-490c-a8df-6ba9a87cf784
-  id: be27e47d-6fb6-4301-93fd-9efaa2cdd2e5
-  name: Технический писатель
-- group_id: baa5ece9-0392-490c-a8df-6ba9a87cf784
-  id: dec06c55-93f9-4e71-9eaa-5a4fc080fedc
-  name: Копирайтер
-- group_id: 7f31465e-f068-4f33-92f3-73fafff8f726
-  id: f27779f9-70eb-4bff-b2ce-8b5ea959d567
-  name: Менеджер по персоналу
-- group_id: 7f31465e-f068-4f33-92f3-73fafff8f726
-  id: 0e8277c8-fb18-4633-bd75-93c67dc506c0
-  name: Директор по персоналу
-- group_id: 7f31465e-f068-4f33-92f3-73fafff8f726
-  id: 105a259b-6034-4c43-8fbf-d0ab845b0215
-  name: Менеджер по найму
-- group_id: 7f31465e-f068-4f33-92f3-73fafff8f726
-  id: 43cb063c-2675-4473-a1d8-4b97c9afee5a
-  name: Директор по найму
-- group_id: 7f31465e-f068-4f33-92f3-73fafff8f726
-  id: 0875e86b-3898-4e2d-be87-bf7f009d75cf
-  name: Аналитик по персоналу
-- group_id: 7f31465e-f068-4f33-92f3-73fafff8f726
-  id: 01ed5bab-10ab-45ce-ab3e-a78c00f5fdd5
-  name: Менеджер по обучению и развитию персонала
-- group_id: 7f31465e-f068-4f33-92f3-73fafff8f726
-  id: f838bf62-1739-4c8c-a88c-a8e872b7a904
-  name: Менеджер по развитию HR-бренда
-- group_id: 589eddd7-effb-4f23-90fa-20bff1e0d88f
-  id: fc815e29-df57-4403-9e1f-0d5afe7d1763
-  name: Офис менеджер
-- group_id: 589eddd7-effb-4f23-90fa-20bff1e0d88f
-  id: f658c962-08fe-4685-8afd-0639efe6bc03
-  name: Бухгалтер
-- group_id: 589eddd7-effb-4f23-90fa-20bff1e0d88f
-  id: 4f4681dc-5a7e-439c-9420-797ce45ac2fe
-  name: Юрист
-- group_id: 9ec4acd9-bcae-4db6-ba48-bc80e7812e92
-  id: 64be5dae-fc3f-488f-9121-575fbd169dd4
-  name: Администратор защиты
-- group_id: 9ec4acd9-bcae-4db6-ba48-bc80e7812e92
-  id: 48c38ac6-a487-4cd1-83ca-04bbacd1db3b
+  name_en: Web Analyst
+- group_id: 0a9ed955-566f-47fe-8e06-151546289654
+  habr_id: 23
+  id: d677bf19-c0c4-47af-93a8-550b42caabf6
+  name: UI/UX дизайнер
+  name_en: UI/UX Designer
+- group_id: 0a9ed955-566f-47fe-8e06-151546289654
+  habr_id: 94
+  id: e59ab771-83f0-4a85-adb7-299c338d4213
+  name: Продуктовый дизайнер
+  name_en: Product Designer
+- group_id: 0a9ed955-566f-47fe-8e06-151546289654
+  habr_id: 24
+  id: 31c0da85-42b3-4f0d-9a3b-fe3c96ed241a
+  name: Веб дизайнер
+  name_en: Web Designer
+- group_id: 0a9ed955-566f-47fe-8e06-151546289654
+  habr_id: 30
+  id: baa5b1d9-fe34-4ff6-aa29-679e03d3e603
+  name: Графический дизайнер
+  name_en: Graphic Designer
+- group_id: 0a9ed955-566f-47fe-8e06-151546289654
+  habr_id: 25
+  id: b03293c0-74fa-42ed-96ec-28739f942379
+  name: Дизайнер приложений
+  name_en: Application Designer
+- group_id: 0a9ed955-566f-47fe-8e06-151546289654
+  habr_id: 27
+  id: c2f817ae-9483-4054-ad38-7ef7626ecdff
+  name: Дизайнер иллюстратор
+  name_en: Designer Illustrator
+- group_id: 0a9ed955-566f-47fe-8e06-151546289654
+  habr_id: 90
+  id: 1563a312-9415-41d2-b0b0-ffbd56c777da
+  name: Нарративный дизайнер
+  name_en: Narrative Designer
+- group_id: 0a9ed955-566f-47fe-8e06-151546289654
+  habr_id: 26
+  id: 136be603-ef85-4191-973b-d88ece1aa64c
+  name: Дизайнер игр
+  name_en: Game Designer
+- group_id: 0a9ed955-566f-47fe-8e06-151546289654
+  habr_id: 91
+  id: e06ac9e4-8fde-400e-809e-8c4f18f4281c
+  name: 3d-аниматор
+  name_en: 3d Animator
+- group_id: 0a9ed955-566f-47fe-8e06-151546289654
+  habr_id: 92
+  id: 098054ae-032e-43fd-95be-2a0e93b4eda9
+  name: Flash-аниматор
+  name_en: Flash Animator
+- group_id: 0a9ed955-566f-47fe-8e06-151546289654
+  habr_id: 28
+  id: 870ad2a3-c34f-47f4-897f-e3e38a6cfe45
+  name: Моушен дизайнер
+  name_en: Motion Designer
+- group_id: 0a9ed955-566f-47fe-8e06-151546289654
+  habr_id: 29
+  id: f9cbf474-97c4-4728-bcbb-032aa8d785eb
+  name: 3d моделлер
+  name_en: 3d Modeler
+- group_id: 0a9ed955-566f-47fe-8e06-151546289654
+  habr_id: 93
+  id: b88a5564-3fb0-4908-b434-6d8ca408ef56
+  name: Художник компьютерной графики
+  name_en: Computer Graphics Artist
+- group_id: 0a9ed955-566f-47fe-8e06-151546289654
+  habr_id: 122
+  id: 84b6b148-8891-42ad-a17e-91f17505f45c
+  name: VUI-дизайнер
+  name_en: VUI-designer
+- group_id: 0a9ed955-566f-47fe-8e06-151546289654
+  habr_id: 31
+  id: c0d72864-3571-46fc-974e-7300dc168156
+  name: Арт директор
+  name_en: Art Director
+- group_id: 2cd07217-7418-440c-b074-84d8030aae99
+  habr_id: 32
+  id: d59e79fb-2fc8-4ddc-b215-fbb383aaa091
+  name: Менеджер проекта
+  name_en: Project Manager
+- group_id: 2cd07217-7418-440c-b074-84d8030aae99
+  habr_id: 33
+  id: ea7933d9-8509-4df7-8a45-83ff71aa6388
+  name: Директор проекта
+  name_en: Project Director
+- group_id: 2cd07217-7418-440c-b074-84d8030aae99
+  habr_id: 34
+  id: a58b895e-8578-41fb-b1cd-a1401c408b15
+  name: Менеджер продукта
+  name_en: Product Manager
+- group_id: 2cd07217-7418-440c-b074-84d8030aae99
+  habr_id: 35
+  id: 7e48941b-ca82-4149-b045-063560de3be8
+  name: Директор по продукту
+  name_en: Chief Product Officer (CPO)
+- group_id: 2cd07217-7418-440c-b074-84d8030aae99
+  habr_id: 119
+  id: f3742dc6-fddd-4ed4-a2b4-5a861616e52e
+  name: Scrum-мастер
+  name_en: Scrum Master
+- group_id: 2cd07217-7418-440c-b074-84d8030aae99
+  habr_id: 36
+  id: 8d42370b-5ea2-4611-8962-875a91f28289
+  name: Менеджер сообщества
+  name_en: Community manager
+- group_id: 2cd07217-7418-440c-b074-84d8030aae99
+  habr_id: 37
+  id: c69ee845-53e8-40cd-8b93-cd19fd17bea1
+  name: Программный менеджер
+  name_en: Program Manager
+- group_id: 2cd07217-7418-440c-b074-84d8030aae99
+  habr_id: 38
+  id: 08c33461-6322-49b0-b312-d5fe88521afa
+  name: Исполнительный директор
+  name_en: Chief Operating Officer (COO)
+- group_id: 2cd07217-7418-440c-b074-84d8030aae99
+  habr_id: 70
+  id: bce22231-0cc0-4d44-81bc-fc7de6081fda
+  name: Директор по информационным технологиям
+  name_en: Chief information officer (CIO)
+- group_id: 2cd07217-7418-440c-b074-84d8030aae99
+  habr_id: 71
+  id: 40bc79f7-8f6e-4b18-8ef3-fae1838cc474
+  name: Финансовый директор
+  name_en: Chief Financial Officer (CFO)
+- group_id: 2cd07217-7418-440c-b074-84d8030aae99
+  habr_id: 39
+  id: a4067426-4fc0-418e-8ef5-0391a87f219a
+  name: Генеральный директор
+  name_en: Chief Executive Officer (CEO)
+- group_id: 501c8ea5-dbf7-4768-98c3-cf982b39dc5f
+  habr_id: 78
+  id: 42df84ee-8d0e-4480-8c60-669b3a9892b8
   name: Пентестер
-- group_id: 9ec4acd9-bcae-4db6-ba48-bc80e7812e92
-  id: 477e2559-7cf6-47ac-b1c8-5fedbbf602a9
+  name_en: Pentester
+- group_id: 501c8ea5-dbf7-4768-98c3-cf982b39dc5f
+  habr_id: 21
+  id: f29c8bbe-d846-4379-93e6-06c6097d40b7
+  name: Администратор защиты
+  name_en: Security Administrator
+- group_id: 501c8ea5-dbf7-4768-98c3-cf982b39dc5f
+  habr_id: 79
+  id: 059fef9f-978d-4bae-af71-92aa9677863e
   name: Специалист по реверс-инжинирингу
-- group_id: 9ec4acd9-bcae-4db6-ba48-bc80e7812e92
-  id: 3b47b8fc-829a-4183-8ee7-68d8fbf8e62e
+  name_en: Reverse Engineer
+- group_id: 501c8ea5-dbf7-4768-98c3-cf982b39dc5f
+  habr_id: 80
+  id: ff9bf171-3719-400f-9adb-184492facfdd
   name: Инженер по безопасности
-- group_id: 9ec4acd9-bcae-4db6-ba48-bc80e7812e92
-  id: 982ff103-41a1-4c9a-82b5-a0f5c7a4941e
+  name_en: Security Engineer
+- group_id: 501c8ea5-dbf7-4768-98c3-cf982b39dc5f
+  habr_id: 81
+  id: e0053179-18bb-4e7c-8459-3657e9903da4
   name: Антифрод аналитик
-- group_id: 63a79807-6a83-4ee3-9716-41c9c368c604
-  id: 56457307-e80b-4380-92c4-414a3995cedc
+  name_en: Antifraud Analyst
+- group_id: 65e17124-e6fd-42ca-ae42-550cd215f5e9
+  habr_id: 44
+  id: 2c54388c-7b24-430b-be85-51f1f7c6d41b
   name: Ученый по данным
-- group_id: 63a79807-6a83-4ee3-9716-41c9c368c604
-  id: eba3a97d-6ccf-49d3-9233-70e6156bbaf3
+  name_en: Data Scientist
+- group_id: 65e17124-e6fd-42ca-ae42-550cd215f5e9
+  habr_id: 125
+  id: a9ff629e-6498-4305-b2ab-24b3907c6ebf
   name: ML разработчик
-- group_id: 068203d8-7fa6-45ca-92aa-e3dd629d9cec
-  id: 28160f1d-777e-4fc4-bb97-9b89836d047d
+  name_en: ML Engineer
+- group_id: 7e0844ba-bd0c-4c38-b2a3-371c704d319d
+  habr_id: 49
+  id: 3e7ebaf4-fe5c-4fe1-ae87-c7e24832e9b6
+  name: Инженер технической поддержки
+  name_en: Technical Support Engineer
+- group_id: 7e0844ba-bd0c-4c38-b2a3-371c704d319d
+  habr_id: 45
+  id: bd0164a8-ab5a-4737-b109-c9c15907e27c
+  name: Менеджер технической поддержки
+  name_en: Technical Support Manager
+- group_id: 7e0844ba-bd0c-4c38-b2a3-371c704d319d
+  habr_id: 46
+  id: 8c38dad6-7e8d-488a-94c8-6e40e95a6187
+  name: Директор технической поддержки
+  name_en: Technical Support Director
+- group_id: 7e0844ba-bd0c-4c38-b2a3-371c704d319d
+  habr_id: 50
+  id: ce6c9594-a531-4a21-9395-24e26caea01d
+  name: Аналитик технической поддержки
+  name_en: Technical Support Analyst
+- group_id: 7e0844ba-bd0c-4c38-b2a3-371c704d319d
+  habr_id: 47
+  id: 48a30e67-8301-4674-beb0-15d0dd669389
+  name: Менеджер по обслуживанию клиентов
+  name_en: Customer Service Manager
+- group_id: 7e0844ba-bd0c-4c38-b2a3-371c704d319d
+  habr_id: 48
+  id: bd1a54e4-fa27-4d2a-8767-92d2ca90c467
+  name: Директор по обслуживанию клиентов
+  name_en: Customer Service Director
+- group_id: 7e0844ba-bd0c-4c38-b2a3-371c704d319d
+  habr_id: 101
+  id: af2300f0-af80-4630-8d03-fc8531fa0634
+  name: Модератор
+  name_en: Moderator
+- group_id: 4c764e57-feb2-4a18-a207-97346141fd99
+  habr_id: 51
+  id: fe30d678-1b69-478a-be9e-9a98c7f6bc4c
+  name: Менеджер по маркетингу
+  name_en: Marketing Manager
+- group_id: 4c764e57-feb2-4a18-a207-97346141fd99
+  habr_id: 52
+  id: a20a1122-d111-4105-8e78-07b9c5795c6e
+  name: Директор по маркетингу
+  name_en: Marketing Director
+- group_id: 4c764e57-feb2-4a18-a207-97346141fd99
+  habr_id: 53
+  id: 9918efe5-cbb1-456f-9d27-48d8bf1da660
+  name: Маркетинговый аналитик
+  name_en: Marketing Analyst
+- group_id: 4c764e57-feb2-4a18-a207-97346141fd99
+  habr_id: 102
+  id: 9fc25124-5cb6-47ec-bf66-2aacbae095e5
+  name: SEO-специалист
+  name_en: SEO Specialist
+- group_id: 4c764e57-feb2-4a18-a207-97346141fd99
+  habr_id: 103
+  id: 5c70eaa2-8001-46f6-8fcc-86abccd0a70e
+  name: SMM-специалист
+  name_en: SMM Specialist
+- group_id: 4c764e57-feb2-4a18-a207-97346141fd99
+  habr_id: 104
+  id: afb677f2-c2f4-4138-a477-e87a53f689bd
+  name: Таргетолог
+  name_en: Targetologist
+- group_id: 4c764e57-feb2-4a18-a207-97346141fd99
+  habr_id: 120
+  id: 34daf0aa-2f51-44e1-8f1d-157bfb2cace2
+  name: Деврел
+  name_en: DevRel
+- group_id: 4c764e57-feb2-4a18-a207-97346141fd99
+  habr_id: 121
+  id: 5c240ba6-02bf-4dbb-a449-7f524ab83a55
+  name: PR-менеджер
+  name_en: PR-manager
+- group_id: 4c764e57-feb2-4a18-a207-97346141fd99
+  habr_id: 131
+  id: 13b041dc-a964-460c-a244-45e0ab91a124
+  name: Директолог
+  name_en: Directologist
+- group_id: 4c764e57-feb2-4a18-a207-97346141fd99
+  habr_id: 132
+  id: d864ad6e-8d0b-4798-ad26-4d3152b5daae
+  name: Контекстолог
+  name_en: PPC specialist
+- group_id: 36ead433-67a2-4cd4-8590-4209e9998a84
+  habr_id: 22
+  id: 2ff2a22b-482c-41f3-8b8b-133e951fb0b7
+  name: DevOps-инженер
+  name_en: DevOps
+- group_id: 36ead433-67a2-4cd4-8590-4209e9998a84
+  habr_id: 17
+  id: 148ef389-f051-49a6-945a-41490862795d
+  name: Системный администратор
+  name_en: System Administration
+- group_id: 36ead433-67a2-4cd4-8590-4209e9998a84
+  habr_id: 18
+  id: b6267a14-6726-433f-bf45-af30559121aa
+  name: Администратор серверов
+  name_en: Server Administrator
+- group_id: 36ead433-67a2-4cd4-8590-4209e9998a84
+  habr_id: 19
+  id: eb57c151-19d9-4f10-8406-f1212389dca2
+  name: Администратор баз данных
+  name_en: Database Administrator
+- group_id: 36ead433-67a2-4cd4-8590-4209e9998a84
+  habr_id: 20
+  id: 450934d6-5007-43c8-ad19-351cd7132665
+  name: Сетевой инженер
+  name_en: Network Engineer
+- group_id: 36ead433-67a2-4cd4-8590-4209e9998a84
+  habr_id: 89
+  id: 5c287e75-7b49-4801-96ec-a3509deebebd
+  name: Администратор сайта
+  name_en: Site Administrator
+- group_id: 36ead433-67a2-4cd4-8590-4209e9998a84
+  habr_id: 130
+  id: 0b9fe427-8ad7-4da2-aa6f-57233ad51d59
+  name: Инженер по доступности сервисов
+  name_en: Site Reliability Engineer (SRE)
+- group_id: 36ead433-67a2-4cd4-8590-4209e9998a84
+  habr_id: 129
+  id: f16bcd56-3da3-4efd-835f-282473051e8b
+  name: MLOps-инженер
+  name_en: MLOps
+- group_id: 65edc675-5662-4f76-8706-03de7a316f1d
+  habr_id: 74
+  id: eb9c66b7-e63d-43e2-9de8-a12d1bdf79cc
+  name: Технический писатель
+  name_en: Technical Writer
+- group_id: 65edc675-5662-4f76-8706-03de7a316f1d
+  habr_id: 59
+  id: d53655ee-bfe5-4fdf-8100-3f248c21200b
+  name: Создатель контента
+  name_en: Content Writer
+- group_id: 65edc675-5662-4f76-8706-03de7a316f1d
+  habr_id: 60
+  id: 1eacb565-9ac3-45b2-85b2-995834b1478d
+  name: Менеджер по контенту
+  name_en: Content Manager
+- group_id: 65edc675-5662-4f76-8706-03de7a316f1d
+  habr_id: 61
+  id: 3cd6397c-bcc7-4eb3-bbaa-c9acfbaa9c78
+  name: Директор по контенту
+  name_en: Content Director
+- group_id: 65edc675-5662-4f76-8706-03de7a316f1d
+  habr_id: 105
+  id: 1c1c2041-a5d7-4399-ac8e-7b693bb04180
+  name: Копирайтер
+  name_en: Copywriter
+- group_id: 76715a75-bafd-4cae-b0e9-40cc3354c013
+  habr_id: 54
+  id: 84a924ad-dd09-46c6-bf8d-466a4ffa768b
+  name: Менеджер по работе с клиентами
+  name_en: Account Manager
+- group_id: 76715a75-bafd-4cae-b0e9-40cc3354c013
+  habr_id: 55
+  id: 1af325a2-b10d-4a2c-be9e-3e1676131a4a
+  name: Директор по работе с клиентами
+  name_en: Account Director
+- group_id: 76715a75-bafd-4cae-b0e9-40cc3354c013
+  habr_id: 56
+  id: daf5f439-9ee3-40ed-82a9-d0a7c368f3af
+  name: Менеджер по продажам
+  name_en: Sales manager
+- group_id: 76715a75-bafd-4cae-b0e9-40cc3354c013
+  habr_id: 57
+  id: e8fa2cd1-ca6a-4f09-b08c-fd9785ec4564
+  name: Директор по продажам
+  name_en: Sales Director
+- group_id: 76715a75-bafd-4cae-b0e9-40cc3354c013
+  habr_id: 58
+  id: 458cbffd-d2d4-4b2a-a56f-86fde5c4e84c
+  name: Аналитик продаж
+  name_en: Sales Analyst
+- group_id: e7d72425-5e20-47fe-a00f-864394bfd9b3
+  habr_id: 62
+  id: 8d40f678-a538-4bef-877b-e7a092e7ece0
+  name: Менеджер по персоналу
+  name_en: HR Manager
+- group_id: e7d72425-5e20-47fe-a00f-864394bfd9b3
+  habr_id: 64
+  id: f24d0aa2-45e9-4c8b-a334-6b14eef02f88
+  name: Менеджер по найму
+  name_en: Recruitment Manager
+- group_id: e7d72425-5e20-47fe-a00f-864394bfd9b3
+  habr_id: 63
+  id: e5c82b3b-73df-4566-ad1d-c23d0dc7d853
+  name: Директор по персоналу
+  name_en: HR Director
+- group_id: e7d72425-5e20-47fe-a00f-864394bfd9b3
+  habr_id: 65
+  id: 19821d3d-c7b0-4663-ac66-ecaaf5718bfb
+  name: Директор по найму
+  name_en: Recruitment Director
+- group_id: e7d72425-5e20-47fe-a00f-864394bfd9b3
+  habr_id: 66
+  id: 86298aa5-91a8-4d9d-aa53-c7ab5521569a
+  name: Аналитик по персоналу
+  name_en: HR Analyst
+- group_id: e7d72425-5e20-47fe-a00f-864394bfd9b3
+  habr_id: 123
+  id: b6f0bf83-2127-40df-810d-c7a95fbe5eb1
+  name: Менеджер по обучению и развитию персонала
+  name_en: Personnel Training and Development Manager
+- group_id: e7d72425-5e20-47fe-a00f-864394bfd9b3
+  habr_id: 124
+  id: 6497e28f-5beb-4b66-8a91-db8527721f03
+  name: Менеджер по развитию HR-бренда
+  name_en: HR Brand Development Manager
+- group_id: 9a1bb4a9-9f48-48a7-8263-9d7c0efab47c
+  habr_id: 67
+  id: e57d7291-5fab-4b27-b155-f0f9a1cf231f
+  name: Офис менеджер
+  name_en: Office Manager
+- group_id: 9a1bb4a9-9f48-48a7-8263-9d7c0efab47c
+  habr_id: 68
+  id: e84080a7-4b00-4c06-8bd2-5414dd8d7ba5
+  name: Бухгалтер
+  name_en: Accountant
+- group_id: 9a1bb4a9-9f48-48a7-8263-9d7c0efab47c
+  habr_id: 69
+  id: b2b78e54-3c43-40c7-9634-19f3edded667
+  name: Юрист
+  name_en: Lawyer
+- group_id: befb4c10-eff9-423d-8f4f-8deb4adc02d8
+  habr_id: 127
+  id: d7ec40eb-dab8-47c2-8e93-26690e6634c5
   name: Зерокодер
+  name_en: Zerocoder

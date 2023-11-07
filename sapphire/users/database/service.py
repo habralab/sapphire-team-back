@@ -93,6 +93,7 @@ class UsersDatabaseService(BaseDatabaseService):
             filters.append(UserSkill.user_id == user.id)
         stmt = select(UserSkill.skill_id).where(*filters)
         result = await session.execute(stmt)
+
         current_skills = result.scalars().all()
 
         return set(current_skills)

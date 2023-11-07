@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 
 import backoff
 import pytest
+from faker import Faker
 
 from autotests.clients.email import EmailClient
 from autotests.clients.rest.exceptions import ResponseException
@@ -34,11 +35,12 @@ class TestProjectFlow:
     @pytest.mark.asyncio
     async def test_create_project(
             self,
+            faker: Faker,
             oleg_id: uuid.UUID,
             oleg_projects_rest_client: ProjectsRestClient,
     ):
-        name = "Oleg Autotest Project"
-        description = "Oleg Autotest Project Description"
+        name = faker.job() + " Сервис"
+        description = faker.text()
         deadline = datetime.utcnow() + timedelta(days=90)
 
         project = await oleg_projects_rest_client.create_project(
