@@ -1,6 +1,7 @@
 import asyncio
 import datetime
 import pathlib
+import random
 import uuid
 from typing import Any
 
@@ -21,6 +22,11 @@ from .settings import AutotestsSettings
 @pytest.fixture(scope="session", autouse=True)
 def faker_session_locale():
     return ["ru_RU"]
+
+
+@pytest.fixture(scope="session", autouse=True)
+def faker_seed():
+    return random.seed()
 
 
 @pytest.fixture(scope="session")
