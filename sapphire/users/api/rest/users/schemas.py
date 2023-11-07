@@ -39,9 +39,3 @@ class UserResponse(BaseModel):
             created_at=user.created_at,
             updated_at=user.updated_at,
         )
-
-
-class UserSkillsResponse(BaseModel):
-    model_config = ConfigDict(from_attributes=True)
-
-    user_skill_ids: list[uuid.UUID]

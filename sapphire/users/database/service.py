@@ -91,7 +91,7 @@ class UsersDatabaseService(BaseDatabaseService):
         filters = []
         if user is not Empty:
             filters.append(UserSkill.user_id == user.id)
-        stmt = select(UserSkill.user_id).where(*filters)
+        stmt = select(UserSkill.skill_id).where(*filters)
         result = await session.execute(stmt)
         current_skills = result.scalars().all()
 
