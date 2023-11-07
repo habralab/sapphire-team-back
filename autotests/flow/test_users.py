@@ -140,7 +140,6 @@ class TestUserUpdateSkillsFlow:
         assert skills == new_skills
 
     @pytest.mark.dependency(depends=["TestUserUpdateSkillsFlow::test_update_user_skills"])
-    @pytest.mark.skip("Not implemented")
     @pytest.mark.asyncio
     async def test_get_user_skills(self, oleg_id: uuid.UUID, users_rest_client: UsersRestClient):
         new_skills: set[uuid.UUID] = self.CONTEXT["new_skills"]
