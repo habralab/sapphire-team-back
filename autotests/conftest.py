@@ -18,6 +18,11 @@ from autotests.clients.websocket import WebsocketClient
 from .settings import AutotestsSettings
 
 
+@pytest.fixture(scope="session", autouse=True)
+def faker_session_locale():
+    return ["ru_RU"]
+
+
 @pytest.fixture(scope="session")
 def event_loop():
     try:
