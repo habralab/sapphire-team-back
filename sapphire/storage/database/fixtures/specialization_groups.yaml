@@ -1,32 +1,62 @@
 model: specialization_groups
 data:
-- id: f6fccd64-1df1-4355-8cbc-e02c347c464e
+- habr_id: 1
+  id: 9725158a-9c9f-416a-9c1b-9444559b3370
   name: Разработка
-- id: af520dbd-08fc-4c85-9894-37c623a97d73
+  name_en: Software Development
+- habr_id: 2
+  id: b89484c8-8d74-4f06-860a-e096e40b2a0b
   name: Тестирование
-- id: 2046dc47-98d7-4c61-b55f-c250fbc65ad8
-  name: Администрирование
-- id: ec1a9abe-f21e-40d8-b83a-b152fa8145de
-  name: Дизайн
-- id: 42f09815-393e-451a-bc64-a232062e3096
-  name: Менеджмент
-- id: a27bde68-c0e2-4acc-8321-5479c2fa293d
+  name_en: Quality Assurance
+- habr_id: 6
+  id: 2c7574f8-c848-4e78-81b1-1cc08a957e9b
   name: Аналитика
-- id: 684c4d01-de1d-490a-b10e-f8a38c6cafe1
-  name: Поддержка
-- id: 536b02b4-077a-4e4f-a9a9-114aee4b539e
-  name: Маркетинг
-- id: a97d0047-7914-4dfb-a35e-7c18328bfff9
-  name: Продажи
-- id: baa5ece9-0392-490c-a8df-6ba9a87cf784
-  name: Контент
-- id: 7f31465e-f068-4f33-92f3-73fafff8f726
-  name: HR
-- id: 589eddd7-effb-4f23-90fa-20bff1e0d88f
-  name: Офис
-- id: 9ec4acd9-bcae-4db6-ba48-bc80e7812e92
+  name_en: Analytics
+- habr_id: 4
+  id: 0a9ed955-566f-47fe-8e06-151546289654
+  name: Дизайн
+  name_en: Design
+- habr_id: 5
+  id: 2cd07217-7418-440c-b074-84d8030aae99
+  name: Менеджмент
+  name_en: Management
+- habr_id: 13
+  id: 501c8ea5-dbf7-4768-98c3-cf982b39dc5f
   name: Информационная безопасность
-- id: 63a79807-6a83-4ee3-9716-41c9c368c604
+  name_en: Information Security
+- habr_id: 14
+  id: 65e17124-e6fd-42ca-ae42-550cd215f5e9
   name: Искусственный интеллект
-- id: 068203d8-7fa6-45ca-92aa-e3dd629d9cec
+  name_en: Artificial Intelligence
+- habr_id: 7
+  id: 7e0844ba-bd0c-4c38-b2a3-371c704d319d
+  name: Поддержка
+  name_en: Support
+- habr_id: 8
+  id: 4c764e57-feb2-4a18-a207-97346141fd99
+  name: Маркетинг
+  name_en: Marketing
+- habr_id: 3
+  id: 36ead433-67a2-4cd4-8590-4209e9998a84
+  name: Администрирование
+  name_en: Administration
+- habr_id: 10
+  id: 65edc675-5662-4f76-8706-03de7a316f1d
+  name: Контент
+  name_en: Content
+- habr_id: 9
+  id: 76715a75-bafd-4cae-b0e9-40cc3354c013
+  name: Продажи
+  name_en: Sales
+- habr_id: 11
+  id: e7d72425-5e20-47fe-a00f-864394bfd9b3
+  name: HR
+  name_en: Human Resources
+- habr_id: 12
+  id: 9a1bb4a9-9f48-48a7-8263-9d7c0efab47c
+  name: Офис
+  name_en: Office
+- habr_id: 15
+  id: befb4c10-eff9-423d-8f4f-8deb4adc02d8
   name: Зерокодинг
+  name_en: No-code

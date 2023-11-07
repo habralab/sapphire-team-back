@@ -39,7 +39,7 @@ class ProjectsDatabaseService(BaseDatabaseService):
         return pathlib.Path(__file__).parent / "fixtures"
 
     def get_models(self) -> list[Type[Base]]:
-        return [Participant, Position, Project, ProjectHistory]
+        return [Participant, Position, Project, ProjectHistory, Review]
 
     async def create_project(
         self,
