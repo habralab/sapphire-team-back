@@ -17,7 +17,7 @@ class HealthResponse(BaseModel):
 class CreateProjectRequest(BaseModel):
     name: str
     description: str | None
-    owner_id: uuid.UUID
+    owner_id: uuid.UUID | None
     deadline: NaiveDatetime | None
 
 
