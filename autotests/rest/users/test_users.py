@@ -154,7 +154,7 @@ async def test_get_user_skills(user_id: uuid.UUID, oleg_users_rest_client: Users
     skills = await oleg_users_rest_client.get_user_skills(user_id=user_id)
     response = await oleg_users_rest_client.get_user_skills(user_id=oleg_id)
 
-    assert response == skills
+    assert response == {skill for skill in skills}
 
 
 @pytest.mark.asyncio

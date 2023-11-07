@@ -148,7 +148,6 @@ async def update_user_skills(
 
 async def get_user_skills(
         request: fastapi.Request,
-        request_user_id: uuid.UUID | None = fastapi.Depends(get_request_user_id),
         user: User = fastapi.Depends(get_path_user),
 ) -> list[uuid.UUID]:
     database_service: UsersDatabaseService = request.app.service.database
