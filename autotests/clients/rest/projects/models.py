@@ -2,7 +2,7 @@ import uuid
 from datetime import datetime
 from typing import Literal
 
-from pydantic import BaseModel, Field, NonNegativeInt, confloat, constr
+from pydantic import BaseModel, Field, NaiveDatetime, NonNegativeInt, confloat, constr
 
 from autotests.rest.models import PaginatedResponse
 
@@ -17,8 +17,8 @@ class HealthResponse(BaseModel):
 class CreateProjectRequest(BaseModel):
     name: str
     description: str | None
-    owner_id: uuid.UUID
-    deadline: datetime | None
+    owner_id: uuid.UUID | None
+    deadline: NaiveDatetime | None
 
 
 class ProjectResponse(BaseModel):
@@ -27,8 +27,8 @@ class ProjectResponse(BaseModel):
     description: str | None
     owner_id: uuid.UUID
     deadline: datetime | None
-    created_at: datetime
-    updated_at: datetime
+    created_at: NaiveDatetime
+    updated_at: NaiveDatetime
     status: ProjectStatusEnum
 
 
