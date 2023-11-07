@@ -3,8 +3,8 @@ import uuid
 from datetime import datetime, timedelta
 
 import backoff
-import faker
 import pytest
+from faker import Faker
 
 from autotests.clients.email import EmailClient
 from autotests.clients.rest.exceptions import ResponseException
@@ -35,7 +35,7 @@ class TestProjectFlow:
     @pytest.mark.asyncio
     async def test_create_project(
             self,
-            faker: faker.Faker,
+            faker: Faker,
             oleg_id: uuid.UUID,
             oleg_projects_rest_client: ProjectsRestClient,
     ):
