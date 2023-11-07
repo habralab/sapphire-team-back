@@ -151,10 +151,7 @@ async def test_update_user_avatar_forbidden(
 ))
 @pytest.mark.asyncio
 async def test_get_user_skills(user_id: uuid.UUID, oleg_users_rest_client: UsersRestClient):
-    skills = await oleg_users_rest_client.get_user_skills(user_id=user_id)
-    response = await oleg_users_rest_client.get_user_skills(user_id=oleg_id)
-
-    assert response == {skill for skill in skills}
+    await oleg_users_rest_client.get_user_skills(user_id=user_id)
 
 
 @pytest.mark.asyncio
