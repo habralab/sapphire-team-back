@@ -43,7 +43,6 @@ class TestProjectFlow:
 
         project = await oleg_projects_rest_client.create_project(
             name=name,
-            owner_id=oleg_id,
             description=description,
             deadline=deadline,
         )
@@ -169,7 +168,6 @@ class TestProjectFlow:
         assert skills == new_skills
 
     @pytest.mark.dependency(depends=["TestProjectFlow::test_update_position_skills"])
-    @pytest.mark.skip("Not implemented")
     @pytest.mark.asyncio
     async def test_get_position_skills(self, oleg_projects_rest_client: ProjectsRestClient):
         project_id: uuid.UUID = self.CONTEXT["project_id"]
