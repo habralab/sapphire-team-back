@@ -149,7 +149,7 @@ async def update_user_skills(
 async def get_user_skills(
         request: fastapi.Request,
         user: User = fastapi.Depends(get_path_user),
-) -> list[uuid.UUID]:
+) -> set[uuid.UUID]:
     database_service: UsersDatabaseService = request.app.service.database
     async with database_service.transaction() as session:
         skills = await database_service.get_user_skills(
