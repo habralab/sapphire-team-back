@@ -33,7 +33,6 @@ class StorageDatabaseService(BaseDatabaseService):
             query_text: str | Type[Empty] = Empty,
             page: int | Type[Empty] = Empty,
             per_page: int | Type[Empty] = Empty,
-            is_other: bool | Type[Empty] = Empty,
             group_id: uuid.UUID | Type[Empty] = Empty,
     ) -> list[Specialization]:
         query = select(Specialization).order_by(desc(Specialization.created_at))
@@ -41,9 +40,6 @@ class StorageDatabaseService(BaseDatabaseService):
         filters = []
         if query_text is not Empty:
             filters.append(Specialization.name.contains(query_text))
-
-        if is_other is not Empty:
-            filters.append(Specialization.is_other == is_other)
 
         if group_id is not Empty:
             filters.append(Specialization.group_id == group_id)

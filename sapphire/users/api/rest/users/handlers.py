@@ -11,7 +11,7 @@ from sapphire.users.database.models import User
 from sapphire.users.database.service import UsersDatabaseService
 
 from .dependencies import auth_user, get_path_user
-from .schemas import UserResponse, UserSkillsResponse, UserUpdateRequest
+from .schemas import UserResponse, UserUpdateRequest
 
 
 async def get_user(
@@ -144,16 +144,3 @@ async def update_user_skills(
             skills=data,
         )
     return skills
-
-async def get_user_skills(
-    request: fastapi.Request,
-    request_user_id: uuid.UUID = fastapi.Depends(auth_user_id),
-    user: User = fastapi.Depends(get_path_user),
-) -> UserSkillsResponse:
-    database_service: UsersDatabaseService = request.app.service.database
-    async with database_service.transaction() as session:
-        skills = await database_service.get_user_skills(
-            session=session,
-            user=user,
-        )
-    return UserSkillsResponse.model_validate(skills)

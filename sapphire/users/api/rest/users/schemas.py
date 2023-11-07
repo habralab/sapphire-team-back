@@ -2,7 +2,7 @@ import uuid
 
 from pydantic import BaseModel, ConfigDict, EmailStr, NaiveDatetime
 
-from sapphire.users.database.models import User, UserSkill
+from sapphire.users.database.models import User
 
 
 class UserUpdateRequest(BaseModel):
@@ -39,10 +39,3 @@ class UserResponse(BaseModel):
             created_at=user.created_at,
             updated_at=user.updated_at,
         )
-
-
-class UserSkillsResponse(BaseModel):
-    model_config = ConfigDict(from_attributes=True)
-
-    user_id: uuid
-    skills: list[UserSkill]
