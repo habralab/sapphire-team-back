@@ -98,16 +98,19 @@ class UsersDatabaseService(BaseDatabaseService):
         return set(current_skills)
 
     async def update_user_skills(self,
-                                 session: AsyncSession,
-                                 user: User,
-                                 skills: Set[uuid.UUID] = frozenset(),
-                                 ) -> Set[uuid.UUID]:
+        session: AsyncSession,
+        user: User,
+        skills: Set[uuid.UUID] = frozenset(),
+    ) -> Set[uuid.UUID]:
 
-        stmt = delete(UserSkill).where(UserSkill.user_id == user.id)
-        await session.execute(stmt)
+        await session.execute(
+            delete(UserSkill).where(UserSkill.user_id == user.id)
+        )
 
-        new_skills = [UserSkill(user=user, skill_id=skill) for skill in skills]
-        user.skills = new_skills
+        new_skills = [UserSkill(user_id=user.id, skill_id=skill) for skill in skills]
+        
+        session.add_all(new_skills)
+
         return skills
 
 
