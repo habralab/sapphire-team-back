@@ -1,7 +1,7 @@
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
-from sqlalchemy import desc, select
+from sqlalchemy import desc, or_, select
 
 from sapphire.storage.database.models import SpecializationGroup
 from sapphire.storage.database.service import StorageDatabaseService
@@ -14,7 +14,9 @@ async def test_get_specialization_groups_without_filters(database_service: Stora
 
     expected_specialization_groups = [SpecializationGroup(name=name)]
     mock_specialization_group = MagicMock()
-    mock_specialization_group.scalars.return_value.all.return_value = expected_specialization_groups
+    mock_specialization_group.unique().scalars.return_value.all.return_value = (
+        expected_specialization_groups
+    )
 
     session.execute = AsyncMock(return_value=mock_specialization_group)
 
@@ -40,14 +42,19 @@ async def test_get_specialization_groups_with_all_filters(
 
     expected_specialization_groups = [SpecializationGroup(name=name)]
     mock_specialization_group = MagicMock()
-    mock_specialization_group.scalars.return_value.all.return_value = expected_specialization_groups
+    mock_specialization_group.unique().scalars.return_value.all.return_value = (
+        expected_specialization_groups
+    )
 
     session.execute = AsyncMock(return_value=mock_specialization_group)
 
     expected_query = (
         select(SpecializationGroup)
         .order_by(desc(SpecializationGroup.created_at))
-        .where(SpecializationGroup.name.contains(name))
+        .where(or_(
+            SpecializationGroup.name.contains(name),
+            SpecializationGroup.name_en.contains(name),
+        ))
         .limit(per_page)
         .offset(offset)
     )
