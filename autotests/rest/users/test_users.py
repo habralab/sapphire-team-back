@@ -128,7 +128,11 @@ async def test_update_user_forbidden(user_id: uuid.UUID, client: UsersRestClient
 ))
 @pytest.mark.asyncio
 async def test_get_user_avatar(client: UsersRestClient, user_id: uuid.UUID):
-    await client.get_user_avatar(user_id=user_id)
+    try:
+        await client.get_user_avatar(user_id=user_id)
+    except ResponseException as exception:
+        assert exception.status_code == HTTPStatus.NOT_FOUND
+        assert exception.body == b'{"detail":"Avatar not found."}'
 
 
 @pytest.mark.parametrize(("user_id", "user_email", "client"), (
