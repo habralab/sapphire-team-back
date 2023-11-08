@@ -12,7 +12,7 @@ from sapphire.projects.database.models import ProjectStatusEnum
 class CreateProjectRequest(BaseModel):
     name: str
     description: str | None = None
-    owner_id: uuid.UUID | None = None
+    owner_id: uuid.UUID
     deadline: NaiveDatetime | None = None
 
 

@@ -9,10 +9,6 @@ from autotests.clients.rest.users.client import UsersRestClient
 class TestUserUpdateFlow:
     CONTEXT = {}
 
-    @pytest.fixture(autouse=True, scope="class")
-    def cleanup(self, oleg_revert_user_data):
-        pass
-
     @pytest.mark.dependency()
     @pytest.mark.asyncio
     async def test_update_user(
@@ -83,10 +79,6 @@ class TestUserUpdateFlow:
 
 
 class TestUserUpdateAvatarFlow:
-    @pytest.fixture(autouse=True, scope="class")
-    def cleanup(self, oleg_revert_user_avatar):
-        pass
-
     @pytest.mark.dependency()
     @pytest.mark.asyncio
     async def test_update_user_avatar(
@@ -116,10 +108,6 @@ class TestUserUpdateAvatarFlow:
 
 class TestUserUpdateSkillsFlow:
     CONTEXT = {}
-
-    @pytest.fixture(autouse=True, scope="class")
-    def cleanup(self, oleg_revert_user_skills):
-        pass
 
     @pytest.mark.dependency()
     @pytest.mark.asyncio

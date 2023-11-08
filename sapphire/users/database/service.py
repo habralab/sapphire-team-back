@@ -84,10 +84,11 @@ class UsersDatabaseService(BaseDatabaseService):
 
         return user
 
-    async def get_user_skills(self,
-                              session: AsyncSession,
-                              user: User | Type[Empty] = Empty,
-                              ) -> set[uuid.UUID]:
+    async def get_user_skills(
+            self,
+            session: AsyncSession,
+            user: User | Type[Empty] = Empty,
+    ) -> set[uuid.UUID]:
         filters = []
         if user is not Empty:
             filters.append(UserSkill.user_id == user.id)
@@ -103,15 +104,13 @@ class UsersDatabaseService(BaseDatabaseService):
         user: User,
         skills: Set[uuid.UUID] = frozenset(),
     ) -> Set[uuid.UUID]:
-
-        await session.execute(
-            delete(UserSkill).where(UserSkill.user_id == user.id)
-        )
+        stmt = delete(UserSkill).where(UserSkill.user_id == user.id) 
+        await session.execute(stmt)
 
         new_skills = [UserSkill(user_id=user.id, skill_id=skill) for skill in skills]
         user.skills = new_skills
 
-        session.add_all(new_skills)
+        session.add(user)
 
         return skills
 
