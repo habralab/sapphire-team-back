@@ -3,7 +3,6 @@ import datetime
 import pathlib
 import random
 import uuid
-from typing import Any
 
 import jwt
 import pytest

@@ -1,3 +1,6 @@
+import backoff
+from httpx import HTTPError
+
 from sapphire.common.http_client import HTTPClient
 
 from .models import CareerTrack, Skill, Specialization
@@ -12,6 +15,7 @@ class HabrCareerClient(HTTPClient):
 
         super().__init__(base_url=self.BASE_URL, headers=headers)
 
+    @backoff.on_exception(backoff.expo, HTTPError, max_tries=3, raise_on_giveup=False)
     async def get_career_track(self, user_id: str) -> CareerTrack:
         path = "/api/v1/users/career_track"
         params = {"id": user_id}

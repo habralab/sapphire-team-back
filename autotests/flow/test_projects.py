@@ -1,7 +1,7 @@
 import asyncio
-from http import HTTPStatus
 import uuid
 from datetime import datetime, timedelta
+from http import HTTPStatus
 
 import backoff
 import pytest

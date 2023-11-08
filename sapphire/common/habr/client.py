@@ -1,3 +1,6 @@
+import backoff
+from httpx import HTTPError
+
 from sapphire.common.http_client import HTTPClient
 
 from .models import GenderEnum, UserCard
@@ -17,6 +20,7 @@ class HabrClient(HTTPClient):
 
         super().__init__(base_url=self.BASE_URL, headers=headers)
 
+    @backoff.on_exception(backoff.expo, HTTPError, max_tries=3, raise_on_giveup=False)
     async def get_user_card(self, username: str) -> UserCard:
         path = f"/users/{username}/card"
 
