@@ -16,9 +16,10 @@ class BaseRestClient(httpx.AsyncClient, ServiceMixin):
             self,
             base_url: str = "",
             headers: dict[str, Any] | None = None,
+            timeout: float = 30,
             verify: bool = True,
     ):
-        super().__init__(base_url=base_url, headers=headers, verify=verify)
+        super().__init__(base_url=base_url, headers=headers, verify=verify, timeout=timeout)
 
     async def start(self):
         await self.__aenter__()  # pylint: disable=unnecessary-dunder-call

@@ -87,27 +87,32 @@ class UsersDatabaseService(BaseDatabaseService):
     async def get_user_skills(self,
                               session: AsyncSession,
                               user: User | Type[Empty] = Empty,
-                              ):
+                              ) -> set[uuid.UUID]:
         filters = []
         if user is not Empty:
             filters.append(UserSkill.user_id == user.id)
-        stmt = select(UserSkill.user_id).where(*filters)
+        stmt = select(UserSkill.skill_id).where(*filters)
         result = await session.execute(stmt)
+
         current_skills = result.scalars().all()
 
-        return current_skills
+        return set(current_skills)
 
     async def update_user_skills(self,
-                                 session: AsyncSession,
-                                 user: User,
-                                 skills: Set[uuid.UUID] = frozenset(),
-                                 ) -> Set[uuid.UUID]:
+        session: AsyncSession,
+        user: User,
+        skills: Set[uuid.UUID] = frozenset(),
+    ) -> Set[uuid.UUID]:
 
-        stmt = delete(UserSkill).where(UserSkill.user_id == user.id)
-        await session.execute(stmt)
+        await session.execute(
+            delete(UserSkill).where(UserSkill.user_id == user.id)
+        )
 
-        new_skills = [UserSkill(user=user, skill_id=skill) for skill in skills]
+        new_skills = [UserSkill(user_id=user.id, skill_id=skill) for skill in skills]
         user.skills = new_skills
+
+        session.add_all(new_skills)
+
         return skills
 
 

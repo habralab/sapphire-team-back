@@ -22,3 +22,10 @@ async def update_project_position_skills(
         )
 
     return skills
+
+
+async def get_project_position_skills(
+        request: fastapi.Request,
+        position: Position = fastapi.Depends(get_path_position),
+) -> list[uuid.UUID]:
+    return [skill.skill_id for skill in position.skills]

@@ -25,7 +25,6 @@ class SpecializationGroupListResponse(PaginatedResponse):
 class SpecializationResponse(BaseModel):
     id: uuid.UUID
     name: str
-    is_other: bool
     group_id: uuid.UUID | None
     created_at: datetime
 

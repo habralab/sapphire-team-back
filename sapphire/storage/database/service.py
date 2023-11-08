@@ -7,13 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from sapphire.common.database.service import BaseDatabaseService
 from sapphire.common.utils.empty import Empty
-from sapphire.storage.database.models import (
-    Base,
-    Skill,
-    Specialization,
-    SpecializationGroup,
-    SpecializationsSkills,
-)
+from sapphire.storage.database.models import Base, Skill, Specialization, SpecializationGroup
 from sapphire.storage.settings import StorageSettings
 
 
@@ -25,15 +19,26 @@ class StorageDatabaseService(BaseDatabaseService):
         return pathlib.Path(__file__).parent / "fixtures"
 
     def get_models(self) -> list[Type[Base]]:
-        return [Skill, Specialization, SpecializationGroup, SpecializationsSkills]
+        return [Skill, Specialization, SpecializationGroup]
 
     async def get_specializations(
-        self,
-        session: AsyncSession,
-        page: int | Type[Empty] = Empty,
-        per_page: int | Type[Empty] = Empty,
+            self,
+            session: AsyncSession,
+            query_text: str | Type[Empty] = Empty,
+            page: int | Type[Empty] = Empty,
+            per_page: int | Type[Empty] = Empty,
+            group_id: uuid.UUID | Type[Empty] = Empty,
     ) -> list[Specialization]:
         query = select(Specialization).order_by(desc(Specialization.created_at))
+
+        filters = []
+        if query_text is not Empty:
+            filters.append(Specialization.name.contains(query_text))
+
+        if group_id is not Empty:
+            filters.append(Specialization.group_id == group_id)
+
+        query = query.where(*filters)
 
         if page is not None and per_page is not None:
             offset = (page - 1) * per_page
@@ -41,7 +46,7 @@ class StorageDatabaseService(BaseDatabaseService):
 
         specializations = await session.execute(query)
 
-        return list(specializations.scalars().all())
+        return list(specializations.unique().scalars().all())
 
     async def get_specialization_groups(
         self,
@@ -54,7 +59,10 @@ class StorageDatabaseService(BaseDatabaseService):
 
         filters = []
         if query_text is not Empty:
-            filters.append(SpecializationGroup.name.contains(query_text))
+            filters.append(or_(
+                SpecializationGroup.name.contains(query_text),
+                SpecializationGroup.name_en.contains(query_text),
+            ))
 
         query = query.where(*filters)
 
@@ -64,7 +72,7 @@ class StorageDatabaseService(BaseDatabaseService):
 
         specialization_groups = await session.execute(query)
 
-        return list(specialization_groups.scalars().all())
+        return list(specialization_groups.unique().scalars().all())
 
     async def get_skills(
         self,
@@ -89,7 +97,7 @@ class StorageDatabaseService(BaseDatabaseService):
             offset = (page - 1) * per_page
             query = query.limit(per_page).offset(offset)
 
-        return list(skills.scalars().all())
+        return list(skills.unique().scalars().all())
 
 
 def get_service(settings: StorageSettings) -> StorageDatabaseService:

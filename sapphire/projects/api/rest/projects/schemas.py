@@ -11,9 +11,9 @@ from sapphire.projects.database.models import ProjectStatusEnum
 
 class CreateProjectRequest(BaseModel):
     name: str
-    description: str | None
-    owner_id: uuid.UUID
-    deadline: NaiveDatetime | None
+    description: str | None = None
+    owner_id: uuid.UUID | None = None
+    deadline: NaiveDatetime | None = None
 
 
 class ProjectResponse(BaseModel):
