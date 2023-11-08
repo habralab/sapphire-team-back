@@ -1,3 +1,5 @@
+import asyncio
+
 import fastapi
 from fastapi.responses import RedirectResponse
 
@@ -54,14 +56,17 @@ async def callback(
         )
 
     if db_user is None:
-        habr_user_info = await habr_client.get_user_card(username=habr_user.login)
-        habr_career_user_info = await habr_career_client.get_career_track(user_id=habr_user.id)
-
-        habr_user_full_name = habr_career_user_info.full_name or habr_user_info.full_name
+        coros = [
+            habr_client.get_user_card(username=habr_user.login),
+            habr_career_client.get_career_track(user_id=habr_user.id),
+        ]
+        habr_user_info, habr_career_user_info = await asyncio.gather(*coros)
         first_name, last_name = None, None
-        if habr_user_full_name is not None:
-            first_name, *last_name = habr_user_full_name.split(maxsplit=1)
-            last_name = last_name[0] if last_name else None
+        if habr_user_info or habr_career_user_info:
+            habr_user_full_name = habr_career_user_info.full_name or habr_user_info.full_name
+            if habr_user_full_name is not None:
+                first_name, *last_name = habr_user_full_name.split(maxsplit=1)
+                last_name = last_name[0] if last_name else None
 
         async with database_service.transaction() as session:
             db_user = await database_service.create_user(
