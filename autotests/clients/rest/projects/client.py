@@ -62,7 +62,7 @@ class ProjectsRestClient(BaseRestClient):
     async def create_project(
             self,
             name: str,
-            owner_id: uuid.UUID | None = None,
+            owner_id: uuid.UUID,
             description: str | None = None,
             deadline: datetime | None = None,
     ) -> ProjectResponse:

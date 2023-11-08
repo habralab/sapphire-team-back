@@ -10,7 +10,7 @@ from sapphire.common.jwt.dependencies.rest import auth_user_id, get_request_user
 from sapphire.users.database.models import User
 from sapphire.users.database.service import UsersDatabaseService
 
-from .dependencies import auth_user, get_path_user
+from .dependencies import get_path_user
 from .schemas import UserResponse, UserUpdateRequest
 
 
@@ -21,12 +21,6 @@ async def get_user(
     with_email = request_user_id == path_user.id
 
     return UserResponse.from_db_model(path_user, with_email=with_email)
-
-
-async def get_me(
-    user: User = fastapi.Depends(auth_user)
-) -> UserResponse:
-    return UserResponse.from_db_model(user)
 
 
 async def update_user(
@@ -125,11 +119,25 @@ async def delete_user_avatar(
     return UserResponse.from_db_model(user=user)
 
 
+async def get_user_skills(
+        request: fastapi.Request,
+        user: User = fastapi.Depends(get_path_user),
+) -> set[uuid.UUID]:
+    database_service: UsersDatabaseService = request.app.service.database
+    async with database_service.transaction() as session:
+        skills = await database_service.get_user_skills(
+            session=session,
+            user=user,
+        )
+
+    return skills
+
+
 async def update_user_skills(
         request: fastapi.Request,
-        data: set[uuid.UUID] = fastapi.Body(embed=False),
         request_user_id: uuid.UUID = fastapi.Depends(auth_user_id),
         user: User = fastapi.Depends(get_path_user),
+        data: set[uuid.UUID] = fastapi.Body(embed=False),
 ) -> set[uuid.UUID]:
     if user.id != request_user_id:
         raise fastapi.HTTPException(
@@ -143,18 +151,4 @@ async def update_user_skills(
             user=user,
             skills=data,
         )
-    return skills
-
-
-async def get_user_skills(
-        request: fastapi.Request,
-        user: User = fastapi.Depends(get_path_user),
-) -> set[uuid.UUID]:
-    database_service: UsersDatabaseService = request.app.service.database
-    async with database_service.transaction() as session:
-        skills = await database_service.get_user_skills(
-            session=session,
-            user=user,
-        )
-
     return skills

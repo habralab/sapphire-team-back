@@ -39,7 +39,7 @@ async def get_request_user_id(
         response.set_cookie(
             key="access_token",
             value=new_access_token,
-            expires=jwt_methods.access_token_expires_utc,
+            expires=jwt_methods.access_token_expires_for_cookie,
             path="/",
             secure=True,
             httponly=True,
@@ -48,7 +48,7 @@ async def get_request_user_id(
         response.set_cookie(
             key="refresh_token",
             value=new_refresh_token,
-            expires=jwt_methods.refresh_token_expires_utc,
+            expires=jwt_methods.refresh_token_expires_for_cookie,
             path="/",
             secure=True,
             httponly=True,

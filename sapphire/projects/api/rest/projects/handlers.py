@@ -29,7 +29,7 @@ async def create_project(
 ) -> ProjectResponse:
     database_service: ProjectsDatabaseService = request.app.service.database
 
-    if data.owner_id is not None and data.owner_id != request_user_id:
+    if data.owner_id != request_user_id:
         raise fastapi.HTTPException(
             status_code=fastapi.status.HTTP_400_BAD_REQUEST,
             detail="Field `owner_id` must be your user id",
@@ -39,7 +39,7 @@ async def create_project(
         project_db = await database_service.create_project(
             session=session,
             name=data.name,
-            owner_id=data.owner_id or request_user_id,
+            owner_id=data.owner_id,
             description=data.description,
             deadline=data.deadline,
         )
