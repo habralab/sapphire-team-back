@@ -132,7 +132,7 @@ class ProjectsRestClient(BaseRestClient):
         return await self.rest_delete(path=path, response_model=PositionResponse)
 
     async def get_project_position_skills(self, project_id: uuid.UUID, position_id: uuid.UUID):
-        path = f"/api/rest/projects/{project_id}/positions/{position_id}/skills"
+        path = f"/api/rest/projects/{project_id}/positions/{position_id}/skills/"
 
         response = await self.get(url=path)
         if response.status_code // 100 != 2:

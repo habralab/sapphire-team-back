@@ -1,9 +1,11 @@
 import asyncio
 import uuid
 from datetime import datetime, timedelta
+from http import HTTPStatus
 
 import backoff
 import pytest
+from faker import Faker
 
 from autotests.clients.email import EmailClient
 from autotests.clients.rest.exceptions import ResponseException
@@ -34,16 +36,17 @@ class TestProjectFlow:
     @pytest.mark.asyncio
     async def test_create_project(
             self,
+            faker: Faker,
             oleg_id: uuid.UUID,
             oleg_projects_rest_client: ProjectsRestClient,
     ):
-        name = "Oleg Autotest Project"
-        description = "Oleg Autotest Project Description"
+        name = faker.job() + " Сервис"
+        description = faker.text()
         deadline = datetime.utcnow() + timedelta(days=90)
 
         project = await oleg_projects_rest_client.create_project(
-            name=name,
             owner_id=oleg_id,
+            name=name,
             description=description,
             deadline=deadline,
         )
@@ -169,7 +172,6 @@ class TestProjectFlow:
         assert skills == new_skills
 
     @pytest.mark.dependency(depends=["TestProjectFlow::test_update_position_skills"])
-    @pytest.mark.skip("Not implemented")
     @pytest.mark.asyncio
     async def test_get_position_skills(self, oleg_projects_rest_client: ProjectsRestClient):
         project_id: uuid.UUID = self.CONTEXT["project_id"]
@@ -265,7 +267,7 @@ class TestProjectFlow:
                 position_id=position_id,
             )
 
-        assert exc_info.value.status_code == 400
+        assert exc_info.value.status_code == HTTPStatus.BAD_REQUEST
         assert exc_info.value.body == (
             b'{"detail":"Participant already send request to project or joined in project"}'
         )

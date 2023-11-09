@@ -1,10 +1,12 @@
+import asyncio
+
 import fastapi
 from fastapi.responses import RedirectResponse
 
 from sapphire.common.habr import HabrClient
 from sapphire.common.habr_career import HabrCareerClient
 from sapphire.common.jwt import JWTMethods
-from sapphire.users.api.rest.auth.schemas import JWTTokensResponse
+from sapphire.users.api.rest.auth.schemas import AuthorizeResponse
 from sapphire.users.database.service import UsersDatabaseService
 from sapphire.users.oauth2.habr import OAuth2HabrBackend
 
@@ -31,7 +33,7 @@ async def authorize(
 @router.get("/callback", name="callback")
 async def callback(
     state: str, code: str, request: fastapi.Request, response: fastapi.Response
-) -> JWTTokensResponse:
+) -> AuthorizeResponse:
     habr_client: HabrClient = request.app.service.habr_client
     habr_career_client: HabrCareerClient = request.app.service.habr_career_client
     habr_oauth2: OAuth2HabrBackend = request.app.service.habr_oauth2
@@ -54,14 +56,17 @@ async def callback(
         )
 
     if db_user is None:
-        habr_user_info = await habr_client.get_user_card(username=habr_user.login)
-        habr_career_user_info = await habr_career_client.get_career_track(user_id=habr_user.id)
-
-        habr_user_full_name = habr_career_user_info.full_name or habr_user_info.full_name
+        coros = [
+            habr_client.get_user_card(username=habr_user.login),
+            habr_career_client.get_career_track(user_id=habr_user.id),
+        ]
+        habr_user_info, habr_career_user_info = await asyncio.gather(*coros)
         first_name, last_name = None, None
-        if habr_user_full_name is not None:
-            first_name, *last_name = habr_user_full_name.split(maxsplit=1)
-            last_name = last_name[0] if last_name else None
+        if habr_user_info or habr_career_user_info:
+            habr_user_full_name = habr_career_user_info.full_name or habr_user_info.full_name
+            if habr_user_full_name is not None:
+                first_name, *last_name = habr_user_full_name.split(maxsplit=1)
+                last_name = last_name[0] if last_name else None
 
         async with database_service.transaction() as session:
             db_user = await database_service.create_user(
@@ -75,8 +80,8 @@ async def callback(
     refresh_token = jwt_methods.issue_refresh_token(db_user.id)
 
     cookies = [
-        ("access_token", access_token, jwt_methods.access_token_expires_utc),
-        ("refresh_token", refresh_token, jwt_methods.refresh_token_expires_utc),
+        ("access_token", access_token, jwt_methods.access_token_expires_for_cookie),
+        ("refresh_token", refresh_token, jwt_methods.refresh_token_expires_for_cookie),
     ]
     for name, token, expires in cookies:
         response.set_cookie(
@@ -89,7 +94,8 @@ async def callback(
             samesite="strict",
         )
 
-    return JWTTokensResponse(
+    return AuthorizeResponse(
+        user_id=db_user.id,
         access_token=access_token,
         refresh_token=refresh_token,
     )

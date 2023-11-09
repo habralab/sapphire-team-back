@@ -4,7 +4,7 @@ from datetime import datetime
 from typing import Set, Type
 
 from pydantic import BaseModel, NonNegativeInt, confloat, conint
-from sqlalchemy import delete, desc, func, or_, select
+from sqlalchemy import delete, desc, distinct, func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
 
@@ -39,7 +39,7 @@ class ProjectsDatabaseService(BaseDatabaseService):
         return pathlib.Path(__file__).parent / "fixtures"
 
     def get_models(self) -> list[Type[Base]]:
-        return [Participant, Position, Project, ProjectHistory]
+        return [Participant, Position, Project, ProjectHistory, Review]
 
     async def create_project(
         self,
@@ -181,6 +181,8 @@ class ProjectsDatabaseService(BaseDatabaseService):
 
         new_skills = [PositionSkill(position=position, skill_id=skill_id) for skill_id in skills]
         position.skills = new_skills
+
+        session.add(position)
         return skills
 
     async def get_participant(
@@ -334,11 +336,15 @@ class ProjectsDatabaseService(BaseDatabaseService):
         result = await session.execute(stmt)
         ownership_projects_count = result.scalar_one()
 
-        stmt = select(func.count(Project.id)).where(  # pylint: disable=not-callable
-            Participant.user_id == user_id,
-            Participant.status == ParticipantStatusEnum.JOINED,
-            Participant.position_id == Position.id,
-            Position.project_id == Project.id,
+        stmt_position_ids = (
+            select(Participant.position_id)
+            .where(
+                Participant.user_id == user_id, Participant.status == ParticipantStatusEnum.JOINED
+            )
+        )
+        stmt = (
+            select(func.count(distinct(Position.project_id))) # pylint: disable=not-callable
+            .where(Position.id.in_(stmt_position_ids))
         )
         result = await session.execute(stmt)
         participant_projects_count = result.scalar_one()

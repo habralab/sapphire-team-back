@@ -13,9 +13,9 @@ from .positions.participants.schemas import ProjectParticipantResponse
 
 class CreateProjectRequest(BaseModel):
     name: str
-    description: str | None
+    description: str | None = None
     owner_id: uuid.UUID
-    deadline: NaiveDatetime | None
+    deadline: NaiveDatetime | None = None
 
 
 class ProjectResponse(BaseModel):
