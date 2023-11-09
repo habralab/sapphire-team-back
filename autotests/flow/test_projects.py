@@ -1,6 +1,7 @@
 import asyncio
 import uuid
 from datetime import datetime, timedelta
+from http import HTTPStatus
 
 import backoff
 import pytest
@@ -44,6 +45,7 @@ class TestProjectFlow:
         deadline = datetime.utcnow() + timedelta(days=90)
 
         project = await oleg_projects_rest_client.create_project(
+            owner_id=oleg_id,
             name=name,
             description=description,
             deadline=deadline,
@@ -262,7 +264,7 @@ class TestProjectFlow:
                 position_id=position_id,
             )
 
-        assert exc_info.value.status_code == 400
+        assert exc_info.value.status_code == HTTPStatus.BAD_REQUEST
         assert exc_info.value.body == (
             b'{"detail":"Participant already send request to project or joined in project"}'
         )

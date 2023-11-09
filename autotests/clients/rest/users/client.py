@@ -1,6 +1,5 @@
 import io
 import uuid
-from typing import Set
 
 import httpx
 
@@ -40,11 +39,6 @@ class UsersRestClient(BaseRestClient):
             raise ResponseException(status_code=response.status_code, body=response.content)
 
         return response
-
-    async def get_me(self) -> UserResponse:
-        path = f"/api/rest/users/me"
-
-        return await self.rest_get(path=path, response_model=UserResponse)
 
     async def get_user(self, user_id: uuid.UUID) -> UserResponse:
         path = f"/api/rest/users/{user_id}"
@@ -102,7 +96,7 @@ class UsersRestClient(BaseRestClient):
     async def update_user_skills(
             self,
             user_id: uuid.UUID,
-            skills: Set[uuid.UUID],
+            skills: set[uuid.UUID],
     ) -> set[uuid.UUID]:
         path = f"/api/rest/users/{user_id}/skills"
 

@@ -11,7 +11,7 @@ build:
 	docker build -t sapphire --target slim .
 
 down:
-	docker stack rm sapphire
+	docker stack rm sapphire || true
 
 clean: down
 	docker rmi sapphire --force

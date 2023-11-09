@@ -3,7 +3,6 @@ import datetime
 import pathlib
 import random
 import uuid
-from typing import Any
 
 import jwt
 import pytest
@@ -64,28 +63,6 @@ def matvey_email(settings: AutotestsSettings) -> str:
     return settings.matvey_email
 
 
-@pytest.fixture(scope="session")
-def oleg_initial_user_data() -> dict[str, Any]:
-    return {
-        "first_name": "Oleg",
-        "last_name": "Yurchik",
-        "about": None,
-        "main_specialization_id": None,
-        "secondary_specialization_id": None,
-    }
-
-
-@pytest.fixture(scope="session")
-def matvey_initial_user_data() -> dict[str, Any]:
-    return {
-        "first_name": "Matvey",
-        "last_name": "Tulaev",
-        "about": None,
-        "main_specialization_id": None,
-        "secondary_specialization_id": None,
-    }
-
-
 @pytest.fixture(scope="function")
 def avatar_file():
     with open(pathlib.Path(__file__).parent / "static" / "avatar.png", "rb") as avatar_file:
@@ -111,28 +88,37 @@ def matvey_access_token(settings: AutotestsSettings, matvey_id: uuid.UUID) -> st
 
 
 @pytest.fixture(scope="session")
+def random_access_token(settings: AutotestsSettings) -> str:
+    payload = {
+        "user_id": str(uuid.uuid4()),
+        "exp": int(datetime.datetime.now().timestamp()) + 24 * 3600,
+    }
+    return jwt.encode(payload, settings.jwt_access_token_private_key, algorithm="RS256")
+
+
+@pytest.fixture(scope="session")
 def users_rest_client(settings: AutotestsSettings) -> UsersRestClient:
-    return UsersRestClient(base_url=str(settings.users_base_url), verify=True)
+    return UsersRestClient(base_url=str(settings.users_base_url))
 
 
 @pytest.fixture(scope="session")
 def storage_rest_client(settings: AutotestsSettings) -> StorageRestClient:
-    return StorageRestClient(base_url=str(settings.storage_base_url), verify=True)
+    return StorageRestClient(base_url=str(settings.storage_base_url))
 
 
 @pytest.fixture(scope="session")
 def projects_rest_client(settings: AutotestsSettings) -> ProjectsRestClient:
-    return ProjectsRestClient(base_url=str(settings.projects_base_url), verify=True)
+    return ProjectsRestClient(base_url=str(settings.projects_base_url))
 
 
 @pytest.fixture(scope="session")
 def notifications_rest_client(settings: AutotestsSettings) -> NotificationsRestClient:
-    return NotificationsRestClient(base_url=str(settings.notifications_base_url), verify=True)
+    return NotificationsRestClient(base_url=str(settings.notifications_base_url))
 
 
 @pytest.fixture(scope="session")
 def messenger_rest_client(settings: AutotestsSettings) -> MessengerRestClient:
-    return MessengerRestClient(base_url=str(settings.messenger_base_url), verify=True)
+    return MessengerRestClient(base_url=str(settings.messenger_base_url))
 
 
 @pytest.fixture(scope="session")
@@ -143,7 +129,6 @@ def oleg_users_rest_client(
     return UsersRestClient(
         base_url=str(settings.users_base_url),
         headers={"Authorization": f"Bearer {oleg_access_token}"},
-        verify=True,
     )
 
 
@@ -155,7 +140,14 @@ def matvey_users_rest_client(
     return UsersRestClient(
         base_url=str(settings.users_base_url),
         headers={"Authorization": f"Bearer {matvey_access_token}"},
-        verify=True,
+    )
+
+
+@pytest.fixture(scope="session")
+def random_users_rest_client(settings: AutotestsSettings, random_access_token: str):
+    return UsersRestClient(
+        base_url=str(settings.users_base_url),
+        headers={"Authorization": f"Bearer {random_access_token}"},
     )
 
 
@@ -167,7 +159,6 @@ def oleg_storage_rest_client(
     return StorageRestClient(
         base_url=str(settings.users_base_url),
         headers={"Authorization": f"Bearer {oleg_access_token}"},
-        verify=True,
     )
 
 
@@ -179,7 +170,6 @@ def matvey_storage_rest_client(
     return StorageRestClient(
         base_url=str(settings.users_base_url),
         headers={"Authorization": f"Bearer {matvey_access_token}"},
-        verify=True,
     )
 
 
@@ -191,7 +181,6 @@ def oleg_projects_rest_client(
     return ProjectsRestClient(
         base_url=str(settings.projects_base_url),
         headers={"Authorization": f"Bearer {oleg_access_token}"},
-        verify=True,
     )
 
 
@@ -203,7 +192,6 @@ def matvey_projects_rest_client(
     return ProjectsRestClient(
         base_url=str(settings.projects_base_url),
         headers={"Authorization": f"Bearer {matvey_access_token}"},
-        verify=True,
     )
 
 
@@ -215,7 +203,6 @@ def oleg_notifications_rest_client(
     return NotificationsRestClient(
         base_url=str(settings.notifications_base_url),
         headers={"Authorization": f"Bearer {oleg_access_token}"},
-        verify=True,
     )
 
 
@@ -227,7 +214,6 @@ def matvey_notifications_rest_client(
     return NotificationsRestClient(
         base_url=str(settings.notifications_base_url),
         headers={"Authorization": f"Bearer {matvey_access_token}"},
-        verify=True,
     )
 
 
@@ -239,7 +225,6 @@ def oleg_messenger_rest_client(
     return MessengerRestClient(
         base_url=str(settings.messenger_base_url),
         headers={"Authorization": f"Bearer {oleg_access_token}"},
-        verify=True,
     )
 
 
@@ -251,7 +236,6 @@ def matvey_messenger_rest_client(
     return MessengerRestClient(
         base_url=str(settings.messenger_base_url),
         headers={"Authorization": f"Bearer {matvey_access_token}"},
-        verify=True,
     )
 
 
@@ -319,40 +303,3 @@ def matvey_email_client(settings: AutotestsSettings) -> EmailClient:
         username=settings.matvey_email,
         password=settings.matvey_email_password,
     )
-
-
-@pytest.fixture(scope="class")
-def oleg_revert_user_data(
-        event_loop: asyncio.AbstractEventLoop,
-        oleg_initial_user_data: dict[str, Any],
-        oleg_users_rest_client: UsersRestClient,
-        oleg_id: uuid.UUID,
-):
-    yield
-    event_loop.run_until_complete(oleg_users_rest_client.update_user(
-        user_id=oleg_id,
-        **oleg_initial_user_data,
-    ))
-
-
-@pytest.fixture(scope="class")
-def oleg_revert_user_avatar(
-        event_loop: asyncio.AbstractEventLoop,
-        oleg_users_rest_client: UsersRestClient,
-        oleg_id: uuid.UUID,
-):
-    yield
-    event_loop.run_until_complete(oleg_users_rest_client.remove_user_avatar(user_id=oleg_id))
-
-
-@pytest.fixture(scope="class")
-def oleg_revert_user_skills(
-        event_loop: asyncio.AbstractEventLoop,
-        oleg_users_rest_client: UsersRestClient,
-        oleg_id: uuid.UUID,
-):
-    yield
-    event_loop.run_until_complete(oleg_users_rest_client.update_user_skills(
-        user_id=oleg_id,
-        skills=set(),
-    ))
