@@ -8,15 +8,19 @@ from sapphire.common.jwt.settings import JWTSettings
 
 def test_correct_access_token(jwt_methods: JWTMethods):
     user_id = uuid.uuid4()
-    access_token = jwt_methods.issue_access_token(user_id)
-    decoded_user_id = jwt_methods.decode_access_token(access_token)
-    assert decoded_user_id == user_id
+    is_activated = True
+    access_token = jwt_methods.issue_access_token(user_id=user_id, is_activated=is_activated)
+    jwt_data = jwt_methods.decode_access_token(access_token)
+    
+    assert jwt_data is not None
+    assert jwt_data.user_id == user_id
+    assert jwt_data.is_activated == is_activated
 
 
 def test_fake_access_token(jwt_methods: JWTMethods):
     fake_access_token = "access_token"
-    decoded_user_id = jwt_methods.decode_access_token(fake_access_token)
-    assert decoded_user_id is None
+    jwt_data = jwt_methods.decode_access_token(fake_access_token)
+    assert jwt_data is None
 
 
 def test_not_user_id_access_token(settings: JWTSettings, jwt_methods: JWTMethods):
@@ -25,21 +29,25 @@ def test_not_user_id_access_token(settings: JWTSettings, jwt_methods: JWTMethods
         settings.jwt_access_token_private_key,
         algorithm="RS256",
     )
-    decoded_user_id = jwt_methods.decode_access_token(fake_access_token)
-    assert decoded_user_id is None
+    jwt_data = jwt_methods.decode_access_token(fake_access_token)
+    assert jwt_data is None
 
 
 def test_correct_refresh_token(jwt_methods: JWTMethods):
     user_id = uuid.uuid4()
-    refresh_token = jwt_methods.issue_refresh_token(user_id)
-    decoded_user_id = jwt_methods.decode_refresh_token(refresh_token)
-    assert decoded_user_id == user_id
+    is_activated = False
+    refresh_token = jwt_methods.issue_refresh_token(user_id=user_id, is_activated=is_activated)
+    jwt_data = jwt_methods.decode_refresh_token(refresh_token)
+
+    assert jwt_data is not None
+    assert jwt_data.user_id == user_id
+    assert jwt_data.is_activated == is_activated
 
 
 def test_fake_refresh_token(jwt_methods: JWTMethods):
     fake_refresh_token = "access_token"
-    decoded_user_id = jwt_methods.decode_refresh_token(fake_refresh_token)
-    assert decoded_user_id is None
+    jwt_data = jwt_methods.decode_refresh_token(fake_refresh_token)
+    assert jwt_data is None
 
 
 def test_not_user_id_refresh_token(settings: JWTSettings, jwt_methods: JWTMethods):
@@ -48,5 +56,5 @@ def test_not_user_id_refresh_token(settings: JWTSettings, jwt_methods: JWTMethod
         settings.jwt_access_token_private_key,
         algorithm="RS256",
     )
-    decoded_user_id = jwt_methods.decode_refresh_token(fake_refresh_token)
-    assert decoded_user_id is None
+    jwt_data = jwt_methods.decode_refresh_token(fake_refresh_token)
+    assert jwt_data is None

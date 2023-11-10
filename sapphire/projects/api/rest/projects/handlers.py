@@ -1,12 +1,13 @@
 import math
 import pathlib
-import uuid
 
 import aiofiles
 import fastapi
 
 from sapphire.common.api.dependencies.pagination import Pagination, pagination
-from sapphire.common.jwt.dependencies.rest import auth_user_id
+from sapphire.common.api.exceptions import HTTPForbidden
+from sapphire.common.jwt.dependencies.rest import is_activated
+from sapphire.common.jwt.models import JWTData
 from sapphire.projects.database.models import Project
 from sapphire.projects.database.service import ProjectsDatabaseService
 
@@ -24,16 +25,13 @@ from .schemas import (
 
 async def create_project(
     request: fastapi.Request,
-    request_user_id: uuid.UUID = fastapi.Depends(auth_user_id),
+    jwt_data: JWTData = fastapi.Depends(is_activated),
     data: CreateProjectRequest = fastapi.Body(embed=False),
 ) -> ProjectResponse:
     database_service: ProjectsDatabaseService = request.app.service.database
 
-    if data.owner_id != request_user_id:
-        raise fastapi.HTTPException(
-            status_code=fastapi.status.HTTP_400_BAD_REQUEST,
-            detail="Field `owner_id` must be your user id",
-        )
+    if data.owner_id != jwt_data.user_id:
+        raise HTTPForbidden()
 
     async with database_service.transaction() as session:
         project_db = await database_service.create_project(

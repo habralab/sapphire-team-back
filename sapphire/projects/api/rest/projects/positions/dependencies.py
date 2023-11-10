@@ -2,6 +2,7 @@ import uuid
 
 import fastapi
 
+from sapphire.common.api.exceptions import HTTPNotFound
 from sapphire.projects.api.rest.projects.dependencies import get_path_project
 from sapphire.projects.database.models import Project
 from sapphire.projects.database.service import ProjectsDatabaseService
@@ -21,9 +22,6 @@ async def get_path_position(
             position_id=position_id,
         )
     if position is None:
-        raise fastapi.HTTPException(
-            status_code=fastapi.status.HTTP_404_NOT_FOUND,
-            detail="Project position not found.",
-        )
+        raise HTTPNotFound()
 
     return position

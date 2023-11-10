@@ -3,7 +3,9 @@ from collections import defaultdict
 
 import fastapi
 
-from sapphire.common.jwt.dependencies.rest import auth_user_id
+from sapphire.common.api.exceptions import HTTPForbidden
+from sapphire.common.jwt.dependencies.rest import is_auth
+from sapphire.common.jwt.models import JWTData
 from sapphire.projects.api.rest.projects.dependencies import get_path_project
 from sapphire.projects.api.rest.projects.positions.dependencies import get_path_position
 from sapphire.projects.broker.service import ProjectsBrokerService
@@ -17,7 +19,7 @@ from .schemas import ProjectParticipantResponse, UpdateParticipantRequest
 async def create_participant(
     request: fastapi.Request,
     position_id: uuid.UUID,
-    user_id: uuid.UUID = fastapi.Depends(auth_user_id),
+    jwt_data: JWTData = fastapi.Depends(is_auth),
     project: Project = fastapi.Depends(get_path_project),
     position: Position = fastapi.Depends(get_path_position),
 ) -> ProjectParticipantResponse:
@@ -28,7 +30,7 @@ async def create_participant(
         participant = await database_service.get_participant(
             session=session,
             position_id=position.id,
-            user_id=user_id,
+            user_id=jwt_data.user_id,
         )
 
     if participant and participant.status in (
@@ -44,7 +46,7 @@ async def create_participant(
         participant = await database_service.create_participant(
             session=session,
             position_id=position_id,
-            user_id=user_id,
+            user_id=jwt_data.user_id,
         )
         await broker_service.send_participant_requested(
             project=project,
@@ -67,7 +69,7 @@ async def get_participant(
 async def update_participant(
     request: fastapi.Request,
     data: UpdateParticipantRequest = fastapi.Body(...),
-    request_user_id: uuid.UUID = fastapi.Depends(auth_user_id),
+    jwt_data: JWTData = fastapi.Depends(is_auth),
     project: Project = fastapi.Depends(get_path_project),
     participant: Participant = fastapi.Depends(get_path_participant),
 ) -> ProjectParticipantResponse:
@@ -91,13 +93,10 @@ async def update_participant(
     participant_status_nodes[project.owner_id].update(project_owner_nodes)
     participant_status_nodes[participant.user_id].update(participant_nodes)
 
-    required_statuses = participant_status_nodes.get(request_user_id, {}).get(data.status, ())
+    required_statuses = participant_status_nodes.get(jwt_data.user_id, {}).get(data.status, ())
 
     if participant.status not in required_statuses:
-        raise fastapi.HTTPException(
-            status_code=fastapi.status.HTTP_403_FORBIDDEN,
-            detail="Forbidden.",
-        )
+        raise HTTPForbidden()
 
     async with database_service.transaction() as session:
         updated_participant_db = await database_service.update_participant_status(
@@ -121,7 +120,7 @@ async def update_participant(
         }
         participant_notification_send = (notification_send_map
             .get(data.status, {})
-            .get(request_user_id, None)
+            .get(jwt_data.user_id, None)
         )
         if participant_notification_send:
             await participant_notification_send(

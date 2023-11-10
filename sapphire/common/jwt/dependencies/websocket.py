@@ -1,17 +1,16 @@
-import uuid
-
 import fastapi
 
-from sapphire.common.api.exceptions import HTTPNotAuthenticated
+from sapphire.common.api.exceptions import HTTPForbidden, HTTPNotAuthenticated
 from sapphire.common.jwt.methods import JWTMethods
+from sapphire.common.jwt.models import JWTData
 
 
-async def get_request_user_id(
+async def get_jwt_data(
         websocket: fastapi.WebSocket,
         access_token_from_cookie: str | None = fastapi.Cookie(None, alias="access_token"),
         refresh_token_from_cookie: str | None = fastapi.Cookie(None, alias="refresh_token"),
         access_token_from_header: str | None = fastapi.Header(None, alias="Authorization"),
-) -> uuid.UUID | None:
+) -> JWTData | None:
     access_token, refresh_token = None, None
 
     if access_token_from_header is not None and access_token_from_header.startswith("Bearer "):
@@ -23,19 +22,26 @@ async def get_request_user_id(
 
     jwt_methods: JWTMethods = websocket.app.service.jwt_methods
 
-    user_id = None
+    jwt_data = None
     if access_token is not None:
-        user_id = jwt_methods.decode_access_token(access_token)
-    if user_id is None:
+        jwt_data = jwt_methods.decode_access_token(access_token)
+    if jwt_data is None:
         if refresh_token is None:
             return None
-        user_id = jwt_methods.decode_refresh_token(refresh_token)
+        jwt_data = jwt_methods.decode_refresh_token(refresh_token)
 
-    return user_id
+    return jwt_data
 
 
-async def auth_user_id(user_id: uuid.UUID | None = fastapi.Depends(get_request_user_id)) -> uuid.UUID:
-    if user_id is None:
-        raise HTTPNotAuthenticated
+async def is_auth(jwt_data: JWTData | None = fastapi.Depends(get_jwt_data)) -> JWTData:
+    if jwt_data is None:
+        raise HTTPNotAuthenticated()
 
-    return user_id
+    return jwt_data
+
+
+async def is_activated(jwt_data: JWTData = fastapi.Depends(is_auth)) -> JWTData:
+    if not jwt_data.is_activated:
+        raise HTTPForbidden()
+
+    return jwt_data

@@ -17,12 +17,19 @@ class User(Base):
     first_name: Mapped[str | None]
     last_name: Mapped[str | None]
     avatar: Mapped[str | None] = mapped_column(unique=True)
+    is_activated: Mapped[bool] = mapped_column(default=False)
     created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
     updated_at: Mapped[datetime] = mapped_column(default=datetime.utcnow, onupdate=datetime.utcnow)
 
     profile: Mapped["Profile"] = relationship("Profile", back_populates="user", lazy=False)
     skills: Mapped[list["UserSkill"]] = relationship(back_populates="user", lazy=False,
                                                      cascade="all, delete-orphan")
+
+    def activate(self) -> bool:
+        if (self.first_name or "").strip() and (self.last_name or "").strip():
+            self.is_activated = True
+
+        return self.is_activated
 
 
 class Profile(Base):

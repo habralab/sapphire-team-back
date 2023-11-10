@@ -1,3 +1,5 @@
+import uuid
+
 import pytest
 import yarl
 
@@ -29,13 +31,31 @@ async def test_logout(oleg_users_rest_client: UsersRestClient):
     await oleg_users_rest_client.logout()
 
 
-@pytest.mark.parametrize(("client", "expected_is_auth"), (
-    (pytest.lazy_fixture("users_rest_client"), False),
-    (pytest.lazy_fixture("oleg_users_rest_client"), True),
-    (pytest.lazy_fixture("matvey_users_rest_client"), True),
+@pytest.mark.parametrize(("client", "user_id", "is_activated"), (
+    (
+        pytest.lazy_fixture("oleg_users_rest_client"),
+        pytest.lazy_fixture("oleg_id"),
+        False,
+    ),
+    (
+        pytest.lazy_fixture("matvey_users_rest_client"),
+        pytest.lazy_fixture("matvey_id"),
+        False,
+    ),
+    (
+        pytest.lazy_fixture("oleg_activated_users_rest_client"),
+        pytest.lazy_fixture("oleg_id"),
+        True,
+    ),
+    (
+        pytest.lazy_fixture("matvey_activated_users_rest_client"),
+        pytest.lazy_fixture("matvey_id"),
+        True,
+    ),
 ))
 @pytest.mark.asyncio
-async def test_check(client: UsersRestClient, expected_is_auth: bool):
-    is_auth = await client.check_auth()
+async def test_check(client: UsersRestClient, user_id: uuid.UUID, is_activated: bool):
+    jwt_data = await client.check_auth()
 
-    assert is_auth is expected_is_auth
+    assert jwt_data.user_id == user_id
+    assert jwt_data.is_activated == is_activated
