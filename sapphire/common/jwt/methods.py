@@ -2,7 +2,9 @@ import datetime
 import uuid
 
 import jwt
+from pydantic import ValidationError
 
+from .models import JWTData
 from .settings import JWTSettings
 
 
@@ -24,61 +26,57 @@ class JWTMethods:
         self.refresh_token_expires: datetime.timedelta = refresh_token_expires
 
     @property
-    def access_token_expires_for_cookie(self) -> str:
-        return (
-            datetime.datetime.utcnow() + self.access_token_expires
-        ).strftime("%a, %d %b %Y %H:%M:%S GMT")
+    def access_token_expires_utc(self) -> datetime.datetime:
+        return datetime.datetime.utcnow() + self.access_token_expires
 
     @property
-    def refresh_token_expires_for_cookie(self) -> str:
-        return (
-            datetime.datetime.utcnow() + self.refresh_token_expires
-        ).strftime("%a, %d %b %Y %H:%M:%S GMT")
+    def refresh_token_expires_utc(self) -> datetime.datetime:
+        return datetime.datetime.utcnow() + self.refresh_token_expires
 
-    def issue_access_token(self, user_id: uuid.UUID) -> str:
+    def issue_access_token(self, user_id: uuid.UUID, is_activated: bool) -> str:
         return jwt.encode(
             {
                 "user_id": str(user_id),
+                "is_activated": is_activated,
                 "exp": datetime.datetime.now() + self.access_token_expires,
             },
             self.access_token_private_key,
             algorithm="RS256",
         )
 
-    def decode_access_token(self, access_token: str) -> uuid.UUID | None:
+    def decode_access_token(self, access_token: str) -> JWTData | None:
         try:
-            return uuid.UUID(
-                jwt.decode(
-                    access_token,
-                    self.access_token_public_key,
-                    algorithms=["RS256"],
-                    options={"require": ["user_id"]},
-                ).get("user_id")
+            data = jwt.decode(
+                access_token,
+                self.access_token_public_key,
+                algorithms=["RS256"],
+                options={"require": ["user_id", "is_activated"]},
             )
-        except jwt.PyJWTError:
+            return JWTData.model_validate(data)
+        except (jwt.PyJWTError, ValidationError):
             return None
 
-    def issue_refresh_token(self, user_id: uuid.UUID) -> str:
+    def issue_refresh_token(self, user_id: uuid.UUID, is_activated: bool) -> str:
         return jwt.encode(
             {
                 "user_id": str(user_id),
+                "is_activated": is_activated,
                 "exp": datetime.datetime.now() + self.refresh_token_expires,
             },
             self.refresh_token_private_key,
             algorithm="RS256",
         )
 
-    def decode_refresh_token(self, refresh_token: str) -> uuid.UUID | None:
+    def decode_refresh_token(self, refresh_token: str) -> JWTData | None:
         try:
-            return uuid.UUID(
-                jwt.decode(
-                    refresh_token,
-                    self.refresh_token_public_key,
-                    algorithms=["RS256"],
-                    options={"require": ["user_id"]},
-                ).get("user_id")
+            data = jwt.decode(
+                refresh_token,
+                self.refresh_token_public_key,
+                algorithms=["RS256"],
+                options={"require": ["user_id", "is_activated"]},
             )
-        except jwt.PyJWTError:
+            return JWTData.model_validate(data)
+        except (jwt.PyJWTError, ValidationError):
             return None
 
 

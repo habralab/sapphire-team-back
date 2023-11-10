@@ -1,8 +1,7 @@
-import uuid
-
 import fastapi
 
-from sapphire.common.jwt.dependencies.rest import get_request_user_id
+from sapphire.common.jwt.dependencies.rest import get_jwt_data
+from sapphire.common.jwt.models import JWTData
 
 
 async def logout(response: fastapi.Response):
@@ -10,7 +9,5 @@ async def logout(response: fastapi.Response):
     response.delete_cookie("refresh_token")
 
 
-async def check(
-        request_user_id: uuid.UUID | None = fastapi.Depends(get_request_user_id),
-) -> bool:
-    return request_user_id is not None
+async def check(jwt_data: JWTData | None = fastapi.Depends(get_jwt_data)) -> JWTData | None:
+    return jwt_data

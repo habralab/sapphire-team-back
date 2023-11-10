@@ -1,3 +1,6 @@
+isort:
+	isort --check .
+
 lint:
 	pylint ./autotests ./sapphire ./tests
 

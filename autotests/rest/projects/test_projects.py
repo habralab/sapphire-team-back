@@ -1,9 +1,12 @@
 import uuid
 from datetime import datetime
+from http import HTTPStatus
 from typing import Type
 
 import pytest
+from faker import Faker
 
+from autotests.clients.rest.exceptions import ResponseException
 from autotests.clients.rest.projects.client import ProjectsRestClient
 from autotests.clients.rest.projects.enums import ProjectStatusEnum
 from autotests.utils import Empty
@@ -59,6 +62,27 @@ async def test_get_projects(
             assert project.owner_id == owner_id
         if status is not Empty:
             assert project.status == status
+
+
+@pytest.mark.parametrize(("client", "owner_id"), (
+    (pytest.lazy_fixture("oleg_projects_rest_client"), pytest.lazy_fixture("oleg_id")),
+    (pytest.lazy_fixture("matvey_proejcts_rest_client"), pytest.lazy_fixture("matvey_id")),
+    (pytest.lazy_fixture("oleg_projects_rest_client"), pytest.lazy_fixture("matvey_id")),
+    (pytest.lazy_fixture("matvey_projects_rest_client"), pytest.lazy_fixture("oleg_id")),
+    (pytest.lazy_fixture("oleg_activated_projects_rest_client"), pytest.lazy_fixture("matvey_id")),
+    (pytest.lazy_fixture("matvey_activated_projects_rest_client"), pytest.lazy_fixture("oleg_id")),
+))
+@pytest.mark.asyncio
+async def test_create_project_forbidden(
+        faker: Faker,
+        client: ProjectsRestClient,
+        owner_id: uuid.UUID,
+):
+    with pytest.raises(ResponseException) as exception:
+        await client.create_project(name=faker.job(), owner_id=owner_id)
+
+    assert exception.value.status_code == HTTPStatus.FORBIDDEN
+    assert exception.value.body == b'{"detail":"Forbidden."}'
 
 
 @pytest.mark.parametrize("user_id", (
