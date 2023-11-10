@@ -23,12 +23,12 @@ async def get_jwt_user(
 async def update_jwt(
         request: fastapi.Request,
         response: fastapi.Response,
-        jwt_data: JWTData = fastapi.Depends(get_jwt_data),
+        jwt_data: JWTData | None = fastapi.Depends(get_jwt_data),
         user: User = fastapi.Depends(get_jwt_user),
 ):
     yield
 
-    if jwt_data.is_activated != user.is_activated:
+    if jwt_data is not None and jwt_data.is_activated != user.is_activated:
         jwt_methods: JWTMethods = request.app.service.jwt_methods
 
         access_token = jwt_methods.issue_access_token(user_id=user.id,

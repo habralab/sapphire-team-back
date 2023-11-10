@@ -1,6 +1,6 @@
 import enum
 
-from pydantic import AnyHttpUrl, BaseModel
+from pydantic import BaseModel
 
 
 class GenderEnum(str, enum.Enum):
@@ -11,6 +11,6 @@ class GenderEnum(str, enum.Enum):
 class UserCard(BaseModel):
     username: str
     full_name: str | None
-    avatar: AnyHttpUrl | None
+    avatar: str | None
     speciality: str | None
     gender: GenderEnum | None
