@@ -1,4 +1,4 @@
-from pydantic import BaseModel, ConfigDict, NonNegativeInt, confloat
+from pydantic import BaseModel, ConfigDict, NonNegativeInt, Annotated, Field
 
 
 class UserStatisticResponse(BaseModel):
@@ -6,4 +6,4 @@ class UserStatisticResponse(BaseModel):
 
     ownership_projects_count: NonNegativeInt
     participant_projects_count: NonNegativeInt
-    rate: confloat(ge=1, le=5)
+    rate: Annotated[float, Field(ge=1, le=5)]
