@@ -1,4 +1,4 @@
-model: project_positions
+model: positions
 data:
 - id: 035431e1-bcf0-49db-a6bb-6e4c05e99852
   project_id: cd8bad95-2585-421a-bef8-1ca18353caa6  # Fixture Project
