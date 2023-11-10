@@ -127,8 +127,7 @@ class TestProjectFlow:
         self.CONTEXT["position_specialization_id"] = specialization_id
 
         assert position.project_id == project_id
-        # TODO: Uncomment after implement specialization_id in PositionResponse
-        # assert position.specialization_id == specialization_id
+        assert position.specialization_id == specialization_id
         assert position.closed_at is None
 
     @pytest.mark.dependency(depends=["TestProjectFlow::test_create_position"])
@@ -146,8 +145,7 @@ class TestProjectFlow:
 
         assert position.id == position_id
         assert position.project_id == project_id
-        # TODO: Uncomment after implement specialization_id in PositionResponse
-        # assert position.specialization_id == position_specialization_id
+        assert position.specialization_id == position_specialization_id
         assert position.closed_at is None
 
     @pytest.mark.dependency(depends=[
@@ -202,8 +200,7 @@ class TestProjectFlow:
         assert len(positions.data) == 1
         assert positions.data[0].id == position_id
         assert positions.data[0].project_id == project_id
-        # TODO: Uncomment after implement specialization_id in PositionResponse
-        # assert positions.data[0].specialization_id == position_specialization_id
+        assert positions.data[0].specialization_id == position_specialization_id
         assert positions.data[0].closed_at is None
 
     @pytest.mark.dependency(depends=[
