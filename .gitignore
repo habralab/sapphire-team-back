@@ -9,5 +9,7 @@ __pycache__
 broker_data
 database_data
 redis_data
+projects_data
 pyrightconfig.json
+users_data
 .vscode
