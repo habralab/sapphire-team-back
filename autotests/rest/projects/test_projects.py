@@ -66,7 +66,7 @@ async def test_get_projects(
 
 @pytest.mark.parametrize(("client", "owner_id"), (
     (pytest.lazy_fixture("oleg_projects_rest_client"), pytest.lazy_fixture("oleg_id")),
-    (pytest.lazy_fixture("matvey_proejcts_rest_client"), pytest.lazy_fixture("matvey_id")),
+    (pytest.lazy_fixture("matvey_projects_rest_client"), pytest.lazy_fixture("matvey_id")),
     (pytest.lazy_fixture("oleg_projects_rest_client"), pytest.lazy_fixture("matvey_id")),
     (pytest.lazy_fixture("matvey_projects_rest_client"), pytest.lazy_fixture("oleg_id")),
     (pytest.lazy_fixture("oleg_activated_projects_rest_client"), pytest.lazy_fixture("matvey_id")),
