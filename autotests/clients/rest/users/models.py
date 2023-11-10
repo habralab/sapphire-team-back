@@ -10,11 +10,17 @@ class HealthResponse(BaseModel):
     version: constr(pattern=r"^\d+\.\d+\.\d+$")
 
 
+class JWTData(BaseModel):
+    user_id: uuid.UUID
+    is_activated: bool
+
+
 class UserResponse(BaseModel):
     id: uuid.UUID
     email: EmailStr | None
     first_name: str | None
     last_name: str | None
+    is_activated: bool
     about: str | None
     main_specialization_id: uuid.UUID | None
     secondary_specialization_id: uuid.UUID | None

@@ -73,6 +73,17 @@ def avatar_file():
 def oleg_access_token(settings: AutotestsSettings, oleg_id: uuid.UUID) -> str:
     payload = {
         "user_id": str(oleg_id),
+        "is_activated": False,
+        "exp": int(datetime.datetime.now().timestamp()) + 24 * 3600,
+    }
+    return jwt.encode(payload, settings.jwt_access_token_private_key, algorithm="RS256")
+
+
+@pytest.fixture(scope="session")
+def oleg_activated_access_token(settings: AutotestsSettings, oleg_id: uuid.UUID) -> str:
+    payload = {
+        "user_id": str(oleg_id),
+        "is_activated": True,
         "exp": int(datetime.datetime.now().timestamp()) + 24 * 3600,
     }
     return jwt.encode(payload, settings.jwt_access_token_private_key, algorithm="RS256")
@@ -82,6 +93,17 @@ def oleg_access_token(settings: AutotestsSettings, oleg_id: uuid.UUID) -> str:
 def matvey_access_token(settings: AutotestsSettings, matvey_id: uuid.UUID) -> str:
     payload = {
         "user_id": str(matvey_id),
+        "is_activated": False,
+        "exp": int(datetime.datetime.now().timestamp()) + 24 * 3600,
+    }
+    return jwt.encode(payload, settings.jwt_access_token_private_key, algorithm="RS256")
+
+
+@pytest.fixture(scope="session")
+def matvey_activated_access_token(settings: AutotestsSettings, matvey_id: uuid.UUID) -> str:
+    payload = {
+        "user_id": str(matvey_id),
+        "is_activated": True,
         "exp": int(datetime.datetime.now().timestamp()) + 24 * 3600,
     }
     return jwt.encode(payload, settings.jwt_access_token_private_key, algorithm="RS256")
@@ -91,6 +113,7 @@ def matvey_access_token(settings: AutotestsSettings, matvey_id: uuid.UUID) -> st
 def random_access_token(settings: AutotestsSettings) -> str:
     payload = {
         "user_id": str(uuid.uuid4()),
+        "is_activated": True,
         "exp": int(datetime.datetime.now().timestamp()) + 24 * 3600,
     }
     return jwt.encode(payload, settings.jwt_access_token_private_key, algorithm="RS256")
@@ -133,6 +156,17 @@ def oleg_users_rest_client(
 
 
 @pytest.fixture(scope="session")
+def oleg_activated_users_rest_client(
+        settings: AutotestsSettings,
+        oleg_activated_access_token: str,
+) -> UsersRestClient:
+    return UsersRestClient(
+        base_url=str(settings.users_base_url),
+        headers={"Authorization": f"Bearer {oleg_activated_access_token}"},
+    )
+
+
+@pytest.fixture(scope="session")
 def matvey_users_rest_client(
         settings: AutotestsSettings,
         matvey_access_token: str,
@@ -140,6 +174,17 @@ def matvey_users_rest_client(
     return UsersRestClient(
         base_url=str(settings.users_base_url),
         headers={"Authorization": f"Bearer {matvey_access_token}"},
+    )
+
+
+@pytest.fixture(scope="session")
+def matvey_activated_users_rest_client(
+        settings: AutotestsSettings,
+        matvey_activated_access_token: str,
+) -> UsersRestClient:
+    return UsersRestClient(
+        base_url=str(settings.users_base_url),
+        headers={"Authorization": f"Bearer {matvey_activated_access_token}"},
     )
 
 
@@ -157,8 +202,19 @@ def oleg_storage_rest_client(
         oleg_access_token: str,
 ) -> StorageRestClient:
     return StorageRestClient(
-        base_url=str(settings.users_base_url),
+        base_url=str(settings.storage_base_url),
         headers={"Authorization": f"Bearer {oleg_access_token}"},
+    )
+
+
+@pytest.fixture(scope="session")
+def oleg_activated_storage_rest_client(
+        settings: AutotestsSettings,
+        oleg_activated_access_token: str,
+) -> StorageRestClient:
+    return StorageRestClient(
+        base_url=str(settings.storage_base_url),
+        headers={"Authorization": f"Bearer {oleg_activated_access_token}"},
     )
 
 
@@ -168,8 +224,19 @@ def matvey_storage_rest_client(
         matvey_access_token: str,
 ) -> StorageRestClient:
     return StorageRestClient(
-        base_url=str(settings.users_base_url),
+        base_url=str(settings.storage_base_url),
         headers={"Authorization": f"Bearer {matvey_access_token}"},
+    )
+
+
+@pytest.fixture(scope="session")
+def matvey_activated_storage_rest_client(
+        settings: AutotestsSettings,
+        matvey_activated_access_token: str,
+) -> StorageRestClient:
+    return StorageRestClient(
+        base_url=str(settings.storage_base_url),
+        headers={"Authorization": f"Bearer {matvey_activated_access_token}"},
     )
 
 
@@ -185,6 +252,17 @@ def oleg_projects_rest_client(
 
 
 @pytest.fixture(scope="session")
+def oleg_activated_projects_rest_client(
+        settings: AutotestsSettings,
+        oleg_activated_access_token: str,
+) -> ProjectsRestClient:
+    return ProjectsRestClient(
+        base_url=str(settings.projects_base_url),
+        headers={"Authorization": f"Bearer {oleg_activated_access_token}"},
+    )
+
+
+@pytest.fixture(scope="session")
 def matvey_projects_rest_client(
         settings: AutotestsSettings,
         matvey_access_token: str,
@@ -192,6 +270,17 @@ def matvey_projects_rest_client(
     return ProjectsRestClient(
         base_url=str(settings.projects_base_url),
         headers={"Authorization": f"Bearer {matvey_access_token}"},
+    )
+
+
+@pytest.fixture(scope="session")
+def matvey_activated_projects_rest_client(
+        settings: AutotestsSettings,
+        matvey_activated_access_token: str,
+) -> ProjectsRestClient:
+    return ProjectsRestClient(
+        base_url=str(settings.projects_base_url),
+        headers={"Authorization": f"Bearer {matvey_activated_access_token}"},
     )
 
 
@@ -207,6 +296,17 @@ def oleg_notifications_rest_client(
 
 
 @pytest.fixture(scope="session")
+def oleg_activated_notifications_rest_client(
+        settings: AutotestsSettings,
+        oleg_activated_access_token: str,
+) -> NotificationsRestClient:
+    return NotificationsRestClient(
+        base_url=str(settings.notifications_base_url),
+        headers={"Authorization": f"Bearer {oleg_activated_access_token}"},
+    )
+
+
+@pytest.fixture(scope="session")
 def matvey_notifications_rest_client(
         settings: AutotestsSettings,
         matvey_access_token: str,
@@ -214,6 +314,17 @@ def matvey_notifications_rest_client(
     return NotificationsRestClient(
         base_url=str(settings.notifications_base_url),
         headers={"Authorization": f"Bearer {matvey_access_token}"},
+    )
+
+
+@pytest.fixture(scope="session")
+def matvey_activated_notifications_rest_client(
+        settings: AutotestsSettings,
+        matvey_activated_access_token: str,
+) -> NotificationsRestClient:
+    return NotificationsRestClient(
+        base_url=str(settings.notifications_base_url),
+        headers={"Authorization": f"Bearer {matvey_activated_access_token}"},
     )
 
 
@@ -229,6 +340,17 @@ def oleg_messenger_rest_client(
 
 
 @pytest.fixture(scope="session")
+def oleg_activated_messenger_rest_client(
+        settings: AutotestsSettings,
+        oleg_activated_access_token: str,
+) -> MessengerRestClient:
+    return MessengerRestClient(
+        base_url=str(settings.messenger_base_url),
+        headers={"Authorization": f"Bearer {oleg_activated_access_token}"},
+    )
+
+
+@pytest.fixture(scope="session")
 def matvey_messenger_rest_client(
         settings: AutotestsSettings,
         matvey_access_token: str,
@@ -236,6 +358,17 @@ def matvey_messenger_rest_client(
     return MessengerRestClient(
         base_url=str(settings.messenger_base_url),
         headers={"Authorization": f"Bearer {matvey_access_token}"},
+    )
+
+
+@pytest.fixture(scope="session")
+def matvey_activated_messenger_rest_client(
+        settings: AutotestsSettings,
+        matvey_activated_access_token: str,
+) -> MessengerRestClient:
+    return MessengerRestClient(
+        base_url=str(settings.messenger_base_url),
+        headers={"Authorization": f"Bearer {matvey_activated_access_token}"},
     )
 
 
@@ -251,6 +384,17 @@ def oleg_messenger_websocket_client(
 
 
 @pytest.fixture(scope="session")
+def oleg_activated_messenger_websocket_client(
+        settings: AutotestsSettings,
+        oleg_activated_access_token: str,
+) -> WebsocketClient:
+    return WebsocketClient(
+        str(settings.messenger_websocket_url),
+        headers={"Authorization": f"Bearer {oleg_activated_access_token}"},
+    )
+
+
+@pytest.fixture(scope="session")
 def matvey_messenger_websocket_client(
         settings: AutotestsSettings,
         matvey_access_token: str,
@@ -258,6 +402,17 @@ def matvey_messenger_websocket_client(
     return WebsocketClient(
         str(settings.messenger_websocket_url),
         headers={"Authorization": f"Bearer {matvey_access_token}"},
+    )
+
+
+@pytest.fixture(scope="session")
+def matvey_activated_messenger_websocket_client(
+        settings: AutotestsSettings,
+        matvey_activated_access_token: str,
+) -> WebsocketClient:
+    return WebsocketClient(
+        str(settings.messenger_websocket_url),
+        headers={"Authorization": f"Bearer {matvey_activated_access_token}"},
     )
 
 
@@ -273,6 +428,17 @@ def oleg_notifications_websocket_client(
 
 
 @pytest.fixture(scope="session")
+def oleg_activated_notifications_websocket_client(
+        settings: AutotestsSettings,
+        oleg_activated_access_token: str,
+) -> WebsocketClient:
+    return WebsocketClient(
+        str(settings.notifications_websocket_url),
+        headers={"Authorization": f"Bearer {oleg_activated_access_token}"},
+    )
+
+
+@pytest.fixture(scope="session")
 def matvey_notifications_websocket_client(
         settings: AutotestsSettings,
         matvey_access_token: str,
@@ -280,6 +446,17 @@ def matvey_notifications_websocket_client(
     return WebsocketClient(
         str(settings.notifications_websocket_url),
         headers={"Authorization": f"Bearer {matvey_access_token}"},
+    )
+
+
+@pytest.fixture(scope="session")
+def matvey_activated_notifications_websocket_client(
+        settings: AutotestsSettings,
+        matvey_activated_access_token: str,
+) -> WebsocketClient:
+    return WebsocketClient(
+        str(settings.notifications_websocket_url),
+        headers={"Authorization": f"Bearer {matvey_activated_access_token}"},
     )
 
 

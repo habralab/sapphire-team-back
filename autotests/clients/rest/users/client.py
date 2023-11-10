@@ -6,7 +6,7 @@ import httpx
 from autotests.clients.rest.base_client import BaseRestClient
 from autotests.clients.rest.exceptions import ResponseException
 
-from .models import HealthResponse, UserResponse, UserUpdateRequest
+from .models import HealthResponse, JWTData, UserResponse, UserUpdateRequest
 
 
 class UsersRestClient(BaseRestClient):
@@ -22,14 +22,10 @@ class UsersRestClient(BaseRestClient):
 
         return response
 
-    async def check_auth(self) -> bool:
+    async def check_auth(self) -> JWTData:
         path = "/api/rest/auth/check"
 
-        response = await self.get(url=path)
-        if response.status_code // 100 != 2:
-            raise ResponseException(status_code=response.status_code, body=response.content)
-
-        return response.json()
+        return await self.rest_get(path=path, response_model=JWTData)
 
     async def logout(self) -> httpx.Response:
         path = "/api/rest/auth/logout"

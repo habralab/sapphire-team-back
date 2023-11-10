@@ -3,10 +3,12 @@ import asyncio
 import fastapi
 from fastapi.responses import RedirectResponse
 
+from sapphire.common.api.utils import set_cookie
 from sapphire.common.habr import HabrClient
 from sapphire.common.habr_career import HabrCareerClient
 from sapphire.common.jwt import JWTMethods
 from sapphire.users.api.rest.auth.schemas import AuthorizeResponse
+from sapphire.users.api.rest.schemas import UserResponse
 from sapphire.users.database.service import UsersDatabaseService
 from sapphire.users.oauth2.habr import OAuth2HabrBackend
 
@@ -75,27 +77,18 @@ async def callback(
                 first_name=first_name,
                 last_name=last_name,
             )
+            db_user.activate()
 
-    access_token = jwt_methods.issue_access_token(db_user.id)
-    refresh_token = jwt_methods.issue_refresh_token(db_user.id)
+    access_token = jwt_methods.issue_access_token(db_user.id, is_activated=db_user.is_activated)
+    refresh_token = jwt_methods.issue_refresh_token(db_user.id, is_activated=db_user.is_activated)
 
-    cookies = [
-        ("access_token", access_token, jwt_methods.access_token_expires_for_cookie),
-        ("refresh_token", refresh_token, jwt_methods.refresh_token_expires_for_cookie),
-    ]
-    for name, token, expires in cookies:
-        response.set_cookie(
-            key=name,
-            value=token,
-            expires=expires,
-            path="/",
-            secure=True,
-            httponly=True,
-            samesite="strict",
-        )
+    response = set_cookie(response=response, name="access_token", value=access_token,
+                          expires=jwt_methods.access_token_expires_utc)
+    response = set_cookie(response=response, name="refresh_token", value=refresh_token,
+                          expires=jwt_methods.refresh_token_expires_utc)
 
     return AuthorizeResponse(
-        user_id=db_user.id,
+        user=UserResponse.from_db_model(user=db_user),
         access_token=access_token,
         refresh_token=refresh_token,
     )

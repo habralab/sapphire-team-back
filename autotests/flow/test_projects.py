@@ -38,13 +38,13 @@ class TestProjectFlow:
             self,
             faker: Faker,
             oleg_id: uuid.UUID,
-            oleg_projects_rest_client: ProjectsRestClient,
+            oleg_activated_projects_rest_client: ProjectsRestClient,
     ):
         name = faker.job() + " Сервис"
         description = faker.text()
         deadline = datetime.utcnow() + timedelta(days=90)
 
-        project = await oleg_projects_rest_client.create_project(
+        project = await oleg_activated_projects_rest_client.create_project(
             owner_id=oleg_id,
             name=name,
             description=description,

@@ -1,9 +1,9 @@
-import uuid
-
 from pydantic import BaseModel
+
+from sapphire.users.api.rest.schemas import UserResponse
 
 
 class AuthorizeResponse(BaseModel):
-    user_id: uuid.UUID
+    user: UserResponse
     access_token: str
     refresh_token: str

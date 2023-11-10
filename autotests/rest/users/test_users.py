@@ -20,6 +20,16 @@ from autotests.clients.rest.users.client import UsersRestClient
         pytest.lazy_fixture("matvey_email"),
         pytest.lazy_fixture("matvey_users_rest_client"),
     ),
+    (
+        pytest.lazy_fixture("oleg_id"),
+        pytest.lazy_fixture("oleg_email"),
+        pytest.lazy_fixture("oleg_activated_users_rest_client"),
+    ),
+    (
+        pytest.lazy_fixture("matvey_id"),
+        pytest.lazy_fixture("matvey_email"),
+        pytest.lazy_fixture("matvey_activated_users_rest_client"),
+    ),
 ))
 @pytest.mark.asyncio
 async def test_get_user_full(user_id: uuid.UUID, user_email: str, client: UsersRestClient):
@@ -32,6 +42,8 @@ async def test_get_user_full(user_id: uuid.UUID, user_email: str, client: UsersR
 @pytest.mark.parametrize(("user_id", "client"), (
     (pytest.lazy_fixture("oleg_id"), pytest.lazy_fixture("matvey_users_rest_client")),
     (pytest.lazy_fixture("matvey_id"), pytest.lazy_fixture("oleg_users_rest_client")),
+    (pytest.lazy_fixture("oleg_id"), pytest.lazy_fixture("matvey_activated_users_rest_client")),
+    (pytest.lazy_fixture("matvey_id"), pytest.lazy_fixture("oleg_activated_users_rest_client")),
     (pytest.lazy_fixture("oleg_id"), pytest.lazy_fixture("users_rest_client")),
     (pytest.lazy_fixture("matvey_id"), pytest.lazy_fixture("users_rest_client")),
     (pytest.lazy_fixture("oleg_id"), pytest.lazy_fixture("random_users_rest_client")),
@@ -45,6 +57,23 @@ async def test_get_user(user_id: uuid.UUID, client: UsersRestClient):
     assert user.email is None
 
 
+@pytest.mark.parametrize("client", (
+    pytest.lazy_fixture("oleg_users_rest_client"),
+    pytest.lazy_fixture("matvey_users_rest_client"),
+    pytest.lazy_fixture("oleg_activated_users_rest_client"),
+    pytest.lazy_fixture("matvey_activated_users_rest_client"),
+    pytest.lazy_fixture("users_rest_client"),
+    pytest.lazy_fixture("random_users_rest_client"),
+))
+@pytest.mark.asyncio
+async def test_get_user_not_found(client: UsersRestClient):
+    with pytest.raises(ResponseException) as exception:
+        await client.get_user(user_id=uuid.uuid4())
+
+    assert exception.value.status_code == HTTPStatus.NOT_FOUND
+    assert exception.value.body == b'{"detail":"Not found."}'
+
+
 @pytest.mark.parametrize(("user_id", "user_email", "client"), (
     (
         pytest.lazy_fixture("oleg_id"),
@@ -55,6 +84,16 @@ async def test_get_user(user_id: uuid.UUID, client: UsersRestClient):
         pytest.lazy_fixture("matvey_id"),
         pytest.lazy_fixture("matvey_email"),
         pytest.lazy_fixture("matvey_users_rest_client"),
+    ),
+    (
+        pytest.lazy_fixture("oleg_id"),
+        pytest.lazy_fixture("oleg_email"),
+        pytest.lazy_fixture("oleg_activated_users_rest_client"),
+    ),
+    (
+        pytest.lazy_fixture("matvey_id"),
+        pytest.lazy_fixture("matvey_email"),
+        pytest.lazy_fixture("matvey_activated_users_rest_client"),
     ),
 ))
 @pytest.mark.asyncio
@@ -101,9 +140,26 @@ async def test_update_user_not_authenticated(user_id: uuid.UUID, users_rest_clie
     assert exception.value.body == b'{"detail":"Not authenticated."}'
 
 
+@pytest.mark.parametrize("client", (
+    pytest.lazy_fixture("oleg_users_rest_client"),
+    pytest.lazy_fixture("oleg_activated_users_rest_client"),
+    pytest.lazy_fixture("matvey_users_rest_client"),
+    pytest.lazy_fixture("matvey_activated_users_rest_client"),
+))
+@pytest.mark.asyncio
+async def test_update_user_not_found(client: UsersRestClient):
+    with pytest.raises(ResponseException) as exception:
+        await client.update_user(user_id=uuid.uuid4())
+
+    assert exception.value.status_code == HTTPStatus.NOT_FOUND
+    assert exception.value.body == b'{"detail":"Not found."}'
+
+
 @pytest.mark.parametrize(("user_id", "client"), (
     (pytest.lazy_fixture("oleg_id"), pytest.lazy_fixture("matvey_users_rest_client")),
+    (pytest.lazy_fixture("oleg_id"), pytest.lazy_fixture("matvey_activated_users_rest_client")),
     (pytest.lazy_fixture("matvey_id"), pytest.lazy_fixture("oleg_users_rest_client")),
+    (pytest.lazy_fixture("matvey_id"), pytest.lazy_fixture("oleg_activated_users_rest_client")),
     (pytest.lazy_fixture("oleg_id"), pytest.lazy_fixture("random_users_rest_client")),
     (pytest.lazy_fixture("matvey_id"), pytest.lazy_fixture("random_users_rest_client")),
 ))
@@ -122,7 +178,9 @@ async def test_update_user_forbidden(user_id: uuid.UUID, client: UsersRestClient
 ))
 @pytest.mark.parametrize("client", (
     pytest.lazy_fixture("oleg_users_rest_client"),
+    pytest.lazy_fixture("oleg_activated_users_rest_client"),
     pytest.lazy_fixture("matvey_users_rest_client"),
+    pytest.lazy_fixture("matvey_activated_users_rest_client"),
     pytest.lazy_fixture("users_rest_client"),
     pytest.lazy_fixture("random_users_rest_client"),
 ))
@@ -132,7 +190,24 @@ async def test_get_user_avatar(client: UsersRestClient, user_id: uuid.UUID):
         await client.get_user_avatar(user_id=user_id)
     except ResponseException as exception:
         assert exception.status_code == HTTPStatus.NOT_FOUND
-        assert exception.body == b'{"detail":"Avatar not found."}'
+        assert exception.body == b'{"detail":"Not found."}'
+
+
+@pytest.mark.parametrize("client", (
+    pytest.lazy_fixture("oleg_users_rest_client"),
+    pytest.lazy_fixture("oleg_activated_users_rest_client"),
+    pytest.lazy_fixture("matvey_users_rest_client"),
+    pytest.lazy_fixture("matvey_activated_users_rest_client"),
+    pytest.lazy_fixture("users_rest_client"),
+    pytest.lazy_fixture("random_users_rest_client"),
+))
+@pytest.mark.asyncio
+async def test_get_user_avatar_not_found(client: UsersRestClient):
+    with pytest.raises(ResponseException) as exception:
+        await client.get_user_avatar(user_id=uuid.uuid4())
+
+    assert exception.value.status_code == HTTPStatus.NOT_FOUND
+    assert exception.value.body == b'{"detail":"Not found."}'
 
 
 @pytest.mark.parametrize(("user_id", "user_email", "client"), (
@@ -145,6 +220,16 @@ async def test_get_user_avatar(client: UsersRestClient, user_id: uuid.UUID):
         pytest.lazy_fixture("matvey_id"),
         pytest.lazy_fixture("matvey_email"),
         pytest.lazy_fixture("matvey_users_rest_client"),
+    ),
+    (
+        pytest.lazy_fixture("oleg_id"),
+        pytest.lazy_fixture("oleg_email"),
+        pytest.lazy_fixture("oleg_activated_users_rest_client"),
+    ),
+    (
+        pytest.lazy_fixture("matvey_id"),
+        pytest.lazy_fixture("matvey_email"),
+        pytest.lazy_fixture("matvey_activated_users_rest_client"),
     ),
 ))
 @pytest.mark.asyncio
@@ -177,9 +262,26 @@ async def test_update_user_avatar_not_authenticated(
     assert exception.value.body == b'{"detail":"Not authenticated."}'
 
 
+@pytest.mark.parametrize("client", (
+    pytest.lazy_fixture("oleg_users_rest_client"),
+    pytest.lazy_fixture("oleg_activated_users_rest_client"),
+    pytest.lazy_fixture("matvey_users_rest_client"),
+    pytest.lazy_fixture("matvey_activated_users_rest_client"),
+))
+@pytest.mark.asyncio
+async def test_update_user_avatar_not_found(avatar_file: io.BytesIO, client: UsersRestClient):
+    with pytest.raises(ResponseException) as exception:
+        await client.update_user_avatar(user_id=uuid.uuid4(), avatar=avatar_file)
+
+    assert exception.value.status_code == HTTPStatus.NOT_FOUND
+    assert exception.value.body == b'{"detail":"Not found."}'
+
+
 @pytest.mark.parametrize(("user_id", "client"), (
     (pytest.lazy_fixture("oleg_id"), pytest.lazy_fixture("matvey_users_rest_client")),
+    (pytest.lazy_fixture("oleg_id"), pytest.lazy_fixture("matvey_activated_users_rest_client")),
     (pytest.lazy_fixture("matvey_id"), pytest.lazy_fixture("oleg_users_rest_client")),
+    (pytest.lazy_fixture("matvey_id"), pytest.lazy_fixture("oleg_activated_users_rest_client")),
     (pytest.lazy_fixture("oleg_id"), pytest.lazy_fixture("random_users_rest_client")),
     (pytest.lazy_fixture("matvey_id"), pytest.lazy_fixture("random_users_rest_client")),
 ))
@@ -196,13 +298,91 @@ async def test_update_user_avatar_forbidden(
     assert exception.value.body == b'{"detail":"Forbidden."}'
 
 
+@pytest.mark.parametrize(("user_id", "email", "client"), (
+    (
+        pytest.lazy_fixture("oleg_id"),
+        pytest.lazy_fixture("oleg_email"),
+        pytest.lazy_fixture("oleg_users_rest_client"),
+    ),
+    (
+        pytest.lazy_fixture("matvey_id"),
+        pytest.lazy_fixture("matvey_email"),
+        pytest.lazy_fixture("matvey_users_rest_client"),
+    ),
+    (
+        pytest.lazy_fixture("oleg_id"),
+        pytest.lazy_fixture("oleg_email"),
+        pytest.lazy_fixture("oleg_activated_users_rest_client"),
+    ),
+    (
+        pytest.lazy_fixture("matvey_id"),
+        pytest.lazy_fixture("matvey_email"),
+        pytest.lazy_fixture("matvey_activated_users_rest_client"),
+    ),
+))
+@pytest.mark.asyncio
+async def test_remove_user_avatar(user_id: uuid.UUID, email: str, client: UsersRestClient):
+    user = await client.remove_user_avatar(user_id=user_id)
+
+    assert user.id == user_id
+    assert user.email == email
+
+
+@pytest.mark.parametrize("user_id", (
+    pytest.lazy_fixture("oleg_id"),
+    pytest.lazy_fixture("matvey_id"),
+))
+@pytest.mark.asyncio
+async def test_remove_user_avatar_not_authenticated(
+        user_id: uuid.UUID,
+        users_rest_client: UsersRestClient,
+):
+    with pytest.raises(ResponseException) as exception:
+        await users_rest_client.remove_user_avatar(user_id=user_id)
+
+    assert exception.value.status_code == HTTPStatus.UNAUTHORIZED
+    assert exception.value.body == b'{"detail":"Not authenticated."}'
+
+
+@pytest.mark.parametrize("client", (
+    pytest.lazy_fixture("oleg_users_rest_client"),
+    pytest.lazy_fixture("oleg_activated_users_rest_client"),
+    pytest.lazy_fixture("matvey_users_rest_client"),
+    pytest.lazy_fixture("matvey_activated_users_rest_client"),
+))
+@pytest.mark.asyncio
+async def test_remove_user_avatar_not_found(client: UsersRestClient):
+    with pytest.raises(ResponseException) as exception:
+        await client.remove_user_avatar(user_id=uuid.uuid4())
+
+    assert exception.value.status_code == HTTPStatus.NOT_FOUND
+    assert exception.value.body == b'{"detail":"Not found."}'
+
+
+@pytest.mark.parametrize(("user_id", "client"), (
+    (pytest.lazy_fixture("oleg_id"), pytest.lazy_fixture("matvey_users_rest_client")),
+    (pytest.lazy_fixture("matvey_id"), pytest.lazy_fixture("oleg_users_rest_client")),
+    (pytest.lazy_fixture("oleg_id"), pytest.lazy_fixture("matvey_activated_users_rest_client")),
+    (pytest.lazy_fixture("matvey_id"), pytest.lazy_fixture("oleg_activated_users_rest_client")),
+))
+@pytest.mark.asyncio
+async def test_remove_user_avatar_forbidden(user_id: uuid.UUID, client: UsersRestClient):
+    with pytest.raises(ResponseException) as exception:
+        await client.remove_user_avatar(user_id=user_id)
+
+    assert exception.value.status_code == HTTPStatus.FORBIDDEN
+    assert exception.value.body == b'{"detail":"Forbidden."}'
+
+
 @pytest.mark.parametrize("user_id", (
     pytest.lazy_fixture("oleg_id"),
     pytest.lazy_fixture("matvey_id"),
 ))
 @pytest.mark.parametrize("client", (
     pytest.lazy_fixture("oleg_users_rest_client"),
+    pytest.lazy_fixture("oleg_activated_users_rest_client"),
     pytest.lazy_fixture("matvey_users_rest_client"),
+    pytest.lazy_fixture("matvey_activated_users_rest_client"),
     pytest.lazy_fixture("users_rest_client"),
     pytest.lazy_fixture("random_users_rest_client"),
 ))
@@ -211,9 +391,28 @@ async def test_get_user_skills(user_id: uuid.UUID, client: UsersRestClient):
     await client.get_user_skills(user_id=user_id)
 
 
+@pytest.mark.parametrize("client", (
+    pytest.lazy_fixture("oleg_users_rest_client"),
+    pytest.lazy_fixture("oleg_activated_users_rest_client"),
+    pytest.lazy_fixture("matvey_users_rest_client"),
+    pytest.lazy_fixture("matvey_activated_users_rest_client"),
+    pytest.lazy_fixture("users_rest_client"),
+    pytest.lazy_fixture("random_users_rest_client"),
+))
+@pytest.mark.asyncio
+async def test_get_user_skills_not_found(client: UsersRestClient):
+    with pytest.raises(ResponseException) as exception:
+        await client.get_user_skills(user_id=uuid.uuid4())
+
+    assert exception.value.status_code == HTTPStatus.NOT_FOUND
+    assert exception.value.body == b'{"detail":"Not found."}'
+
+
 @pytest.mark.parametrize(("user_id", "client"), (
     (pytest.lazy_fixture("oleg_id"), pytest.lazy_fixture("oleg_users_rest_client")),
+    (pytest.lazy_fixture("oleg_id"), pytest.lazy_fixture("oleg_activated_users_rest_client")),
     (pytest.lazy_fixture("matvey_id"), pytest.lazy_fixture("matvey_users_rest_client")),
+    (pytest.lazy_fixture("matvey_id"), pytest.lazy_fixture("matvey_activated_users_rest_client")),
 ))
 @pytest.mark.asyncio
 async def test_update_user_skills(user_id: uuid.UUID, client: UsersRestClient):
@@ -240,9 +439,26 @@ async def test_update_user_skills_not_authenticated(
     assert exception.value.body == b'{"detail":"Not authenticated."}'
 
 
+@pytest.mark.parametrize("client", (
+    pytest.lazy_fixture("oleg_users_rest_client"),
+    pytest.lazy_fixture("oleg_activated_users_rest_client"),
+    pytest.lazy_fixture("matvey_users_rest_client"),
+    pytest.lazy_fixture("matvey_activated_users_rest_client"),
+))
+@pytest.mark.asyncio
+async def test_update_user_skills_not_found(client: UsersRestClient):
+    with pytest.raises(ResponseException) as exception:
+        await client.update_user_skills(user_id=uuid.uuid4(), skills=set())
+
+    assert exception.value.status_code == HTTPStatus.NOT_FOUND
+    assert exception.value.body == b'{"detail":"Not found."}'
+
+
 @pytest.mark.parametrize(("user_id", "client"), (
     (pytest.lazy_fixture("oleg_id"), pytest.lazy_fixture("matvey_users_rest_client")),
+    (pytest.lazy_fixture("oleg_id"), pytest.lazy_fixture("matvey_activated_users_rest_client")),
     (pytest.lazy_fixture("matvey_id"), pytest.lazy_fixture("oleg_users_rest_client")),
+    (pytest.lazy_fixture("matvey_id"), pytest.lazy_fixture("oleg_activated_users_rest_client")),
     (pytest.lazy_fixture("oleg_id"), pytest.lazy_fixture("random_users_rest_client")),
     (pytest.lazy_fixture("matvey_id"), pytest.lazy_fixture("random_users_rest_client")),
 ))
