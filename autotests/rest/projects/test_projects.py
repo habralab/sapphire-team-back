@@ -1,12 +1,12 @@
-from http import HTTPStatus
 import uuid
 from datetime import datetime
+from http import HTTPStatus
 from typing import Type
 
 import pytest
 from faker import Faker
-from autotests.clients.rest.exceptions import ResponseException
 
+from autotests.clients.rest.exceptions import ResponseException
 from autotests.clients.rest.projects.client import ProjectsRestClient
 from autotests.clients.rest.projects.enums import ProjectStatusEnum
 from autotests.utils import Empty

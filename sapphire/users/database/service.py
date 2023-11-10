@@ -104,7 +104,7 @@ class UsersDatabaseService(BaseDatabaseService):
         user: User,
         skills: Set[uuid.UUID] = frozenset(),
     ) -> Set[uuid.UUID]:
-        stmt = delete(UserSkill).where(UserSkill.user == user)
+        stmt = delete(UserSkill).where(UserSkill.user_id == user.id)
         await session.execute(stmt)
 
         new_skills = [UserSkill(user=user, skill_id=skill) for skill in skills]
