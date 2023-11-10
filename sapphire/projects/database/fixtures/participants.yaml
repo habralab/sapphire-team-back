@@ -1,4 +1,4 @@
-model: project_participants
+model: participants
 data:
 - id: 9b721bc2-e56d-4deb-9359-50bcb1022e74
   position_id: 035431e1-bcf0-49db-a6bb-6e4c05e99852 # Fixture Project -> Бэкенд разработчик

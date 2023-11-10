@@ -20,7 +20,7 @@ class SpecializationGroup(Base):
     created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
 
     specializations: Mapped[list["Specialization"]] = relationship(back_populates="group",
-                                                                   lazy="joined")
+                                                                   lazy=False)
 
 class Specialization(Base):
     __tablename__ = "specializations"
@@ -33,7 +33,7 @@ class Specialization(Base):
     created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
 
     group: Mapped[SpecializationGroup] = relationship(back_populates="specializations",
-                                                      lazy="joined")
+                                                      lazy=False)
 
 
 class Skill(Base):
