@@ -1,3 +1,10 @@
+OSFLAG :=
+ifeq ($(OS),Windows_NT)
+    OSFLAG = WIN
+else
+    OSFLAG = UNIX
+endif
+
 lint:
 	pylint ./autotests ./sapphire ./tests
 
@@ -17,5 +24,9 @@ clean: down
 	docker rmi sapphire --force
 
 up: clean build
+ifeq ($(OSFLAG),WIN)
+	timeout /t 15
+else
 	sleep 15
+endif
 	docker stack deploy -c docker-compose.yaml sapphire
