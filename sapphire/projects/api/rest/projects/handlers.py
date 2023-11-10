@@ -5,6 +5,7 @@ import aiofiles
 import fastapi
 
 from sapphire.common.api.dependencies.pagination import Pagination, pagination
+from sapphire.common.api.exceptions import HTTPForbidden
 from sapphire.common.jwt.dependencies.rest import is_activated
 from sapphire.common.jwt.models import JWTData
 from sapphire.projects.database.models import Project
@@ -30,10 +31,7 @@ async def create_project(
     database_service: ProjectsDatabaseService = request.app.service.database
 
     if data.owner_id != jwt_data.user_id:
-        raise fastapi.HTTPException(
-            status_code=fastapi.status.HTTP_400_BAD_REQUEST,
-            detail="Field `owner_id` must be your user id",
-        )
+        raise HTTPForbidden()
 
     async with database_service.transaction() as session:
         project_db = await database_service.create_project(
