@@ -86,7 +86,7 @@ class TestProjectFlow:
             project_id=project_id,
             status=ProjectStatusEnum.FINISHED,
         )
-
+        
         assert project.id == project_id
         assert project.status == ProjectStatusEnum.FINISHED
 
@@ -108,7 +108,7 @@ class TestProjectFlow:
             project_id=project_id,
             status=ProjectStatusEnum.PREPARATION,
         )
-
+        
         assert project.id == project_id
         assert project.status == ProjectStatusEnum.PREPARATION
 
@@ -741,7 +741,7 @@ class TestProjectFlow:
             project_id=project_id,
             status=ProjectStatusEnum.IN_WORK,
         )
-
+        
         assert project.id == project_id
         assert project.status == ProjectStatusEnum.IN_WORK
 

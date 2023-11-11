@@ -2,6 +2,7 @@ import pathlib
 import uuid
 from typing import Type
 
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from sapphire.common.database.service import BaseDatabaseService
@@ -19,6 +20,12 @@ class MessengerDatabaseService(BaseDatabaseService):
 
     def get_models(self) -> list[Type[Base]]:
         return [Chat, Member, Message]
+
+    async def get_chats(self, session: AsyncSession, user_id: uuid.UUID) -> list[Chat]:
+        stmt = select(Chat).where(Member.user_id == user_id, Member.chat_id == Chat.id)
+        result = await session.execute(stmt)
+
+        return list(result.unique().scalars().all())
 
     async def create_chat(
             self,

@@ -49,13 +49,16 @@ class ProjectsDatabaseService(BaseDatabaseService):
         description: str | None = None,
         deadline: datetime | None = None,
     ) -> Project:
+        nested_session = await session.begin_nested()
         project = Project(
             name=name, owner_id=owner_id, description=description, deadline=deadline
         )
         history = ProjectHistory(project=project, status=ProjectStatusEnum.PREPARATION)
-
-        session.add_all([project, history])
-
+        project.history.append(history)
+        session.add(project)
+        await nested_session.commit()
+        
+        await session.refresh(project)
         return project
 
     async def get_project(
@@ -99,8 +102,8 @@ class ProjectsDatabaseService(BaseDatabaseService):
         if avatar is not Empty:
             project.avatar = avatar
         if status is not Empty:
-            project = await self._change_project_status(session=session,
-                project=project, status=status,
+            project = await self._change_project_status(
+                session=session, project=project, status=status,
             )
 
         session.add(project)
@@ -112,13 +115,16 @@ class ProjectsDatabaseService(BaseDatabaseService):
         project: Project,
         status: ProjectStatusEnum,
     ) -> Project:
+        nested_session = await session.begin_nested()
         new_history_entry = ProjectHistory(
             project_id = project.id,
             status=status,
         )
         session.add(new_history_entry)
         project.history.insert(0, new_history_entry)
+        await nested_session.commit()
 
+        await session.refresh(project)
         return project
 
     async def get_project_positions(

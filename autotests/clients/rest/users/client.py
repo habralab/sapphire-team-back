@@ -44,8 +44,8 @@ class UsersRestClient(BaseRestClient):
     async def update_user(
             self,
             user_id: uuid.UUID,
-            first_name: str | None = None,
-            last_name: str | None = None,
+            first_name: str,
+            last_name: str,
             about: str | None = None,
             main_specialization_id: uuid.UUID | None = None,
             secondary_specialization_id: uuid.UUID | None = None,

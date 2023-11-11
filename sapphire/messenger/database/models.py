@@ -16,8 +16,17 @@ class Chat(Base):
     created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
     is_personal: Mapped[bool]
 
-    messages: Mapped[list["Message"]] = relationship(back_populates="chat")
-    member: Mapped[list["Member"]] = relationship(back_populates="chat")
+    messages: Mapped[list["Message"]] = relationship(
+        back_populates="chat",
+        order_by="desc(Message.created_at)",
+    )
+    last_message: Mapped["Message"] = relationship(
+        back_populates="chat",
+        order_by="desc(Message.created_at)",
+        lazy=False,
+        overlaps="messages",
+    )
+    members: Mapped[list["Member"]] = relationship(back_populates="chat", lazy=False)
 
 
 class Message(Base):
@@ -41,4 +50,4 @@ class Member(Base):
     leave_at: Mapped[datetime | None]
     join_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
 
-    chat: Mapped[Chat] = relationship(Chat, back_populates="member")
+    chat: Mapped[Chat] = relationship(Chat, back_populates="members")

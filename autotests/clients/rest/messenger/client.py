@@ -1,6 +1,6 @@
 from autotests.clients.rest.base_client import BaseRestClient
 
-from .models import HealthResponse
+from .models import ChatListResponse, HealthResponse
 
 
 class MessengerRestClient(BaseRestClient):
@@ -8,3 +8,8 @@ class MessengerRestClient(BaseRestClient):
         path = "/health"
 
         return await self.rest_get(path=path, response_model=HealthResponse)
+
+    async def get_chats(self) -> ChatListResponse:
+        path = "/api/rest/chats/"
+
+        return await self.rest_get(path=path, response_model=ChatListResponse)
