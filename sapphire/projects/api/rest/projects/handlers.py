@@ -14,9 +14,9 @@ from sapphire.projects.database.service import ProjectsDatabaseService
 from .dependencies import get_path_project, path_project_is_owner
 from .schemas import (
     CreateProjectRequest,
-    ProjectFiltersRequest,
     ProjectHistoryListResponse,
     ProjectHistoryResponse,
+    ProjectListFiltersRequest,
     ProjectListResponse,
     ProjectPartialUpdateRequest,
     ProjectResponse,
@@ -48,7 +48,7 @@ async def create_project(
 async def get_projects(
     request: fastapi.Request,
     pagination: Pagination = fastapi.Depends(pagination),
-    filters: ProjectFiltersRequest = fastapi.Depends(ProjectFiltersRequest),
+    filters: ProjectListFiltersRequest = fastapi.Depends(ProjectListFiltersRequest),
 ) -> ProjectListResponse:
     database_service: ProjectsDatabaseService = request.app.service.database
 

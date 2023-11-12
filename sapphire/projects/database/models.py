@@ -40,6 +40,11 @@ class Project(Base):
         order_by="desc(ProjectHistory.created_at)",
         lazy=False,
     )
+    last_history: Mapped["ProjectHistory"] = relationship(
+        back_populates="project",
+        order_by="desc(ProjectHistory.created_at)",
+        lazy=False,
+    )
     positions: Mapped[list["Position"]] = relationship(back_populates="project", lazy=False)
     reviews: Mapped[list["Review"]] = relationship(back_populates="project", lazy=False)
 
@@ -48,8 +53,8 @@ class Project(Base):
     )
 
     @property
-    def status(self):
-        return self.history[0].status
+    def status(self) -> ProjectStatusEnum:
+        return self.last_history.status
 
     @property
     def joined_participants(self) -> list["Participant"]:

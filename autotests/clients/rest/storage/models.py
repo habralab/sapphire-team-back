@@ -4,7 +4,7 @@ from typing import Literal
 
 from pydantic import BaseModel, constr
 
-from autotests.rest.models import PaginatedResponse
+from autotests.clients.rest.models import PaginatedResponse
 
 
 class HealthResponse(BaseModel):

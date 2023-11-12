@@ -132,9 +132,17 @@ async def test_update_user(
     pytest.lazy_fixture("matvey_id"),
 ))
 @pytest.mark.asyncio
-async def test_update_user_not_authenticated(user_id: uuid.UUID, users_rest_client: UsersRestClient):
+async def test_update_user_not_authenticated(
+        faker: Faker,
+        user_id: uuid.UUID,
+        users_rest_client: UsersRestClient,
+):
     with pytest.raises(ResponseException) as exception:
-        await users_rest_client.update_user(user_id=user_id)
+        await users_rest_client.update_user(
+            user_id=user_id,
+            first_name=faker.first_name(),
+            last_name=faker.last_name(),
+        )
 
     assert exception.value.status_code == HTTPStatus.UNAUTHORIZED
     assert exception.value.body == b'{"detail":"Not authenticated."}'
@@ -147,9 +155,13 @@ async def test_update_user_not_authenticated(user_id: uuid.UUID, users_rest_clie
     pytest.lazy_fixture("matvey_activated_users_rest_client"),
 ))
 @pytest.mark.asyncio
-async def test_update_user_not_found(client: UsersRestClient):
+async def test_update_user_not_found(faker: Faker, client: UsersRestClient):
     with pytest.raises(ResponseException) as exception:
-        await client.update_user(user_id=uuid.uuid4())
+        await client.update_user(
+            user_id=uuid.uuid4(),
+            first_name=faker.first_name(),
+            last_name=faker.last_name(),
+        )
 
     assert exception.value.status_code == HTTPStatus.NOT_FOUND
     assert exception.value.body == b'{"detail":"Not found."}'
@@ -164,9 +176,13 @@ async def test_update_user_not_found(client: UsersRestClient):
     (pytest.lazy_fixture("matvey_id"), pytest.lazy_fixture("random_users_rest_client")),
 ))
 @pytest.mark.asyncio
-async def test_update_user_forbidden(user_id: uuid.UUID, client: UsersRestClient):
+async def test_update_user_forbidden(faker: Faker, user_id: uuid.UUID, client: UsersRestClient):
     with pytest.raises(ResponseException) as exception:
-        await client.update_user(user_id=user_id)
+        await client.update_user(
+            user_id=user_id,
+            first_name=faker.first_name(),
+            last_name=faker.last_name(),
+        )
 
     assert exception.value.status_code == 403
     assert exception.value.body == b'{"detail":"Forbidden."}'
@@ -186,11 +202,7 @@ async def test_update_user_forbidden(user_id: uuid.UUID, client: UsersRestClient
 ))
 @pytest.mark.asyncio
 async def test_get_user_avatar(client: UsersRestClient, user_id: uuid.UUID):
-    try:
-        await client.get_user_avatar(user_id=user_id)
-    except ResponseException as exception:
-        assert exception.status_code == HTTPStatus.NOT_FOUND
-        assert exception.body == b'{"detail":"Not found."}'
+    await client.get_user_avatar(user_id=user_id)
 
 
 @pytest.mark.parametrize("client", (

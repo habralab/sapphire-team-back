@@ -46,7 +46,7 @@ class ProjectListResponse(PaginatedResponse):
     data: list[ProjectResponse]
 
 
-class ProjectFiltersRequest(BaseModel):
+class ProjectListFiltersRequest(BaseModel):
     query_text: str | Type[Empty] = Empty
     owner_id: uuid.UUID | Type[Empty] = Empty
     deadline: NaiveDatetime | Type[Empty] = Empty
