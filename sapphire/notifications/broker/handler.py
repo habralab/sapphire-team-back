@@ -48,3 +48,7 @@ class NotificationsBrokerHandler(BaseBrokerHandler):
     @property
     def database(self) -> NotificationsDatabaseService:
         return self._database
+
+    @property
+    def websocket_connection_storage(self) -> WebsocketConnectionStorage:
+        return self._websocket_connection_storage

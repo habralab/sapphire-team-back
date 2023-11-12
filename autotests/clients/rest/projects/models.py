@@ -4,7 +4,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field, NaiveDatetime, NonNegativeInt, confloat, constr
 
-from autotests.rest.models import PaginatedResponse
+from autotests.clients.rest.models import PaginatedResponse
 
 from .enums import ParticipantStatusEnum, ProjectStatusEnum
 

@@ -7,7 +7,7 @@ from sapphire.common.jwt.settings import JWTSettings
 
 
 class MessengerSettings(BaseAPISettings, BaseDatabaseSettings, JWTSettings):
-    model_config = SettingsConfigDict(secrets_dir="/run/secrets")
+    model_config = SettingsConfigDict(env_file=".env", secrets_dir="/run/secrets", extra="allow")
 
     db_dsn: AnyUrl = AnyUrl("sqlite+aiosqlite:///messenger.sqlite3")
 

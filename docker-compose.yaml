@@ -11,6 +11,10 @@ services:
       - ${DATABASE_DIR:-./database_data}:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready"]
+    ports:
+      - target: 5432
+        published: 5432
+        mode: host
     deploy:
       replicas: 1
 
@@ -199,6 +203,8 @@ services:
       ROOT_URL: ${MESSENGER_ROOT_URL:-http://localhost:3000/messenger}
       ROOT_PATH: ${MESSENGER_ROOT_PATH:-/messenger}
       ALLOWED_ORIGINS: ${MESSENGER_ALLOWED_ORIGINS:-["http://localhost:3000"]}
+      CONSUMER_SERVERS: '["kafka:9091"]'
+      TOPICS: '["chats"]'
     secrets:
       - jwt_access_token_public_key
       - jwt_access_token_private_key

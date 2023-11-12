@@ -33,7 +33,7 @@ def test_get_alembic_config_path(database_service: ProjectsDatabaseService):
 
 @pytest.mark.asyncio
 async def test_create_project(database_service: ProjectsDatabaseService):
-    session = MagicMock()
+    session = AsyncMock()
     name = "Any name"
     owner_id = uuid.uuid4()
     description = "Any description"
@@ -52,14 +52,7 @@ async def test_create_project(database_service: ProjectsDatabaseService):
     assert project.description == description
     assert project.deadline == deadline
 
-    session.add_all.assert_called_once()
-    assert len(session.add_all.call_args[0]) == 1
-    assert isinstance(session.add_all.call_args[0][0], list)
-    assert len(session.add_all.call_args[0][0]) == 2
-
-    session_project, session_history = session.add_all.call_args[0][0]
-    assert session_project is project
-    assert session_history.project is project
+    session.add.assert_called_once_with(project)
 
 
 @pytest.mark.asyncio

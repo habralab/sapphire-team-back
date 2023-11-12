@@ -11,7 +11,7 @@ from sapphire.common.jwt.settings import JWTSettings
 
 class ProjectsSettings(BaseAPISettings, BaseBrokerProducerSettings, BaseDatabaseSettings,
                        JWTSettings):
-    model_config = SettingsConfigDict(secrets_dir="/run/secrets")
+    model_config = SettingsConfigDict(env_file=".env", secrets_dir="/run/secrets", extra="allow")
 
     db_dsn: AnyUrl = AnyUrl("sqlite+aiosqlite:///projects.sqlite3")
 
