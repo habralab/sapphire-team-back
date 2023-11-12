@@ -1,9 +1,11 @@
 import uuid
 from datetime import datetime
+from typing import Type
 
 from pydantic import BaseModel, ConfigDict
 
 from sapphire.common.api.schemas.paginated import PaginatedResponse
+from sapphire.common.utils.empty import Empty
 from sapphire.messenger.database.models import Chat
 
 
@@ -39,6 +41,10 @@ class ChatResponse(BaseModel):
             ),
             created_at=chat.created_at,
         )
+
+
+class ChatListFiltersRequest(BaseModel):
+    member: set[uuid.UUID] | Type[Empty] = Empty
 
 
 class ChatListResponse(PaginatedResponse):

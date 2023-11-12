@@ -57,7 +57,7 @@ class ProjectsDatabaseService(BaseDatabaseService):
         project.history.append(history)
         session.add(project)
         await nested_session.commit()
-        
+
         await session.refresh(project)
         return project
 

@@ -2,10 +2,11 @@ import pathlib
 import uuid
 from typing import Type
 
-from sqlalchemy import select
+from sqlalchemy import or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from sapphire.common.database.service import BaseDatabaseService
+from sapphire.common.utils.empty import Empty
 from sapphire.messenger.settings import MessengerSettings
 
 from .models import Base, Chat, Member, Message
@@ -21,9 +22,20 @@ class MessengerDatabaseService(BaseDatabaseService):
     def get_models(self) -> list[Type[Base]]:
         return [Chat, Member, Message]
 
-    async def get_chats(self, session: AsyncSession, user_id: uuid.UUID) -> list[Chat]:
-        stmt = select(Chat).where(Member.user_id == user_id, Member.chat_id == Chat.id)
-        result = await session.execute(stmt)
+    async def get_chats(
+            self,
+            session: AsyncSession,
+            user_id: uuid.UUID,
+            members: set[uuid.UUID] | Type[Empty] = Empty,
+    ) -> list[Chat]:
+        query = select(Chat).where(Member.user_id == user_id, Member.chat_id == Chat.id)
+
+        filters = []
+        if members is not Empty and len(members) > 0:
+            filters.append(or_(*(Member.user_id == member for member in members)))
+        query = query.where(*filters)
+
+        result = await session.execute(query)
 
         return list(result.unique().scalars().all())
 
@@ -37,7 +49,7 @@ class MessengerDatabaseService(BaseDatabaseService):
 
         for member_id in members_ids:
             member = Member(user_id=member_id)
-            chat.member.append(member)
+            chat.members.append(member)
 
         session.add(chat)
 

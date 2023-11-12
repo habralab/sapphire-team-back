@@ -291,14 +291,17 @@ class TestProjectFlow:
         pass
 
     @pytest.mark.dependency(depends=["TestProjectFlow::test_get_first_request_to_join"])
-    @pytest.mark.skip("Not implemented")
     @pytest.mark.asyncio
     @backoff.on_exception(backoff.constant, Exception, max_time=60)
     async def test_oleg_chat_opened(
             self,
+            oleg_id: uuid.UUID,
+            matvey_id: uuid.UUID,
             oleg_messenger_rest_client: MessengerRestClient,
     ):
-        pass
+        chats = await oleg_messenger_rest_client.get_chats(members={oleg_id, matvey_id})
+
+        assert len(chats.data) > 0
 
     @pytest.mark.dependency(depends=["TestProjectFlow::test_get_first_request_participant"])
     @pytest.mark.skip("Not implemented")
