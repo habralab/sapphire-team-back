@@ -15,7 +15,9 @@ class MessengerRestClient(BaseRestClient):
 
     async def get_chats(self, members: set[uuid.UUID] | Type[Empty] = Empty) -> ChatListResponse:
         path = "/api/rest/chats/"
-        params = {"member": members}
+        params = {
+            "member": [str(member) for member in members] if isinstance(members, set) else Empty,
+        }
         params = {key: value for key, value in params.items() if value is not Empty}
 
         return await self.rest_get(path=path, params=params, response_model=ChatListResponse)
