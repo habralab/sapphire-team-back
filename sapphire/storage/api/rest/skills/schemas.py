@@ -5,6 +5,7 @@ from typing import Type
 import fastapi
 from pydantic import BaseModel, ConfigDict, Field
 
+from sapphire.common.api.schemas.paginated import PaginatedResponse
 from sapphire.common.utils.empty import Empty
 
 
@@ -14,6 +15,10 @@ class SkillResponse(BaseModel):
     id: uuid.UUID
     name: str | None
     created_at: datetime
+
+
+class SkillListResponse(PaginatedResponse):
+    data: list[SkillResponse]
 
 
 class SkillsFiltersRequest(BaseModel):
