@@ -34,3 +34,5 @@ class AutotestsSettings(JWTSettings):
     project_id: uuid.UUID
     position_id: uuid.UUID
     participant_id: uuid.UUID
+
+    chat_id: uuid.UUID
