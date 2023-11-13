@@ -12,6 +12,7 @@ from autotests.utils import Empty
 from .models import (
     CreatePositionRequest,
     CreateProjectRequest,
+    CreateProjectResponse,
     CreateReviewRequest,
     HealthResponse,
     ParticipantResponse,
@@ -23,7 +24,6 @@ from .models import (
     ReviewResponse,
     UpdateParticipantRequest,
     UserStatisticResponse,
-    CreateProjectResponse,
 )
 
 

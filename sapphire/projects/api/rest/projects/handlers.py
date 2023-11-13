@@ -3,6 +3,7 @@ import pathlib
 
 import aiofiles
 import fastapi
+from loguru import logger
 
 from sapphire.common.api.dependencies.pagination import Pagination, pagination
 from sapphire.common.api.exceptions import HTTPForbidden
@@ -14,16 +15,16 @@ from sapphire.projects.database.service import ProjectsDatabaseService
 from .dependencies import get_path_project, path_project_is_owner
 from .schemas import (
     CreateProjectRequest,
+    CreateProjectResponse,
     ProjectHistoryListResponse,
     ProjectHistoryResponse,
     ProjectListFiltersRequest,
     ProjectListResponse,
     ProjectPartialUpdateRequest,
     ProjectResponse,
-    CreateProjectResponse,
 )
 
-from loguru import logger
+
 async def create_project(
     request: fastapi.Request,
     jwt_data: JWTData = fastapi.Depends(is_activated),

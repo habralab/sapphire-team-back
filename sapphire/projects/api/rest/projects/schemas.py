@@ -7,6 +7,7 @@ from pydantic import BaseModel, ConfigDict, Field, NaiveDatetime
 from sapphire.common.api.schemas.paginated import PaginatedResponse
 from sapphire.common.utils.empty import Empty
 from sapphire.projects.database.models import ProjectStatusEnum
+
 from .positions.participants.schemas import ParticipantResponse
 
 
