@@ -1,8 +1,8 @@
 import uuid
 from datetime import datetime
-from typing import Literal
+from typing import Annotated, Literal
 
-from pydantic import BaseModel, Field, NaiveDatetime, NonNegativeInt, confloat, constr
+from pydantic import BaseModel, Field, NaiveDatetime, NonNegativeInt, constr
 
 from autotests.clients.rest.models import PaginatedResponse
 
@@ -21,6 +21,26 @@ class CreateProjectRequest(BaseModel):
     deadline: NaiveDatetime | None
 
 
+class CreateProjectResponse(BaseModel):
+    id: uuid.UUID
+    name: str
+    description: str | None = None
+    owner_id: uuid.UUID
+    deadline: NaiveDatetime | None = None
+    created_at: NaiveDatetime
+    status: ProjectStatusEnum
+
+
+class ParticipantResponse(BaseModel):
+    id: uuid.UUID
+    position_id: uuid.UUID
+    user_id: uuid.UUID
+    status: ParticipantStatusEnum
+    joined_at: NaiveDatetime | None
+    created_at: datetime
+    updated_at: datetime
+
+
 class ProjectResponse(BaseModel):
     id: uuid.UUID
     name: str
@@ -30,6 +50,7 @@ class ProjectResponse(BaseModel):
     created_at: NaiveDatetime
     updated_at: NaiveDatetime
     status: ProjectStatusEnum
+    joined_participants: list[ParticipantResponse]
 
 
 class ProjectListResponse(PaginatedResponse):
@@ -72,15 +93,6 @@ class UpdateParticipantRequest(BaseModel):
     status: ParticipantStatusEnum
 
 
-class ParticipantResponse(BaseModel):
-    id: uuid.UUID
-    position_id: uuid.UUID
-    user_id: uuid.UUID
-    status: ParticipantStatusEnum
-    created_at: datetime
-    updated_at: datetime
-
-
 class ProjectPartialUpdateRequest(BaseModel):
     status: ProjectStatusEnum | None
 
@@ -88,4 +100,4 @@ class ProjectPartialUpdateRequest(BaseModel):
 class UserStatisticResponse(BaseModel):
     ownership_projects_count: NonNegativeInt
     participant_projects_count: NonNegativeInt
-    rate: confloat(ge=1, le=5)
+    rate: Annotated[float, Field(ge=1, le=5)]

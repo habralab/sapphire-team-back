@@ -13,7 +13,7 @@ from sapphire.projects.database.models import Participant, ParticipantStatusEnum
 from sapphire.projects.database.service import ProjectsDatabaseService
 
 from .dependencies import get_path_participant
-from .schemas import ProjectParticipantResponse, UpdateParticipantRequest
+from .schemas import ParticipantResponse, UpdateParticipantRequest
 
 
 async def create_participant(
@@ -22,7 +22,7 @@ async def create_participant(
     jwt_data: JWTData = fastapi.Depends(is_auth),
     project: Project = fastapi.Depends(get_path_project),
     position: Position = fastapi.Depends(get_path_position),
-) -> ProjectParticipantResponse:
+) -> ParticipantResponse:
     broker_service: ProjectsBrokerService = request.app.service.broker
     database_service: ProjectsDatabaseService = request.app.service.database
 
@@ -57,13 +57,13 @@ async def create_participant(
             members_ids=[project.owner_id, participant.user_id],
         )
 
-    return ProjectParticipantResponse.model_validate(participant)
+    return ParticipantResponse.model_validate(participant)
 
 
 async def get_participant(
     participant: Participant = fastapi.Depends(get_path_participant),
-) -> ProjectParticipantResponse:
-    return ProjectParticipantResponse.model_validate(participant)
+) -> ParticipantResponse:
+    return ParticipantResponse.model_validate(participant)
 
 
 async def update_participant(
@@ -72,7 +72,7 @@ async def update_participant(
     jwt_data: JWTData = fastapi.Depends(is_auth),
     project: Project = fastapi.Depends(get_path_project),
     participant: Participant = fastapi.Depends(get_path_participant),
-) -> ProjectParticipantResponse:
+) -> ParticipantResponse:
     broker_service: ProjectsBrokerService = request.app.service.broker
     database_service: ProjectsDatabaseService = request.app.service.database
 
@@ -127,4 +127,4 @@ async def update_participant(
                 project=project, participant=participant
             )
 
-    return ProjectParticipantResponse.model_validate(updated_participant_db)
+    return ParticipantResponse.model_validate(updated_participant_db)

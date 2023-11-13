@@ -14,6 +14,7 @@ from sapphire.projects.database.service import ProjectsDatabaseService
 from .dependencies import get_path_project, path_project_is_owner
 from .schemas import (
     CreateProjectRequest,
+    CreateProjectResponse,
     ProjectHistoryListResponse,
     ProjectHistoryResponse,
     ProjectListFiltersRequest,
@@ -27,7 +28,7 @@ async def create_project(
     request: fastapi.Request,
     jwt_data: JWTData = fastapi.Depends(is_activated),
     data: CreateProjectRequest = fastapi.Body(embed=False),
-) -> ProjectResponse:
+) -> CreateProjectResponse:
     database_service: ProjectsDatabaseService = request.app.service.database
 
     if data.owner_id != jwt_data.user_id:
@@ -42,7 +43,7 @@ async def create_project(
             deadline=data.deadline,
         )
 
-    return ProjectResponse.model_validate(project_db)
+    return CreateProjectResponse.model_validate(project_db)
 
 
 async def get_projects(
