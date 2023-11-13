@@ -1,6 +1,6 @@
 import pathlib
 
-from pydantic import AnyUrl
+from pydantic import AnyUrl, PositiveInt
 from pydantic_settings import SettingsConfigDict
 
 from sapphire.common.api.settings import BaseAPISettings
@@ -16,6 +16,7 @@ class ProjectsSettings(BaseAPISettings, BaseBrokerProducerSettings, BaseDatabase
     db_dsn: AnyUrl = AnyUrl("sqlite+aiosqlite:///projects.sqlite3")
 
     media_dir_path: pathlib.Path = pathlib.Path("/media")
+    load_file_chunk_size: PositiveInt = 1024 * 1024 # 1 Mb
 
     producer_servers: list[str] = ["localhost:9091"]
 

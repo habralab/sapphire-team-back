@@ -73,7 +73,11 @@ class UsersRestClient(BaseRestClient):
     async def update_user_avatar(self, user_id: uuid.UUID, avatar: io.BytesIO) -> UserResponse:
         path = f"/api/rest/users/{user_id}/avatar"
 
-        return await self.rest_post(path=path, response_model=UserResponse, files={"avatar": avatar})
+        return await self.rest_post(
+            path=path,
+            response_model=UserResponse,
+            files={"avatar": avatar},
+        )
 
     async def remove_user_avatar(self, user_id: uuid.UUID) -> UserResponse:
         path = f"/api/rest/users/{user_id}/avatar"

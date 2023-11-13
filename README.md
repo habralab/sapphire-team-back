@@ -141,6 +141,12 @@ GRANT ALL PRIVILEGES ON DATABASE service_name TO service_name;
 ALTER DATABASE service_name OWNER TO service_name;
 ```
 
+For autotests you should install all autotests fixtures from every service: Users, Projects,
+Notifications, Messenger
+```shell
+poetry run python -m sapphire <service> database fixtures apply autotests
+```
+
 ### Run: Python
 
 For running separate services, please, see documentation:

@@ -11,7 +11,7 @@ from alembic.config import Config as AlembicConfig
 from facet import ServiceMixin
 from loguru import logger
 from pydantic import BaseModel
-from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.orm import DeclarativeBase
 
 
@@ -32,7 +32,7 @@ class FixtureContent(BaseModel):
 
 class BaseDatabaseService(ServiceMixin):
     FIXTURES_FORMATS_MAPPING = {
-        FixtureFormatEnum.YAML: yaml.safe_load,
+        FixtureFormatEnum.YAML: lambda filepath: list(yaml.safe_load_all(filepath)),
         FixtureFormatEnum.JSON: json.load,
     }
 
@@ -117,26 +117,34 @@ class BaseDatabaseService(ServiceMixin):
             fixture_format: FixtureFormatEnum = FixtureFormatEnum.YAML,
     ):
         fixtures_directory_path = self.get_fixtures_directory_path()
-        models_mapping = {model.__tablename__: model for model in self.get_models()}
 
         fixture_file_path = fixtures_directory_path / f"{name}.{fixture_format.value}"
         fixture_file_loader = self.FIXTURES_FORMATS_MAPPING[fixture_format]
         with open(fixture_file_path, "rt", encoding="utf-8") as fixture_file:
             fixture_payload = fixture_file_loader(fixture_file)
-        fixture_content = FixtureContent(**fixture_payload)
         logger.info("Load fixture '{}'", name)
 
-        model = models_mapping.get(fixture_content.model)
+        if isinstance(fixture_payload, dict):
+            fixture_payload = [fixture_payload]
+        elif not isinstance(fixture_payload, list):
+            raise ValueError(f"Fixture '{name}' have incorrect format: must be dict or list")
+        async with self.transaction() as session:
+            for payload in fixture_payload:
+                await self._apply_fixture(name=name, payload=payload, session=session)
+        logger.info("Fixture '{}' apply to database", name)
+
+    async def _apply_fixture(self, name: str, payload: dict[str, Any], session: AsyncSession):
+        content = FixtureContent(**payload)
+        models_mapping = {model.__tablename__: model for model in self.get_models()}
+        model = models_mapping.get(content.model)
         if model is None:
-            raise ValueError(f"Incorrect model name in fixture '{name}': {fixture_content.model}")
+            raise ValueError(f"Incorrect model name in fixture '{name}': {content.model}")
+
         records = [
             model(**self.prepare_fixture_fields_for_model(fields))
-            for fields in fixture_content.data
+            for fields in content.data
         ]
-
-        async with self.transaction() as session:
-            session.add_all(records)
-        logger.info("Fixture '{}' apply to database", name)
+        session.add_all(records)
 
     async def start(self):
         logger.info("Start Database service")

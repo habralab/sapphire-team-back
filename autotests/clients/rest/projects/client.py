@@ -1,3 +1,4 @@
+import io
 import uuid
 from datetime import datetime
 from typing import Type
@@ -95,6 +96,33 @@ class ProjectsRestClient(BaseRestClient):
         request = ProjectPartialUpdateRequest(status=status)
 
         return await self.rest_patch(path=path, data=request, response_model=ProjectResponse)
+
+    async def get_project_avatar(self, project_id: uuid.UUID) -> io.BytesIO:
+        path = f"/api/rest/projects/{project_id}/avatar"
+
+        response = await self.get(url=path)
+        if response.status_code // 100 != 2:
+            raise ResponseException(status_code=response.status_code, body=response.content)
+
+        return io.BytesIO(response.content)
+
+    async def upload_project_avatar(
+            self,
+            project_id: uuid.UUID,
+            avatar: io.BytesIO,
+    ) -> ProjectResponse:
+        path = f"/api/rest/projects/{project_id}/avatar"
+
+        return await self.rest_post(
+            path=path,
+            response_model=ProjectResponse,
+            files={"avatar": avatar},
+        )
+
+    async def remove_project_avatar(self, project_id: uuid.UUID) -> ProjectResponse:
+        path = f"/api/rest/projects/{project_id}/avatar"
+
+        return await self.rest_delete(path=path, response_model=ProjectResponse)
 
     async def get_project_positions(
             self,
