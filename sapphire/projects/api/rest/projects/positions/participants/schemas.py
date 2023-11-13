@@ -5,7 +5,7 @@ from pydantic import BaseModel, ConfigDict, NaiveDatetime
 from sapphire.projects.database.models import ParticipantStatusEnum
 
 
-class ProjectParticipantResponse(BaseModel):
+class ParticipantResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     id: uuid.UUID

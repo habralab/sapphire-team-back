@@ -23,6 +23,7 @@ from .models import (
     ReviewResponse,
     UpdateParticipantRequest,
     UserStatisticResponse,
+    CreateProjectResponse,
 )
 
 
@@ -65,7 +66,7 @@ class ProjectsRestClient(BaseRestClient):
             owner_id: uuid.UUID,
             description: str | None = None,
             deadline: datetime | None = None,
-    ) -> ProjectResponse:
+    ) -> CreateProjectResponse:
         path = "/api/rest/projects/"
         request = CreateProjectRequest(
             name=name,
@@ -74,7 +75,7 @@ class ProjectsRestClient(BaseRestClient):
             deadline=deadline,
         )
 
-        return await self.rest_post(path=path, data=request, response_model=ProjectResponse)
+        return await self.rest_post(path=path, data=request, response_model=CreateProjectResponse)
 
     async def get_project(self, project_id: uuid.UUID) -> ProjectResponse:
         path = f"/api/rest/projects/{project_id}"

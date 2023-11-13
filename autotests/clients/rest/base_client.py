@@ -53,7 +53,7 @@ class BaseRestClient(httpx.AsyncClient, ServiceMixin):
 
         response = await self.request(method=method, url=path, content=request_data, files=files,
                                       params=request_params, headers=headers)
-
+        print(response.json())
         if response.status_code // 100 != 2:
             raise ResponseException(status_code=response.status_code, body=response.read())
 

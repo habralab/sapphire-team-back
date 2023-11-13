@@ -20,14 +20,15 @@ from .schemas import (
     ProjectListResponse,
     ProjectPartialUpdateRequest,
     ProjectResponse,
+    CreateProjectResponse,
 )
 
-
+from loguru import logger
 async def create_project(
     request: fastapi.Request,
     jwt_data: JWTData = fastapi.Depends(is_activated),
     data: CreateProjectRequest = fastapi.Body(embed=False),
-) -> ProjectResponse:
+) -> CreateProjectResponse:
     database_service: ProjectsDatabaseService = request.app.service.database
 
     if data.owner_id != jwt_data.user_id:
@@ -41,8 +42,9 @@ async def create_project(
             description=data.description,
             deadline=data.deadline,
         )
-
-    return ProjectResponse.model_validate(project_db)
+    logger.info("AAAAAAAAAAAAAAAAA")
+    logger.info(project_db.__dict__)
+    return CreateProjectResponse.model_validate(project_db)
 
 
 async def get_projects(

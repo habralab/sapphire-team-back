@@ -60,8 +60,6 @@ class ProjectsDatabaseService(BaseDatabaseService):
 
         await session.refresh(project)
 
-        project.on_create = True
-
         return project
 
     async def get_project(

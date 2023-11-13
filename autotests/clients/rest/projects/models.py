@@ -21,6 +21,16 @@ class CreateProjectRequest(BaseModel):
     deadline: NaiveDatetime | None
 
 
+class CreateProjectResponse(BaseModel):
+    id: uuid.UUID
+    name: str
+    description: str | None = None
+    owner_id: uuid.UUID
+    deadline: NaiveDatetime | None = None
+    created_at: NaiveDatetime
+    status: ProjectStatusEnum
+
+
 class ProjectResponse(BaseModel):
     id: uuid.UUID
     name: str
@@ -30,7 +40,7 @@ class ProjectResponse(BaseModel):
     created_at: NaiveDatetime
     updated_at: NaiveDatetime
     status: ProjectStatusEnum
-    joined_participants: list["ProjectParticipantResponse"]
+    joined_participants: list["ParticipantResponse"]
 
 
 class ProjectListResponse(PaginatedResponse):
@@ -78,6 +88,7 @@ class ParticipantResponse(BaseModel):
     position_id: uuid.UUID
     user_id: uuid.UUID
     status: ParticipantStatusEnum
+    joined_at: NaiveDatetime | None
     created_at: datetime
     updated_at: datetime
 
@@ -90,13 +101,3 @@ class UserStatisticResponse(BaseModel):
     ownership_projects_count: NonNegativeInt
     participant_projects_count: NonNegativeInt
     rate: Annotated[float, Field(ge=1, le=5)]
-
-
-class ProjectParticipantResponse(BaseModel):
-    id: uuid.UUID
-    position_id: uuid.UUID
-    user_id: uuid.UUID
-    status: ParticipantStatusEnum
-    joined_at: NaiveDatetime | None
-    created_at: NaiveDatetime
-    updated_at: NaiveDatetime

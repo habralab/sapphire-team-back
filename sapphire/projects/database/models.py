@@ -63,9 +63,7 @@ class Project(Base):
             for position in self.positions
             for participant in position.participants
             if participant.status == ParticipantStatusEnum.JOINED
-        ] if not self.on_create else []
-
-    on_create = False
+        ]
 
 
 class ProjectHistory(Base):
