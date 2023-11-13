@@ -58,7 +58,9 @@ class ProjectsDatabaseService(BaseDatabaseService):
         session.add(project)
         await nested_session.commit()
 
-        await session.refresh(project)
+        session.add_all([project, history])
+        project.on_create = True
+
         return project
 
     async def get_project(
@@ -70,7 +72,9 @@ class ProjectsDatabaseService(BaseDatabaseService):
         if project_id is not Empty:
             filters.append(Project.id == project_id)
 
-        statement = select(Project).where(*filters)
+        statement = select(Project).where(*filters).options(
+            joinedload(Project.positions).joinedload(Position.participants)
+        )
         result = await session.execute(statement)
         return result.unique().scalar_one_or_none()
 

@@ -530,11 +530,15 @@ class TestProjectFlow:
             position_id=position_id,
             participant_id=participant_id,
         )
+        project = await projects_rest_client.get_project(
+            project_id=project_id,
+        )
 
         assert participant.id == participant_id
         assert participant.position_id == position_id
         assert participant.user_id == matvey_id
         assert participant.status == ParticipantStatusEnum.JOINED
+        assert participant.user_id in [p.user_id for p in project.joined_participants]
 
     @pytest.mark.dependency(depends=["TestProjectFlow::test_get_third_accepted_request_to_join"])
     @pytest.mark.skip("Not implemented")

@@ -1,4 +1,6 @@
-from pydantic import BaseModel, ConfigDict, NonNegativeInt, Annotated, Field
+from typing import Annotated
+
+from pydantic import BaseModel, ConfigDict, Field, NonNegativeInt
 
 
 class UserStatisticResponse(BaseModel):

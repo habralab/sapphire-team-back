@@ -29,7 +29,7 @@ class ProjectResponse(BaseModel):
     created_at: NaiveDatetime
     updated_at: NaiveDatetime
     status: ProjectStatusEnum
-    joined_participants: list[ProjectParticipantResponse] | None
+    joined_participants: list[ProjectParticipantResponse]
 
 
 class ProjectHistoryResponse(BaseModel):

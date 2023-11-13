@@ -1,8 +1,8 @@
 import uuid
 from datetime import datetime
-from typing import Literal
+from typing import Annotated, Literal
 
-from pydantic import BaseModel, Field, NaiveDatetime, NonNegativeInt, confloat, constr
+from pydantic import BaseModel, Field, NaiveDatetime, NonNegativeInt, constr
 
 from autotests.clients.rest.models import PaginatedResponse
 
@@ -30,7 +30,7 @@ class ProjectResponse(BaseModel):
     created_at: NaiveDatetime
     updated_at: NaiveDatetime
     status: ProjectStatusEnum
-    joined_participants: list["ProjectParticipantResponse"] | None
+    joined_participants: list["ProjectParticipantResponse"]
 
 
 class ProjectListResponse(PaginatedResponse):
@@ -89,12 +89,10 @@ class ProjectPartialUpdateRequest(BaseModel):
 class UserStatisticResponse(BaseModel):
     ownership_projects_count: NonNegativeInt
     participant_projects_count: NonNegativeInt
-    rate: confloat(ge=1, le=5)
+    rate: Annotated[float, Field(ge=1, le=5)]
 
 
 class ProjectParticipantResponse(BaseModel):
-    model_config = ConfigDict(from_attributes=True)
-
     id: uuid.UUID
     position_id: uuid.UUID
     user_id: uuid.UUID
