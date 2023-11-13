@@ -1,20 +1,6 @@
-import uuid
-
-from pydantic import BaseModel, ConfigDict, NaiveDatetime
+from pydantic import BaseModel
 
 from sapphire.projects.database.models import ParticipantStatusEnum
-
-
-class ParticipantResponse(BaseModel):
-    model_config = ConfigDict(from_attributes=True)
-
-    id: uuid.UUID
-    position_id: uuid.UUID
-    user_id: uuid.UUID
-    status: ParticipantStatusEnum
-    joined_at: NaiveDatetime | None
-    created_at: NaiveDatetime
-    updated_at: NaiveDatetime
 
 
 class UpdateParticipantRequest(BaseModel):

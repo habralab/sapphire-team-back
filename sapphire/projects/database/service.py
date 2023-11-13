@@ -6,7 +6,6 @@ from typing import Set, Type
 from pydantic import BaseModel, NonNegativeInt, confloat, conint
 from sqlalchemy import delete, desc, distinct, func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import joinedload
 
 from sapphire.common.database.service import BaseDatabaseService
 from sapphire.common.utils.empty import Empty
@@ -71,10 +70,9 @@ class ProjectsDatabaseService(BaseDatabaseService):
         if project_id is not Empty:
             filters.append(Project.id == project_id)
 
-        statement = select(Project).where(*filters).options(
-            joinedload(Project.positions).joinedload(Position.participants)
-        )
+        statement = select(Project).where(*filters)
         result = await session.execute(statement)
+
         return result.unique().scalar_one_or_none()
 
     async def update_project(
@@ -88,9 +86,7 @@ class ProjectsDatabaseService(BaseDatabaseService):
         avatar: str | None | Type[Empty] = Empty,
         status: ProjectStatusEnum | None | Type[Empty] = Empty,
     ) -> Project:
-        query = select(Project).where(Project.id == project.id).options(
-            joinedload(Project.history),
-        )
+        query = select(Project).where(Project.id == project.id)
         result = await session.execute(query)
         project = result.unique().scalar_one()
 
