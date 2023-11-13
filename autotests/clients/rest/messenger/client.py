@@ -4,7 +4,7 @@ from typing import Type
 from autotests.clients.rest.base_client import BaseRestClient
 from autotests.utils import Empty
 
-from .models import ChatListResponse, HealthResponse
+from .models import ChatListResponse, ChatResponse, HealthResponse
 
 
 class MessengerRestClient(BaseRestClient):
@@ -21,3 +21,8 @@ class MessengerRestClient(BaseRestClient):
         params = {key: value for key, value in params.items() if value is not Empty}
 
         return await self.rest_get(path=path, params=params, response_model=ChatListResponse)
+
+    async def get_chat(self, chat_id: uuid.UUID) -> ChatResponse:
+        path = f"/api/rest/chats/{chat_id}"
+
+        return await self.rest_get(path=path, response_model=ChatResponse)

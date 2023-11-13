@@ -55,6 +55,12 @@ class MessengerDatabaseService(BaseDatabaseService):
 
         return chat
 
+    async def get_chat(self, session: AsyncSession, chat_id: uuid.UUID) -> Chat | None:
+        query = select(Chat).where(Chat.id == chat_id)
+        result = await session.execute(query)
+
+        return result.unique().scalar_one_or_none()
+
 
 def get_service(settings: MessengerSettings) -> MessengerDatabaseService:
     return MessengerDatabaseService(dsn=str(settings.db_dsn))
