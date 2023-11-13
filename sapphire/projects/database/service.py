@@ -58,7 +58,8 @@ class ProjectsDatabaseService(BaseDatabaseService):
         session.add(project)
         await nested_session.commit()
 
-        session.add_all([project, history])
+        await session.refresh(project)
+
         project.on_create = True
 
         return project
