@@ -34,6 +34,10 @@ jobs:
           -e "MATVEY_ID=${MATVEY_ID}"
           -e "MATVEY_EMAIL=${MATVEY_EMAIL}"
           -e "MATVEY_EMAIL_PASSWORD=${MATVEY_EMAIL_PASSWORD}"
+          -e "PROJECT_ID=${PROJECT_ID}"
+          -e "POSITION_ID=${POSITION_ID}"
+          -e "PARTICIPANT_ID=${PARTICIPANT_ID}"
+          -e "CHAT_ID=${CHAT_ID}"
           -v /sapphire/stage/secrets:/run/secrets
           sapphire:test-${{ github.sha }} pytest autotests
       - name: Notification

@@ -8,12 +8,13 @@ from sapphire.common.jwt.dependencies.rest import is_auth
 from sapphire.common.jwt.models import JWTData
 from sapphire.projects.api.rest.projects.dependencies import get_path_project
 from sapphire.projects.api.rest.projects.positions.dependencies import get_path_position
+from sapphire.projects.api.rest.projects.schemas import ParticipantResponse
 from sapphire.projects.broker.service import ProjectsBrokerService
 from sapphire.projects.database.models import Participant, ParticipantStatusEnum, Position, Project
 from sapphire.projects.database.service import ProjectsDatabaseService
 
 from .dependencies import get_path_participant
-from .schemas import ParticipantResponse, UpdateParticipantRequest
+from .schemas import UpdateParticipantRequest
 
 
 async def create_participant(
