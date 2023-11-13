@@ -78,7 +78,7 @@ class TestUserUpdateFlow:
         assert user.secondary_specialization_id == secondary_specialization_id
 
 
-class TestUserUpdateAvatarFlow:
+class TestUserAvatarFlow:
     @pytest.mark.dependency()
     @pytest.mark.asyncio
     async def test_update_user_avatar(
@@ -93,7 +93,7 @@ class TestUserUpdateAvatarFlow:
         assert user.id == oleg_id
         assert user.email == oleg_email
 
-    @pytest.mark.dependency(depends=["TestUserUpdateAvatarFlow::test_update_user_avatar"])
+    @pytest.mark.dependency(depends=["TestUserAvatarFlow::test_update_user_avatar"])
     @pytest.mark.asyncio
     async def test_get_user_avatar(
             self,
@@ -105,8 +105,32 @@ class TestUserUpdateAvatarFlow:
 
         assert user_avatar.read() == avatar_file.read()
 
+    @pytest.mark.dependency(depends=["TestUserAvatarFlow::test_get_user_avatar"])
+    @pytest.mark.asyncio
+    async def test_remove_user_avatar(
+            self,
+            oleg_id: uuid.UUID,
+            oleg_email: str,
+            oleg_users_rest_client: UsersRestClient,
+    ):
+        user = await oleg_users_rest_client.remove_user_avatar(user_id=oleg_id)
 
-class TestUserUpdateSkillsFlow:
+        assert user.id == oleg_id
+        assert user.email == oleg_email
+
+    @pytest.mark.dependency(depends=["TestUserAvatarFlow::test_remove_user_avatar"])
+    @pytest.mark.asyncio
+    async def test_get_user_avatar_after_remove(
+            self,
+            oleg_id: uuid.UUID,
+            users_rest_client: UsersRestClient,
+    ):
+        avatar = await users_rest_client.get_user_avatar(user_id=oleg_id)
+
+        assert avatar.read() == b"null"
+
+
+class TestUserSkillsFlow:
     CONTEXT = {}
 
     @pytest.mark.dependency()
@@ -127,7 +151,7 @@ class TestUserUpdateSkillsFlow:
 
         assert skills == new_skills
 
-    @pytest.mark.dependency(depends=["TestUserUpdateSkillsFlow::test_update_user_skills"])
+    @pytest.mark.dependency(depends=["TestUserSkillsFlow::test_update_user_skills"])
     @pytest.mark.asyncio
     async def test_get_user_skills(self, oleg_id: uuid.UUID, users_rest_client: UsersRestClient):
         new_skills: set[uuid.UUID] = self.CONTEXT["new_skills"]

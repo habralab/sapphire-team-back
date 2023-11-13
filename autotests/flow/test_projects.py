@@ -1,4 +1,5 @@
 import asyncio
+import io
 import uuid
 from datetime import datetime, timedelta
 from http import HTTPStatus
@@ -27,10 +28,13 @@ class TestProjectFlow:
         project_id = self.CONTEXT.get("project_id")
 
         if project_id is not None:
-            event_loop.run_until_complete(oleg_projects_rest_client.partial_update_project(
-                project_id=project_id,
-                status=ProjectStatusEnum.FINISHED,
-            ))
+            try:
+                event_loop.run_until_complete(oleg_projects_rest_client.partial_update_project(
+                    project_id=project_id,
+                    status=ProjectStatusEnum.FINISHED,
+                ))
+            except ResponseException:
+                pass
 
     @pytest.mark.dependency()
     @pytest.mark.asyncio
@@ -353,8 +357,6 @@ class TestProjectFlow:
             participant_id=participant_id,
         )
 
-        del self.CONTEXT["participant_id"]
-
         assert participant.id == participant_id
         assert participant.position_id == position_id
         assert participant.user_id == matvey_id
@@ -441,8 +443,6 @@ class TestProjectFlow:
             position_id=position_id,
             participant_id=participant_id,
         )
-
-        del self.CONTEXT["participant_id"]
 
         assert participant.id == participant_id
         assert participant.position_id == position_id
@@ -707,8 +707,6 @@ class TestProjectFlow:
             participant_id=participant_id,
         )
 
-        del self.CONTEXT["participant_id"]
-
         assert participant.id == participant_id
         assert participant.position_id == position_id
         assert participant.user_id == matvey_id
@@ -785,8 +783,6 @@ class TestProjectFlow:
             position_id=position_id,
         )
 
-        del self.CONTEXT["position_id"]
-
         assert position.id == position_id
         assert position.project_id == project_id
         assert position.closed_at is not None
@@ -823,23 +819,85 @@ class TestProjectFlow:
     @pytest.mark.asyncio
     async def test_create_review(
         self,
+        faker: Faker,
         oleg_id: uuid.UUID,
         matvey_id: uuid.UUID, 
         oleg_projects_rest_client: ProjectsRestClient
     ):
         project_id: uuid.UUID = self.CONTEXT["project_id"]
+        review_rate = faker.pyint(1, 5)
+        review_text = faker.text()
 
         review = await oleg_projects_rest_client.create_project_review(
             project_id=project_id,
             user_id=matvey_id,
-            rate=5,
-            text="test",
+            rate=review_rate,
+            text=review_text,
         )
 
-        del self.CONTEXT["project_id"]
+        self.CONTEXT["review_text"] = review_text
 
         assert review.project_id == project_id
         assert review.from_user_id == oleg_id
         assert review.to_user_id == matvey_id
-        assert review.rate == 5
-        assert review.text == "test"
+        assert review.rate == review_rate
+        assert review.text == review_text
+
+    @pytest.mark.dependency(depends=["TestProjectFlow::test_create_review"])
+    @pytest.mark.skip("Not implemented")
+    @pytest.mark.asyncio
+    async def test_get_review(self):
+        project_id: uuid.UUID = self.CONTEXT["project_id"]
+
+
+class TestProjectAvatarFlow:
+    @pytest.mark.dependency()
+    @pytest.mark.asyncio
+    async def test_upload_project_avatar(
+            self,
+            avatar_file: io.BytesIO,
+            oleg_projects_rest_client: ProjectsRestClient,
+            project_id: uuid.UUID,
+    ):
+        project = await oleg_projects_rest_client.upload_project_avatar(
+            project_id=project_id,
+            avatar=avatar_file,
+        )
+
+        assert project.id == project_id
+
+    @pytest.mark.dependency(depends=["TestProjectAvatarFlow::test_upload_project_avatar"])
+    @pytest.mark.skip("Not implemented")
+    @pytest.mark.asyncio
+    async def test_get_project_avatar(
+            self,
+            avatar_file: io.BytesIO,
+            oleg_projects_rest_client: ProjectsRestClient,
+            project_id: uuid.UUID,
+    ):
+        avatar = await oleg_projects_rest_client.get_project_avatar(project_id=project_id)
+
+        assert avatar.read() == avatar_file.read()
+
+    @pytest.mark.dependency(depends=["TestProjectAvatarFlow::test_get_project_avatar"])
+    @pytest.mark.asyncio
+    async def test_remove_project_avatar(
+            self,
+            oleg_projects_rest_client: ProjectsRestClient,
+            project_id: uuid.UUID,
+    ):
+        project = await oleg_projects_rest_client.remove_project_avatar(project_id=project_id)
+
+        assert project.id == project_id
+
+    @pytest.mark.dependency(depends=["TestProjectAvatarFlow::test_remove_project_avatar"])
+    @pytest.mark.skip("Not implemented")
+    @pytest.mark.asyncio
+    async def test_get_project_avatar_after_removing(
+            self,
+            project_id: uuid.UUID,
+            projects_rest_client: ProjectsRestClient,
+    ):
+        avatar = await projects_rest_client.get_project_avatar(project_id=project_id)
+
+        assert avatar.read() == b"null"

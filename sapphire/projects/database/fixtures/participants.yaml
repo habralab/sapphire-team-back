@@ -1,9 +1,0 @@
-model: participants
-data:
-- id: 9b721bc2-e56d-4deb-9359-50bcb1022e74
-  position_id: 035431e1-bcf0-49db-a6bb-6e4c05e99852 # Fixture Project -> Бэкенд разработчик
-  user_id: 412f1c40-125f-47b9-aaef-1c079c12d63b  # sapphire2user@gmail.com
-  status: "JOINED"
-  created_at: 2023-01-01T00:00:00.000000
-  updated_at: 2023-01-02T00:00:00.000000
-  joined_at: 2023-01-02T00:00:00.000000
