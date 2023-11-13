@@ -63,6 +63,21 @@ def matvey_email(settings: AutotestsSettings) -> str:
     return settings.matvey_email
 
 
+@pytest.fixture(scope="session")
+def project_id(settings: AutotestsSettings) -> uuid.UUID:
+    return settings.project_id
+
+
+@pytest.fixture(scope="session")
+def position_id(settings: AutotestsSettings) -> uuid.UUID:
+    return settings.position_id
+
+
+@pytest.fixture(scope="session")
+def participant_id(settings: AutotestsSettings) -> uuid.UUID:
+    return settings.participant_id
+
+
 @pytest.fixture(scope="function")
 def avatar_file():
     with open(pathlib.Path(__file__).parent / "static" / "avatar.png", "rb") as avatar_file:
@@ -241,6 +256,17 @@ def matvey_activated_storage_rest_client(
 
 
 @pytest.fixture(scope="session")
+def random_storage_rest_client(
+        settings: AutotestsSettings,
+        random_access_token: str,
+) -> StorageRestClient:
+    return StorageRestClient(
+        base_url=str(settings.storage_base_url),
+        headers={"Authorization": f"Bearer {random_access_token}"},
+    )
+
+
+@pytest.fixture(scope="session")
 def oleg_projects_rest_client(
         settings: AutotestsSettings,
         oleg_access_token: str,
@@ -281,6 +307,17 @@ def matvey_activated_projects_rest_client(
     return ProjectsRestClient(
         base_url=str(settings.projects_base_url),
         headers={"Authorization": f"Bearer {matvey_activated_access_token}"},
+    )
+
+
+@pytest.fixture(scope="session")
+def random_projects_rest_client(
+        settings: AutotestsSettings,
+        random_access_token: str,
+) -> ProjectsRestClient:
+    return ProjectsRestClient(
+        base_url=str(settings.projects_base_url),
+        headers={"Authorization": f"Bearer {random_access_token}"},
     )
 
 
@@ -329,6 +366,17 @@ def matvey_activated_notifications_rest_client(
 
 
 @pytest.fixture(scope="session")
+def random_notifications_rest_client(
+        settings: AutotestsSettings,
+        random_access_token: str,
+) -> NotificationsRestClient:
+    return NotificationsRestClient(
+        base_url=str(settings.notifications_base_url),
+        headers={"Authorization": f"Bearer {random_access_token}"},
+    )
+
+
+@pytest.fixture(scope="session")
 def oleg_messenger_rest_client(
         settings: AutotestsSettings,
         oleg_access_token: str,
@@ -370,6 +418,22 @@ def matvey_activated_messenger_rest_client(
         base_url=str(settings.messenger_base_url),
         headers={"Authorization": f"Bearer {matvey_activated_access_token}"},
     )
+
+
+@pytest.fixture(scope="session")
+def random_messenger_rest_client(
+        settings: AutotestsSettings,
+        random_access_token: str,
+) -> MessengerRestClient:
+    return MessengerRestClient(
+        base_url=str(settings.messenger_base_url),
+        headers={"Authorization": f"Bearer {random_access_token}"},
+    )
+
+
+@pytest.fixture(scope="session")
+def messenger_websocket_client(settings: AutotestsSettings) -> WebsocketClient:
+    return WebsocketClient(str(settings.messenger_websocket_url))
 
 
 @pytest.fixture(scope="session")
@@ -417,6 +481,22 @@ def matvey_activated_messenger_websocket_client(
 
 
 @pytest.fixture(scope="session")
+def random_messenger_websocket_client(
+        settings: AutotestsSettings,
+        random_access_token: str,
+) -> WebsocketClient:
+    return WebsocketClient(
+        str(settings.messenger_base_url),
+        headers={"Authorization": f"Bearer {random_access_token}"},
+    )
+
+
+@pytest.fixture(scope="session")
+def notifications_websocket_client(settings: AutotestsSettings) -> WebsocketClient:
+    return WebsocketClient(str(settings.notifications_websocket_url))
+
+
+@pytest.fixture(scope="session")
 def oleg_notifications_websocket_client(
         settings: AutotestsSettings,
         oleg_access_token: str,
@@ -457,6 +537,17 @@ def matvey_activated_notifications_websocket_client(
     return WebsocketClient(
         str(settings.notifications_websocket_url),
         headers={"Authorization": f"Bearer {matvey_activated_access_token}"},
+    )
+
+
+@pytest.fixture(scope="session")
+def random_notifications_websocket_client(
+        settings: AutotestsSettings,
+        random_access_token: str,
+) -> WebsocketClient:
+    return WebsocketClient(
+        str(settings.notifications_websocket_url),
+        headers={"Authorization": f"Bearer {random_access_token}"},
     )
 
 

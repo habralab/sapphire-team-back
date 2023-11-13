@@ -12,6 +12,14 @@ from autotests.clients.rest.projects.enums import ProjectStatusEnum
 from autotests.utils import Empty
 
 
+@pytest.mark.parametrize("client", (
+    pytest.lazy_fixture("oleg_projects_rest_client"),
+    pytest.lazy_fixture("oleg_activated_projects_rest_client"),
+    pytest.lazy_fixture("matvey_projects_rest_client"),
+    pytest.lazy_fixture("matvey_activated_projects_rest_client"),
+    pytest.lazy_fixture("projects_rest_client"),
+    pytest.lazy_fixture("random_projects_rest_client"),
+))
 @pytest.mark.parametrize(
     (
         "text", "owner_id", "deadline", "status", "position_is_closed",
@@ -34,7 +42,7 @@ from autotests.utils import Empty
 )
 @pytest.mark.asyncio
 async def test_get_projects(
-        projects_rest_client: ProjectsRestClient,
+        client: ProjectsRestClient,
         text: str | Type[Empty],
         owner_id: uuid.UUID | Type[Empty],
         deadline: datetime | Type[Empty],
@@ -45,7 +53,7 @@ async def test_get_projects(
         page: int,
         per_page: int,
 ):
-    projects = await projects_rest_client.get_projects(
+    projects = await client.get_projects(
         text=text,
         owner_id=owner_id,
         deadline=deadline,
@@ -83,3 +91,18 @@ async def test_create_project_forbidden(
 
     assert exception.value.status_code == HTTPStatus.FORBIDDEN
     assert exception.value.body == b'{"detail":"Forbidden."}'
+
+
+@pytest.mark.parametrize("client", (
+    pytest.lazy_fixture("oleg_projects_rest_client"),
+    pytest.lazy_fixture("oleg_activated_projects_rest_client"),
+    pytest.lazy_fixture("matvey_projects_rest_client"),
+    pytest.lazy_fixture("matvey_activated_projects_rest_client"),
+    pytest.lazy_fixture("projects_rest_client"),
+    pytest.lazy_fixture("random_projects_rest_client"),
+))
+@pytest.mark.asyncio
+async def test_get_project(project_id: uuid.UUID, client: ProjectsRestClient):
+    project = await client.get_project(project_id=project_id)
+
+    assert project.id == project_id

@@ -10,7 +10,7 @@ python -m sapphire projects database migrations apply
 
 ### Fixtures
 ```shell
-python -m sapphire projects database fixtures apply projects history positions participants
+python -m sapphire projects database fixtures apply autotests
 ```
 
 ## Run

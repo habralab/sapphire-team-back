@@ -1,0 +1,27 @@
+model: projects
+data:
+- id: cd8bad95-2585-421a-bef8-1ca18353caa6
+  name: "Fixture Project"
+  owner_id: 03fe07b9-109c-4e11-a2a5-184921fbfc49  # sapphire1user@gmail.com
+---
+model: projects_history
+data:
+- id: 4d6aefe2-c6b5-44c8-99c8-199627208efc
+  project_id: cd8bad95-2585-421a-bef8-1ca18353caa6  # Fixture Project
+  status: PREPARATION
+---
+model: positions
+data:
+- id: 035431e1-bcf0-49db-a6bb-6e4c05e99852
+  project_id: cd8bad95-2585-421a-bef8-1ca18353caa6  # Fixture Project
+  specialization_id: d7ad864b-094c-4db3-9b2e-b22fb3e89675  # Бэкенд разработчик
+---
+model: participants
+data:
+- id: 9b721bc2-e56d-4deb-9359-50bcb1022e74
+  position_id: 035431e1-bcf0-49db-a6bb-6e4c05e99852 # Fixture Project -> Бэкенд разработчик
+  user_id: 412f1c40-125f-47b9-aaef-1c079c12d63b  # sapphire2user@gmail.com
+  status: "JOINED"
+  created_at: 2023-01-01T00:00:00.000000
+  updated_at: 2023-01-02T00:00:00.000000
+  joined_at: 2023-01-02T00:00:00.000000

@@ -10,7 +10,7 @@ python -m sapphire notifications database migrations apply
 
 ### Fixtures
 ```shell
-python -m sapphire notifications database fixtures apply notifications
+python -m sapphire notifications database fixtures apply autotests
 ```
 
 ## Run

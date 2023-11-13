@@ -1,3 +1,4 @@
+import pathlib
 from typing import Iterable
 
 import fastapi
@@ -19,6 +20,8 @@ class ProjectsAPIService(BaseAPIService):
         database: ProjectsDatabaseService,
         jwt_methods: JWTMethods,
         broker_service: ProjectsBrokerService,
+        media_dir_path: pathlib.Path = pathlib.Path("/media"),
+        load_file_chunk_size: int = 1024 * 1024,  # 1 Mb
         version: str = "0.0.0.0",
         root_url: str = "http://localhost",
         root_path: str = "",
@@ -28,6 +31,8 @@ class ProjectsAPIService(BaseAPIService):
         self._database = database
         self._jwt_methods = jwt_methods
         self._broker_service = broker_service
+        self._media_dir_path = media_dir_path
+        self._load_file_chunk_size = load_file_chunk_size
 
         super().__init__(
             title="Projects",
@@ -60,6 +65,14 @@ class ProjectsAPIService(BaseAPIService):
     def broker(self) -> ProjectsBrokerService:
         return self._broker_service
 
+    @property
+    def media_dir_path(self) -> pathlib.Path:
+        return self._media_dir_path
+
+    @property
+    def load_file_chunk_size(self) -> int:
+        return self._load_file_chunk_size
+
 
 def get_service(
         database: ProjectsDatabaseService,
@@ -71,6 +84,8 @@ def get_service(
         database=database,
         jwt_methods=jwt_methods,
         broker_service=broker_service,
+        media_dir_path=settings.media_dir_path,
+        load_file_chunk_size=settings.load_file_chunk_size,
         version=get_version() or "0.0.0",
         root_url=str(settings.root_url),
         root_path=settings.root_path,

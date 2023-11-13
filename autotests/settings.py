@@ -30,3 +30,7 @@ class AutotestsSettings(JWTSettings):
     matvey_id: uuid.UUID
     matvey_email: str
     matvey_email_password: str
+
+    project_id: uuid.UUID
+    position_id: uuid.UUID
+    participant_id: uuid.UUID
