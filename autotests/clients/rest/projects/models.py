@@ -31,6 +31,16 @@ class CreateProjectResponse(BaseModel):
     status: ProjectStatusEnum
 
 
+class ParticipantResponse(BaseModel):
+    id: uuid.UUID
+    position_id: uuid.UUID
+    user_id: uuid.UUID
+    status: ParticipantStatusEnum
+    joined_at: NaiveDatetime | None
+    created_at: datetime
+    updated_at: datetime
+
+
 class ProjectResponse(BaseModel):
     id: uuid.UUID
     name: str
@@ -40,7 +50,7 @@ class ProjectResponse(BaseModel):
     created_at: NaiveDatetime
     updated_at: NaiveDatetime
     status: ProjectStatusEnum
-    joined_participants: list["ParticipantResponse"]
+    joined_participants: list[ParticipantResponse]
 
 
 class ProjectListResponse(PaginatedResponse):
@@ -81,16 +91,6 @@ class CreatePositionRequest(BaseModel):
 
 class UpdateParticipantRequest(BaseModel):
     status: ParticipantStatusEnum
-
-
-class ParticipantResponse(BaseModel):
-    id: uuid.UUID
-    position_id: uuid.UUID
-    user_id: uuid.UUID
-    status: ParticipantStatusEnum
-    joined_at: NaiveDatetime | None
-    created_at: datetime
-    updated_at: datetime
 
 
 class ProjectPartialUpdateRequest(BaseModel):
