@@ -3,7 +3,6 @@ import pathlib
 
 import aiofiles
 import fastapi
-from loguru import logger
 
 from sapphire.common.api.dependencies.pagination import Pagination, pagination
 from sapphire.common.api.exceptions import HTTPForbidden
@@ -43,8 +42,7 @@ async def create_project(
             description=data.description,
             deadline=data.deadline,
         )
-    logger.info("AAAAAAAAAAAAAAAAA")
-    logger.info(project_db.__dict__)
+
     return CreateProjectResponse.model_validate(project_db)
 
 
