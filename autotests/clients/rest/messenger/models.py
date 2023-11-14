@@ -30,3 +30,7 @@ class ChatResponse(BaseModel):
 
 class ChatListResponse(PaginatedResponse):
     data: list[ChatResponse]
+
+
+class MessageListResponse(PaginatedResponse):
+    data: list[MessageResponse]
