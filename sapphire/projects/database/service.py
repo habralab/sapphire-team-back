@@ -109,11 +109,12 @@ class ProjectsDatabaseService(BaseDatabaseService):
 
         return project
 
-    async def _change_project_status(self,
-                                     session: AsyncSession,
-                                     project: Project,
-                                     status: ProjectStatusEnum,
-                                     ) -> Project:
+    async def _change_project_status(
+            self,
+            session: AsyncSession,
+            project: Project,
+            status: ProjectStatusEnum,
+    ) -> Project:
         nested_session = await session.begin_nested()
         new_history_entry = ProjectHistory(
             project_id=project.id,
