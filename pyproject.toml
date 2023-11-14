@@ -35,6 +35,8 @@ python-multipart = "^0.0.6"
 aiofiles = "^23.2.1"
 httpx = "^0.25.0"
 typer = {version = "^0.9.0", extras = ["all"]}
+aioredis = "^2.0.1"
+redis = ">=4.2.0rc1"
 
 [tool.poetry.extras]
 sqlite = ["aiosqlite"]

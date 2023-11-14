@@ -1,4 +1,3 @@
-import httpx
 import pydantic
 
 from sapphire.users.settings import UsersSettings

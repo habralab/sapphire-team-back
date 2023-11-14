@@ -41,12 +41,12 @@ class ProjectsDatabaseService(BaseDatabaseService):
         return [Participant, Position, Project, ProjectHistory, Review]
 
     async def create_project(
-        self,
-        session: AsyncSession,
-        name: str,
-        owner_id: uuid.UUID,
-        description: str | None = None,
-        deadline: datetime | None = None,
+            self,
+            session: AsyncSession,
+            name: str,
+            owner_id: uuid.UUID,
+            description: str | None = None,
+            deadline: datetime | None = None,
     ) -> Project:
         nested_session = await session.begin_nested()
         project = Project(
@@ -62,9 +62,9 @@ class ProjectsDatabaseService(BaseDatabaseService):
         return project
 
     async def get_project(
-        self,
-        session: AsyncSession,
-        project_id: uuid.UUID | Type[Empty] = Empty,
+            self,
+            session: AsyncSession,
+            project_id: uuid.UUID | Type[Empty] = Empty,
     ) -> Project | None:
         filters = []
         if project_id is not Empty:
@@ -76,15 +76,15 @@ class ProjectsDatabaseService(BaseDatabaseService):
         return result.unique().scalar_one_or_none()
 
     async def update_project(
-        self,
-        session: AsyncSession,
-        project: Project,
-        name: str | None | Type[Empty] = Empty,
-        owner_id: uuid.UUID | None | Type[Empty] = Empty,
-        description: str | None | Type[Empty] = Empty,
-        deadline: datetime | None | Type[Empty] = Empty,
-        avatar: str | None | Type[Empty] = Empty,
-        status: ProjectStatusEnum | None | Type[Empty] = Empty,
+            self,
+            session: AsyncSession,
+            project: Project,
+            name: str | None | Type[Empty] = Empty,
+            owner_id: uuid.UUID | None | Type[Empty] = Empty,
+            description: str | None | Type[Empty] = Empty,
+            deadline: datetime | None | Type[Empty] = Empty,
+            avatar: str | None | Type[Empty] = Empty,
+            status: ProjectStatusEnum | None | Type[Empty] = Empty,
     ) -> Project:
         query = select(Project).where(Project.id == project.id)
         result = await session.execute(query)
@@ -110,13 +110,13 @@ class ProjectsDatabaseService(BaseDatabaseService):
         return project
 
     async def _change_project_status(self,
-        session: AsyncSession,
-        project: Project,
-        status: ProjectStatusEnum,
-    ) -> Project:
+                                     session: AsyncSession,
+                                     project: Project,
+                                     status: ProjectStatusEnum,
+                                     ) -> Project:
         nested_session = await session.begin_nested()
         new_history_entry = ProjectHistory(
-            project_id = project.id,
+            project_id=project.id,
             status=status,
         )
         session.add(new_history_entry)
@@ -127,9 +127,9 @@ class ProjectsDatabaseService(BaseDatabaseService):
         return project
 
     async def get_project_positions(
-        self,
-        session: AsyncSession,
-        project_id: uuid.UUID | Type[Empty] = Empty,
+            self,
+            session: AsyncSession,
+            project_id: uuid.UUID | Type[Empty] = Empty,
     ) -> list[Position]:
         filters = []
         if project_id is not Empty:
@@ -140,10 +140,10 @@ class ProjectsDatabaseService(BaseDatabaseService):
         return list(result.unique().scalars().all())
 
     async def get_project_position(
-        self,
-        session: AsyncSession,
-        project_id: uuid.UUID | Type[Empty] = Empty,
-        position_id: uuid.UUID | Type[Empty] = Empty,
+            self,
+            session: AsyncSession,
+            project_id: uuid.UUID | Type[Empty] = Empty,
+            position_id: uuid.UUID | Type[Empty] = Empty,
     ) -> Position | None:
         filters = []
         if project_id is not Empty:
@@ -157,10 +157,10 @@ class ProjectsDatabaseService(BaseDatabaseService):
         return result.unique().scalar_one_or_none()
 
     async def create_project_position(
-        self,
-        session: AsyncSession,
-        project: Project,
-        specialization_id: uuid.UUID,
+            self,
+            session: AsyncSession,
+            project: Project,
+            specialization_id: uuid.UUID,
     ) -> Position:
         position = Position(project=project, specialization_id=specialization_id)
 
@@ -191,11 +191,11 @@ class ProjectsDatabaseService(BaseDatabaseService):
         return skills
 
     async def get_participant(
-        self,
-        session: AsyncSession,
-        participant_id: uuid.UUID | Type[Empty] = Empty,
-        position_id: uuid.UUID | Type[Empty] = Empty,
-        user_id: uuid.UUID | Type[Empty] = Empty,
+            self,
+            session: AsyncSession,
+            participant_id: uuid.UUID | Type[Empty] = Empty,
+            position_id: uuid.UUID | Type[Empty] = Empty,
+            user_id: uuid.UUID | Type[Empty] = Empty,
     ) -> Participant | None:
         filters = []
         if participant_id is not Empty:
@@ -211,11 +211,11 @@ class ProjectsDatabaseService(BaseDatabaseService):
         return result.scalars().first()
 
     async def get_participants(
-        self,
-        session: AsyncSession,
-        position: Position | Type[Empty] = Empty,
-        user_id: uuid.UUID | Type[Empty] = Empty,
-        project: Project | Type[Empty] = Empty,
+            self,
+            session: AsyncSession,
+            position: Position | Type[Empty] = Empty,
+            user_id: uuid.UUID | Type[Empty] = Empty,
+            project: Project | Type[Empty] = Empty,
     ) -> list[Participant]:
         filters = []
         if position is not Empty:
@@ -230,10 +230,10 @@ class ProjectsDatabaseService(BaseDatabaseService):
         return list(result.unique().scalars().all())
 
     async def create_participant(
-        self,
-        session: AsyncSession,
-        position_id: uuid.UUID,
-        user_id: uuid.UUID,
+            self,
+            session: AsyncSession,
+            position_id: uuid.UUID,
+            user_id: uuid.UUID,
     ) -> Participant:
         participant = Participant(
             user_id=user_id,
@@ -245,10 +245,10 @@ class ProjectsDatabaseService(BaseDatabaseService):
         return participant
 
     async def update_participant_status(
-        self,
-        session: AsyncSession,
-        participant: Participant,
-        status: ParticipantStatusEnum,
+            self,
+            session: AsyncSession,
+            participant: Participant,
+            status: ParticipantStatusEnum,
     ) -> Participant:
         participant.status = status
         if status == ParticipantStatusEnum.JOINED:
@@ -258,17 +258,17 @@ class ProjectsDatabaseService(BaseDatabaseService):
         return participant
 
     async def get_projects(
-        self,
-        session: AsyncSession,
-        query_text: str | Type[Empty] = Empty,
-        owner_id: uuid.UUID | Type[Empty] = Empty,
-        deadline: datetime | Type[Empty] = Empty,
-        status: ProjectStatusEnum | Type[Empty] = Empty,
-        position_is_closed: bool | Type[Empty] = Empty,
-        position_skill_ids: list[uuid.UUID] | Type[Empty] = Empty,
-        position_specialization_ids: list[uuid.UUID] | Type[Empty] = Empty,
-        page: int | Type[Empty] = Empty,
-        per_page: int | Type[Empty] = Empty,
+            self,
+            session: AsyncSession,
+            query_text: str | Type[Empty] = Empty,
+            owner_id: uuid.UUID | Type[Empty] = Empty,
+            deadline: datetime | Type[Empty] = Empty,
+            status: ProjectStatusEnum | Type[Empty] = Empty,
+            position_is_closed: bool | Type[Empty] = Empty,
+            position_skill_ids: list[uuid.UUID] | Type[Empty] = Empty,
+            position_specialization_ids: list[uuid.UUID] | Type[Empty] = Empty,
+            page: int | Type[Empty] = Empty,
+            per_page: int | Type[Empty] = Empty,
     ) -> list[Project]:
         filters = []
         query = select(Project).order_by(Project.created_at.desc())
@@ -339,7 +339,7 @@ class ProjectsDatabaseService(BaseDatabaseService):
             func.count(Project.id),  # pylint: disable=not-callable
         ).where(Project.owner_id == user_id)
         result = await session.execute(stmt)
-        ownership_projects_count = result.scalar_one()
+        ownership_projects_count = result.scalar_one()  # pylint: disable=not-callable
 
         stmt_position_ids = (
             select(Participant.position_id)
@@ -348,11 +348,11 @@ class ProjectsDatabaseService(BaseDatabaseService):
             )
         )
         stmt = (
-            select(func.count(distinct(Position.project_id))) # pylint: disable=not-callable
+            select(func.count(distinct(Position.project_id)))  # pylint: disable=not-callable
             .where(Position.id.in_(stmt_position_ids))
         )
         result = await session.execute(stmt)
-        participant_projects_count = result.scalar_one()
+        participant_projects_count = result.scalar_one()  # pylint: disable=not-callable
 
         rate = 5.0
 
@@ -363,13 +363,13 @@ class ProjectsDatabaseService(BaseDatabaseService):
         )
 
     async def create_review(
-        self,
-        session: AsyncSession,
-        project: Project,
-        from_user_id: uuid.UUID,
-        to_user_id: uuid.UUID,
-        rate: conint(ge=1, le=5),
-        text: str,
+            self,
+            session: AsyncSession,
+            project: Project,
+            from_user_id: uuid.UUID,
+            to_user_id: uuid.UUID,
+            rate: conint(ge=1, le=5),
+            text: str,
     ) -> Review:
         review = Review(
             project_id=project.id,
@@ -383,11 +383,11 @@ class ProjectsDatabaseService(BaseDatabaseService):
         return review
 
     async def get_review(
-        self,
-        session: AsyncSession,
-        project: Project | Type[Empty] = Empty,
-        from_user_id: uuid.UUID | Type[Empty] = Empty,
-        to_user_id: uuid.UUID | Type[Empty] = Empty,
+            self,
+            session: AsyncSession,
+            project: Project | Type[Empty] = Empty,
+            from_user_id: uuid.UUID | Type[Empty] = Empty,
+            to_user_id: uuid.UUID | Type[Empty] = Empty,
     ) -> Review | None:
         filters = []
 

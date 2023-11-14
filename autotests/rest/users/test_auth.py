@@ -13,10 +13,9 @@ async def test_oauth2_habr_authorize_redirect(
         users_rest_client: UsersRestClient,
 ):
     response = await users_rest_client.oauth2_habr_authorize()
-
     location = response.headers.get("Location")
-    assert location
 
+    assert location
     location_url = yarl.URL(location)
 
     assert location_url.host == "account.habr.com"
