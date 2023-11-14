@@ -40,6 +40,7 @@ async def create_project(
             name=data.name,
             owner_id=data.owner_id,
             description=data.description,
+            startline=data.startline,
             deadline=data.deadline,
         )
 

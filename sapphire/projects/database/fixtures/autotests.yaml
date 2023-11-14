@@ -3,6 +3,7 @@ data:
 - id: cd8bad95-2585-421a-bef8-1ca18353caa6
   name: "Fixture Project"
   owner_id: 03fe07b9-109c-4e11-a2a5-184921fbfc49  # sapphire1user@gmail.com
+  startline: 2023-01-03T00:00:00.000000
 ---
 model: projects_history
 data:

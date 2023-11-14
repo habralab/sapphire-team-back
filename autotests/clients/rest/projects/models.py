@@ -18,17 +18,8 @@ class CreateProjectRequest(BaseModel):
     name: str
     description: str | None
     owner_id: uuid.UUID | None
+    startline: NaiveDatetime
     deadline: NaiveDatetime | None
-
-
-class CreateProjectResponse(BaseModel):
-    id: uuid.UUID
-    name: str
-    description: str | None = None
-    owner_id: uuid.UUID
-    deadline: NaiveDatetime | None = None
-    created_at: NaiveDatetime
-    status: ProjectStatusEnum
 
 
 class ParticipantResponse(BaseModel):
@@ -46,6 +37,7 @@ class ProjectResponse(BaseModel):
     name: str
     description: str | None
     owner_id: uuid.UUID
+    startline: datetime
     deadline: datetime | None
     created_at: NaiveDatetime
     updated_at: NaiveDatetime
