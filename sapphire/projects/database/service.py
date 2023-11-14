@@ -45,12 +45,17 @@ class ProjectsDatabaseService(BaseDatabaseService):
         session: AsyncSession,
         name: str,
         owner_id: uuid.UUID,
+        startline: datetime,
         description: str | None = None,
         deadline: datetime | None = None,
     ) -> Project:
         nested_session = await session.begin_nested()
         project = Project(
-            name=name, owner_id=owner_id, description=description, deadline=deadline
+            name=name,
+            owner_id=owner_id,
+            description=description,
+            startline=startline,
+            deadline=deadline,
         )
         history = ProjectHistory(project=project, status=ProjectStatusEnum.PREPARATION)
         project.history.append(history)
@@ -82,6 +87,7 @@ class ProjectsDatabaseService(BaseDatabaseService):
         name: str | None | Type[Empty] = Empty,
         owner_id: uuid.UUID | None | Type[Empty] = Empty,
         description: str | None | Type[Empty] = Empty,
+        startline: datetime | Type[Empty] = Empty,
         deadline: datetime | None | Type[Empty] = Empty,
         avatar: str | None | Type[Empty] = Empty,
         status: ProjectStatusEnum | None | Type[Empty] = Empty,
@@ -96,6 +102,8 @@ class ProjectsDatabaseService(BaseDatabaseService):
             project.owner_id = owner_id
         if description is not Empty:
             project.description = description
+        if startline is not Empty:
+            project.startline = startline
         if deadline is not Empty:
             project.deadline = deadline
         if avatar is not Empty:
@@ -262,7 +270,10 @@ class ProjectsDatabaseService(BaseDatabaseService):
         session: AsyncSession,
         query_text: str | Type[Empty] = Empty,
         owner_id: uuid.UUID | Type[Empty] = Empty,
-        deadline: datetime | Type[Empty] = Empty,
+        startline_le: datetime | Type[Empty] = Empty,
+        startline_ge: datetime | Type[Empty] = Empty,
+        deadline_le: datetime | Type[Empty] = Empty,
+        deadline_ge: datetime | Type[Empty] = Empty,
         status: ProjectStatusEnum | Type[Empty] = Empty,
         position_is_closed: bool | Type[Empty] = Empty,
         position_skill_ids: list[uuid.UUID] | Type[Empty] = Empty,
@@ -285,8 +296,14 @@ class ProjectsDatabaseService(BaseDatabaseService):
             )
         if owner_id is not Empty:
             filters.append(Project.owner_id == owner_id)
-        if deadline is not Empty:
-            filters.append(Project.deadline <= deadline)
+        if startline_le is not Empty:
+            filters.append(Project.startline <= startline_le)
+        if startline_ge is not Empty:
+            filters.append(Project.startline >= startline_ge)
+        if deadline_le is not Empty:
+            filters.append(Project.deadline <= deadline_le)
+        if deadline_ge is not Empty:
+            filters.append(Project.deadline >= deadline_ge)
         if status is not Empty:
             history_query = (
                 select(ProjectHistory)

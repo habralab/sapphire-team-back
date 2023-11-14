@@ -13,7 +13,6 @@ from autotests.utils import Empty
 from .models import (
     CreatePositionRequest,
     CreateProjectRequest,
-    CreateProjectResponse,
     CreateReviewRequest,
     HealthResponse,
     ParticipantResponse,
@@ -38,7 +37,10 @@ class ProjectsRestClient(BaseRestClient):
             self,
             text: str | Type[Empty] = Empty,
             owner_id: uuid.UUID | Type[Empty] = Empty,
-            deadline: datetime | Type[Empty] = Empty,
+            startline_ge: datetime | Type[Empty] = Empty,
+            startline_le: datetime | Type[Empty] = Empty,
+            deadline_ge: datetime | Type[Empty] = Empty,
+            deadline_le: datetime | Type[Empty] = Empty,
             status: ProjectStatusEnum | Type[Empty] = Empty,
             position_is_closed: bool | Type[Empty] = Empty,
             position_skill_ids: list[uuid.UUID] | Type[Empty] = Empty,
@@ -51,7 +53,10 @@ class ProjectsRestClient(BaseRestClient):
         params = {
             "query_text": text,
             "owner_id": owner_id,
-            "deadline": deadline,
+            "startline_ge": startline_ge,
+            "startline_le": startline_le,
+            "deadline_ge": deadline_ge,
+            "deadline_le": deadline_le,
             "status": status.value if status is not Empty else Empty,
             "position_is_closed": position_is_closed,
             "position_skill_ids": position_skill_ids,
@@ -67,18 +72,20 @@ class ProjectsRestClient(BaseRestClient):
             self,
             name: str,
             owner_id: uuid.UUID,
+            startline: datetime,
             description: str | None = None,
             deadline: datetime | None = None,
-    ) -> CreateProjectResponse:
+    ) -> ProjectResponse:
         path = "/api/rest/projects/"
         request = CreateProjectRequest(
             name=name,
             description=description,
             owner_id=owner_id,
+            startline=startline,
             deadline=deadline,
         )
 
-        return await self.rest_post(path=path, data=request, response_model=CreateProjectResponse)
+        return await self.rest_post(path=path, data=request, response_model=ProjectResponse)
 
     async def get_project(self, project_id: uuid.UUID) -> ProjectResponse:
         path = f"/api/rest/projects/{project_id}"

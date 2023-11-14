@@ -1,5 +1,5 @@
 import uuid
-from datetime import datetime
+from datetime import datetime, timedelta
 from http import HTTPStatus
 from typing import Type
 
@@ -47,9 +47,29 @@ def participant_user_ids_set_3(oleg_id: uuid.UUID, matvey_id: uuid.UUID) -> list
     pytest.lazy_fixture("participant_user_ids_set_2"),
     pytest.lazy_fixture("participant_user_ids_set_3"),
 ))
+@pytest.mark.parametrize("startline_ge", (
+    Empty,
+    datetime.utcnow() + timedelta(days=7),
+    datetime.utcnow() - timedelta(days=7),
+))
+@pytest.mark.parametrize("startline_le", (
+    Empty,
+    datetime.utcnow() + timedelta(days=7),
+    datetime.utcnow() - timedelta(days=7),
+))
+@pytest.mark.parametrize("deadline_ge", (
+    Empty,
+    datetime.utcnow() + timedelta(days=7),
+    datetime.utcnow() - timedelta(days=7),
+))
+@pytest.mark.parametrize("deadline_le", (
+    Empty,
+    datetime.utcnow() + timedelta(days=7),
+    datetime.utcnow() - timedelta(days=7),
+))
 @pytest.mark.parametrize(
     (
-        "text", "owner_id", "deadline", "position_is_closed", "position_skill_ids",
+        "text", "owner_id", "position_is_closed", "position_skill_ids",
         "position_specialization_ids", "page", "per_page",
     ),
     (
@@ -57,7 +77,6 @@ def participant_user_ids_set_3(oleg_id: uuid.UUID, matvey_id: uuid.UUID) -> list
         (
             "test",
             uuid.uuid4(),
-            datetime.utcnow(),
             False,
             [],
             [],
@@ -71,7 +90,10 @@ async def test_get_projects(
         client: ProjectsRestClient,
         text: str | Type[Empty],
         owner_id: uuid.UUID | Type[Empty],
-        deadline: datetime | Type[Empty],
+        startline_ge: datetime | Type[Empty],
+        startline_le: datetime | Type[Empty],
+        deadline_ge: datetime | Type[Empty],
+        deadline_le: datetime | Type[Empty],
         status: ProjectStatusEnum | Type[Empty],
         position_is_closed: bool | Type[Empty],
         position_skill_ids: list[uuid.UUID] | Type[Empty],
@@ -83,7 +105,10 @@ async def test_get_projects(
     projects = await client.get_projects(
         text=text,
         owner_id=owner_id,
-        deadline=deadline,
+        startline_ge=startline_ge,
+        startline_le=startline_le,
+        deadline_ge=deadline_ge,
+        deadline_le=deadline_le,
         status=status,
         position_is_closed=position_is_closed,
         position_skill_ids=position_skill_ids,
@@ -98,6 +123,14 @@ async def test_get_projects(
             assert project.owner_id == owner_id
         if status is not Empty:
             assert project.status == status
+        if startline_ge is not Empty:
+            assert project.startline >= startline_ge
+        if startline_le is not Empty:
+            assert project.startline <= startline_le
+        if deadline_ge is not Empty:
+            assert project.deadline is not None and project.deadline >= deadline_ge
+        if deadline_le is not Empty:
+            assert project.deadline is not None and project.deadline <= deadline_le
 
 
 @pytest.mark.parametrize(("client", "owner_id"), (
@@ -115,7 +148,11 @@ async def test_create_project_forbidden(
         owner_id: uuid.UUID,
 ):
     with pytest.raises(ResponseException) as exception:
-        await client.create_project(name=faker.job(), owner_id=owner_id)
+        await client.create_project(
+            name=faker.job(),
+            owner_id=owner_id,
+            startline=datetime.now() + timedelta(days=30),
+        )
 
     assert exception.value.status_code == HTTPStatus.FORBIDDEN
     assert exception.value.body == b'{"detail":"Forbidden."}'

@@ -4,9 +4,9 @@ import uuid
 import aiofiles
 import aiofiles.os
 import fastapi
-from fastapi.responses import FileResponse
 
 from sapphire.common.api.exceptions import HTTPForbidden
+from sapphire.common.api.responses import ImageResponse
 from sapphire.common.jwt.dependencies.rest import get_jwt_data, is_auth
 from sapphire.common.jwt.models import JWTData
 from sapphire.users.api.rest.schemas import UserResponse
@@ -52,11 +52,11 @@ async def update_user(
     return UserResponse.from_db_model(user)
 
 
-async def get_user_avatar(user: User = fastapi.Depends(get_path_user)) -> FileResponse:
+async def get_user_avatar(user: User = fastapi.Depends(get_path_user)) -> ImageResponse:
     if user.avatar is None:
         return None
 
-    return FileResponse(user.avatar)
+    return ImageResponse(user.avatar)
 
 
 async def upload_user_avatar(

@@ -25,19 +25,8 @@ class CreateProjectRequest(BaseModel):
     name: str
     description: str | None = None
     owner_id: uuid.UUID
+    startline: NaiveDatetime
     deadline: NaiveDatetime | None = None
-
-
-class CreateProjectResponse(BaseModel):
-    model_config = ConfigDict(from_attributes=True)
-
-    id: uuid.UUID
-    name: str
-    description: str | None = None
-    owner_id: uuid.UUID
-    deadline: NaiveDatetime | None = None
-    created_at: NaiveDatetime
-    status: ProjectStatusEnum
 
 
 class ProjectResponse(BaseModel):
@@ -47,6 +36,7 @@ class ProjectResponse(BaseModel):
     name: str
     description: str | None
     owner_id: uuid.UUID
+    startline: NaiveDatetime
     deadline: NaiveDatetime | None
     created_at: NaiveDatetime
     updated_at: NaiveDatetime
@@ -73,7 +63,10 @@ class ProjectListResponse(PaginatedResponse):
 class ProjectListFiltersRequest(BaseModel):
     query_text: str | Type[Empty] = Empty
     owner_id: uuid.UUID | Type[Empty] = Empty
-    deadline: NaiveDatetime | Type[Empty] = Empty
+    startline_ge: NaiveDatetime | Type[Empty] = Empty
+    startline_le: NaiveDatetime | Type[Empty] = Empty
+    deadline_ge: NaiveDatetime | Type[Empty] = Empty
+    deadline_le: NaiveDatetime | Type[Empty] = Empty
     status: ProjectStatusEnum | Type[Empty] = Empty
     position_is_closed: bool | Type[Empty] = Empty
     position_skill_ids: list[str] | Type[Empty] = Field(fastapi.Query(Empty))

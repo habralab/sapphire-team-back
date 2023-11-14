@@ -1,7 +1,7 @@
 import os
 import pathlib
 import uuid
-from datetime import datetime
+from datetime import datetime, timedelta
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
@@ -37,6 +37,7 @@ async def test_create_project(database_service: ProjectsDatabaseService):
     name = "Any name"
     owner_id = uuid.uuid4()
     description = "Any description"
+    startline = datetime.now()
     deadline = datetime.now()
 
     project = await database_service.create_project(
@@ -44,6 +45,7 @@ async def test_create_project(database_service: ProjectsDatabaseService):
         name=name,
         owner_id=owner_id,
         description=description,
+        startline=startline,
         deadline=deadline,
     )
 
@@ -126,7 +128,10 @@ async def test_get_projects_with_all_query_params(database_service: ProjectsData
     result = MagicMock()
     project_id = uuid.uuid4()
     owner_id = uuid.uuid4()
-    deadline = datetime.now()
+    startline_ge = datetime.now() - timedelta(days=30)
+    startline_le = datetime.now() + timedelta(days=30)
+    deadline_ge = datetime.now() - timedelta(days=30)
+    deadline_le = datetime.now() + timedelta(days=30)
     query_text = "query_text"
     position_skill_ids = [uuid.uuid4(), uuid.uuid4()]
     position_specialization_ids = [uuid.uuid4(), uuid.uuid4()]
@@ -139,7 +144,10 @@ async def test_get_projects_with_all_query_params(database_service: ProjectsData
         session=session,
         query_text=query_text,
         owner_id=owner_id,
-        deadline=deadline,
+        deadline_ge=deadline_ge,
+        deadline_le=deadline_le,
+        startline_ge=startline_ge,
+        startline_le=startline_le,
         status=ParticipantStatusEnum.REQUEST,
         position_is_closed=False,
         position_skill_ids=position_skill_ids,
