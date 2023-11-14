@@ -3,10 +3,10 @@ import pathlib
 
 import aiofiles
 import fastapi
+from fastapi.responses import FileResponse
 
 from sapphire.common.api.dependencies.pagination import Pagination, pagination
 from sapphire.common.api.exceptions import HTTPForbidden
-from sapphire.common.api.responses import ImageResponse
 from sapphire.common.jwt.dependencies.rest import is_activated
 from sapphire.common.jwt.models import JWTData
 from sapphire.projects.database.models import Project
@@ -112,11 +112,11 @@ async def partial_update_project(
 
 async def get_project_avatar(
         project: Project = fastapi.Depends(get_path_project),
-) -> ImageResponse:
+) -> FileResponse:
     if project.avatar is None:
         return None
 
-    return ImageResponse(project.avatar)
+    return FileResponse(project.avatar)
 
 
 async def upload_project_avatar(
