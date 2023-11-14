@@ -106,3 +106,16 @@ async def test_get_project(project_id: uuid.UUID, client: ProjectsRestClient):
     project = await client.get_project(project_id=project_id)
 
     assert project.id == project_id
+
+
+@pytest.mark.parametrize("client", (
+    pytest.lazy_fixture("oleg_projects_rest_client"),
+    pytest.lazy_fixture("oleg_activated_projects_rest_client"),
+    pytest.lazy_fixture("matvey_projects_rest_client"),
+    pytest.lazy_fixture("matvey_activated_projects_rest_client"),
+    pytest.lazy_fixture("projects_rest_client"),
+    pytest.lazy_fixture("random_projects_rest_client"),
+))
+@pytest.mark.asyncio
+async def test_get_project_avatar(project_id: uuid.UUID, client: ProjectsRestClient):
+    await client.get_project_avatar(project_id=project_id)
