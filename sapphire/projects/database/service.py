@@ -267,10 +267,13 @@ class ProjectsDatabaseService(BaseDatabaseService):
         position_is_closed: bool | Type[Empty] = Empty,
         position_skill_ids: list[uuid.UUID] | Type[Empty] = Empty,
         position_specialization_ids: list[uuid.UUID] | Type[Empty] = Empty,
+        participant_user_ids: list[uuid.UUID] | Type[Empty] = Empty,
         page: int | Type[Empty] = Empty,
         per_page: int | Type[Empty] = Empty,
     ) -> list[Project]:
         filters = []
+        position_filters = []
+        participant_filters = []
         query = select(Project).order_by(Project.created_at.desc())
 
         if query_text is not Empty:
@@ -296,30 +299,30 @@ class ProjectsDatabaseService(BaseDatabaseService):
                 status == history_query.c.status,
             ])
 
-        position_params = [
-            position_is_closed,
-            position_skill_ids,
-            position_specialization_ids,
-        ]
+        if position_is_closed is not Empty:
+            position_filters.append(
+                Position.closed_at.is_(None)
+                if position_is_closed
+                else Position.closed_at.is_not(None)
+            )
+        if position_specialization_ids is not Empty:
+            position_filters.append(
+                Position.specialization_id.in_(position_specialization_ids)
+            )
+        if position_skill_ids is not Empty:
+            position_skill_query = (
+                select(PositionSkill.position_id)
+                .where(PositionSkill.skill_id.in_(position_skill_ids))
+            )
+            position_filters.append(Position.id.in_(position_skill_query))
+        if participant_user_ids is not Empty:
+            participant_filters.append(Participant.user_id.in_(participant_user_ids))
 
-        if any(x is not Empty for x in position_params):
-            position_filters = []
-            if position_is_closed is not Empty:
-                position_filters.append(
-                    Position.closed_at.is_(None)
-                    if position_is_closed
-                    else Position.closed_at.is_not(None)
-                )
-            if position_specialization_ids is not Empty:
-                position_filters.append(
-                    Position.specialization_id.in_(position_specialization_ids)
-                )
-            if position_skill_ids is not Empty:
-                position_skill_query = (
-                    select(PositionSkill.position_id)
-                    .where(PositionSkill.skill_id.in_(position_skill_ids))
-                )
-                position_filters.append(Position.id.in_(position_skill_query))
+        if participant_filters:
+            position_filters.append(
+                Position.id.in_(select(Participant.position_id).where(*participant_filters))
+            )
+        if position_filters:
             filters.append(
                 Project.id.in_(select(Position.project_id).where(*position_filters))
             )
