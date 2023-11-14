@@ -867,7 +867,6 @@ class TestProjectAvatarFlow:
         assert project.id == project_id
 
     @pytest.mark.dependency(depends=["TestProjectAvatarFlow::test_upload_project_avatar"])
-    @pytest.mark.skip("Not implemented")
     @pytest.mark.asyncio
     async def test_get_project_avatar(
             self,
@@ -891,7 +890,6 @@ class TestProjectAvatarFlow:
         assert project.id == project_id
 
     @pytest.mark.dependency(depends=["TestProjectAvatarFlow::test_remove_project_avatar"])
-    @pytest.mark.skip("Not implemented")
     @pytest.mark.asyncio
     async def test_get_project_avatar_after_removing(
             self,
