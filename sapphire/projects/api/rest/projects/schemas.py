@@ -78,6 +78,7 @@ class ProjectListFiltersRequest(BaseModel):
     position_is_closed: bool | Type[Empty] = Empty
     position_skill_ids: list[str] | Type[Empty] = Field(fastapi.Query(Empty))
     position_specialization_ids: list[uuid.UUID] | Type[Empty] = Field(fastapi.Query(Empty))
+    participant_user_ids: list[uuid.UUID] | Type[Empty] = Field(fastapi.Query(Empty))
 
 
 class ProjectPartialUpdateRequest(BaseModel):

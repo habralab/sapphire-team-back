@@ -43,6 +43,7 @@ class ProjectsRestClient(BaseRestClient):
             position_is_closed: bool | Type[Empty] = Empty,
             position_skill_ids: list[uuid.UUID] | Type[Empty] = Empty,
             position_specialization_ids: list[uuid.UUID] | Type[Empty] = Empty,
+            participant_user_ids: list[uuid.UUID] | Type[Empty] = Empty,
             page: int = 1,
             per_page: int = 10,
     ) -> ProjectListResponse:
@@ -55,6 +56,7 @@ class ProjectsRestClient(BaseRestClient):
             "position_is_closed": position_is_closed,
             "position_skill_ids": position_skill_ids,
             "position_specialization_ids": position_specialization_ids,
+            "participant_user_ids": participant_user_ids,
             "page": page,
             "per_page": per_page,
         }

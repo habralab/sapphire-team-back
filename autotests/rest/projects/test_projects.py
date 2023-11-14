@@ -12,6 +12,21 @@ from autotests.clients.rest.projects.enums import ProjectStatusEnum
 from autotests.utils import Empty
 
 
+@pytest.fixture()
+def participant_user_ids_set_1(oleg_id: uuid.UUID) -> list[uuid.UUID]:
+    return [oleg_id]
+
+
+@pytest.fixture()
+def participant_user_ids_set_2(matvey_id: uuid.UUID) -> list[uuid.UUID]:
+    return [matvey_id]
+
+
+@pytest.fixture()
+def participant_user_ids_set_3(oleg_id: uuid.UUID, matvey_id: uuid.UUID) -> list[uuid.UUID]:
+    return [oleg_id, matvey_id]
+
+
 @pytest.mark.parametrize("client", (
     pytest.lazy_fixture("oleg_projects_rest_client"),
     pytest.lazy_fixture("oleg_activated_projects_rest_client"),
@@ -20,18 +35,29 @@ from autotests.utils import Empty
     pytest.lazy_fixture("projects_rest_client"),
     pytest.lazy_fixture("random_projects_rest_client"),
 ))
+@pytest.mark.parametrize("status", (
+    Empty,
+    ProjectStatusEnum.PREPARATION,
+    ProjectStatusEnum.IN_WORK,
+    ProjectStatusEnum.FINISHED,
+))
+@pytest.mark.parametrize("participant_user_ids", (
+    Empty,
+    pytest.lazy_fixture("participant_user_ids_set_1"),
+    pytest.lazy_fixture("participant_user_ids_set_2"),
+    pytest.lazy_fixture("participant_user_ids_set_3"),
+))
 @pytest.mark.parametrize(
     (
-        "text", "owner_id", "deadline", "status", "position_is_closed",
-        "position_skill_ids", "position_specialization_ids", "page", "per_page",
+        "text", "owner_id", "deadline", "position_is_closed", "position_skill_ids",
+        "position_specialization_ids", "page", "per_page",
     ),
     (
-        (Empty, Empty, Empty, Empty, Empty, Empty, Empty, 1, 10),
+        (Empty, Empty, Empty, Empty, Empty, Empty, 1, 10),
         (
             "test",
             uuid.uuid4(),
             datetime.utcnow(),
-            ProjectStatusEnum.PREPARATION,
             False,
             [],
             [],
@@ -50,6 +76,7 @@ async def test_get_projects(
         position_is_closed: bool | Type[Empty],
         position_skill_ids: list[uuid.UUID] | Type[Empty],
         position_specialization_ids: list[uuid.UUID] | Type[Empty],
+        participant_user_ids: list[uuid.UUID] | Type[Empty],
         page: int,
         per_page: int,
 ):
@@ -61,6 +88,7 @@ async def test_get_projects(
         position_is_closed=position_is_closed,
         position_skill_ids=position_skill_ids,
         position_specialization_ids=position_specialization_ids,
+        participant_user_ids=participant_user_ids,
         page=page,
         per_page=per_page,
     )
