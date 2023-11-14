@@ -12,21 +12,6 @@ from autotests.clients.rest.projects.enums import ProjectStatusEnum
 from autotests.utils import Empty
 
 
-@pytest.fixture()
-def participant_user_ids_set_1(oleg_id: uuid.UUID) -> list[uuid.UUID]:
-    return [oleg_id]
-
-
-@pytest.fixture()
-def participant_user_ids_set_2(matvey_id: uuid.UUID) -> list[uuid.UUID]:
-    return [matvey_id]
-
-
-@pytest.fixture()
-def participant_user_ids_set_3(oleg_id: uuid.UUID, matvey_id: uuid.UUID) -> list[uuid.UUID]:
-    return [oleg_id, matvey_id]
-
-
 @pytest.mark.parametrize("client", (
     pytest.lazy_fixture("oleg_projects_rest_client"),
     pytest.lazy_fixture("oleg_activated_projects_rest_client"),
@@ -35,49 +20,24 @@ def participant_user_ids_set_3(oleg_id: uuid.UUID, matvey_id: uuid.UUID) -> list
     pytest.lazy_fixture("projects_rest_client"),
     pytest.lazy_fixture("random_projects_rest_client"),
 ))
-@pytest.mark.parametrize("status", (
-    Empty,
-    ProjectStatusEnum.PREPARATION,
-    ProjectStatusEnum.IN_WORK,
-    ProjectStatusEnum.FINISHED,
-))
-@pytest.mark.parametrize("participant_user_ids", (
-    Empty,
-    pytest.lazy_fixture("participant_user_ids_set_1"),
-    pytest.lazy_fixture("participant_user_ids_set_2"),
-    pytest.lazy_fixture("participant_user_ids_set_3"),
-))
-@pytest.mark.parametrize("startline_ge", (
-    Empty,
-    datetime.utcnow() + timedelta(days=7),
-    datetime.utcnow() - timedelta(days=7),
-))
-@pytest.mark.parametrize("startline_le", (
-    Empty,
-    datetime.utcnow() + timedelta(days=7),
-    datetime.utcnow() - timedelta(days=7),
-))
-@pytest.mark.parametrize("deadline_ge", (
-    Empty,
-    datetime.utcnow() + timedelta(days=7),
-    datetime.utcnow() - timedelta(days=7),
-))
-@pytest.mark.parametrize("deadline_le", (
-    Empty,
-    datetime.utcnow() + timedelta(days=7),
-    datetime.utcnow() - timedelta(days=7),
-))
 @pytest.mark.parametrize(
     (
-        "text", "owner_id", "position_is_closed", "position_skill_ids",
-        "position_specialization_ids", "page", "per_page",
+        "text", "owner_id", "startline_ge", "startline_le", "deadline_ge", "deadline_le",
+        "status", "position_is_closed", "position_skill_ids", "position_specialization_ids",
+        "participant_user_ids", "page", "per_page",
     ),
     (
-        (Empty, Empty, Empty, Empty, Empty, Empty, 1, 10),
+        (Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, 1, 10),
         (
             "test",
             uuid.uuid4(),
+            datetime.utcnow(),
+            datetime.utcnow() + timedelta(days=7),
+            datetime.utcnow() + timedelta(days=30),
+            datetime.utcnow() + timedelta(days=90),
+            ProjectStatusEnum.FINISHED,
             False,
+            [],
             [],
             [],
             1,

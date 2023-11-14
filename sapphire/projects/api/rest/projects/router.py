@@ -1,7 +1,5 @@
 import fastapi
 
-from sapphire.common.api.responses import ImageResponse
-
 from . import handlers, positions, reviews
 
 router = fastapi.APIRouter()
@@ -12,7 +10,7 @@ router.add_api_route(path="/{project_id}", methods=["GET"], endpoint=handlers.ge
 router.add_api_route(path="/{project_id}", methods=["PATCH"],
                      endpoint=handlers.partial_update_project)
 router.add_api_route(path="/{project_id}/avatar", methods=["GET"],
-                     endpoint=handlers.get_project_avatar, response_class=ImageResponse)
+                     endpoint=handlers.get_project_avatar)
 router.add_api_route(path="/{project_id}/avatar", methods=["POST"],
                      endpoint=handlers.upload_project_avatar)
 router.add_api_route(path="/{project_id}/avatar", methods=["DELETE"],
