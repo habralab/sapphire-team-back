@@ -1,5 +1,5 @@
-import uuid
 import asyncio
+import uuid
 from typing import Any, Iterable
 
 import aiosmtplib
@@ -36,8 +36,8 @@ class EmailSenderService(ServiceMixin):
     def templates(self) -> dict[str, Template]:
         return self._templates
 
-    async def _get_recipient_email(recipient: uuid.UUID) -> str: 
-        # TODO: Написать функцию взятия email из сервиса users при помощи user_id
+    async def _get_recipient_email(self, recipient: uuid.UUID) -> str:
+        # Issue: Write a function to get email from the users service using user_id
 
         return "email@example.com"
 

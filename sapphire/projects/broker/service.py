@@ -7,8 +7,8 @@ from sapphire.common.broker.models.messenger import CreateChat
 from sapphire.common.broker.models.notification import Notification
 from sapphire.common.broker.models.projects import (
     ParticipantNotificationData,
-    ParticipantNotificationType,
     ParticipantNotificationEmail,
+    ParticipantNotificationType,
 )
 from sapphire.common.broker.service import BaseBrokerProducerService
 from sapphire.projects.database.models import Participant, Project
@@ -187,7 +187,7 @@ class ProjectsBrokerService(BaseBrokerProducerService):
         await self.send(topic="chats", message=chat_data)
 
     @property
-    def _email_topic() -> str:
+    def _email_topic(self) -> str:
         return "email"
 
 def get_service(
