@@ -72,6 +72,22 @@ async def test_get_chat_not_authenticated(
     assert exception.value.body == b'{"detail":"Not authenticated."}'
 
 
+@pytest.mark.parametrize("client", (
+    pytest.lazy_fixture("oleg_messenger_rest_client"),
+    pytest.lazy_fixture("oleg_activated_messenger_rest_client"),
+    pytest.lazy_fixture("matvey_messenger_rest_client"),
+    pytest.lazy_fixture("matvey_activated_messenger_rest_client"),
+    pytest.lazy_fixture("random_messenger_rest_client"),
+))
+@pytest.mark.asyncio
+async def test_get_chat_not_found(client: MessengerRestClient):
+    with pytest.raises(ResponseException) as exception:
+        await client.get_chat(chat_id=uuid.uuid4())
+
+    assert exception.value.status_code == HTTPStatus.NOT_FOUND
+    assert exception.value.body == b'{"detail":"Not found."}'
+
+
 @pytest.mark.asyncio
 async def test_get_chat_forbidden(
         chat_id: uuid.UUID,
@@ -79,6 +95,60 @@ async def test_get_chat_forbidden(
 ):
     with pytest.raises(ResponseException) as exception:
         await random_messenger_rest_client.get_chat(chat_id=chat_id)
+
+    assert exception.value.status_code == HTTPStatus.FORBIDDEN
+    assert exception.value.body == b'{"detail":"Forbidden."}'
+
+
+@pytest.mark.parametrize("client", (
+    pytest.lazy_fixture("oleg_messenger_rest_client"),
+    pytest.lazy_fixture("oleg_activated_messenger_rest_client"),
+    pytest.lazy_fixture("matvey_messenger_rest_client"),
+    pytest.lazy_fixture("matvey_activated_messenger_rest_client"),
+))
+@pytest.mark.asyncio
+async def test_get_chat_messages(chat_id: uuid.UUID, client: MessengerRestClient):
+    messages = await client.get_chat_messages(chat_id=chat_id)
+
+    for message in messages.data:
+        assert message.chat_id == chat_id
+
+
+@pytest.mark.asyncio
+async def test_get_chat_messages_not_authenticated(
+        chat_id: uuid.UUID,
+        messenger_rest_client: MessengerRestClient,
+):
+    with pytest.raises(ResponseException) as exception:
+        await messenger_rest_client.get_chat_messages(chat_id=chat_id)
+
+    assert exception.value.status_code == HTTPStatus.UNAUTHORIZED
+    assert exception.value.body == b'{"detail":"Not authenticated."}'
+
+
+@pytest.mark.parametrize("client", (
+    pytest.lazy_fixture("oleg_messenger_rest_client"),
+    pytest.lazy_fixture("oleg_activated_messenger_rest_client"),
+    pytest.lazy_fixture("matvey_messenger_rest_client"),
+    pytest.lazy_fixture("matvey_activated_messenger_rest_client"),
+    pytest.lazy_fixture("random_messenger_rest_client"),
+))
+@pytest.mark.asyncio
+async def test_get_chat_messages_not_found(client: MessengerRestClient):
+    with pytest.raises(ResponseException) as exception:
+        await client.get_chat_messages(chat_id=uuid.uuid4())
+
+    assert exception.value.status_code == HTTPStatus.NOT_FOUND
+    assert exception.value.body == b'{"detail":"Not found."}'
+
+
+@pytest.mark.asyncio
+async def test_get_chat_messages_forbidden(
+        chat_id: uuid.UUID,
+        random_messenger_rest_client: MessengerRestClient,
+):
+    with pytest.raises(ResponseException) as exception:
+        await random_messenger_rest_client.get_chat_messages(chat_id=chat_id)
 
     assert exception.value.status_code == HTTPStatus.FORBIDDEN
     assert exception.value.body == b'{"detail":"Forbidden."}'
