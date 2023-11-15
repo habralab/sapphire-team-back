@@ -69,6 +69,19 @@ class MessengerDatabaseService(BaseDatabaseService):
 
         return list(result.unique().scalars().all())
 
+    async def create_chat_message(
+            self,
+            session: AsyncSession,
+            chat: Chat,
+            user_id: uuid.UUID,
+            text: str,
+    ) -> Message:
+        message = Message(chat=chat, user_id=user_id, text=text)
+
+        session.add(message)
+
+        return message
+
 
 def get_service(settings: MessengerSettings) -> MessengerDatabaseService:
     return MessengerDatabaseService(dsn=str(settings.db_dsn))
