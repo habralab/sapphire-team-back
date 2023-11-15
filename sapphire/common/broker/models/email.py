@@ -1,9 +1,8 @@
-from typing import Any
+import uuid
 
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel
 
 
 class Email(BaseModel):
     type: str
-    to: list[EmailStr]
-    data: dict[str, Any]
+    to: list[uuid.UUID]

@@ -8,6 +8,7 @@ from sapphire.common.broker.models.notification import Notification
 from sapphire.common.broker.models.projects import (
     ParticipantNotificationData,
     ParticipantNotificationType,
+    ParticipantNotificationEmail,
 )
 from sapphire.common.broker.service import BaseBrokerProducerService
 from sapphire.projects.database.models import Participant, Project
@@ -21,8 +22,17 @@ class ProjectsBrokerService(BaseBrokerProducerService):
         participant: Participant
     ) -> None:
         """RECIPIENTS: ONLY OWNER"""
+        notification_type = ParticipantNotificationType.REQUESTED
+
+        await self.send(
+            topic=self._email_topic,
+            message=ParticipantNotificationEmail(
+                to=[project.owner_id], type=notification_type
+            ),
+        )
+
         await self._send_notification_to_recipients(
-            notification_type=ParticipantNotificationType.REQUESTED,
+            notification_type=notification_type,
             recipients=[project.owner_id],
             notification_data=await self._create_participant_notification_data(
                 project, participant
@@ -34,8 +44,18 @@ class ProjectsBrokerService(BaseBrokerProducerService):
         participant: Participant,
     ) -> None:
         """RECIPIENTS: PROJECT OWNER AND PARTICIPANTS"""
+        notification_type = ParticipantNotificationType.JOINED
+
+        await self.send(
+            topic=self._email_topic,
+            message=ParticipantNotificationEmail(
+                to=[project.owner_id] + [p.user_id for p in project.joined_participants],
+                type=notification_type
+            ),
+        )
+
         await self._send_notification_to_recipients(
-            notification_type=ParticipantNotificationType.JOINED,
+            notification_type=notification_type,
             recipients=[project.owner_id] + [p.user_id for p in project.joined_participants],
             notification_data=await self._create_participant_notification_data(
                 project, participant
@@ -47,8 +67,17 @@ class ProjectsBrokerService(BaseBrokerProducerService):
         participant: Participant,
     ) -> None:
         """RECIPIENTS: ONLY OWNER"""
+        notification_type = ParticipantNotificationType.PARTICIPANT_DECLINED
+
+        await self.send(
+            topic=self._email_topic,
+            message=ParticipantNotificationEmail(
+                to=[project.owner_id], type=notification_type
+            ),
+        )
+
         await self._send_notification_to_recipients(
-            notification_type=ParticipantNotificationType.PARTICIPANT_DECLINED,
+            notification_type=notification_type,
             recipients=[project.owner_id],
             notification_data=await self._create_participant_notification_data(
                 project, participant
@@ -60,8 +89,17 @@ class ProjectsBrokerService(BaseBrokerProducerService):
         participant: Participant,
     ) -> None:
         """RECIPIENTS: ONLY PARTICIPANT"""
+        notification_type = ParticipantNotificationType.OWNER_DECLINED
+
+        await self.send(
+            topic=self._email_topic,
+            message=ParticipantNotificationEmail(
+                to=[participant.user_id], type=notification_type
+            ),
+        )
+
         await self._send_notification_to_recipients(
-            notification_type=ParticipantNotificationType.OWNER_DECLINED,
+            notification_type=notification_type,
             recipients=[participant.user_id],
             notification_data=await self._create_participant_notification_data(
                 project, participant
@@ -73,8 +111,18 @@ class ProjectsBrokerService(BaseBrokerProducerService):
         participant: Participant,
     ) -> None:
         """RECIPIENTS: PROJECT OWNER AND PARTICIPANTS"""
+        notification_type = ParticipantNotificationType.PARTICIPANT_LEFT
+
+        await self.send(
+            topic=self._email_topic,
+            message=ParticipantNotificationEmail(
+                to=[project.owner_id] + [p.user_id for p in project.joined_participants],
+                type=notification_type
+            ),
+        )
+
         await self._send_notification_to_recipients(
-            notification_type=ParticipantNotificationType.PARTICIPANT_LEFT,
+            notification_type=notification_type,
             recipients=[project.owner_id] + [p.user_id for p in project.joined_participants],
             notification_data=await self._create_participant_notification_data(
                 project, participant
@@ -86,8 +134,18 @@ class ProjectsBrokerService(BaseBrokerProducerService):
         participant: Participant,
     ) -> None:
         """RECIPIENTS: PROJECT OWNER AND PARTICIPANTS"""
+        notification_type = ParticipantNotificationType.OWNER_EXCLUDED
+
+        await self.send(
+            topic=self._email_topic,
+            message=ParticipantNotificationEmail(
+                to=[project.owner_id] + [p.user_id for p in project.joined_participants],
+                type=notification_type
+            ),
+        )
+
         await self._send_notification_to_recipients(
-            notification_type=ParticipantNotificationType.OWNER_EXCLUDED,
+            notification_type=notification_type,
             recipients=[project.owner_id] + [p.user_id for p in project.joined_participants],
             notification_data=await self._create_participant_notification_data(
                 project, participant
@@ -127,6 +185,10 @@ class ProjectsBrokerService(BaseBrokerProducerService):
     ) -> None:
         chat_data = CreateChat(is_personal=is_personal, members_ids=members_ids)
         await self.send(topic="chats", message=chat_data)
+
+    @property
+    def _email_topic() -> str:
+        return "email"
 
 def get_service(
         loop: asyncio.AbstractEventLoop,
