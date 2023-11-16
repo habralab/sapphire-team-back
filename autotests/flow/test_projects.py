@@ -46,6 +46,7 @@ class TestProjectFlow:
     ):
         name = faker.job() + " Сервис"
         description = faker.text()
+        startline = datetime.utcnow() + timedelta(days=30)
         deadline = datetime.utcnow() + timedelta(days=90)
 
         project = await oleg_activated_projects_rest_client.create_project(
@@ -53,6 +54,7 @@ class TestProjectFlow:
             name=name,
             description=description,
             deadline=deadline,
+            startline=startline,
         )
 
         self.CONTEXT["project_id"] = project.id

@@ -37,6 +37,7 @@ def upgrade() -> None:
     op.create_table("messages",
         sa.Column("id", sa.Uuid(), nullable=False),
         sa.Column("chat_id", sa.Uuid(), nullable=False),
+        sa.Column("user_id", sa.Uuid, nullable=False),
         sa.Column("text", sa.String(length=2048), nullable=False),
         sa.Column("created_at", sa.DateTime(), nullable=False),
         sa.Column("updated_at", sa.DateTime(), nullable=False),

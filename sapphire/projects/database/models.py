@@ -30,6 +30,7 @@ class Project(Base):
     name: Mapped[str]
     description: Mapped[str | None]
     owner_id: Mapped[uuid.UUID]
+    startline: Mapped[datetime]
     deadline: Mapped[datetime | None]
     created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
     updated_at: Mapped[datetime] = mapped_column(default=datetime.utcnow, onupdate=datetime.utcnow)

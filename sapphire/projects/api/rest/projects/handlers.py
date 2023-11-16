@@ -40,6 +40,7 @@ async def create_project(
             name=data.name,
             owner_id=data.owner_id,
             description=data.description,
+            startline=data.startline,
             deadline=data.deadline,
         )
 
@@ -109,7 +110,9 @@ async def partial_update_project(
     return ProjectResponse.model_validate(project)
 
 
-async def get_project_avatar(project: Project = fastapi.Depends(get_path_project)) -> FileResponse:
+async def get_project_avatar(
+        project: Project = fastapi.Depends(get_path_project),
+) -> FileResponse:
     if project.avatar is None:
         return None
 
