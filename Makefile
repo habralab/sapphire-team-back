@@ -26,10 +26,14 @@ down:
 clean: down
 	docker rmi sapphire --force
 
-up: clean build
+update:
+	docker stack deploy -c docker-compose.yaml sapphire
+
+sleep:
 ifeq ($(OSFLAG),WIN)
 	timeout /t 15
 else
 	sleep 15
 endif
-	docker stack deploy -c docker-compose.yaml sapphire
+
+up: clean build sleep update
