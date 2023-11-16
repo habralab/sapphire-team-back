@@ -87,6 +87,7 @@ class ProjectsDatabaseService(BaseDatabaseService):
             name: str | None | Type[Empty] = Empty,
             owner_id: uuid.UUID | None | Type[Empty] = Empty,
             description: str | None | Type[Empty] = Empty,
+            startline: datetime | Type[Empty] = Empty,
             deadline: datetime | None | Type[Empty] = Empty,
             avatar: str | None | Type[Empty] = Empty,
             status: ProjectStatusEnum | None | Type[Empty] = Empty,
@@ -103,6 +104,8 @@ class ProjectsDatabaseService(BaseDatabaseService):
             project.description = description
         if deadline is not Empty:
             project.deadline = deadline
+        if startline is not Empty:
+            project.startline = startline
         if avatar is not Empty:
             project.avatar = avatar
         if status is not Empty:
