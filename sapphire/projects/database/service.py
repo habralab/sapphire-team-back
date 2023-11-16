@@ -357,7 +357,7 @@ class ProjectsDatabaseService(BaseDatabaseService):
             func.count(Project.id),  # pylint: disable=not-callable
         ).where(Project.owner_id == user_id)
         result = await session.execute(stmt)
-        ownership_projects_count = result.scalar_one()  # pylint: disable=not-callable
+        ownership_projects_count = result.scalar_one()
 
         stmt_position_ids = (
             select(Participant.position_id)
@@ -370,7 +370,7 @@ class ProjectsDatabaseService(BaseDatabaseService):
             .where(Position.id.in_(stmt_position_ids))
         )
         result = await session.execute(stmt)
-        participant_projects_count = result.scalar_one()  # pylint: disable=not-callable
+        participant_projects_count = result.scalar_one()
 
         rate = 5.0
 
