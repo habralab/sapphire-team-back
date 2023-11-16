@@ -100,7 +100,7 @@ async def callback(
 
     cache_valid = await cache_service.validate_state(state=state)
     if not cache_valid:
-        raise fastapi.HTTPException(status_code=400)
+        raise fastapi.status.HTTP_404_NOT_FOUND
 
     return AuthorizeResponse(
         user=UserResponse.from_db_model(user=db_user),
