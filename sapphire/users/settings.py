@@ -15,13 +15,8 @@ access_token = generate_rsa_keys()
 refresh_token = generate_rsa_keys()
 
 
-class UsersSettings(
-    BaseAPISettings,
-    BaseDatabaseSettings,
-    JWTSettings,
-    HabrSettings,
-    HabrCareerSettings,
-    BaseCacheSettings,
+class UsersSettings(BaseAPISettings, BaseDatabaseSettings, JWTSettings, HabrSettings,
+                    HabrCareerSettings, BaseCacheSettings,
 ):
     model_config = SettingsConfigDict(env_file=".env", extra="allow", secrets_dir="/run/secrets")
 

@@ -16,12 +16,13 @@ class BaseCacheService(ServiceMixin):
         if self.redis:
             self.redis.close()
             await self.redis.wait_closed()
+            self.redis = None
 
-    async def set_value(self, key: str, value: Any):
+    async def set(self, key: str, value: Any):
         await self.redis.set(key, value)
 
-    async def get_value(self, key: str):
+    async def get(self, key: str):
         await self.redis.get(key)
 
-    async def delete_key(self, key: str):
+    async def delete(self, key: str):
         await self.redis.delete(key)
