@@ -34,6 +34,7 @@ class Message(Base):
 
     id: Mapped[uuid.UUID] = mapped_column(default=uuid.uuid4, primary_key=True)
     chat_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("chats.id"))
+    user_id: Mapped[uuid.UUID]
     text: Mapped[str] = mapped_column(String(2048))
     created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
     updated_at: Mapped[datetime] = mapped_column(default=datetime.utcnow, onupdate=datetime.utcnow)

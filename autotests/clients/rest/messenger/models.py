@@ -15,6 +15,7 @@ class HealthResponse(BaseModel):
 class MessageResponse(BaseModel):
     id: uuid.UUID
     chat_id: uuid.UUID
+    user_id: uuid.UUID
     text: str
     created_at: datetime
     updated_at: datetime
@@ -34,3 +35,7 @@ class ChatListResponse(PaginatedResponse):
 
 class MessageListResponse(PaginatedResponse):
     data: list[MessageResponse]
+
+
+class CreateMessageRequest(BaseModel):
+    text: constr(min_length=1, strip_whitespace=True)
