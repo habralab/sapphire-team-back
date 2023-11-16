@@ -14,8 +14,7 @@ class OAuth2BaseBackend(HTTPClient):
 
         super().__init__()
 
-    def get_authorization_url(self, redirect_url: str | None = None) -> str:
-        state = "test"
+    def get_authorization_url(self, state: str, redirect_url: str | None = None) -> str:
         query_parameters = {
             "client_id": self._client_id,
             "redirect_uri": redirect_url,
@@ -28,13 +27,7 @@ class OAuth2BaseBackend(HTTPClient):
 
         return str(url)
 
-    async def check_state(self, state: str) -> bool:
-        return state == "test"
-
-    async def get_token(self, state: str, code: str) -> str | None:
-        if not await self.check_state(state=state):
-            return None
-
+    async def get_token(self, code: str) -> str | None:
         payload = {
             "grant_type": self.grant_type,
             "code": code,

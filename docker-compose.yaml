@@ -80,6 +80,7 @@ services:
       ROOT_PATH: ${USERS_ROOT_PATH:-/users}
       ALLOWED_ORIGINS: ${USERS_ALLOWED_ORIGINS:-["http://localhost:3000"]}
       HABR_OAUTH2_CALLBACK_URL: ${USERS_HABR_OAUTH2_CALLBACK_URL:-http://localhost:3000/users/api/rest/auth/oauth2/habr/callback}
+      CACHE_URL: "redis://redis:6379/0"
     secrets:
       - habr_oauth2_client_id
       - habr_oauth2_client_secret

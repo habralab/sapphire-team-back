@@ -9,6 +9,7 @@ from sapphire.common.habr_career import HabrCareerClient
 from sapphire.common.jwt import JWTMethods
 from sapphire.users.api.rest.auth.schemas import AuthorizeResponse
 from sapphire.users.api.rest.schemas import UserResponse
+from sapphire.users.cache.service import UsersCacheService
 from sapphire.users.database.service import UsersDatabaseService
 from sapphire.users.oauth2.habr import OAuth2HabrBackend
 
@@ -23,10 +24,15 @@ async def authorize(
     habr_oauth2: OAuth2HabrBackend = request.app.service.habr_oauth2
     habr_oauth2_callback_url: str = request.app.service.habr_oauth2_callback_url
 
+    cache_service: UsersCacheService = request.app.service.cache
+
+    state = await cache_service.set_state()
+
     if redirect_url is None:
         redirect_url = habr_oauth2_callback_url
     authorization_url = habr_oauth2.get_authorization_url(
         redirect_url=redirect_url,
+        state=state,
     )
 
     return authorization_url
@@ -34,7 +40,10 @@ async def authorize(
 
 @router.get("/callback", name="callback")
 async def callback(
-    state: str, code: str, request: fastapi.Request, response: fastapi.Response
+        state: str,
+        code: str,
+        request: fastapi.Request,
+        response: fastapi.Response,
 ) -> AuthorizeResponse:
     habr_client: HabrClient = request.app.service.habr_client
     habr_career_client: HabrCareerClient = request.app.service.habr_career_client
@@ -43,7 +52,9 @@ async def callback(
 
     database_service: UsersDatabaseService = request.app.service.database
 
-    token = await habr_oauth2.get_token(state, code)
+    cache_service: UsersCacheService = request.app.service.cache
+
+    token = await habr_oauth2.get_token(code=code)
     if token is None:
         raise fastapi.HTTPException(
             status_code=fastapi.status.HTTP_401_UNAUTHORIZED,
@@ -86,6 +97,10 @@ async def callback(
                           expires=jwt_methods.access_token_expires_utc)
     response = set_cookie(response=response, name="refresh_token", value=refresh_token,
                           expires=jwt_methods.refresh_token_expires_utc)
+
+    cache_valid = await cache_service.validate_state(state=state)
+    if not cache_valid:
+        raise fastapi.HTTPException(status_code=fastapi.status.HTTP_400_BAD_REQUEST)
 
     return AuthorizeResponse(
         user=UserResponse.from_db_model(user=db_user),

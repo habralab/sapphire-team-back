@@ -7,7 +7,7 @@ from sapphire.common.habr.client import get_habr_client
 from sapphire.common.habr_career.client import get_habr_career_client
 from sapphire.common.jwt.methods import get_jwt_methods
 
-from . import api, database
+from . import api, cache, database
 from .oauth2.habr import get_oauth2_backend
 from .service import get_service
 from .settings import UsersSettings, get_settings
@@ -22,6 +22,7 @@ def run(ctx: typer.Context):
     habr_client = get_habr_client(settings=settings)
     habr_career_client = get_habr_career_client(settings=settings)
     jwt_methods = get_jwt_methods(settings=settings)
+    cache_service = cache.get_service(settings=settings)
     api_service = api.get_service(
         database=database_service,
         habr_oauth2=habr_oauth2,
@@ -29,6 +30,7 @@ def run(ctx: typer.Context):
         habr_career_client=habr_career_client,
         jwt_methods=jwt_methods,
         settings=settings,
+        cache=cache_service
     )
     users_service = get_service(api=api_service)
 
