@@ -3,11 +3,11 @@ import uuid
 
 from pydantic import BaseModel
 
+from sapphire.common.broker.models.email import Email
 from sapphire.common.broker.models.messenger import CreateChat
 from sapphire.common.broker.models.notification import Notification
 from sapphire.common.broker.models.projects import (
     ParticipantNotificationData,
-    ParticipantNotificationEmail,
     ParticipantNotificationType,
 )
 from sapphire.common.broker.service import BaseBrokerProducerService
@@ -26,9 +26,7 @@ class ProjectsBrokerService(BaseBrokerProducerService):
 
         await self.send(
             topic=self._email_topic,
-            message=ParticipantNotificationEmail(
-                to=[project.owner_id], type=notification_type
-            ),
+            message=Email(to=[project.owner_id], type=notification_type),
         )
 
         await self._send_notification_to_recipients(
@@ -48,9 +46,9 @@ class ProjectsBrokerService(BaseBrokerProducerService):
 
         await self.send(
             topic=self._email_topic,
-            message=ParticipantNotificationEmail(
+            message=Email(
                 to=[project.owner_id] + [p.user_id for p in project.joined_participants],
-                type=notification_type
+                type=notification_type,
             ),
         )
 
@@ -71,9 +69,7 @@ class ProjectsBrokerService(BaseBrokerProducerService):
 
         await self.send(
             topic=self._email_topic,
-            message=ParticipantNotificationEmail(
-                to=[project.owner_id], type=notification_type
-            ),
+            message=Email(to=[project.owner_id], type=notification_type),
         )
 
         await self._send_notification_to_recipients(
@@ -93,7 +89,7 @@ class ProjectsBrokerService(BaseBrokerProducerService):
 
         await self.send(
             topic=self._email_topic,
-            message=ParticipantNotificationEmail(
+            message=Email(
                 to=[participant.user_id], type=notification_type
             ),
         )
@@ -115,9 +111,9 @@ class ProjectsBrokerService(BaseBrokerProducerService):
 
         await self.send(
             topic=self._email_topic,
-            message=ParticipantNotificationEmail(
+            message=Email(
                 to=[project.owner_id] + [p.user_id for p in project.joined_participants],
-                type=notification_type
+                type=notification_type,
             ),
         )
 
@@ -138,9 +134,9 @@ class ProjectsBrokerService(BaseBrokerProducerService):
 
         await self.send(
             topic=self._email_topic,
-            message=ParticipantNotificationEmail(
+            message=Email(
                 to=[project.owner_id] + [p.user_id for p in project.joined_participants],
-                type=notification_type
+                type=notification_type,
             ),
         )
 

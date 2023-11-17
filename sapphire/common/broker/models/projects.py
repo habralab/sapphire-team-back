@@ -3,8 +3,6 @@ import uuid
 
 from pydantic import BaseModel, ConfigDict
 
-from .email import Email
-
 
 class ParticipantNotificationData(BaseModel):
     model_config = ConfigDict(from_attributes=True)
@@ -21,7 +19,3 @@ class ParticipantNotificationType(str, enum.Enum):
     PARTICIPANT_DECLINED = "participant_declined"
     PARTICIPANT_LEFT = "participant_left"
     OWNER_EXCLUDED = "owner_excluded"
-
-
-class ParticipantNotificationEmail(Email):
-    type: ParticipantNotificationType
