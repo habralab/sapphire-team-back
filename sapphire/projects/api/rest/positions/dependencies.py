@@ -16,7 +16,7 @@ async def get_path_position(
     database_service: ProjectsDatabaseService = request.app.service.database
 
     async with database_service.transaction() as session:
-        position = await database_service.get_project_position(
+        position = await database_service.get_position(
             session=session,
             position_id=position_id,
         )

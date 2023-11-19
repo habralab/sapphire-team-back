@@ -124,7 +124,7 @@ class TestProjectFlow:
         project_id: uuid.UUID = self.CONTEXT["project_id"]
         
         specialization_id = uuid.uuid4()
-        position = await oleg_projects_rest_client.create_project_position(
+        position = await oleg_projects_rest_client.create_position(
             project_id=project_id,
             specialization_id=specialization_id,
         )
@@ -144,10 +144,7 @@ class TestProjectFlow:
         position_id: uuid.UUID = self.CONTEXT["position_id"]
         position_specialization_id: uuid.UUID = self.CONTEXT["position_specialization_id"]
 
-        position = await projects_rest_client.get_project_position(
-            project_id=project_id,
-            position_id=position_id,
-        )
+        position = await projects_rest_client.get_position(position_id=position_id)
 
         assert position.id == position_id
         assert position.project_id == project_id
@@ -160,13 +157,11 @@ class TestProjectFlow:
     ])
     @pytest.mark.asyncio
     async def test_update_position_skills(self, oleg_projects_rest_client: ProjectsRestClient):
-        project_id: uuid.UUID = self.CONTEXT["project_id"]
         position_id: uuid.UUID = self.CONTEXT["position_id"]
 
         new_skills = {uuid.uuid4() for _ in range(10)}
 
-        skills = await oleg_projects_rest_client.update_project_position_skills(
-            project_id=project_id,
+        skills = await oleg_projects_rest_client.update_position_skills(
             position_id=position_id,
             skills=new_skills,
         )
@@ -178,14 +173,10 @@ class TestProjectFlow:
     @pytest.mark.dependency(depends=["TestProjectFlow::test_update_position_skills"])
     @pytest.mark.asyncio
     async def test_get_position_skills(self, oleg_projects_rest_client: ProjectsRestClient):
-        project_id: uuid.UUID = self.CONTEXT["project_id"]
         position_id: uuid.UUID = self.CONTEXT["position_id"]
         position_skills: set[uuid.UUID] = self.CONTEXT["position_skills"]
 
-        skills = await oleg_projects_rest_client.get_project_position_skills(
-            project_id=project_id,
-            position_id=position_id,
-        )
+        skills = await oleg_projects_rest_client.get_position_skills(position_id=position_id)
 
         assert skills == position_skills
 
@@ -199,9 +190,7 @@ class TestProjectFlow:
         position_id: uuid.UUID = self.CONTEXT["position_id"]
         position_specialization_id: uuid.UUID = self.CONTEXT["position_specialization_id"]
 
-        positions = await projects_rest_client.get_project_positions(
-            project_id=project_id,
-        )
+        positions = await projects_rest_client.get_positions(project_id=project_id)
 
         assert len(positions.data) == 1
         assert positions.data[0].id == position_id
@@ -219,11 +208,9 @@ class TestProjectFlow:
             matvey_id: uuid.UUID,
             matvey_projects_rest_client: ProjectsRestClient,
     ):
-        project_id: uuid.UUID = self.CONTEXT["project_id"]
         position_id: uuid.UUID = self.CONTEXT["position_id"]
 
-        participant = await matvey_projects_rest_client.create_request_to_join_project_position(
-            project_id=project_id,
+        participant = await matvey_projects_rest_client.create_request_to_join_position(
             position_id=position_id,
         )
 
@@ -240,15 +227,10 @@ class TestProjectFlow:
             matvey_id: uuid.UUID,
             projects_rest_client: ProjectsRestClient,
     ):
-        project_id: uuid.UUID = self.CONTEXT["project_id"]
         position_id: uuid.UUID = self.CONTEXT["position_id"]
         participant_id: uuid.UUID = self.CONTEXT["participant_id"]
 
-        participant = await projects_rest_client.get_project_position_participant(
-            project_id=project_id,
-            position_id=position_id,
-            participant_id=participant_id,
-        )
+        participant = await projects_rest_client.get_participant(participant_id=participant_id)
 
         assert participant.id == participant_id
         assert participant.position_id == position_id
@@ -261,12 +243,10 @@ class TestProjectFlow:
             self,
             matvey_projects_rest_client: ProjectsRestClient,
     ):
-        project_id: uuid.UUID = self.CONTEXT["project_id"]
         position_id: uuid.UUID = self.CONTEXT["position_id"]
 
         with pytest.raises(ResponseException) as exc_info:
-            await matvey_projects_rest_client.create_request_to_join_project_position(
-                project_id=project_id,
+            await matvey_projects_rest_client.create_request_to_join_position(
                 position_id=position_id,
             )
 
@@ -326,13 +306,10 @@ class TestProjectFlow:
             matvey_id: uuid.UUID,
             matvey_projects_rest_client: ProjectsRestClient,
     ):
-        project_id: uuid.UUID = self.CONTEXT["project_id"]
         position_id: uuid.UUID = self.CONTEXT["position_id"]
         participant_id: uuid.UUID = self.CONTEXT["participant_id"]
 
-        participant = await matvey_projects_rest_client.update_project_position_participant(
-            project_id=project_id,
-            position_id=position_id,
+        participant = await matvey_projects_rest_client.update_participant(
             participant_id=participant_id,
             status=ParticipantStatusEnum.DECLINED,
         )
@@ -349,15 +326,10 @@ class TestProjectFlow:
             matvey_id: uuid.UUID,
             projects_rest_client: ProjectsRestClient,
     ):
-        project_id: uuid.UUID = self.CONTEXT["project_id"]
         position_id: uuid.UUID = self.CONTEXT["position_id"]
         participant_id: uuid.UUID = self.CONTEXT["participant_id"]
 
-        participant = await projects_rest_client.get_project_position_participant(
-            project_id=project_id,
-            position_id=position_id,
-            participant_id=participant_id,
-        )
+        participant = await projects_rest_client.get_participant(participant_id=participant_id)
 
         assert participant.id == participant_id
         assert participant.position_id == position_id
@@ -392,11 +364,9 @@ class TestProjectFlow:
             matvey_id: uuid.UUID,
             matvey_projects_rest_client: ProjectsRestClient,
     ):
-        project_id: uuid.UUID = self.CONTEXT["project_id"]
         position_id: uuid.UUID = self.CONTEXT["position_id"]
 
-        participant = await matvey_projects_rest_client.create_request_to_join_project_position(
-            project_id=project_id,
+        participant = await matvey_projects_rest_client.create_request_to_join_position(
             position_id=position_id,
         )
 
@@ -413,13 +383,10 @@ class TestProjectFlow:
             matvey_id: uuid.UUID,
             oleg_projects_rest_client: ProjectsRestClient,
     ):
-        project_id: uuid.UUID = self.CONTEXT["project_id"]
         position_id: uuid.UUID = self.CONTEXT["position_id"]
         participant_id: uuid.UUID = self.CONTEXT["participant_id"]
 
-        participant = await oleg_projects_rest_client.update_project_position_participant(
-            project_id=project_id,
-            position_id=position_id,
+        participant = await oleg_projects_rest_client.update_participant(
             participant_id=participant_id,
             status=ParticipantStatusEnum.DECLINED,
         )
@@ -436,15 +403,10 @@ class TestProjectFlow:
             matvey_id: uuid.UUID,
             projects_rest_client: ProjectsRestClient,
     ):
-        project_id: uuid.UUID = self.CONTEXT["project_id"]
         position_id: uuid.UUID = self.CONTEXT["position_id"]
         participant_id: uuid.UUID = self.CONTEXT["participant_id"]
 
-        participant = await projects_rest_client.get_project_position_participant(
-            project_id=project_id,
-            position_id=position_id,
-            participant_id=participant_id,
-        )
+        participant = await projects_rest_client.get_participant(participant_id=participant_id)
 
         assert participant.id == participant_id
         assert participant.position_id == position_id
@@ -479,11 +441,9 @@ class TestProjectFlow:
             matvey_id: uuid.UUID,
             matvey_projects_rest_client: ProjectsRestClient,
     ):
-        project_id: uuid.UUID = self.CONTEXT["project_id"]
         position_id: uuid.UUID = self.CONTEXT["position_id"]
 
-        participant = await matvey_projects_rest_client.create_request_to_join_project_position(
-            project_id=project_id,
+        participant = await matvey_projects_rest_client.create_request_to_join_position(
             position_id=position_id,
         )
 
@@ -500,13 +460,10 @@ class TestProjectFlow:
             matvey_id: uuid.UUID,
             oleg_projects_rest_client: ProjectsRestClient,
     ):
-        project_id: uuid.UUID = self.CONTEXT["project_id"]
         position_id: uuid.UUID = self.CONTEXT["position_id"]
         participant_id: uuid.UUID = self.CONTEXT["participant_id"]
 
-        participant = await oleg_projects_rest_client.update_project_position_participant(
-            project_id=project_id,
-            position_id=position_id,
+        participant = await oleg_projects_rest_client.update_participant(
             participant_id=participant_id,
             status=ParticipantStatusEnum.JOINED,
         )
@@ -523,15 +480,10 @@ class TestProjectFlow:
             matvey_id: uuid.UUID,
             projects_rest_client: ProjectsRestClient,
     ):
-        project_id: uuid.UUID = self.CONTEXT["project_id"]
         position_id: uuid.UUID = self.CONTEXT["position_id"]
         participant_id: uuid.UUID = self.CONTEXT["participant_id"]
 
-        participant = await projects_rest_client.get_project_position_participant(
-            project_id=project_id,
-            position_id=position_id,
-            participant_id=participant_id,
-        )
+        participant = await projects_rest_client.get_participant(participant_id=participant_id)
 
         assert participant.id == participant_id
         assert participant.position_id == position_id
@@ -566,13 +518,10 @@ class TestProjectFlow:
             matvey_id: uuid.UUID,
             matvey_projects_rest_client: ProjectsRestClient,
     ):
-        project_id: uuid.UUID = self.CONTEXT["project_id"]
         position_id: uuid.UUID = self.CONTEXT["position_id"]
         participant_id: uuid.UUID = self.CONTEXT["participant_id"]
 
-        participant = await matvey_projects_rest_client.update_project_position_participant(
-            project_id=project_id,
-            position_id=position_id,
+        participant = await matvey_projects_rest_client.update_participant(
             participant_id=participant_id,
             status=ParticipantStatusEnum.LEFT,
         )
@@ -589,15 +538,10 @@ class TestProjectFlow:
             matvey_id: uuid.UUID,
             projects_rest_client: ProjectsRestClient,
     ):
-        project_id: uuid.UUID = self.CONTEXT["project_id"]
         position_id: uuid.UUID = self.CONTEXT["position_id"]
         participant_id: uuid.UUID = self.CONTEXT["participant_id"]
 
-        participant = await projects_rest_client.get_project_position_participant(
-            project_id=project_id,
-            position_id=position_id,
-            participant_id=participant_id,
-        )
+        participant = await projects_rest_client.get_participant(participant_id=participant_id)
 
         assert participant.id == participant_id
         assert participant.position_id == position_id
@@ -632,11 +576,9 @@ class TestProjectFlow:
             matvey_id: uuid.UUID,
             matvey_projects_rest_client: ProjectsRestClient,
     ):
-        project_id: uuid.UUID = self.CONTEXT["project_id"]
         position_id: uuid.UUID = self.CONTEXT["position_id"]
 
-        participant = await matvey_projects_rest_client.create_request_to_join_project_position(
-            project_id=project_id,
+        participant = await matvey_projects_rest_client.create_request_to_join_position(
             position_id=position_id,
         )
 
@@ -653,13 +595,10 @@ class TestProjectFlow:
             matvey_id: uuid.UUID,
             oleg_projects_rest_client: ProjectsRestClient,
     ):
-        project_id: uuid.UUID = self.CONTEXT["project_id"]
         position_id: uuid.UUID = self.CONTEXT["position_id"]
         participant_id: uuid.UUID = self.CONTEXT["participant_id"]
 
-        participant = await oleg_projects_rest_client.update_project_position_participant(
-            project_id=project_id,
-            position_id=position_id,
+        participant = await oleg_projects_rest_client.update_participant(
             participant_id=participant_id,
             status=ParticipantStatusEnum.JOINED,
         )
@@ -676,13 +615,10 @@ class TestProjectFlow:
             matvey_id: uuid.UUID,
             oleg_projects_rest_client: ProjectsRestClient,
     ):
-        project_id: uuid.UUID = self.CONTEXT["project_id"]
         position_id: uuid.UUID = self.CONTEXT["position_id"]
         participant_id: uuid.UUID = self.CONTEXT["participant_id"]
 
-        participant = await oleg_projects_rest_client.update_project_position_participant(
-            project_id=project_id,
-            position_id=position_id,
+        participant = await oleg_projects_rest_client.update_participant(
             participant_id=participant_id,
             status=ParticipantStatusEnum.LEFT,
         )
@@ -699,15 +635,10 @@ class TestProjectFlow:
             matvey_id: uuid.UUID,
             projects_rest_client: ProjectsRestClient,
     ):
-        project_id: uuid.UUID = self.CONTEXT["project_id"]
         position_id: uuid.UUID = self.CONTEXT["position_id"]
         participant_id: uuid.UUID = self.CONTEXT["participant_id"]
 
-        participant = await projects_rest_client.get_project_position_participant(
-            project_id=project_id,
-            position_id=position_id,
-            participant_id=participant_id,
-        )
+        participant = await projects_rest_client.get_participant(participant_id=participant_id)
 
         assert participant.id == participant_id
         assert participant.position_id == position_id
@@ -764,10 +695,7 @@ class TestProjectFlow:
         project_id: uuid.UUID = self.CONTEXT["project_id"]
         position_id: uuid.UUID = self.CONTEXT["position_id"]
 
-        position = await oleg_projects_rest_client.remove_project_position(
-            project_id=project_id,
-            position_id=position_id,
-        )
+        position = await oleg_projects_rest_client.remove_position(position_id=position_id)
 
         assert position.id == position_id
         assert position.project_id == project_id
@@ -780,10 +708,7 @@ class TestProjectFlow:
         project_id: uuid.UUID = self.CONTEXT["project_id"]
         position_id: uuid.UUID = self.CONTEXT["position_id"]
 
-        position = await projects_rest_client.get_project_position(
-            project_id=project_id,
-            position_id=position_id,
-        )
+        position = await projects_rest_client.get_position(position_id=position_id)
 
         assert position.id == position_id
         assert position.project_id == project_id
@@ -830,7 +755,7 @@ class TestProjectFlow:
         review_rate = faker.pyint(1, 5)
         review_text = faker.text()
 
-        review = await oleg_projects_rest_client.create_project_review(
+        review = await oleg_projects_rest_client.create_review(
             project_id=project_id,
             user_id=matvey_id,
             rate=review_rate,

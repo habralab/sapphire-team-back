@@ -149,7 +149,6 @@ async def test_get_projects_with_all_query_params(database_service: ProjectsData
         startline_ge=startline_ge,
         startline_le=startline_le,
         status=ParticipantStatusEnum.REQUEST,
-        position_is_closed=False,
         position_skill_ids=position_skill_ids,
         position_specialization_ids=position_specialization_ids,
     )
@@ -165,7 +164,7 @@ async def test_create_project_position(database_service: ProjectsDatabaseService
     project = MagicMock()
     specialization_id = uuid.uuid4()
 
-    result_position = await database_service.create_project_position(
+    result_position = await database_service.create_position(
         session=session,
         specialization_id=specialization_id,
         project=project,
@@ -181,7 +180,7 @@ async def test_remove_project_position(database_service: ProjectsDatabaseService
     session = MagicMock()
     position = Position(id=uuid.uuid4(), specialization_id=uuid.uuid4(), project_id=uuid.uuid4())
 
-    result_position = await database_service.remove_project_position(
+    result_position = await database_service.remove_position(
         session=session,
         position=position,
     )
@@ -202,7 +201,7 @@ async def test_get_project_position(database_service: ProjectsDatabaseService):
     session.execute = AsyncMock()
     session.execute.return_value = result
 
-    result_position = await database_service.get_project_position(
+    result_position = await database_service.get_position(
         session=session,
         position_id=position_id,
     )
@@ -224,7 +223,7 @@ async def test_get_project_positions(database_service: ProjectsDatabaseService):
     session.execute = AsyncMock()
     session.execute.return_value = result
 
-    positions = await database_service.get_project_positions(
+    positions = await database_service.get_positions(
         session=session,
         project_id=project_id,
     )
@@ -335,9 +334,9 @@ async def test_get_participants_with_all_filters(
 
     participants = await database_service.get_participants(
         session=session,
-        project=project,
         position=position,
         user_id=user_id,
+        project_id=project.id,
     )
 
     assert participants == expected_participants

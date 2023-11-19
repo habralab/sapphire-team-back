@@ -63,12 +63,6 @@ class TestUserUpdateFlow:
 
         user = await users_rest_client.get_user(user_id=oleg_id)
 
-        del self.CONTEXT["first_name"]
-        del self.CONTEXT["last_name"]
-        del self.CONTEXT["about"]
-        del self.CONTEXT["main_specialization_id"]
-        del self.CONTEXT["secondary_specialization_id"]
-
         assert user.id == oleg_id
         assert user.email is None
         assert user.first_name == first_name

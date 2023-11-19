@@ -4,6 +4,7 @@ from pydantic import BaseModel, ConfigDict, Field, NaiveDatetime
 
 
 class CreateReviewRequest(BaseModel):
+    project_id: uuid.UUID
     user_id: uuid.UUID
     rate: int = Field(ge=1, le=5)
     text: str

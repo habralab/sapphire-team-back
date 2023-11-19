@@ -49,6 +49,7 @@ class ProjectListResponse(PaginatedResponse):
 
 
 class CreateReviewRequest(BaseModel):
+    project_id: uuid.UUID
     user_id: uuid.UUID
     rate: int = Field(ge=1, le=5)
     text: str
@@ -77,7 +78,12 @@ class PositionListResponse(PaginatedResponse):
 
 
 class CreatePositionRequest(BaseModel):
+    project_id: uuid.UUID
     specialization_id: uuid.UUID
+
+
+class CreateParticipantRequest(BaseModel):
+    position_id: uuid.UUID
 
 
 class UpdateParticipantRequest(BaseModel):

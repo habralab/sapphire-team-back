@@ -224,15 +224,15 @@ class ProjectsDatabaseService(BaseDatabaseService):
             session: AsyncSession,
             position: Position | Type[Empty] = Empty,
             user_id: uuid.UUID | Type[Empty] = Empty,
-            project: Project | Type[Empty] = Empty,
+            project_id: uuid.UUID | Type[Empty] = Empty,
     ) -> list[Participant]:
         filters = []
         if position is not Empty:
             filters.append(Participant.position_id == position.id)
         if user_id is not Empty:
             filters.append(Participant.user_id == user_id)
-        if project is not Empty:
-            position_query = select(Position.id).where(Position.project_id == project.id)
+        if project_id is not Empty:
+            position_query = select(Position.id).where(Position.project_id == project_id)
             filters.append(Participant.position_id.in_(position_query))
         query = select(Participant).where(*filters)
         result = await session.execute(query)
@@ -276,7 +276,6 @@ class ProjectsDatabaseService(BaseDatabaseService):
         deadline_le: datetime | Type[Empty] = Empty,
         deadline_ge: datetime | Type[Empty] = Empty,
         status: ProjectStatusEnum | Type[Empty] = Empty,
-        position_is_closed: bool | Type[Empty] = Empty,
         position_skill_ids: list[uuid.UUID] | Type[Empty] = Empty,
         position_specialization_ids: list[uuid.UUID] | Type[Empty] = Empty,
         participant_user_ids: list[uuid.UUID] | Type[Empty] = Empty,
@@ -317,12 +316,6 @@ class ProjectsDatabaseService(BaseDatabaseService):
                 status == history_query.c.status,
             ])
 
-        if position_is_closed is not Empty:
-            position_filters.append(
-                Position.closed_at.is_(None)
-                if position_is_closed
-                else Position.closed_at.is_not(None)
-            )
         if position_specialization_ids is not Empty:
             position_filters.append(
                 Position.specialization_id.in_(position_specialization_ids)

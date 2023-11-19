@@ -1,4 +1,3 @@
-import uuid
 from collections import defaultdict
 
 import fastapi
@@ -6,11 +5,9 @@ import fastapi
 from sapphire.common.api.exceptions import HTTPForbidden, HTTPNotFound
 from sapphire.common.jwt.dependencies.rest import is_auth
 from sapphire.common.jwt.models import JWTData
-from sapphire.projects.api.rest.projects.dependencies import get_path_project
-from sapphire.projects.api.rest.projects.positions.dependencies import get_path_position
 from sapphire.projects.api.rest.projects.schemas import ParticipantResponse
 from sapphire.projects.broker.service import ProjectsBrokerService
-from sapphire.projects.database.models import Participant, ParticipantStatusEnum, Position, Project
+from sapphire.projects.database.models import Participant, ParticipantStatusEnum
 from sapphire.projects.database.service import ProjectsDatabaseService
 
 from .dependencies import get_path_participant
@@ -33,8 +30,6 @@ async def create_participant(
 
     if position is None:
         raise HTTPNotFound()
-    if position.project.owner_id != jwt_data.user_id:
-        raise HTTPForbidden()
 
     async with database_service.transaction() as session:
         participant = await database_service.get_participant(
@@ -108,10 +103,14 @@ async def update_participant(
         raise HTTPForbidden()
 
     async with database_service.transaction() as session:
-        updated_participant_db = await database_service.update_participant_status(
+        participant = await database_service.update_participant_status(
             session=session,
             participant=participant,
             status=data.status,
+        )
+        project = await database_service.get_project(
+            session=session,
+            project_id=participant.position.project_id,
         )
 
         notification_send_map = {
@@ -132,9 +131,6 @@ async def update_participant(
             .get(jwt_data.user_id, None)
         )
         if participant_notification_send:
-            await participant_notification_send(
-                project=participant.position.project,
-                participant=participant,
-            )
+            await participant_notification_send(project=project, participant=participant)
 
-    return ParticipantResponse.model_validate(updated_participant_db)
+    return ParticipantResponse.model_validate(participant)
