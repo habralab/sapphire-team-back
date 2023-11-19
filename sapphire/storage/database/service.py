@@ -48,6 +48,17 @@ class StorageDatabaseService(BaseDatabaseService):
 
         return list(specializations.unique().scalars().all())
 
+    async def get_specialization(
+            self,
+            session: AsyncSession,
+            habr_id: int,
+    ) -> Specialization | None:
+        query = select(Specialization).where(Specialization.habr_id == habr_id)
+
+        result = await session.execute(query)
+
+        return result.unique().scalar_one_or_none()
+
     async def get_specialization_groups(
         self,
         session: AsyncSession,
@@ -74,6 +85,17 @@ class StorageDatabaseService(BaseDatabaseService):
 
         return list(specialization_groups.unique().scalars().all())
 
+    async def get_specialization_group(
+            self,
+            session: AsyncSession,
+            habr_id: int,
+    ) -> SpecializationGroup | None:
+        query = select(SpecializationGroup).where(SpecializationGroup.habr_id == habr_id)
+
+        result = await session.execute(query)
+
+        return result.unique().scalar_one_or_none()
+
     async def get_skills(
         self,
         session: AsyncSession,
@@ -98,6 +120,13 @@ class StorageDatabaseService(BaseDatabaseService):
             query = query.limit(per_page).offset(offset)
 
         return list(skills.unique().scalars().all())
+
+    async def get_skill(self, session: AsyncSession, habr_id: int) -> Skill | None:
+        query = select(Skill).where(Skill.habr_id == habr_id)
+
+        result = await session.execute(query)
+
+        return result.unique().scalar_one_or_none()
 
 
 def get_service(settings: StorageSettings) -> StorageDatabaseService:

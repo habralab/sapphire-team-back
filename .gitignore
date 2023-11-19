@@ -5,11 +5,12 @@
 .idea
 .pytest_cache
 .venv
+.vscode
 __pycache__
 broker_data
 database_data
 redis_data
 projects_data
 pyrightconfig.json
+sapphire/storage/internal_api/grpc/*
 users_data
-.vscode
