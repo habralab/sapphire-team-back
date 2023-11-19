@@ -2,7 +2,7 @@ import fastapi
 
 from sapphire.common.api.openapi import IMAGE_SCHEMA
 
-from . import handlers, positions, reviews
+from . import handlers
 
 router = fastapi.APIRouter()
 
@@ -20,5 +20,3 @@ router.add_api_route(path="/{project_id}/avatar", methods=["POST"],
 router.add_api_route(path="/{project_id}/avatar", methods=["DELETE"],
                      endpoint=handlers.delete_project_avatar)
 router.add_api_route(path="/{project_id}/history", methods=["GET"], endpoint=handlers.history)
-router.include_router(positions.router, prefix="/{project_id}/positions")
-router.include_router(reviews.router, prefix="/{project_id}/reviews")

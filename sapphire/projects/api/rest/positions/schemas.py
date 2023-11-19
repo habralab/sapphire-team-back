@@ -1,11 +1,17 @@
 import uuid
+from typing import Type
 
 from pydantic import BaseModel, ConfigDict, NaiveDatetime
 
 from sapphire.common.api.schemas.paginated import PaginatedResponse
+from sapphire.common.utils.empty import Empty
 
 
-class ProjectPositionResponse(BaseModel):
+class PositionListFiltersRequest(BaseModel):
+    project_id: uuid.UUID | Type[Empty] = Empty
+
+
+class PositionResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     id: uuid.UUID
@@ -16,9 +22,10 @@ class ProjectPositionResponse(BaseModel):
     specialization_id: uuid.UUID
 
 
-class ProjectPositionsResponse(PaginatedResponse):
-    data: list[ProjectPositionResponse]
+class PositionListResponse(PaginatedResponse):
+    data: list[PositionResponse]
 
 
-class CreateProjectPositionRequest(BaseModel):
+class CreatePositionRequest(BaseModel):
+    project_id: uuid.UUID
     specialization_id: uuid.UUID

@@ -3,7 +3,7 @@ from collections import defaultdict
 
 import fastapi
 
-from sapphire.common.api.exceptions import HTTPForbidden
+from sapphire.common.api.exceptions import HTTPForbidden, HTTPNotFound
 from sapphire.common.jwt.dependencies.rest import is_auth
 from sapphire.common.jwt.models import JWTData
 from sapphire.projects.api.rest.projects.dependencies import get_path_project
@@ -14,18 +14,27 @@ from sapphire.projects.database.models import Participant, ParticipantStatusEnum
 from sapphire.projects.database.service import ProjectsDatabaseService
 
 from .dependencies import get_path_participant
-from .schemas import UpdateParticipantRequest
+from .schemas import CreateParticipantRequest, UpdateParticipantRequest
 
 
 async def create_participant(
     request: fastapi.Request,
-    position_id: uuid.UUID,
     jwt_data: JWTData = fastapi.Depends(is_auth),
-    project: Project = fastapi.Depends(get_path_project),
-    position: Position = fastapi.Depends(get_path_position),
+    data: CreateParticipantRequest = fastapi.Body(embed=False),
 ) -> ParticipantResponse:
     broker_service: ProjectsBrokerService = request.app.service.broker
     database_service: ProjectsDatabaseService = request.app.service.database
+
+    async with database_service.transaction() as session:
+        position = await database_service.get_position(
+            session=session,
+            position_id=data.position_id,
+        )
+
+    if position is None:
+        raise HTTPNotFound()
+    if position.project.owner_id != jwt_data.user_id:
+        raise HTTPForbidden()
 
     async with database_service.transaction() as session:
         participant = await database_service.get_participant(
@@ -46,16 +55,16 @@ async def create_participant(
     async with database_service.transaction() as session:
         participant = await database_service.create_participant(
             session=session,
-            position_id=position_id,
+            position_id=position.id,
             user_id=jwt_data.user_id,
         )
         await broker_service.send_participant_requested(
-            project=project,
+            project=position.project,
             participant=participant,
         )
         await broker_service.send_create_chat(
             is_personal=True,
-            members_ids=[project.owner_id, participant.user_id],
+            members_ids=[position.project.owner_id, participant.user_id],
         )
 
     return ParticipantResponse.model_validate(participant)
@@ -69,9 +78,8 @@ async def get_participant(
 
 async def update_participant(
     request: fastapi.Request,
-    data: UpdateParticipantRequest = fastapi.Body(...),
+    data: UpdateParticipantRequest = fastapi.Body(embed=False),
     jwt_data: JWTData = fastapi.Depends(is_auth),
-    project: Project = fastapi.Depends(get_path_project),
     participant: Participant = fastapi.Depends(get_path_participant),
 ) -> ParticipantResponse:
     broker_service: ProjectsBrokerService = request.app.service.broker
@@ -91,7 +99,7 @@ async def update_participant(
 
     participant_status_nodes = defaultdict(dict)
 
-    participant_status_nodes[project.owner_id].update(project_owner_nodes)
+    participant_status_nodes[participant.position.project.owner_id].update(project_owner_nodes)
     participant_status_nodes[participant.user_id].update(participant_nodes)
 
     required_statuses = participant_status_nodes.get(jwt_data.user_id, {}).get(data.status, ())
@@ -108,15 +116,15 @@ async def update_participant(
 
         notification_send_map = {
             ParticipantStatusEnum.JOINED: {
-                participant.user_id: broker_service.send_participant_joined
+                participant.user_id: broker_service.send_participant_joined,
             },
             ParticipantStatusEnum.DECLINED: {
                 participant.user_id: broker_service.send_participant_declined,
-                project.owner_id: broker_service.send_owner_declined
+                participant.position.project.owner_id: broker_service.send_owner_declined,
             },
             ParticipantStatusEnum.LEFT: {
                 participant.user_id: broker_service.send_participant_left,
-                project.owner_id: broker_service.send_owner_excluded
+                participant.position.project.owner_id: broker_service.send_owner_excluded,
             }
         }
         participant_notification_send = (notification_send_map
@@ -125,7 +133,8 @@ async def update_participant(
         )
         if participant_notification_send:
             await participant_notification_send(
-                project=project, participant=participant
+                project=participant.position.project,
+                participant=participant,
             )
 
     return ParticipantResponse.model_validate(updated_participant_db)

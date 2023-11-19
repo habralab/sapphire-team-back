@@ -135,7 +135,7 @@ class ProjectsDatabaseService(BaseDatabaseService):
         await session.refresh(project)
         return project
 
-    async def get_project_positions(
+    async def get_positions(
             self,
             session: AsyncSession,
             project_id: uuid.UUID | Type[Empty] = Empty,
@@ -148,7 +148,7 @@ class ProjectsDatabaseService(BaseDatabaseService):
         result = await session.execute(statement)
         return list(result.unique().scalars().all())
 
-    async def get_project_position(
+    async def get_position(
             self,
             session: AsyncSession,
             project_id: uuid.UUID | Type[Empty] = Empty,
@@ -165,7 +165,7 @@ class ProjectsDatabaseService(BaseDatabaseService):
 
         return result.unique().scalar_one_or_none()
 
-    async def create_project_position(
+    async def create_position(
             self,
             session: AsyncSession,
             project: Project,
@@ -177,14 +177,14 @@ class ProjectsDatabaseService(BaseDatabaseService):
 
         return position
 
-    async def remove_project_position(self, session: AsyncSession, position: Position) -> Position:
+    async def remove_position(self, session: AsyncSession, position: Position) -> Position:
         position.closed_at = datetime.utcnow()
 
         session.add(position)
 
         return position
 
-    async def update_project_position_skills(
+    async def update_position_skills(
             self,
             session: AsyncSession,
             position: Position,
