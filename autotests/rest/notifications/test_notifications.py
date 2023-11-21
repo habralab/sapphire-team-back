@@ -14,12 +14,10 @@ from autotests.utils import Empty
 ))
 @pytest.mark.parametrize(
     ("is_read", "page", "per_page"),
-    ((Empty, 1, 10),
     (
-        True,
-        1,
-        10,
-    ))
+        (Empty, 1, 10),
+        (True, 1, 10),
+    ),
 )
 @pytest.mark.asyncio
 async def test_get_notifications(
@@ -28,6 +26,7 @@ async def test_get_notifications(
         page: int | Type[Empty],
         per_page: int | Type[Empty],
 ):
+
     notifications = await client.get_notifications(
         page=page,
         per_page=per_page,
