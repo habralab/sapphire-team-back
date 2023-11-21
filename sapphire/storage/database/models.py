@@ -14,7 +14,7 @@ class SpecializationGroup(Base):
     __tablename__ = "specialization_groups"
 
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True)
-    habr_id: Mapped[int | None] = mapped_column(unique=True)
+    habr_id: Mapped[PositiveInt | None] = mapped_column(unique=True)
     name: Mapped[str]
     name_en: Mapped[str]
     created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
@@ -26,7 +26,7 @@ class Specialization(Base):
     __tablename__ = "specializations"
 
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True)
-    habr_id: Mapped[int | None] = mapped_column(unique=True)
+    habr_id: Mapped[PositiveInt | None] = mapped_column(unique=True)
     name: Mapped[str]
     name_en: Mapped[str]
     group_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("specialization_groups.id"))

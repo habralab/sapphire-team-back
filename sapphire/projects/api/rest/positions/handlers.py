@@ -28,7 +28,7 @@ async def get_positions(
     async with database_service.transaction() as session:
         positions = await database_service.get_positions(
             session=session,
-            project_id=filters.project_id,
+            **filters.model_dump(),
         )
 
     total_items = len(positions)

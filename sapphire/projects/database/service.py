@@ -139,10 +139,54 @@ class ProjectsDatabaseService(BaseDatabaseService):
             self,
             session: AsyncSession,
             project_id: uuid.UUID | Type[Empty] = Empty,
+            is_closed: bool | Type[Empty] = Empty,
+            specialization_ids: list[uuid.UUID] | Type[Empty] = Empty,
+            skill_ids: list[uuid.UUID] | Type[Empty] = Empty,
+            project_query_text: str | Type[Empty] = Empty,
+            project_startline_ge: datetime | Type[Empty] = Empty,
+            project_startline_le: datetime | Type[Empty] = Empty,
+            project_deadline_ge: datetime | Type[Empty] = Empty,
+            project_deadline_le: datetime | Type[Empty] = Empty,
+            project_status: ProjectStatusEnum | Type[Empty] = Empty,
     ) -> list[Position]:
         filters = []
+        skill_filters = []
+        project_filters = []
+
         if project_id is not Empty:
             filters.append(Position.project_id == project_id)
+        if is_closed is not Empty:
+            filters.append(Position.closed_at != None if is_closed else Position.closed_at == None)
+        if specialization_ids is not Empty:
+            filters.append(Position.specialization_id.in_(specialization_ids))
+        
+        if skill_ids is not Empty:
+            skill_filters.append(PositionSkill.id.in_(skill_ids))
+
+        if project_query_text is not Empty:
+            project_filters.append(or_(
+                Project.name.contains(project_query_text),
+                Project.description.contains(project_query_text),
+            ))
+        if project_startline_ge is not Empty:
+            project_filters.append(Project.startline >= project_startline_ge)
+        if project_startline_le is not Empty:
+            project_filters.append(Project.startline <= project_startline_le)
+        if project_deadline_ge is not Empty:
+            project_filters.append(Project.deadline >= project_deadline_ge)
+        if project_deadline_le is not Empty:
+            project_filters.append(Project.deadline <= project_deadline_le)
+        if project_status is not Empty:
+            project_filters.append(Project.status == project_status)
+
+        if skill_filters:
+            filters.append(
+                Position.id.in_(select(PositionSkill.position_id).where(*skill_filters))
+            )
+        if project_filters:
+            filters.append(
+                Position.project_id.in_(select(Project.id).where(*project_filters))
+            )
 
         statement = select(Position).where(*filters)
         result = await session.execute(statement)

@@ -153,35 +153,6 @@ class TestProjectFlow:
 
     @pytest.mark.dependency(depends=[
         "TestProjectFlow::test_create_position",
-        # TODO: Replace to: "TestProjectFlow::test_get_position",
-    ])
-    @pytest.mark.asyncio
-    async def test_update_position_skills(self, oleg_projects_rest_client: ProjectsRestClient):
-        position_id: uuid.UUID = self.CONTEXT["position_id"]
-
-        new_skills = {uuid.uuid4() for _ in range(10)}
-
-        skills = await oleg_projects_rest_client.update_position_skills(
-            position_id=position_id,
-            skills=new_skills,
-        )
-
-        self.CONTEXT["position_skills"] = skills
-
-        assert skills == new_skills
-
-    @pytest.mark.dependency(depends=["TestProjectFlow::test_update_position_skills"])
-    @pytest.mark.asyncio
-    async def test_get_position_skills(self, oleg_projects_rest_client: ProjectsRestClient):
-        position_id: uuid.UUID = self.CONTEXT["position_id"]
-        position_skills: set[uuid.UUID] = self.CONTEXT["position_skills"]
-
-        skills = await oleg_projects_rest_client.get_position_skills(position_id=position_id)
-
-        assert skills == position_skills
-
-    @pytest.mark.dependency(depends=[
-        "TestProjectFlow::test_create_position",
         # TODO: Replace to :"TestProjectFlow::test_get_position"
     ])
     @pytest.mark.asyncio
@@ -826,3 +797,69 @@ class TestProjectAvatarFlow:
         avatar = await projects_rest_client.get_project_avatar(project_id=project_id)
 
         assert avatar.read() == b"null"
+
+
+class TestPositionSkillsFlow:
+    CONTEXT = {}
+
+    @pytest.mark.dependency()
+    @pytest.mark.asyncio
+    async def test_update_position_skills(
+            self,
+            oleg_projects_rest_client: ProjectsRestClient,
+            position_id: uuid.UUID,
+    ):
+        new_skills = {uuid.uuid4() for _ in range(10)}
+
+        skills = await oleg_projects_rest_client.update_position_skills(
+            position_id=position_id,
+            skills=new_skills,
+        )
+
+        self.CONTEXT["skills"] = new_skills
+
+        assert skills == new_skills
+
+    @pytest.mark.dependency(depends=["TestPositionSkillsFlow::test_update_position_skills"])
+    @pytest.mark.asyncio
+    async def test_get_position_skills(
+            self,
+            oleg_projects_rest_client: ProjectsRestClient,
+            position_id: uuid.UUID,
+    ):
+        position_skills: set[uuid.UUID] = self.CONTEXT["skills"]
+
+        skills = await oleg_projects_rest_client.get_position_skills(position_id=position_id)
+
+        assert skills == position_skills
+
+    @pytest.mark.dependency(depends=["TestPositionSkillsFlow::test_get_position_skills"])
+    @pytest.mark.asyncio
+    async def test_empty_position_skills(
+            self,
+            oleg_projects_rest_client: ProjectsRestClient,
+            position_id: uuid.UUID,
+    ):
+        new_skills = set()
+
+        skills = await oleg_projects_rest_client.update_position_skills(
+            position_id=position_id,
+            skills=new_skills,
+        )
+
+        self.CONTEXT["skills"] = new_skills
+
+        assert skills == new_skills
+
+    @pytest.mark.dependency(depends=["TestPositionSkillsFlow::test_empty_position_skills"])
+    @pytest.mark.asyncio
+    async def test_get_empty_position_skills(
+            self,
+            oleg_projects_rest_client: ProjectsRestClient,
+            position_id: uuid.UUID,
+    ):
+        position_skills: set[uuid.UUID] = self.CONTEXT["skills"]
+
+        skills = await oleg_projects_rest_client.get_position_skills(position_id=position_id)
+
+        assert skills == position_skills

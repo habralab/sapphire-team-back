@@ -135,9 +135,33 @@ class ProjectsRestClient(BaseRestClient):
     async def get_positions(
             self,
             project_id: uuid.UUID | Type[Empty] = Empty,
+            is_closed: bool | Type[Empty] = Empty,
+            specialization_ids: list[uuid.UUID] | Type[Empty] = Empty,
+            skill_ids: list[uuid.UUID] | Type[Empty] = Empty,
+            project_query_text: str | Type[Empty] = Empty,
+            project_startline_ge: datetime | Type[Empty] = Empty,
+            project_startline_le: datetime | Type[Empty] = Empty,
+            project_deadline_ge: datetime | Type[Empty] = Empty,
+            project_deadline_le: datetime | Type[Empty] = Empty,
+            project_status: ProjectStatusEnum | Type[Empty] = Empty,
+            page: int = 1,
+            per_page: int = 10,
     ) -> PositionListResponse:
         path = f"/api/rest/positions/"
-        params = {"project_id": project_id}
+        params = {
+            "project_id": project_id,
+            "is_closed": is_closed,
+            "specialization_ids": specialization_ids,
+            "skill_ids": skill_ids,
+            "project_query_text": project_query_text,
+            "project_startline_ge": project_startline_ge,
+            "project_startline_le": project_startline_le,
+            "project_deadline_ge": project_deadline_ge,
+            "project_deadline_le": project_deadline_le,
+            "project_status": Empty if project_status is Empty else project_status.value,
+            "page": page,
+            "per_page": per_page,
+        }
         params = {key: value for key, value in params.items() if value is not Empty}
 
         return await self.rest_get(path=path, params=params, response_model=PositionListResponse)
