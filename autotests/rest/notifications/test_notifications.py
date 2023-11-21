@@ -28,6 +28,7 @@ async def test_get_notifications(
         page: int | Type[Empty],
         per_page: int | Type[Empty],
 ):
+
     notifications = await client.get_notifications(
         page=page,
         per_page=per_page,
