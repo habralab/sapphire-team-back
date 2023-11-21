@@ -2,12 +2,17 @@ import pathlib
 import uuid
 from typing import Any, Type
 
+from sqlalchemy import select
+
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from sapphire.common.database.service import BaseDatabaseService
 from sapphire.notifications.settings import NotificationsSettings
 
+from sapphire.common.utils.empty import Empty
+
 from .models import Base, Notification
+from sapphire.common.broker.models import notification
 
 
 class NotificationsDatabaseService(BaseDatabaseService):
@@ -32,6 +37,30 @@ class NotificationsDatabaseService(BaseDatabaseService):
         session.add(notification)
 
         return notification
+
+    async def get_notifications(
+            self,
+            session: AsyncSession,
+            recipient_id: uuid.UUID,
+            is_read: bool | Type[Empty] = Empty,
+            page: int | Type[Empty] = Empty,
+            per_page: int | Type[Empty] = Empty,
+    ) -> list[Notification]:
+        filters = [Notification.recipient_id == recipient_id]
+        if is_read is not Empty:
+            filters.append(Notification.is_read == is_read)
+
+        stmt = select(Notification).where(*filters)
+
+        if page is not Empty and per_page is not Empty:
+            offset = (page - 1) * per_page
+            stmt = stmt.limit(per_page).offset(offset)
+
+        result = await session.execute(stmt)
+
+        notifications_db = list(result.scalars().all())
+
+        return notifications_db
 
 
 def get_service(settings: NotificationsSettings) -> NotificationsDatabaseService:
