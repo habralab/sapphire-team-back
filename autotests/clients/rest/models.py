@@ -1,9 +1,7 @@
-from pydantic import BaseModel, NonNegativeInt, PositiveInt
+from pydantic import BaseModel, NaiveDatetime, PositiveInt
 
 
 class PaginatedResponse(BaseModel):
     data: list
-    page: PositiveInt
+    next_cursor: NaiveDatetime | None
     per_page: PositiveInt
-    total_pages: NonNegativeInt | None
-    total_items: NonNegativeInt | None

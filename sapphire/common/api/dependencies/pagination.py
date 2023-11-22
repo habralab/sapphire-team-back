@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Type
 
 from fastapi import Query
-from pydantic import BaseModel, NaiveDatetime, conint
+from pydantic import BaseModel, conint
 
 from sapphire.common.utils.empty import Empty
 

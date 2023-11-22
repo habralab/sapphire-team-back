@@ -47,7 +47,7 @@ class ProjectsRestClient(BaseRestClient):
             position_skill_ids: list[uuid.UUID] | Type[Empty] = Empty,
             position_specialization_ids: list[uuid.UUID] | Type[Empty] = Empty,
             participant_user_ids: list[uuid.UUID] | Type[Empty] = Empty,
-            page: int = 1,
+            cursor: datetime | Type[Empty] = Empty,
             per_page: int = 10,
     ) -> ProjectListResponse:
         path = "/api/rest/projects/"
@@ -63,7 +63,7 @@ class ProjectsRestClient(BaseRestClient):
             "position_skill_ids": position_skill_ids,
             "position_specialization_ids": position_specialization_ids,
             "participant_user_ids": participant_user_ids,
-            "page": page,
+            "cursor": cursor,
             "per_page": per_page,
         }
         params = {key: value for key, value in params.items() if value is not Empty}
@@ -146,7 +146,7 @@ class ProjectsRestClient(BaseRestClient):
             project_deadline_ge: datetime | Type[Empty] = Empty,
             project_deadline_le: datetime | Type[Empty] = Empty,
             project_status: ProjectStatusEnum | Type[Empty] = Empty,
-            page: int = 1,
+            cursor: datetime | Type[Empty] = Empty,
             per_page: int = 10,
     ) -> PositionListResponse:
         path = f"/api/rest/positions/"
@@ -161,7 +161,7 @@ class ProjectsRestClient(BaseRestClient):
             "project_deadline_ge": project_deadline_ge,
             "project_deadline_le": project_deadline_le,
             "project_status": Empty if project_status is Empty else project_status.value,
-            "page": page,
+            "cursor": cursor,
             "per_page": per_page,
         }
         params = {key: value for key, value in params.items() if value is not Empty}
