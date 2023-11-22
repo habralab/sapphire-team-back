@@ -31,7 +31,7 @@ class PositionResponse(BaseModel):
     closed_at: NaiveDatetime | None
     created_at: NaiveDatetime
     updated_at: NaiveDatetime
-    
+
     @classmethod
     def from_db_model(cls, instance: Position):
         return cls(

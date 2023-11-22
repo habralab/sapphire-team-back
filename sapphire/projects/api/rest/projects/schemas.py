@@ -63,6 +63,7 @@ class ProjectListResponse(PaginatedResponse):
 class ProjectListFiltersRequest(BaseModel):
     query_text: str | Type[Empty] = Empty
     owner_id: uuid.UUID | Type[Empty] = Empty
+    user_id: uuid.UUID | Type[Empty] = Empty
     startline_ge: NaiveDatetime | Type[Empty] = Empty
     startline_le: NaiveDatetime | Type[Empty] = Empty
     deadline_ge: NaiveDatetime | Type[Empty] = Empty

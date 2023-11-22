@@ -1,4 +1,5 @@
 import uuid
+
 from pydantic import BaseModel
 
 from sapphire.projects.database.models import ParticipantStatusEnum

@@ -4,17 +4,17 @@ import fastapi
 
 from sapphire.common.api.dependencies.pagination import Pagination, pagination
 from sapphire.common.api.exceptions import HTTPForbidden, HTTPNotFound
-from sapphire.common.jwt.models import JWTData
 from sapphire.common.jwt.dependencies.rest import is_auth
+from sapphire.common.jwt.models import JWTData
 from sapphire.projects.database.models import Position
 from sapphire.projects.database.service import ProjectsDatabaseService
 
 from .dependencies import path_position_is_owner
 from .schemas import (
     CreatePositionRequest,
-    PositionResponse,
     PositionListFiltersRequest,
     PositionListResponse,
+    PositionResponse,
 )
 
 

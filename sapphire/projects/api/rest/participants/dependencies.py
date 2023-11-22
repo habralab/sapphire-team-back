@@ -1,9 +1,9 @@
 import uuid
 
 import fastapi
-from sapphire.common.api.exceptions import HTTPNotFound
 
-from sapphire.projects.database.models import Participant, Position
+from sapphire.common.api.exceptions import HTTPNotFound
+from sapphire.projects.database.models import Participant
 from sapphire.projects.database.service import ProjectsDatabaseService
 
 

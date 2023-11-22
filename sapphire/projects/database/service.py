@@ -156,12 +156,16 @@ class ProjectsDatabaseService(BaseDatabaseService):
         if project_id is not Empty:
             filters.append(Position.project_id == project_id)
         if is_closed is not Empty:
-            filters.append(Position.closed_at != None if is_closed else Position.closed_at == None)
+            filters.append(
+                Position.closed_at is not None
+                if is_closed else
+                Position.closed_at is None
+            )
         if specialization_ids is not Empty:
             filters.append(Position.specialization_id.in_(specialization_ids))
-        
+
         if skill_ids is not Empty:
-            skill_filters.append(PositionSkill.id.in_(skill_ids))
+            skill_filters.append(PositionSkill.skill_id.in_(skill_ids))
 
         if project_query_text is not Empty:
             project_filters.append(or_(
@@ -177,7 +181,16 @@ class ProjectsDatabaseService(BaseDatabaseService):
         if project_deadline_le is not Empty:
             project_filters.append(Project.deadline <= project_deadline_le)
         if project_status is not Empty:
-            project_filters.append(Project.status == project_status)
+            history_query = (
+                select(ProjectHistory)
+                .distinct(ProjectHistory.project_id)
+                .order_by(ProjectHistory.project_id, desc(ProjectHistory.created_at))
+                .subquery()
+            )
+            project_filters.extend([
+                Project.id == history_query.c.project_id,
+                project_status == history_query.c.status,
+            ])
 
         if skill_filters:
             filters.append(
@@ -215,7 +228,7 @@ class ProjectsDatabaseService(BaseDatabaseService):
             project: Project,
             specialization_id: uuid.UUID,
     ) -> Position:
-        position = Position(project=project, specialization_id=specialization_id)
+        position = Position(project=project, specialization_id=specialization_id, skills=[])
 
         session.add(position)
 
@@ -315,6 +328,7 @@ class ProjectsDatabaseService(BaseDatabaseService):
         session: AsyncSession,
         query_text: str | Type[Empty] = Empty,
         owner_id: uuid.UUID | Type[Empty] = Empty,
+        user_id: uuid.UUID | Type[Empty] = Empty,
         startline_le: datetime | Type[Empty] = Empty,
         startline_ge: datetime | Type[Empty] = Empty,
         deadline_le: datetime | Type[Empty] = Empty,
@@ -340,6 +354,15 @@ class ProjectsDatabaseService(BaseDatabaseService):
             )
         if owner_id is not Empty:
             filters.append(Project.owner_id == owner_id)
+        if user_id is not Empty:
+            filters.append(or_(
+                Project.owner_id == owner_id,
+                Project.id.in_(select(Position.project_id).where(
+                    Position.id.in_(select(Participant.position_id).where(
+                        Participant.user_id == user_id,
+                    )),
+                )),
+            ))
         if startline_le is not Empty:
             filters.append(Project.startline <= startline_le)
         if startline_ge is not Empty:

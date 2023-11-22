@@ -22,14 +22,15 @@ from autotests.utils import Empty
 ))
 @pytest.mark.parametrize(
     (
-        "text", "owner_id", "startline_ge", "startline_le", "deadline_ge", "deadline_le",
+        "text", "owner_id", "user_id", "startline_ge", "startline_le", "deadline_ge", "deadline_le",
         "status", "position_skill_ids", "position_specialization_ids",
         "participant_user_ids", "page", "per_page",
     ),
     (
-        (Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, 1, 10),
+        (Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, 1, 10),
         (
             "test",
+            uuid.uuid4(),
             uuid.uuid4(),
             datetime.utcnow(),
             datetime.utcnow() + timedelta(days=7),
@@ -49,6 +50,7 @@ async def test_get_projects(
         client: ProjectsRestClient,
         text: str | Type[Empty],
         owner_id: uuid.UUID | Type[Empty],
+        user_id: uuid.UUID | Type[Empty],
         startline_ge: datetime | Type[Empty],
         startline_le: datetime | Type[Empty],
         deadline_ge: datetime | Type[Empty],
@@ -63,6 +65,7 @@ async def test_get_projects(
     projects = await client.get_projects(
         text=text,
         owner_id=owner_id,
+        user_id=user_id,
         startline_ge=startline_ge,
         startline_le=startline_le,
         deadline_ge=deadline_ge,

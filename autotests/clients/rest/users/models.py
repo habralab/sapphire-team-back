@@ -21,6 +21,7 @@ class UserResponse(BaseModel):
     first_name: str | None
     last_name: str | None
     is_activated: bool
+    has_avatar: bool
     about: str | None
     main_specialization_id: uuid.UUID | None
     secondary_specialization_id: uuid.UUID | None

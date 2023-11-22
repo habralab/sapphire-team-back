@@ -25,6 +25,10 @@ class User(Base):
     skills: Mapped[list["UserSkill"]] = relationship(back_populates="user", lazy=False,
                                                      cascade="all, delete-orphan")
 
+    @property
+    def has_avatar(self) -> bool:
+        return self.avatar is not None
+
     def activate(self) -> bool:
         if (self.first_name or "").strip() and (self.last_name or "").strip():
             self.is_activated = True

@@ -38,6 +38,7 @@ class ProjectsRestClient(BaseRestClient):
             self,
             text: str | Type[Empty] = Empty,
             owner_id: uuid.UUID | Type[Empty] = Empty,
+            user_id: uuid.UUID | Type[Empty] = Empty,
             startline_ge: datetime | Type[Empty] = Empty,
             startline_le: datetime | Type[Empty] = Empty,
             deadline_ge: datetime | Type[Empty] = Empty,
@@ -53,6 +54,7 @@ class ProjectsRestClient(BaseRestClient):
         params = {
             "query_text": text,
             "owner_id": owner_id,
+            "user_id": user_id,
             "startline_ge": startline_ge,
             "startline_le": startline_le,
             "deadline_ge": deadline_ge,
