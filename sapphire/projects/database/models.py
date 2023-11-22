@@ -123,6 +123,12 @@ class PositionSkill(Base):
 
     position: Mapped[Position] = relationship(back_populates="skills", lazy=False)
 
+    __table_args__ = (
+        Index("positions_skills__position_id_idx", "position_id", postgresql_using="hash"),
+        Index("positions_skills__skill_id_idx", "skill_id", postgresql_using="hash"),
+        Index("positions_skills__created_at_idx", "created_at", postgresql_using="btree"),
+    )
+
 
 class Participant(Base):
     __tablename__ = "participants"

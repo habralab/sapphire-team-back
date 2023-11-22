@@ -83,6 +83,12 @@ def upgrade() -> None:
         sa.ForeignKeyConstraint(["position_id"], ["positions.id"]),
         sa.PrimaryKeyConstraint("position_id", "skill_id"),
     )
+    op.create_index("positions_skills__position_id_idx", "positions_skills", ["position_id"],
+                    unique=False, postgresql_using="hash")
+    op.create_index("positions_skills__skill_id_idx", "positions_skills", ["skill_id"],
+                    unique=False, postgresql_using="hash")
+    op.create_index("positions_skills__created_at_idx", "positions_skills", ["created_at"],
+                    unique=False, postgresql_using="btree")
     op.create_table("reviews",
         sa.Column("id", sa.Uuid(), nullable=False),
         sa.Column("project_id", sa.Uuid(), nullable=False),
@@ -113,6 +119,12 @@ def downgrade() -> None:
     op.drop_index("projects_history__project_id_idx", table_name="projects_history",
                   postgresql_using="hash")
     op.drop_table("projects_history")
+    op.drop_index("positions_skills__position_id_idx", table_name="positions_skills",
+                  postgresql_using="hash")
+    op.drop_index("positions_skills__skill_id_idx", table_name="positions_skills",
+                  postgresql_using="hash")
+    op.drop_index("positions_skills__created_at_idx", table_name="positions_skills",
+                  postgresql_using="btree")
     op.drop_table("positions_skills")
     op.drop_index("positions__specialization_id_idx", table_name="positions",
                   postgresql_using="hash")
