@@ -23,10 +23,17 @@ async def get_chats(
             session=session,
             user_id=jwt_data.user_id,
             members=filters.member,
+            cursor=pagination.cursor,
+            per_page=pagination.per_page,
         )
 
+    next_cursor = None
+    if db_chats:
+        next_cursor = db_chats[-1].created_at
+
     chats = [ChatResponse.from_db_model(chat) for chat in db_chats]
-    return ChatListResponse(data=chats, page=pagination.page, per_page=pagination.per_page)
+
+    return ChatListResponse(data=chats, next_cursor=next_cursor, per_page=pagination.per_page)
 
 
 async def get_chat(chat: Chat = fastapi.Depends(path_chat_is_member)):

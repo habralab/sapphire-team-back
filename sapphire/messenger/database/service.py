@@ -1,8 +1,9 @@
+import datetime
 import pathlib
 import uuid
 from typing import Type
 
-from sqlalchemy import or_, select
+from sqlalchemy import desc, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from sapphire.common.database.service import BaseDatabaseService
@@ -27,13 +28,21 @@ class MessengerDatabaseService(BaseDatabaseService):
             session: AsyncSession,
             user_id: uuid.UUID,
             members: set[uuid.UUID] | Type[Empty] = Empty,
+            cursor: datetime.datetime | Type[Empty] = Empty,
+            per_page: int | Type[Empty] = Empty,
     ) -> list[Chat]:
         query = select(Chat).where(Member.user_id == user_id, Member.chat_id == Chat.id)
 
         filters = []
         if members is not Empty and len(members) > 0:
             filters.append(or_(*(Member.user_id == member for member in members)))
-        query = query.where(*filters)
+
+        if per_page is not Empty:
+            query = query.limit(per_page)
+        if cursor is not Empty:
+            filters.append(Chat.created_at < cursor)
+
+        query = query.where(*filters).order_by(desc(Chat.created_at))
 
         result = await session.execute(query)
 
@@ -61,10 +70,22 @@ class MessengerDatabaseService(BaseDatabaseService):
 
         return result.unique().scalar_one_or_none()
 
-    async def get_chat_messages(self, session: AsyncSession, chat_id: uuid.UUID) -> list[Message]:
+    async def get_chat_messages(
+            self,
+            session: AsyncSession,
+            chat_id: uuid.UUID,
+            cursor: datetime.datetime | Type[Empty] = Empty,
+            per_page: int | Type[Empty] = Empty,
+    ) -> list[Message]:
         query = (
             select(Message).where(Message.chat_id == chat_id).order_by(Message.created_at.desc())
         )
+
+        if cursor is not Empty:
+            query = query.where(Message.created_at < cursor)
+        if per_page is not Empty:
+            query = query.limit(per_page)
+
         result = await session.execute(query)
 
         return list(result.unique().scalars().all())

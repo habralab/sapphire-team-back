@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Any
 
 from pydantic import BaseModel
@@ -5,7 +6,5 @@ from pydantic import BaseModel
 
 class PaginatedResponse(BaseModel):
     data: list[Any]
-    page: int
+    next_cursor: datetime | None
     per_page: int
-    total_pages: int | None = None
-    total_items: int | None = None

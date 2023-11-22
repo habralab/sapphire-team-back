@@ -148,7 +148,11 @@ class ProjectsDatabaseService(BaseDatabaseService):
             project_deadline_ge: datetime | Type[Empty] = Empty,
             project_deadline_le: datetime | Type[Empty] = Empty,
             project_status: ProjectStatusEnum | Type[Empty] = Empty,
+            cursor: datetime | Type[Empty] = Empty,
+            per_page: int | Type[Empty] = Empty,
     ) -> list[Position]:
+        statement = select(Position).order_by(Position.created_at.desc())
+
         filters = []
         skill_filters = []
         project_filters = []
@@ -201,7 +205,12 @@ class ProjectsDatabaseService(BaseDatabaseService):
                 Position.project_id.in_(select(Project.id).where(*project_filters))
             )
 
-        statement = select(Position).where(*filters)
+        if cursor is not Empty:
+            filters.append(Position.created_at < cursor)
+        if per_page is not Empty:
+            statement = statement.limit(per_page)
+
+        statement = statement.where(*filters)
         result = await session.execute(statement)
         return list(result.unique().scalars().all())
 
@@ -337,7 +346,7 @@ class ProjectsDatabaseService(BaseDatabaseService):
         position_skill_ids: list[uuid.UUID] | Type[Empty] = Empty,
         position_specialization_ids: list[uuid.UUID] | Type[Empty] = Empty,
         participant_user_ids: list[uuid.UUID] | Type[Empty] = Empty,
-        page: int | Type[Empty] = Empty,
+        cursor: datetime | Type[Empty] = Empty,
         per_page: int | Type[Empty] = Empty,
     ) -> list[Project]:
         filters = []
@@ -405,14 +414,36 @@ class ProjectsDatabaseService(BaseDatabaseService):
                 Project.id.in_(select(Position.project_id).where(*position_filters))
             )
 
-        query = query.where(*filters)
+        if cursor is not Empty:
+            filters.append(Project.created_at < cursor)
+        if per_page is not Empty:
+            query = query.limit(per_page)
 
-        if page is not Empty and per_page is not Empty:
-            offset = (page - 1) * per_page
-            query = query.limit(per_page).offset(offset)
+        query = query.where(*filters)
 
         result = await session.execute(query)
 
+        return list(result.unique().scalars().all())
+
+    async def get_project_history(
+        self,
+        session: AsyncSession,
+        project_id: uuid.UUID,
+        cursor: datetime | Type[Empty] = Empty,
+        per_page: int | Type[Empty] = Empty,
+    ) -> list[Project]:
+        query = (
+            select(ProjectHistory)
+            .where(ProjectHistory.project_id == project_id)
+            .order_by(ProjectHistory.created_at.desc())
+        )
+
+        if cursor is not Empty:
+            query = query.where(ProjectHistory.created_at < cursor)
+        if per_page is not Empty:
+            query = query.limit(per_page)
+
+        result = await session.execute(query)
         return list(result.unique().scalars().all())
 
     async def get_user_statistic(self, session: AsyncSession, user_id: uuid.UUID) -> UserStatistic:

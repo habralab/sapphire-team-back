@@ -1,3 +1,4 @@
+from datetime import datetime
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
@@ -36,9 +37,8 @@ async def test_get_specialization_groups_with_all_filters(
 ):
     session = MagicMock()
     name = "Developer"
-    page = 1
+    cursor = datetime.now()
     per_page = 10
-    offset = (page - 1) * per_page
 
     expected_specialization_groups = [SpecializationGroup(name=name)]
     mock_specialization_group = MagicMock()
@@ -51,18 +51,20 @@ async def test_get_specialization_groups_with_all_filters(
     expected_query = (
         select(SpecializationGroup)
         .order_by(desc(SpecializationGroup.created_at))
-        .where(or_(
-            SpecializationGroup.name.contains(name),
-            SpecializationGroup.name_en.contains(name),
-        ))
+        .where(
+            or_(
+                SpecializationGroup.name.contains(name),
+                SpecializationGroup.name_en.contains(name),
+            ),
+            SpecializationGroup.created_at < cursor,
+        )
         .limit(per_page)
-        .offset(offset)
     )
 
     specialization_groups = await database_service.get_specialization_groups(
         session=session,
         query_text=name,
-        page=page,
+        cursor=cursor,
         per_page=per_page,
     )
 

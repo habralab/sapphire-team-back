@@ -20,10 +20,22 @@ async def get_messages(
     database_service: MessengerDatabaseService = request.app.service.database
 
     async with database_service.transaction() as session:
-        db_messages = await database_service.get_chat_messages(session=session, chat_id=chat.id)
+        db_messages = await database_service.get_chat_messages(
+            session=session,
+            chat_id=chat.id,
+            cursor=pagination.cursor,
+            per_page=pagination.per_page,
+        )
+
+    next_cursor = None
+    if db_messages:
+        next_cursor = db_messages[-1].created_at
 
     messages = [MessageResponse.model_validate(db_message) for db_message in db_messages]
-    return MessageListResponse(data=messages, page=pagination.page, per_page=pagination.per_page)
+
+    return MessageListResponse(
+        data=messages, next_cursor=next_cursor, per_page=pagination.per_page
+    )
 
 
 async def create_message(

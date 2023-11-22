@@ -1,5 +1,3 @@
-import math
-
 import fastapi
 
 from sapphire.common.api.dependencies.pagination import Pagination, pagination
@@ -26,23 +24,21 @@ async def get_positions(
     database_service: ProjectsDatabaseService = request.app.service.database
 
     async with database_service.transaction() as session:
-        positions = await database_service.get_positions(
+        positions_db = await database_service.get_positions(
             session=session,
+            cursor=pagination.cursor,
+            per_page=pagination.per_page,
             **filters.model_dump(),
         )
 
-    total_items = len(positions)
-    total_pages = int(math.ceil(total_items / pagination.per_page))
-    offset = (pagination.page - 1) * pagination.per_page
-    positions = positions[offset:offset + pagination.per_page]
-    data = [PositionResponse.from_db_model(position) for position in positions]
+    next_cursor = None
+    if positions_db:
+        next_cursor = positions_db[-1].created_at
+
+    positions = [PositionResponse.model_validate(position) for position in positions_db]
 
     return PositionListResponse(
-        data=data,
-        total_items=total_items,
-        total_pages=total_pages,
-        page=pagination.page,
-        per_page=pagination.per_page,
+        data=positions, next_cursor=next_cursor, per_page=pagination.per_page
     )
 
 

@@ -1,5 +1,6 @@
 import pathlib
 import uuid
+from datetime import datetime
 from typing import Type
 
 from sqlalchemy import desc, or_, select
@@ -25,7 +26,7 @@ class StorageDatabaseService(BaseDatabaseService):
             self,
             session: AsyncSession,
             query_text: str | Type[Empty] = Empty,
-            page: int | Type[Empty] = Empty,
+            cursor: datetime | Type[Empty] = Empty,
             per_page: int | Type[Empty] = Empty,
             group_id: uuid.UUID | Type[Empty] = Empty,
     ) -> list[Specialization]:
@@ -38,11 +39,13 @@ class StorageDatabaseService(BaseDatabaseService):
         if group_id is not Empty:
             filters.append(Specialization.group_id == group_id)
 
-        query = query.where(*filters)
+        if cursor is not Empty:
+            filters.append(Skill.created_at < cursor)
+        if per_page is not Empty:
+            query = query.limit(per_page)
 
-        if page is not None and per_page is not None:
-            offset = (page - 1) * per_page
-            query = query.limit(per_page).offset(offset)
+
+        query = query.where(*filters)
 
         specializations = await session.execute(query)
 
@@ -63,7 +66,7 @@ class StorageDatabaseService(BaseDatabaseService):
         self,
         session: AsyncSession,
         query_text: str | Type[Empty] = Empty,
-        page: int | Type[Empty] = Empty,
+        cursor: datetime | Type[Empty] = Empty,
         per_page: int | Type[Empty] = Empty,
     ) -> list[SpecializationGroup]:
         query = select(SpecializationGroup).order_by(desc(SpecializationGroup.created_at))
@@ -75,11 +78,12 @@ class StorageDatabaseService(BaseDatabaseService):
                 SpecializationGroup.name_en.contains(query_text),
             ))
 
-        query = query.where(*filters)
+        if cursor is not Empty:
+            filters.append(SpecializationGroup.created_at < cursor)
+        if per_page is not Empty:
+            query = query.limit(per_page)
 
-        if page is not Empty and per_page is not Empty:
-            offset = (page - 1) * per_page
-            query = query.limit(per_page).offset(offset)
+        query = query.where(*filters)
 
         specialization_groups = await session.execute(query)
 
@@ -101,7 +105,7 @@ class StorageDatabaseService(BaseDatabaseService):
         session: AsyncSession,
         query_text: str | Type[Empty] = Empty,
         skill_ids: list[uuid.UUID] | Type[Empty] = Empty,
-        page: int | Type[Empty] = Empty,
+        cursor: datetime | Type[Empty] = Empty,
         per_page: int | Type[Empty] = Empty,
     ) -> list[Skill]:
         query = select(Skill).order_by(desc(Skill.created_at))
@@ -112,12 +116,13 @@ class StorageDatabaseService(BaseDatabaseService):
         if skill_ids is not Empty:
             filters.append(or_(*(Skill.id == id_ for id_ in skill_ids)))
 
+        if cursor is not Empty:
+            filters.append(Skill.created_at < cursor)
+        if per_page is not Empty:
+            query = query.limit(per_page)
+
         query = query.where(*filters)
         skills = await session.execute(query)
-
-        if page is not Empty and per_page is not Empty:
-            offset = (page - 1) * per_page
-            query = query.limit(per_page).offset(offset)
 
         return list(skills.unique().scalars().all())
 
