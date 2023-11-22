@@ -1194,13 +1194,13 @@ files = [
 
 [[package]]
 name = "py-fast-grpc"
-version = "0.1.6"
+version = "0.1.10"
 description = "gRPC simple and easy to use Python framework"
 optional = false
 python-versions = ">=3.11,<4.0"
 files = [
-    {file = "py_fast_grpc-0.1.6-py3-none-any.whl", hash = "sha256:1d7b9c2f6d4a084cc321aa8f5750f3ccaccee962e5b17104ae2bf372faee7260"},
-    {file = "py_fast_grpc-0.1.6.tar.gz", hash = "sha256:403fb380d846a167ccab88e521057a425c68486cce6169a2af6baba9a7916daf"},
+    {file = "py_fast_grpc-0.1.10-py3-none-any.whl", hash = "sha256:e71f37643dadf907747f78bc6ed83c9b80f7d530ada9a7cbe8993be45530024e"},
+    {file = "py_fast_grpc-0.1.10.tar.gz", hash = "sha256:12f99af4877f9d758e57d2904c683427f7f18d48b0967f1a92dc0b27f25f94ef"},
 ]
 
 [package.dependencies]
@@ -1647,17 +1647,17 @@ jupyter = ["ipywidgets (>=7.5.1,<9)"]
 
 [[package]]
 name = "setuptools"
-version = "68.2.2"
+version = "69.0.2"
 description = "Easily download, build, install, upgrade, and uninstall Python packages"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "setuptools-68.2.2-py3-none-any.whl", hash = "sha256:b454a35605876da60632df1a60f736524eb73cc47bbc9f3f1ef1b644de74fd2a"},
-    {file = "setuptools-68.2.2.tar.gz", hash = "sha256:4ac1475276d2f1c48684874089fefcd83bd7162ddaafb81fac866ba0db282a87"},
+    {file = "setuptools-69.0.2-py3-none-any.whl", hash = "sha256:1e8fdff6797d3865f37397be788a4e3cba233608e9b509382a2777d25ebde7f2"},
+    {file = "setuptools-69.0.2.tar.gz", hash = "sha256:735896e78a4742605974de002ac60562d286fa8051a7e2299445e8e8fbb01aa6"},
 ]
 
 [package.extras]
-docs = ["furo", "jaraco.packaging (>=9.3)", "jaraco.tidelift (>=1.4)", "pygments-github-lexers (==0.0.5)", "rst.linker (>=1.9)", "sphinx (>=3.5)", "sphinx-favicon", "sphinx-hoverxref (<2)", "sphinx-inline-tabs", "sphinx-lint", "sphinx-notfound-page (>=1,<2)", "sphinx-reredirects", "sphinxcontrib-towncrier"]
+docs = ["furo", "jaraco.packaging (>=9.3)", "jaraco.tidelift (>=1.4)", "pygments-github-lexers (==0.0.5)", "rst.linker (>=1.9)", "sphinx (<7.2.5)", "sphinx (>=3.5)", "sphinx-favicon", "sphinx-inline-tabs", "sphinx-lint", "sphinx-notfound-page (>=1,<2)", "sphinx-reredirects", "sphinxcontrib-towncrier"]
 testing = ["build[virtualenv]", "filelock (>=3.4.0)", "flake8-2020", "ini2toml[lite] (>=0.9)", "jaraco.develop (>=7.21)", "jaraco.envs (>=2.2)", "jaraco.path (>=3.2.0)", "pip (>=19.1)", "pytest (>=6)", "pytest-black (>=0.3.7)", "pytest-checkdocs (>=2.4)", "pytest-cov", "pytest-enabler (>=2.2)", "pytest-mypy (>=0.9.1)", "pytest-perf", "pytest-ruff", "pytest-timeout", "pytest-xdist", "tomli-w (>=1.0.0)", "virtualenv (>=13.0.0)", "wheel"]
 testing-integration = ["build[virtualenv] (>=1.0.3)", "filelock (>=3.4.0)", "jaraco.envs (>=2.2)", "jaraco.path (>=3.2.0)", "packaging (>=23.1)", "pytest", "pytest-enabler", "pytest-xdist", "tomli", "virtualenv (>=13.0.0)", "wheel"]
 
@@ -2128,4 +2128,4 @@ sqlite = ["aiosqlite"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "553a120738f509ff92f8352df445cd9b195fe98bfaf6e950ed1ff1902553fed6"
+content-hash = "495de73992d47f458c4add9b698b1a7372c1959fc53b3a8069435446c42d28f5"
