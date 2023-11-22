@@ -3,16 +3,13 @@ import uuid
 from typing import Any, Type
 
 from sqlalchemy import select
-
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from sapphire.common.database.service import BaseDatabaseService
+from sapphire.common.utils.empty import Empty
 from sapphire.notifications.settings import NotificationsSettings
 
-from sapphire.common.utils.empty import Empty
-
 from .models import Base, Notification
-from sapphire.common.broker.models import notification
 
 
 class NotificationsDatabaseService(BaseDatabaseService):

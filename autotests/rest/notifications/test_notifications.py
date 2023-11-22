@@ -1,6 +1,7 @@
-from typing import Type, Any
+from typing import Any, Type
 
 import pytest
+
 from autotests.clients.rest.notifications.client import NotificationsRestClient
 from autotests.utils import Empty
 

@@ -1,6 +1,6 @@
 import fastapi
-from sapphire.notifications.api.rest import handlers
 
+from sapphire.notifications.api.rest import handlers
 
 router = fastapi.APIRouter()
 

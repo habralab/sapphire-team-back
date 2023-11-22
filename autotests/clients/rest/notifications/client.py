@@ -1,13 +1,13 @@
 import io
 import uuid
 from datetime import datetime
-from typing import Type, Any
+from typing import Any, Type
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from autotests.clients.rest.base_client import BaseRestClient
 from autotests.clients.rest.exceptions import ResponseException
-from autotests.clients.rest.notifications.models import NotificationModel, NotificationListResponse
+from autotests.clients.rest.notifications.models import NotificationListResponse, NotificationModel
 from autotests.utils import Empty
 
 from .models import HealthResponse
