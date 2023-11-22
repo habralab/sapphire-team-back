@@ -29,7 +29,7 @@ def upgrade() -> None:
     )
     op.create_table("specialization_groups",
         sa.Column("id", sa.Uuid(), nullable=False),
-        sa.Column("habr_id", sa.Integer(), nullable=True),
+        sa.Column("habr_id", sa.Integer(), nullable=False),
         sa.Column("name", sa.String(), nullable=False),
         sa.Column("name_en", sa.String(), nullable=False),
         sa.Column("created_at", sa.DateTime(), nullable=False),

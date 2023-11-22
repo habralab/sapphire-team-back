@@ -54,6 +54,11 @@ def matvey_id(settings: AutotestsSettings) -> uuid.UUID:
 
 
 @pytest.fixture(scope="session")
+def random_id(settings: AutotestsSettings) -> uuid.UUID:
+    return uuid.uuid4()
+
+
+@pytest.fixture(scope="session")
 def oleg_email(settings: AutotestsSettings) -> str:
     return settings.oleg_email
 
@@ -130,9 +135,9 @@ def matvey_activated_access_token(settings: AutotestsSettings, matvey_id: uuid.U
 
 
 @pytest.fixture(scope="session")
-def random_access_token(settings: AutotestsSettings) -> str:
+def random_access_token(settings: AutotestsSettings, random_id: uuid.UUID) -> str:
     payload = {
-        "user_id": str(uuid.uuid4()),
+        "user_id": str(random_id),
         "is_activated": True,
         "exp": int(datetime.datetime.now().timestamp()) + 24 * 3600,
     }

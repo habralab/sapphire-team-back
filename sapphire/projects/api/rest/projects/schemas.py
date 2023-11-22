@@ -63,13 +63,13 @@ class ProjectListResponse(PaginatedResponse):
 class ProjectListFiltersRequest(BaseModel):
     query_text: str | Type[Empty] = Empty
     owner_id: uuid.UUID | Type[Empty] = Empty
+    user_id: uuid.UUID | Type[Empty] = Empty
     startline_ge: NaiveDatetime | Type[Empty] = Empty
     startline_le: NaiveDatetime | Type[Empty] = Empty
     deadline_ge: NaiveDatetime | Type[Empty] = Empty
     deadline_le: NaiveDatetime | Type[Empty] = Empty
     status: ProjectStatusEnum | Type[Empty] = Empty
-    position_is_closed: bool | Type[Empty] = Empty
-    position_skill_ids: list[str] | Type[Empty] = Field(fastapi.Query(Empty))
+    position_skill_ids: list[uuid.UUID] | Type[Empty] = Field(fastapi.Query(Empty))
     position_specialization_ids: list[uuid.UUID] | Type[Empty] = Field(fastapi.Query(Empty))
     participant_user_ids: list[uuid.UUID] | Type[Empty] = Field(fastapi.Query(Empty))
 

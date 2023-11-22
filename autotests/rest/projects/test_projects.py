@@ -22,8 +22,8 @@ from autotests.utils import Empty
 ))
 @pytest.mark.parametrize(
     (
-        "text", "owner_id", "startline_ge", "startline_le", "deadline_ge", "deadline_le",
-        "status", "position_is_closed", "position_skill_ids", "position_specialization_ids",
+        "text", "owner_id", "user_id", "startline_ge", "startline_le", "deadline_ge", "deadline_le",
+        "status", "position_skill_ids", "position_specialization_ids",
         "participant_user_ids", "page", "per_page",
     ),
     (
@@ -31,12 +31,12 @@ from autotests.utils import Empty
         (
             "test",
             uuid.uuid4(),
+            uuid.uuid4(),
             datetime.utcnow(),
             datetime.utcnow() + timedelta(days=7),
             datetime.utcnow() + timedelta(days=30),
             datetime.utcnow() + timedelta(days=90),
             ProjectStatusEnum.FINISHED,
-            False,
             [],
             [],
             [],
@@ -50,12 +50,12 @@ async def test_get_projects(
         client: ProjectsRestClient,
         text: str | Type[Empty],
         owner_id: uuid.UUID | Type[Empty],
+        user_id: uuid.UUID | Type[Empty],
         startline_ge: datetime | Type[Empty],
         startline_le: datetime | Type[Empty],
         deadline_ge: datetime | Type[Empty],
         deadline_le: datetime | Type[Empty],
         status: ProjectStatusEnum | Type[Empty],
-        position_is_closed: bool | Type[Empty],
         position_skill_ids: list[uuid.UUID] | Type[Empty],
         position_specialization_ids: list[uuid.UUID] | Type[Empty],
         participant_user_ids: list[uuid.UUID] | Type[Empty],
@@ -65,12 +65,12 @@ async def test_get_projects(
     projects = await client.get_projects(
         text=text,
         owner_id=owner_id,
+        user_id=user_id,
         startline_ge=startline_ge,
         startline_le=startline_le,
         deadline_ge=deadline_ge,
         deadline_le=deadline_le,
         status=status,
-        position_is_closed=position_is_closed,
         position_skill_ids=position_skill_ids,
         position_specialization_ids=position_specialization_ids,
         participant_user_ids=participant_user_ids,
@@ -131,6 +131,23 @@ async def test_get_project(project_id: uuid.UUID, client: ProjectsRestClient):
     project = await client.get_project(project_id=project_id)
 
     assert project.id == project_id
+
+
+@pytest.mark.parametrize("client", (
+    pytest.lazy_fixture("oleg_projects_rest_client"),
+    pytest.lazy_fixture("oleg_activated_projects_rest_client"),
+    pytest.lazy_fixture("matvey_projects_rest_client"),
+    pytest.lazy_fixture("matvey_activated_projects_rest_client"),
+    pytest.lazy_fixture("projects_rest_client"),
+    pytest.lazy_fixture("random_projects_rest_client"),
+))
+@pytest.mark.asyncio
+async def test_get_project_not_found(client: ProjectsRestClient):
+    with pytest.raises(ResponseException) as exception:
+        await client.get_project(project_id=uuid.uuid4())
+
+    assert exception.value.status_code == HTTPStatus.NOT_FOUND
+    assert exception.value.body == b'{"detail":"Not found."}'
 
 
 @pytest.mark.parametrize("client", (

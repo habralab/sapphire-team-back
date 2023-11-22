@@ -46,7 +46,8 @@ class Project(Base):
         order_by="desc(ProjectHistory.created_at)",
         lazy=False,
     )
-    positions: Mapped[list["Position"]] = relationship(back_populates="project", lazy=False)
+    positions: Mapped[list["Position"]] = relationship(back_populates="project", join_depth=2,
+                                                       lazy=False)
     reviews: Mapped[list["Review"]] = relationship(back_populates="project", lazy=False)
 
     __table_args__ = (
@@ -62,8 +63,7 @@ class Project(Base):
         return [
             participant
             for position in self.positions
-            for participant in position.participants
-            if participant.status == ParticipantStatusEnum.JOINED
+            for participant in position.joined_participants
         ]
 
 
@@ -95,7 +95,16 @@ class Position(Base):
     project: Mapped[Project] = relationship(back_populates="positions", lazy=False)
     participants: Mapped[list["Participant"]] = relationship(back_populates="position",
                                                              lazy=False)
-    skills: Mapped[list["PositionSkill"]] = relationship(back_populates="position", lazy=False)
+    joined_participants: Mapped[list["Participant"]] = relationship(
+        back_populates="position",
+        primaryjoin=(
+            "and_(Position.id == Participant.position_id, "
+            f"Participant.status == '{ParticipantStatusEnum.JOINED.value}')"
+        ),
+        lazy=False,
+    )
+    skills: Mapped[list["PositionSkill"]] = relationship(back_populates="position", lazy=False,
+                                                         cascade="all, delete-orphan")
 
     __table_args__ = (
         Index("positions__project_id_idx", "project_id", postgresql_using="hash"),

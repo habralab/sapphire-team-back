@@ -13,6 +13,7 @@ class UserResponse(BaseModel):
     first_name: str | None
     last_name: str | None
     is_activated: bool
+    has_avatar: bool
     about: str | None
     main_specialization_id: uuid.UUID | None
     secondary_specialization_id: uuid.UUID | None
@@ -27,6 +28,7 @@ class UserResponse(BaseModel):
             first_name=user.first_name,
             last_name=user.last_name,
             is_activated=user.is_activated,
+            has_avatar=user.has_avatar,
             about=user.profile.about,
             main_specialization_id=user.profile.main_specialization_id,
             secondary_specialization_id=user.profile.secondary_specialization_id,

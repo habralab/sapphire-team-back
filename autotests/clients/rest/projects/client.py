@@ -11,6 +11,7 @@ from autotests.clients.rest.projects.enums import ParticipantStatusEnum, Project
 from autotests.utils import Empty
 
 from .models import (
+    CreateParticipantRequest,
     CreatePositionRequest,
     CreateProjectRequest,
     CreateReviewRequest,
@@ -37,12 +38,12 @@ class ProjectsRestClient(BaseRestClient):
             self,
             text: str | Type[Empty] = Empty,
             owner_id: uuid.UUID | Type[Empty] = Empty,
+            user_id: uuid.UUID | Type[Empty] = Empty,
             startline_ge: datetime | Type[Empty] = Empty,
             startline_le: datetime | Type[Empty] = Empty,
             deadline_ge: datetime | Type[Empty] = Empty,
             deadline_le: datetime | Type[Empty] = Empty,
             status: ProjectStatusEnum | Type[Empty] = Empty,
-            position_is_closed: bool | Type[Empty] = Empty,
             position_skill_ids: list[uuid.UUID] | Type[Empty] = Empty,
             position_specialization_ids: list[uuid.UUID] | Type[Empty] = Empty,
             participant_user_ids: list[uuid.UUID] | Type[Empty] = Empty,
@@ -53,12 +54,12 @@ class ProjectsRestClient(BaseRestClient):
         params = {
             "query_text": text,
             "owner_id": owner_id,
+            "user_id": user_id,
             "startline_ge": startline_ge,
             "startline_le": startline_le,
             "deadline_ge": deadline_ge,
             "deadline_le": deadline_le,
             "status": status.value if status is not Empty else Empty,
-            "position_is_closed": position_is_closed,
             "position_skill_ids": position_skill_ids,
             "position_specialization_ids": position_specialization_ids,
             "participant_user_ids": participant_user_ids,
@@ -133,44 +134,68 @@ class ProjectsRestClient(BaseRestClient):
 
         return await self.rest_delete(path=path, response_model=ProjectResponse)
 
-    async def get_project_positions(
+    async def get_positions(
             self,
-            project_id: uuid.UUID,
+            project_id: uuid.UUID | Type[Empty] = Empty,
+            is_closed: bool | Type[Empty] = Empty,
+            specialization_ids: list[uuid.UUID] | Type[Empty] = Empty,
+            skill_ids: list[uuid.UUID] | Type[Empty] = Empty,
+            project_query_text: str | Type[Empty] = Empty,
+            project_startline_ge: datetime | Type[Empty] = Empty,
+            project_startline_le: datetime | Type[Empty] = Empty,
+            project_deadline_ge: datetime | Type[Empty] = Empty,
+            project_deadline_le: datetime | Type[Empty] = Empty,
+            project_status: ProjectStatusEnum | Type[Empty] = Empty,
+            page: int = 1,
+            per_page: int = 10,
     ) -> PositionListResponse:
-        path = f"/api/rest/projects/{project_id}/positions/"
+        path = f"/api/rest/positions/"
+        params = {
+            "project_id": project_id,
+            "is_closed": is_closed,
+            "specialization_ids": specialization_ids,
+            "skill_ids": skill_ids,
+            "project_query_text": project_query_text,
+            "project_startline_ge": project_startline_ge,
+            "project_startline_le": project_startline_le,
+            "project_deadline_ge": project_deadline_ge,
+            "project_deadline_le": project_deadline_le,
+            "project_status": Empty if project_status is Empty else project_status.value,
+            "page": page,
+            "per_page": per_page,
+        }
+        params = {key: value for key, value in params.items() if value is not Empty}
 
-        return await self.rest_get(path=path, response_model=PositionListResponse)
+        return await self.rest_get(path=path, params=params, response_model=PositionListResponse)
 
-    async def create_project_position(
+    async def create_position(
             self,
             project_id: uuid.UUID,
             specialization_id: uuid.UUID,
     ) -> PositionResponse:
-        path = f"/api/rest/projects/{project_id}/positions/"
-        request = CreatePositionRequest(specialization_id=specialization_id)
+        path = f"/api/rest/positions/"
+        request = CreatePositionRequest(
+            project_id=project_id,
+            specialization_id=specialization_id,
+        )
 
         return await self.rest_post(path=path, data=request, response_model=PositionResponse)
 
-    async def get_project_position(
-            self,
-            project_id: uuid.UUID,
-            position_id: uuid.UUID,
-    ) -> PositionResponse:
-        path = f"/api/rest/projects/{project_id}/positions/{position_id}"
+    async def get_position(self, position_id: uuid.UUID) -> PositionResponse:
+        path = f"/api/rest/positions/{position_id}"
 
         return await self.rest_get(path=path, response_model=PositionResponse)
 
-    async def remove_project_position(
+    async def remove_position(
             self,
-            project_id: uuid.UUID,
             position_id: uuid.UUID,
     ) -> PositionResponse:
-        path = f"/api/rest/projects/{project_id}/positions/{position_id}"
+        path = f"/api/rest/positions/{position_id}"
 
         return await self.rest_delete(path=path, response_model=PositionResponse)
 
-    async def get_project_position_skills(self, project_id: uuid.UUID, position_id: uuid.UUID):
-        path = f"/api/rest/projects/{project_id}/positions/{position_id}/skills/"
+    async def get_position_skills(self, position_id: uuid.UUID):
+        path = f"/api/rest/positions/{position_id}/skills/"
 
         response = await self.get(url=path)
         if response.status_code // 100 != 2:
@@ -178,13 +203,12 @@ class ProjectsRestClient(BaseRestClient):
 
         return {uuid.UUID(skill) for skill in response.json()}
 
-    async def update_project_position_skills(
+    async def update_position_skills(
             self,
-            project_id: uuid.UUID,
             position_id: uuid.UUID,
             skills: set[uuid.UUID] = frozenset(),
     ) -> set[uuid.UUID]:
-        path = f"/api/rest/projects/{project_id}/positions/{position_id}/skills/"
+        path = f"/api/rest/positions/{position_id}/skills/"
 
         response = await self.post(url=path, json=list(map(str, skills)))
         if response.status_code // 100 != 2:
@@ -192,50 +216,37 @@ class ProjectsRestClient(BaseRestClient):
 
         return {uuid.UUID(skill) for skill in response.json()}
 
-    async def create_request_to_join_project_position(
-            self,
-            project_id: uuid.UUID,
-            position_id: uuid.UUID,
-    ) -> ParticipantResponse:
-        path = f"/api/rest/projects/{project_id}/positions/{position_id}/participants/"
-        
-        return await self.rest_post(path=path, response_model=ParticipantResponse)
+    async def create_request_to_join_position(self, position_id: uuid.UUID) -> ParticipantResponse:
+        path = f"/api/rest/participants/"
+        request = CreateParticipantRequest(position_id=position_id)
 
-    async def get_project_position_participant(
-            self,
-            project_id: uuid.UUID,
-            position_id: uuid.UUID,
-            participant_id: uuid.UUID,
-    ) -> ParticipantResponse:
-        path = (
-            f"/api/rest/projects/{project_id}/positions/{position_id}/participants/{participant_id}"
-        )
+        return await self.rest_post(path=path, data=request, response_model=ParticipantResponse)
+
+    async def get_participant(self, participant_id: uuid.UUID) -> ParticipantResponse:
+        path = f"/api/rest/participants/{participant_id}"
 
         return await self.rest_get(path=path, response_model=ParticipantResponse)
 
-    async def update_project_position_participant(
+    async def update_participant(
             self,
-            project_id: uuid.UUID,
-            position_id: uuid.UUID,
             participant_id: uuid.UUID,
             status: ParticipantStatusEnum,
     ) -> ParticipantResponse:
-        path = (
-            f"/api/rest/projects/{project_id}/positions/{position_id}/participants/{participant_id}"
-        )
+        path = f"/api/rest/participants/{participant_id}"
         request = UpdateParticipantRequest(status=status)
 
         return await self.rest_post(path=path, data=request, response_model=ParticipantResponse)
 
-    async def create_project_review(
+    async def create_review(
             self,
             project_id: uuid.UUID,
             user_id: uuid.UUID,
             rate: conint(ge=1, le=5),
             text: str,
     ) -> ReviewResponse:
-        path = f"/api/rest/projects/{project_id}/reviews/"
+        path = f"/api/rest/reviews/"
         request = CreateReviewRequest(
+            project_id=project_id,
             user_id=user_id,
             rate=rate,
             text=text,

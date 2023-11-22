@@ -135,20 +135,77 @@ class ProjectsDatabaseService(BaseDatabaseService):
         await session.refresh(project)
         return project
 
-    async def get_project_positions(
+    async def get_positions(
             self,
             session: AsyncSession,
             project_id: uuid.UUID | Type[Empty] = Empty,
+            is_closed: bool | Type[Empty] = Empty,
+            specialization_ids: list[uuid.UUID] | Type[Empty] = Empty,
+            skill_ids: list[uuid.UUID] | Type[Empty] = Empty,
+            project_query_text: str | Type[Empty] = Empty,
+            project_startline_ge: datetime | Type[Empty] = Empty,
+            project_startline_le: datetime | Type[Empty] = Empty,
+            project_deadline_ge: datetime | Type[Empty] = Empty,
+            project_deadline_le: datetime | Type[Empty] = Empty,
+            project_status: ProjectStatusEnum | Type[Empty] = Empty,
     ) -> list[Position]:
         filters = []
+        skill_filters = []
+        project_filters = []
+
         if project_id is not Empty:
             filters.append(Position.project_id == project_id)
+        if is_closed is not Empty:
+            filters.append(
+                Position.closed_at is not None
+                if is_closed else
+                Position.closed_at is None
+            )
+        if specialization_ids is not Empty:
+            filters.append(Position.specialization_id.in_(specialization_ids))
+
+        if skill_ids is not Empty:
+            skill_filters.append(PositionSkill.skill_id.in_(skill_ids))
+
+        if project_query_text is not Empty:
+            project_filters.append(or_(
+                Project.name.contains(project_query_text),
+                Project.description.contains(project_query_text),
+            ))
+        if project_startline_ge is not Empty:
+            project_filters.append(Project.startline >= project_startline_ge)
+        if project_startline_le is not Empty:
+            project_filters.append(Project.startline <= project_startline_le)
+        if project_deadline_ge is not Empty:
+            project_filters.append(Project.deadline >= project_deadline_ge)
+        if project_deadline_le is not Empty:
+            project_filters.append(Project.deadline <= project_deadline_le)
+        if project_status is not Empty:
+            history_query = (
+                select(ProjectHistory)
+                .distinct(ProjectHistory.project_id)
+                .order_by(ProjectHistory.project_id, desc(ProjectHistory.created_at))
+                .subquery()
+            )
+            project_filters.extend([
+                Project.id == history_query.c.project_id,
+                project_status == history_query.c.status,
+            ])
+
+        if skill_filters:
+            filters.append(
+                Position.id.in_(select(PositionSkill.position_id).where(*skill_filters))
+            )
+        if project_filters:
+            filters.append(
+                Position.project_id.in_(select(Project.id).where(*project_filters))
+            )
 
         statement = select(Position).where(*filters)
         result = await session.execute(statement)
         return list(result.unique().scalars().all())
 
-    async def get_project_position(
+    async def get_position(
             self,
             session: AsyncSession,
             project_id: uuid.UUID | Type[Empty] = Empty,
@@ -165,26 +222,26 @@ class ProjectsDatabaseService(BaseDatabaseService):
 
         return result.unique().scalar_one_or_none()
 
-    async def create_project_position(
+    async def create_position(
             self,
             session: AsyncSession,
             project: Project,
             specialization_id: uuid.UUID,
     ) -> Position:
-        position = Position(project=project, specialization_id=specialization_id)
+        position = Position(project=project, specialization_id=specialization_id, skills=[])
 
         session.add(position)
 
         return position
 
-    async def remove_project_position(self, session: AsyncSession, position: Position) -> Position:
+    async def remove_position(self, session: AsyncSession, position: Position) -> Position:
         position.closed_at = datetime.utcnow()
 
         session.add(position)
 
         return position
 
-    async def update_project_position_skills(
+    async def update_position_skills(
             self,
             session: AsyncSession,
             position: Position,
@@ -224,15 +281,15 @@ class ProjectsDatabaseService(BaseDatabaseService):
             session: AsyncSession,
             position: Position | Type[Empty] = Empty,
             user_id: uuid.UUID | Type[Empty] = Empty,
-            project: Project | Type[Empty] = Empty,
+            project_id: uuid.UUID | Type[Empty] = Empty,
     ) -> list[Participant]:
         filters = []
         if position is not Empty:
             filters.append(Participant.position_id == position.id)
         if user_id is not Empty:
             filters.append(Participant.user_id == user_id)
-        if project is not Empty:
-            position_query = select(Position.id).where(Position.project_id == project.id)
+        if project_id is not Empty:
+            position_query = select(Position.id).where(Position.project_id == project_id)
             filters.append(Participant.position_id.in_(position_query))
         query = select(Participant).where(*filters)
         result = await session.execute(query)
@@ -271,12 +328,12 @@ class ProjectsDatabaseService(BaseDatabaseService):
         session: AsyncSession,
         query_text: str | Type[Empty] = Empty,
         owner_id: uuid.UUID | Type[Empty] = Empty,
+        user_id: uuid.UUID | Type[Empty] = Empty,
         startline_le: datetime | Type[Empty] = Empty,
         startline_ge: datetime | Type[Empty] = Empty,
         deadline_le: datetime | Type[Empty] = Empty,
         deadline_ge: datetime | Type[Empty] = Empty,
         status: ProjectStatusEnum | Type[Empty] = Empty,
-        position_is_closed: bool | Type[Empty] = Empty,
         position_skill_ids: list[uuid.UUID] | Type[Empty] = Empty,
         position_specialization_ids: list[uuid.UUID] | Type[Empty] = Empty,
         participant_user_ids: list[uuid.UUID] | Type[Empty] = Empty,
@@ -297,6 +354,15 @@ class ProjectsDatabaseService(BaseDatabaseService):
             )
         if owner_id is not Empty:
             filters.append(Project.owner_id == owner_id)
+        if user_id is not Empty:
+            filters.append(or_(
+                Project.owner_id == owner_id,
+                Project.id.in_(select(Position.project_id).where(
+                    Position.id.in_(select(Participant.position_id).where(
+                        Participant.user_id == user_id,
+                    )),
+                )),
+            ))
         if startline_le is not Empty:
             filters.append(Project.startline <= startline_le)
         if startline_ge is not Empty:
@@ -317,12 +383,6 @@ class ProjectsDatabaseService(BaseDatabaseService):
                 status == history_query.c.status,
             ])
 
-        if position_is_closed is not Empty:
-            position_filters.append(
-                Position.closed_at.is_(None)
-                if position_is_closed
-                else Position.closed_at.is_not(None)
-            )
         if position_specialization_ids is not Empty:
             position_filters.append(
                 Position.specialization_id.in_(position_specialization_ids)

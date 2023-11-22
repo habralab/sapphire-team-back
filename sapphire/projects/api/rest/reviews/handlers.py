@@ -1,7 +1,7 @@
 import fastapi
 
-from sapphire.projects.api.rest.projects.dependencies import path_project_is_owner
-from sapphire.projects.database.models import ParticipantStatusEnum, Project, ProjectStatusEnum
+from sapphire.common.api.exceptions import HTTPNotFound
+from sapphire.projects.database.models import ParticipantStatusEnum, ProjectStatusEnum
 from sapphire.projects.database.service import ProjectsDatabaseService
 
 from .schemas import CreateReviewRequest, ReviewResponse
@@ -9,22 +9,20 @@ from .schemas import CreateReviewRequest, ReviewResponse
 
 async def create_review(
     request: fastapi.Request,
-    project: Project = fastapi.Depends(path_project_is_owner),
     data: CreateReviewRequest = fastapi.Body(embed=False),
 ) -> ReviewResponse:
     database_service: ProjectsDatabaseService = request.app.service.database
 
     async with database_service.transaction() as session:
+        project = await database_service.get_project(session=session, project_id=data.project_id)
         participants = await database_service.get_participants(
             session=session,
-            project=project,
+            project_id=data.project_id,
             user_id=data.user_id,
         )
-    if not participants:
-        raise fastapi.HTTPException(
-            status_code=fastapi.status.HTTP_404_NOT_FOUND,
-            detail="Not found.",
-        )
+    if not participants or project is None:
+        raise HTTPNotFound()
+
     if (
         project.status != ProjectStatusEnum.FINISHED
         or not any(
