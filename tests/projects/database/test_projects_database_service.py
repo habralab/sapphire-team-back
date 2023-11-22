@@ -101,20 +101,19 @@ async def test_get_projects_with_pagination(database_service: ProjectsDatabaseSe
     result = MagicMock()
     project_id = uuid.uuid4()
     expected_projects = [Project(id=project_id, name="test", owner_id=uuid.uuid4())]
-    page = 1
+    cursor = datetime.now()
     per_page = 10
-    offset = (page - 1) * per_page
     expected_query = (
         select(Project)
+        .where(Project.created_at < cursor)
         .order_by(desc(Project.created_at))
         .limit(per_page)
-        .offset(offset)
     )
     result.unique.return_value.scalars.return_value.all.return_value = expected_projects
     session.execute = AsyncMock()
     session.execute.return_value = result
 
-    projects = await database_service.get_projects(session=session, page=page, per_page=per_page)
+    projects = await database_service.get_projects(session=session, cursor=cursor, per_page=per_page)
 
     assert projects == expected_projects
 
@@ -218,7 +217,11 @@ async def test_get_project_positions(database_service: ProjectsDatabaseService):
     expected_positions = [
         Position(id=uuid.uuid4(), specialization_id=specialization_id, project_id=project_id)
     ]
-    expected_query = select(Position).where(Position.project_id == project_id)
+    expected_query = (
+        select(Position)
+        .where(Position.project_id == project_id)
+        .order_by(Position.created_at.desc())
+    )
     result.unique().scalars.return_value.all.return_value = expected_positions
     session.execute = AsyncMock()
     session.execute.return_value = result
