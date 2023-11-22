@@ -1,6 +1,6 @@
+from datetime import datetime
 from unittest.mock import AsyncMock, MagicMock
 
-from datetime import datetime
 import pytest
 from sqlalchemy import desc, or_, select
 
