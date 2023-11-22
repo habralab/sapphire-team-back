@@ -22,6 +22,5 @@ class NotificationModel(BaseModel):
     updated_at: datetime
 
 
-
 class NotificationListResponse(PaginatedResponse):
     data: list[NotificationModel]
