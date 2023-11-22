@@ -5,7 +5,7 @@ from pydantic import BaseModel, ConfigDict, NaiveDatetime
 
 from sapphire.common.api.schemas.paginated import PaginatedResponse
 from sapphire.common.utils.empty import Empty
-from sapphire.projects.database.models import ProjectStatusEnum
+from sapphire.projects.database.models import Position, ProjectStatusEnum
 
 
 class PositionListFiltersRequest(BaseModel):
@@ -26,10 +26,23 @@ class PositionResponse(BaseModel):
 
     id: uuid.UUID
     project_id: uuid.UUID
+    specialization_id: uuid.UUID
+    skills: list[uuid.UUID]
     closed_at: NaiveDatetime | None
     created_at: NaiveDatetime
     updated_at: NaiveDatetime
-    specialization_id: uuid.UUID
+    
+    @classmethod
+    def from_db_model(cls, instance: Position):
+        return cls(
+            id=instance.id,
+            project_id=instance.project_id,
+            specialization_id=instance.specialization_id,
+            skills=[skill.skill_id for skill in instance.skills],
+            closed_at=instance.closed_at,
+            created_at=instance.created_at,
+            updated_at=instance.updated_at,
+        )
 
 
 class PositionListResponse(PaginatedResponse):

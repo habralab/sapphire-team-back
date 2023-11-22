@@ -35,7 +35,7 @@ async def get_positions(
     total_pages = int(math.ceil(total_items / pagination.per_page))
     offset = (pagination.page - 1) * pagination.per_page
     positions = positions[offset:offset + pagination.per_page]
-    data = [PositionResponse.model_validate(position) for position in positions]
+    data = [PositionResponse.from_db_model(position) for position in positions]
 
     return PositionListResponse(
         data=data,
@@ -68,7 +68,7 @@ async def create_position(
             specialization_id=data.specialization_id,
         )
 
-    return PositionResponse.model_validate(db_position)
+    return PositionResponse.from_db_model(db_position)
 
 
 async def remove_position(
@@ -83,4 +83,4 @@ async def remove_position(
             position=position,
         )
 
-    return PositionResponse.model_validate(position)
+    return PositionResponse.from_db_model(position)

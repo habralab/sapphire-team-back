@@ -68,6 +68,7 @@ class PositionResponse(BaseModel):
     id: uuid.UUID
     project_id: uuid.UUID
     specialization_id: uuid.UUID
+    skills: list[uuid.UUID]
     closed_at: datetime | None
     created_at: datetime
     updated_at: datetime
