@@ -5,7 +5,7 @@ import aiofiles
 import fastapi
 from fastapi.responses import FileResponse
 
-from sapphire.common.api.dependencies.pagination import Pagination, pagination
+from sapphire.common.api.dependencies.pagination import OffsetPagination, offset_pagination
 from sapphire.common.api.exceptions import HTTPForbidden
 from sapphire.common.jwt.dependencies.rest import is_activated
 from sapphire.common.jwt.models import JWTData
@@ -49,7 +49,7 @@ async def create_project(
 
 async def get_projects(
     request: fastapi.Request,
-    pagination: Pagination = fastapi.Depends(pagination),
+    pagination: OffsetPagination = fastapi.Depends(offset_pagination),
     filters: ProjectListFiltersRequest = fastapi.Depends(ProjectListFiltersRequest),
 ) -> ProjectListResponse:
     database_service: ProjectsDatabaseService = request.app.service.database
@@ -75,7 +75,7 @@ async def get_project(
 
 async def history(
     project: Project = fastapi.Depends(get_path_project),
-    pagination: Pagination = fastapi.Depends(pagination),
+    pagination: OffsetPagination = fastapi.Depends(offset_pagination),
 ) -> ProjectHistoryListResponse:
     offset = (pagination.page - 1) * pagination.per_page
     history = [

@@ -1,6 +1,6 @@
 import fastapi
 
-from sapphire.storage.api.rest.dependencies import Pagination, pagination
+from sapphire.common.api.dependencies.pagination import OffsetPagination, offset_pagination
 from sapphire.storage.api.rest.skills.schemas import (
     SkillListResponse,
     SkillResponse,
@@ -11,7 +11,7 @@ from sapphire.storage.database.service import StorageDatabaseService
 
 async def get_skills(
     request: fastapi.Request,
-    pagination: Pagination = fastapi.Depends(pagination),
+    pagination: OffsetPagination = fastapi.Depends(offset_pagination),
     filters: SkillsFiltersRequest = fastapi.Depends(SkillsFiltersRequest),
 ) -> SkillListResponse:
     database_service: StorageDatabaseService = request.app.service.database

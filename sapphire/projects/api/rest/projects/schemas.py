@@ -4,7 +4,7 @@ from typing import Type
 import fastapi
 from pydantic import BaseModel, ConfigDict, Field, NaiveDatetime
 
-from sapphire.common.api.schemas.paginated import PaginatedResponse
+from sapphire.common.api.schemas.paginated import OffsetPaginatedResponse
 from sapphire.common.utils.empty import Empty
 from sapphire.projects.database.models import ParticipantStatusEnum, ProjectStatusEnum
 
@@ -52,11 +52,11 @@ class ProjectHistoryResponse(BaseModel):
     created_at: NaiveDatetime
 
 
-class ProjectHistoryListResponse(PaginatedResponse):
+class ProjectHistoryListResponse(OffsetPaginatedResponse):
     data: list[ProjectHistoryResponse]
 
 
-class ProjectListResponse(PaginatedResponse):
+class ProjectListResponse(OffsetPaginatedResponse):
     data: list[ProjectResponse]
 
 

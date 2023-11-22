@@ -1,6 +1,6 @@
 import fastapi
 
-from sapphire.common.api.dependencies.pagination import pagination
+from sapphire.common.api.dependencies.pagination import offset_pagination, OffsetPagination
 from sapphire.storage.api.rest.specializations.schemas import (
     SpecializationFiltersRequest,
     SpecializationListResponse,
@@ -11,7 +11,7 @@ from sapphire.storage.database.service import StorageDatabaseService
 
 async def get_specializations(
     request: fastapi.Request,
-    pagination: dict = fastapi.Depends(pagination),
+    pagination: OffsetPagination = fastapi.Depends(offset_pagination),
     filters: SpecializationFiltersRequest = fastapi.Depends(SpecializationFiltersRequest),
 ) -> SpecializationListResponse:
 

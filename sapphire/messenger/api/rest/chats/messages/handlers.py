@@ -1,6 +1,6 @@
 import fastapi
 
-from sapphire.common.api.dependencies.pagination import Pagination, pagination
+from sapphire.common.api.dependencies.pagination import OffsetPagination, offset_pagination
 from sapphire.common.jwt.dependencies.rest import is_auth
 from sapphire.common.jwt.models import JWTData
 from sapphire.messenger.api.rest.chats.dependencies import path_chat_is_member
@@ -15,7 +15,7 @@ from .schemas import CreateMessageRequest
 async def get_messages(
         request: fastapi.Request,
         chat: Chat = fastapi.Depends(path_chat_is_member),
-        pagination: Pagination = fastapi.Depends(pagination),
+        pagination: OffsetPagination = fastapi.Depends(offset_pagination),
 ) -> MessageListResponse:
     database_service: MessengerDatabaseService = request.app.service.database
 
