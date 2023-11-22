@@ -4,7 +4,7 @@ from typing import Type
 
 from pydantic import BaseModel, ConfigDict
 
-from sapphire.common.api.schemas.paginated import CursorPaginatedResponse
+from sapphire.common.api.schemas.paginated import PaginatedResponse
 from sapphire.common.utils.empty import Empty
 from sapphire.messenger.database.models import Chat
 
@@ -48,5 +48,5 @@ class ChatListFiltersRequest(BaseModel):
     member: set[uuid.UUID] | Type[Empty] = Empty
 
 
-class ChatListResponse(CursorPaginatedResponse):
+class ChatListResponse(PaginatedResponse):
     data: list[ChatResponse]

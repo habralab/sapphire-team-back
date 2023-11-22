@@ -1,17 +1,10 @@
+from datetime import datetime
 from typing import Any
 
 from pydantic import BaseModel
 
 
-class OffsetPaginatedResponse(BaseModel):
+class PaginatedResponse(BaseModel):
     data: list[Any]
-    page: int
-    per_page: int
-    total_pages: int | None = None
-    total_items: int | None = None
-
-
-class CursorPaginatedResponse(BaseModel):
-    data: list[Any]
-    next_cursor: Any | None
+    next_cursor: datetime | None
     per_page: int

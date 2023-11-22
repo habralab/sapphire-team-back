@@ -5,7 +5,7 @@ from typing import Type
 import fastapi
 from pydantic import BaseModel, ConfigDict, Field
 
-from sapphire.common.api.schemas.paginated import OffsetPaginatedResponse
+from sapphire.common.api.schemas.paginated import PaginatedResponse
 from sapphire.common.utils.empty import Empty
 
 
@@ -17,7 +17,7 @@ class SkillResponse(BaseModel):
     created_at: datetime
 
 
-class SkillListResponse(OffsetPaginatedResponse):
+class SkillListResponse(PaginatedResponse):
     data: list[SkillResponse]
 
 

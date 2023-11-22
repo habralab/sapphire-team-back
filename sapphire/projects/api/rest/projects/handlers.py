@@ -1,11 +1,10 @@
-import math
 import pathlib
 
 import aiofiles
 import fastapi
 from fastapi.responses import FileResponse
 
-from sapphire.common.api.dependencies.pagination import OffsetPagination, offset_pagination
+from sapphire.common.api.dependencies.pagination import Pagination, pagination
 from sapphire.common.api.exceptions import HTTPForbidden
 from sapphire.common.jwt.dependencies.rest import is_activated
 from sapphire.common.jwt.models import JWTData
@@ -49,7 +48,7 @@ async def create_project(
 
 async def get_projects(
     request: fastapi.Request,
-    pagination: OffsetPagination = fastapi.Depends(offset_pagination),
+    pagination: Pagination = fastapi.Depends(pagination),
     filters: ProjectListFiltersRequest = fastapi.Depends(ProjectListFiltersRequest),
 ) -> ProjectListResponse:
     database_service: ProjectsDatabaseService = request.app.service.database
@@ -57,14 +56,20 @@ async def get_projects(
     async with database_service.transaction() as session:
         projects_db = await database_service.get_projects(
             session=session,
-            page=pagination.page,
+            cursor=pagination.cursor,
             per_page=pagination.per_page,
             **filters.model_dump(),
         )
 
+    next_cursor = None
+    if projects_db:
+        next_cursor = projects_db[-1].created_at
+
     projects = [ProjectResponse.model_validate(project_db) for project_db in projects_db]
 
-    return ProjectListResponse(data=projects, page=pagination.page, per_page=pagination.per_page)
+    return ProjectListResponse(
+        data=projects, next_cursor=next_cursor, per_page=pagination.per_page
+    )
 
 
 async def get_project(
@@ -74,22 +79,28 @@ async def get_project(
 
 
 async def history(
+    request: fastapi.Request,
     project: Project = fastapi.Depends(get_path_project),
-    pagination: OffsetPagination = fastapi.Depends(offset_pagination),
+    pagination: Pagination = fastapi.Depends(pagination),
 ) -> ProjectHistoryListResponse:
-    offset = (pagination.page - 1) * pagination.per_page
-    history = [
-        ProjectHistoryResponse.model_validate(event)
-        for event in project.history[offset : offset + pagination.per_page]
-    ]
-    total_items = len(project.history)
-    total_pages = int(math.ceil(total_items / pagination.per_page))
+    database_service: ProjectsDatabaseService = request.app.service.database
+
+    async with database_service.transaction() as session:
+        project_history_db = await database_service.get_project_history(
+            session=session,
+            project_id=project.id,
+            cursor=pagination.cursor,
+            per_page=pagination.per_page,
+        )
+
+    next_cursor = None
+    if project_history_db:
+        next_cursor = project_history_db[-1].created_at
+
+    history = [ProjectHistoryResponse.model_validate(event) for event in project_history_db]
+
     return ProjectHistoryListResponse(
-        data=history,
-        page=pagination.page,
-        per_page=pagination.per_page,
-        total_pages=total_pages,
-        total_items=total_items,
+        data=history, next_cursor=next_cursor, per_page=pagination.per_page
     )
 
 
