@@ -22,7 +22,6 @@ class MessengerDatabaseService(BaseDatabaseService):
     def get_models(self) -> list[Type[Base]]:
         return [Chat, Member, Message]
 
-
     async def _get_chats_filters(
         self,
         user_id: uuid.UUID,
@@ -33,7 +32,6 @@ class MessengerDatabaseService(BaseDatabaseService):
             filters.append(or_(*(Member.user_id == member for member in members)))
 
         return filters
-
 
     async def get_chats_count(
             self,
@@ -49,7 +47,6 @@ class MessengerDatabaseService(BaseDatabaseService):
         result = await session.scalar(query)
 
         return result
-
 
     async def get_chats(
             self,
@@ -94,10 +91,31 @@ class MessengerDatabaseService(BaseDatabaseService):
 
         return result.unique().scalar_one_or_none()
 
-    async def get_chat_messages(self, session: AsyncSession, chat_id: uuid.UUID) -> list[Message]:
+
+    async def get_chat_messages_count(self, session: AsyncSession, chat_id: uuid.UUID) -> int:
+        query = (
+            select(func.count(Message.id)).where(Message.chat_id == chat_id) # pylint: disable=not-callable
+        )
+        result = await session.scalar(query)
+
+        return result
+
+
+    async def get_chat_messages(
+            self,
+            session: AsyncSession,
+            chat_id: uuid.UUID,
+            page: int | Type[Empty] = Empty,
+            per_page: int | Type[Empty] = Empty,
+    ) -> list[Message]:
         query = (
             select(Message).where(Message.chat_id == chat_id).order_by(Message.created_at.desc())
         )
+
+        if page is not Empty and per_page is not Empty:
+            offset = (page - 1) * per_page
+            query = query.limit(per_page).offset(offset)
+
         result = await session.execute(query)
 
         return list(result.unique().scalars().all())
