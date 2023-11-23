@@ -88,6 +88,16 @@ def chat_id(settings: AutotestsSettings) -> uuid.UUID:
     return settings.chat_id
 
 
+@pytest.fixture(scope="session")
+def oleg_notification_id(settings: AutotestsSettings) -> uuid.UUID:
+    return settings.oleg_notification_id
+
+
+@pytest.fixture(scope="session")
+def matvey_notification_id(settings: AutotestsSettings) -> uuid.UUID:
+    return settings.matvey_notification_id
+
+
 @pytest.fixture(scope="function")
 def avatar_file():
     with open(pathlib.Path(__file__).parent / "static" / "avatar.png", "rb") as avatar_file:

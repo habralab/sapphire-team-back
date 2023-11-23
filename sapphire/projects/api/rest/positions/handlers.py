@@ -67,7 +67,7 @@ async def create_position(
 
 async def get_position(
         position: Position = fastapi.Depends(get_path_position),
-):
+) -> PositionResponse:
     return PositionResponse.from_db_model(position)
 
 

@@ -59,6 +59,29 @@ class NotificationsDatabaseService(BaseDatabaseService):
 
         return notifications_db
 
+    async def get_notification(
+            self,
+            session: AsyncSession,
+            notification_id: uuid.UUID,
+    ) -> Notification | None:
+        stmt = select(Notification).where(Notification.id == notification_id)
+
+        result = await session.execute(stmt)
+
+        return result.unique().scalar_one_or_none()
+
+    async def update_notification(
+            self,
+            session: AsyncSession,
+            notification: Notification,
+            is_read: bool | Type[Empty] = Empty,
+    ):
+        if is_read is not Empty:
+            if is_read is False:
+                raise ValueError("Parameter 'is_read' cannot be False")
+            notification.is_read = True
+        session.add(notification)
+
 
 def get_service(settings: NotificationsSettings) -> NotificationsDatabaseService:
     return NotificationsDatabaseService(dsn=str(settings.db_dsn))

@@ -142,6 +142,7 @@ class ProjectsDatabaseService(BaseDatabaseService):
             is_closed: bool | Type[Empty] = Empty,
             specialization_ids: list[uuid.UUID] | Type[Empty] = Empty,
             skill_ids: list[uuid.UUID] | Type[Empty] = Empty,
+            joined_user_id: uuid.UUID | Type[Empty] = Empty,
             project_query_text: str | Type[Empty] = Empty,
             project_startline_ge: datetime | Type[Empty] = Empty,
             project_startline_le: datetime | Type[Empty] = Empty,
@@ -168,6 +169,17 @@ class ProjectsDatabaseService(BaseDatabaseService):
 
         if skill_ids is not Empty:
             skill_filters.append(PositionSkill.skill_id.in_(skill_ids))
+
+        if joined_user_id is not Empty:
+            filters.append(or_(
+                Position.project_id.in_(select(Project.id).where(
+                    Project.owner_id == joined_user_id,
+                )),
+                Position.id.in_(select(Participant.position_id).where(
+                    Participant.user_id == joined_user_id,
+                    Participant.status == ParticipantStatusEnum.JOINED,
+                ))
+            ))
 
         if project_query_text is not Empty:
             project_filters.append(or_(

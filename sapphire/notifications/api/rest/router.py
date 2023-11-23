@@ -1,7 +1,7 @@
 import fastapi
 
-from sapphire.notifications.api.rest import handlers
+from . import notifications
 
 router = fastapi.APIRouter()
 
-router.add_api_route(path="/notifications", methods=["GET"], endpoint=handlers.get_notifications)
+router.include_router(notifications.router, prefix="/notifications")
