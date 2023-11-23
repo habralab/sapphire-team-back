@@ -1,11 +1,15 @@
 import uuid
 from datetime import datetime
-from typing import Any, Type
+from typing import Any, Literal, Type
 
 from pydantic import BaseModel, ConfigDict
 
 from sapphire.common.api.schemas.paginated import PaginatedResponse
 from sapphire.common.utils.empty import Empty
+
+
+class UpdateNotificationRequest(BaseModel):
+    is_read: Literal[True]
 
 
 class NotificationResponse(BaseModel):

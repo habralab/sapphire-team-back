@@ -5,8 +5,14 @@ from sapphire.common.jwt.dependencies.rest import is_auth
 from sapphire.common.jwt.models import JWTData
 from sapphire.notifications.database.models import Notification
 from sapphire.notifications.database.service import NotificationsDatabaseService
+
 from .dependencies import get_path_notification
-from .schemas import NotificationResponse, NotificationFiltersRequest, NotificationListResponse
+from .schemas import (
+    NotificationFiltersRequest,
+    NotificationListResponse,
+    NotificationResponse,
+    UpdateNotificationRequest,
+)
 
 
 async def get_notifications(
@@ -41,4 +47,21 @@ async def get_notifications(
 async def get_notification(
         notification: Notification = fastapi.Depends(get_path_notification),
 ) -> NotificationResponse:
+    return NotificationResponse.model_validate(notification)
+
+
+async def update_notification(
+        request: fastapi.Request,
+        notification: Notification = fastapi.Depends(get_path_notification),
+        data: UpdateNotificationRequest = fastapi.Body(embed=False),
+) -> NotificationResponse:
+    database_service: NotificationsDatabaseService = request.app.service.database
+
+    async with database_service.transaction() as session:
+        await database_service.update_notification(
+            session=session,
+            notification=notification,
+            is_read=data.is_read,
+        )
+
     return NotificationResponse.model_validate(notification)

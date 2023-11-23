@@ -1,10 +1,10 @@
 import uuid
 
 import fastapi
+
 from sapphire.common.api.exceptions import HTTPForbidden, HTTPNotFound
 from sapphire.common.jwt.dependencies.rest import is_auth
 from sapphire.common.jwt.models import JWTData
-
 from sapphire.notifications.database.models import Notification
 from sapphire.notifications.database.service import NotificationsDatabaseService
 

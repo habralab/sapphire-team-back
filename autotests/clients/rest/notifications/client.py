@@ -1,11 +1,15 @@
 import uuid
-from typing import Type
-
+from typing import Literal, Type
 
 from autotests.clients.rest.base_client import BaseRestClient
 from autotests.utils import Empty
 
-from .models import HealthResponse, NotificationListResponse, NotificationResponse
+from .models import (
+    HealthResponse,
+    NotificationListResponse,
+    NotificationResponse,
+    UpdateNotificationRequest,
+)
 
 
 class NotificationsRestClient(BaseRestClient):
@@ -36,3 +40,14 @@ class NotificationsRestClient(BaseRestClient):
         path = f"/api/rest/notifications/{notification_id}"
 
         return await self.rest_get(path=path, response_model=NotificationResponse)
+
+    async def update_notification(
+            self,
+            notification_id: uuid.UUID,
+            is_read: Literal[True],
+    ) -> NotificationResponse:
+        path = f"/api/rest/notifications/{notification_id}"
+
+        request = UpdateNotificationRequest(is_read=is_read)
+
+        return await self.rest_post(path=path, data=request, response_model=NotificationResponse)
