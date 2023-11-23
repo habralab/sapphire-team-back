@@ -9,7 +9,7 @@ from sapphire.common.jwt.models import JWTData
 from sapphire.projects.database.models import Position
 from sapphire.projects.database.service import ProjectsDatabaseService
 
-from .dependencies import path_position_is_owner
+from .dependencies import get_path_position, path_position_is_owner
 from .schemas import (
     CreatePositionRequest,
     PositionListFiltersRequest,
@@ -28,19 +28,15 @@ async def get_positions(
     async with database_service.transaction() as session:
         positions = await database_service.get_positions(
             session=session,
+            page=pagination.page,
+            per_page=pagination.per_page,
             **filters.model_dump(),
         )
 
-    total_items = len(positions)
-    total_pages = int(math.ceil(total_items / pagination.per_page))
-    offset = (pagination.page - 1) * pagination.per_page
-    positions = positions[offset:offset + pagination.per_page]
     data = [PositionResponse.from_db_model(position) for position in positions]
 
     return PositionListResponse(
         data=data,
-        total_items=total_items,
-        total_pages=total_pages,
         page=pagination.page,
         per_page=pagination.per_page,
     )
@@ -69,6 +65,12 @@ async def create_position(
         )
 
     return PositionResponse.from_db_model(db_position)
+
+
+async def get_position(
+        position: Position = fastapi.Depends(get_path_position),
+):
+    return PositionResponse.from_db_model(position)
 
 
 async def remove_position(
