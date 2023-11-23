@@ -1,7 +1,8 @@
 import uuid
 from typing import Type
 
-from pydantic import BaseModel, ConfigDict, NaiveDatetime
+import fastapi
+from pydantic import BaseModel, ConfigDict, Field, NaiveDatetime
 
 from sapphire.common.api.schemas.paginated import PaginatedResponse
 from sapphire.common.utils.empty import Empty
@@ -11,8 +12,9 @@ from sapphire.projects.database.models import Position, ProjectStatusEnum
 class PositionListFiltersRequest(BaseModel):
     project_id: uuid.UUID | Type[Empty] = Empty
     is_closed: bool | Type[Empty] = Empty
-    specialization_ids: list[uuid.UUID] | Type[Empty] = Empty
-    skill_ids: list[uuid.UUID] | Type[Empty] = Empty
+    specialization_ids: list[uuid.UUID] | Type[Empty] = Field(fastapi.Query(Empty))
+    skill_ids: list[uuid.UUID] | Type[Empty] = Field(fastapi.Query(Empty))
+    joined_user_id: uuid.UUID | Type[Empty] = Empty
     project_query_text: str | Type[Empty] = Empty
     project_startline_ge: NaiveDatetime | Type[Empty] = Empty
     project_startline_le: NaiveDatetime | Type[Empty] = Empty
