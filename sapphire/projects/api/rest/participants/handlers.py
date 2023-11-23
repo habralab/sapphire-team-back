@@ -11,7 +11,12 @@ from sapphire.projects.database.models import Participant, ParticipantStatusEnum
 from sapphire.projects.database.service import ProjectsDatabaseService
 
 from .dependencies import get_path_participant
-from .schemas import CreateParticipantRequest, UpdateParticipantRequest
+from .schemas import (
+    CreateParticipantRequest,
+    ParticipantListFiltersRequest,
+    ParticipantListResponse,
+    UpdateParticipantRequest,
+)
 
 
 async def create_participant(
@@ -134,3 +139,20 @@ async def update_participant(
             await participant_notification_send(project=project, participant=participant)
 
     return ParticipantResponse.model_validate(participant)
+
+
+async def get_participants(
+    request: fastapi.Request,
+    pagination: Pagination = fastapi.Depends(pagination),
+    filters: ParticipantListFiltersRequest = fastapi.Depends(ParticipantListFiltersRequest),
+):
+    database_service: ProjectsDatabaseService = request.app.service.database
+    async with database_service.transaction() as session:
+        participants_db = await database_service.get_projects(
+            session=session,
+            page=pagination.page,
+            per_page=pagination.per_page,
+            **filters.model_dump(),
+        )
+    
+    return ParticipantListResponse.model_validate(participants_db)

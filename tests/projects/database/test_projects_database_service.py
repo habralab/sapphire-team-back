@@ -312,7 +312,7 @@ async def test_get_participants_with_all_filters(
 ):
     session = MagicMock()
     project = MagicMock()
-    position = MagicMock()
+    position_id = MagicMock()
     user_id = uuid.uuid4()
     expected_participants = [Participant(position_id=position.id, user_id=user_id)]
     mock_participant = MagicMock()
@@ -334,7 +334,7 @@ async def test_get_participants_with_all_filters(
 
     participants = await database_service.get_participants(
         session=session,
-        position=position,
+        position_id=position_id,
         user_id=user_id,
         project_id=project.id,
     )

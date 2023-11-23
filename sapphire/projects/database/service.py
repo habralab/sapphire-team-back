@@ -279,18 +279,34 @@ class ProjectsDatabaseService(BaseDatabaseService):
     async def get_participants(
             self,
             session: AsyncSession,
-            position: Position | Type[Empty] = Empty,
+            position_id: uuid.UUID | Type[Empty] = Empty,
             user_id: uuid.UUID | Type[Empty] = Empty,
             project_id: uuid.UUID | Type[Empty] = Empty,
     ) -> list[Participant]:
         filters = []
-        if position is not Empty:
-            filters.append(Participant.position_id == position.id)
+
         if user_id is not Empty:
             filters.append(Participant.user_id == user_id)
+        if position_id is not Empty:
+            filters.append(Participant.position_id == position_id)
         if project_id is not Empty:
             position_query = select(Position.id).where(Position.project_id == project_id)
             filters.append(Participant.position_id.in_(position_query))
+        if status is not Empty:
+            filters.append(Participant.status == status)
+        if created_at_le is not Empty:
+            filters.append(Participant.created_at <= created_at_le)
+        if created_at_ge is not Empty:
+            filters.append(Participant.created_at >= created_at_ge)
+        if joined_at_le is not Empty:
+            filters.append(Participant.joined_at <= joined_at_le)
+        if joined_at_ge is not Empty:
+            filters.append(Participant.joined_at >= joined_at_ge)
+        if updated_at_le is not Empty:
+            filters.append(Participant.updated_at <= updated_at_le)
+        if updated_at_ge is not Empty:
+            filters.append(Participant.updated_at >= updated_at_ge)
+
         query = select(Participant).where(*filters)
         result = await session.execute(query)
         return list(result.unique().scalars().all())
