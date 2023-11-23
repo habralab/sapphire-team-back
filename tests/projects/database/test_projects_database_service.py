@@ -218,7 +218,13 @@ async def test_get_project_positions(database_service: ProjectsDatabaseService):
     expected_positions = [
         Position(id=uuid.uuid4(), specialization_id=specialization_id, project_id=project_id)
     ]
-    expected_query = select(Position).where(Position.project_id == project_id).order_by(Position.created_at.desc()).offset(0).limit(10)
+    expected_query = (
+        select(Position)
+        .where(Position.project_id == project_id).
+        order_by(Position.created_at.desc())
+        .offset(0)
+        .limit(10)
+    )
     result.unique().scalars.return_value.all.return_value = expected_positions
     session.execute = AsyncMock()
     session.execute.return_value = result
