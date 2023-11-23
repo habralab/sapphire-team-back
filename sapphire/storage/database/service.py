@@ -41,7 +41,7 @@ class StorageDatabaseService(BaseDatabaseService):
             query_text: str | Type[Empty] = Empty,
             group_id: uuid.UUID | Type[Empty] = Empty,
     ) -> int:
-        query = select(func.count(Specialization)) # pylint: disable=not-callable
+        query = select(func.count(Specialization.id)) # pylint: disable=not-callable
 
         filters = await self._get_specializations_filters(query_text=query_text, group_id=group_id)
 
@@ -99,7 +99,7 @@ class StorageDatabaseService(BaseDatabaseService):
         self,
         session: AsyncSession,
         query_text: str | Type[Empty] = Empty,
-    ) -> list[SpecializationGroup]:
+    ) -> int:
         query = (
             select(func.count(SpecializationGroup.id)) # pylint: disable=not-callable
             .order_by(desc(SpecializationGroup.created_at))
@@ -108,7 +108,7 @@ class StorageDatabaseService(BaseDatabaseService):
         filters = await self._get_specialization_groups_filters(query_text=query_text)
         query = query.where(*filters)
 
-        result = await session.execute(query)
+        result = await session.scalar(query)
 
         return result
 
@@ -162,7 +162,7 @@ class StorageDatabaseService(BaseDatabaseService):
         query_text: str | Type[Empty] = Empty,
         skill_ids: list[uuid.UUID] | Type[Empty] = Empty,
     ) -> int:
-        query = select(func.count(Skill)) # pylint: disable=not-callable
+        query = select(func.count(Skill.id)) # pylint: disable=not-callable
 
         filters = await self._get_skills_filters(query_text=query_text, skill_ids=skill_ids)
 

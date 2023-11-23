@@ -91,7 +91,6 @@ class MessengerDatabaseService(BaseDatabaseService):
 
         return result.unique().scalar_one_or_none()
 
-
     async def get_chat_messages_count(self, session: AsyncSession, chat_id: uuid.UUID) -> int:
         query = (
             select(func.count(Message.id)).where(Message.chat_id == chat_id) # pylint: disable=not-callable
@@ -99,7 +98,6 @@ class MessengerDatabaseService(BaseDatabaseService):
         result = await session.scalar(query)
 
         return result
-
 
     async def get_chat_messages(
             self,

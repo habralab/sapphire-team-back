@@ -494,8 +494,8 @@ class ProjectsDatabaseService(BaseDatabaseService):
         position_skill_ids: list[uuid.UUID] | Type[Empty] = Empty,
         position_specialization_ids: list[uuid.UUID] | Type[Empty] = Empty,
         participant_user_ids: list[uuid.UUID] | Type[Empty] = Empty,
-    ) -> list[Project]:
-        query = select(Project).order_by(Project.created_at.desc())
+    ) -> int:
+        query = select(func.count(Project)) # pylint: disable=not-callable
         filters = await self._get_projects_filters(
             query_text=query_text,
             owner_id=owner_id,
