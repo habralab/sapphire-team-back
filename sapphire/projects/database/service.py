@@ -149,6 +149,8 @@ class ProjectsDatabaseService(BaseDatabaseService):
             project_deadline_ge: datetime | Type[Empty] = Empty,
             project_deadline_le: datetime | Type[Empty] = Empty,
             project_status: ProjectStatusEnum | Type[Empty] = Empty,
+            page: int = 1,
+            per_page: int = 10,
     ) -> list[Position]:
         filters = []
         skill_filters = []
@@ -349,8 +351,8 @@ class ProjectsDatabaseService(BaseDatabaseService):
         position_skill_ids: list[uuid.UUID] | Type[Empty] = Empty,
         position_specialization_ids: list[uuid.UUID] | Type[Empty] = Empty,
         participant_user_ids: list[uuid.UUID] | Type[Empty] = Empty,
-        page: int | Type[Empty] = Empty,
-        per_page: int | Type[Empty] = Empty,
+        page: int = 1,
+        per_page: int = 10,
     ) -> list[Project]:
         filters = []
         position_filters = []
@@ -419,9 +421,8 @@ class ProjectsDatabaseService(BaseDatabaseService):
 
         query = query.where(*filters)
 
-        if page is not Empty and per_page is not Empty:
-            offset = (page - 1) * per_page
-            query = query.limit(per_page).offset(offset)
+        offset = (page - 1) * per_page
+        query = query.limit(per_page).offset(offset)
 
         result = await session.execute(query)
 

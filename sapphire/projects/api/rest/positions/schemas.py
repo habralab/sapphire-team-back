@@ -6,6 +6,7 @@ from pydantic import BaseModel, ConfigDict, Field, NaiveDatetime
 
 from sapphire.common.api.schemas.paginated import PaginatedResponse
 from sapphire.common.utils.empty import Empty
+from sapphire.projects.api.rest.schemas import ProjectResponse
 from sapphire.projects.database.models import Position, ProjectStatusEnum
 
 
@@ -27,7 +28,7 @@ class PositionResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     id: uuid.UUID
-    project_id: uuid.UUID
+    project: ProjectResponse
     specialization_id: uuid.UUID
     skills: list[uuid.UUID]
     closed_at: NaiveDatetime | None
@@ -38,7 +39,7 @@ class PositionResponse(BaseModel):
     def from_db_model(cls, instance: Position):
         return cls(
             id=instance.id,
-            project_id=instance.project_id,
+            project=ProjectResponse.model_validate(instance.project),
             specialization_id=instance.specialization_id,
             skills=[skill.skill_id for skill in instance.skills],
             closed_at=instance.closed_at,
