@@ -274,7 +274,7 @@ class ProjectsDatabaseService(BaseDatabaseService):
             project_status=project_status,
         )
 
-        statement = select(Position).where(*filters)
+        statement = select(Position).where(*filters).order_by(Position.created_at.desc())
 
         offset = (page - 1) * per_page
         statement = statement.limit(per_page).offset(offset)
