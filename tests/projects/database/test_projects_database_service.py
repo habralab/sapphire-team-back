@@ -315,12 +315,12 @@ async def test_get_participants_with_all_filters(
     position_id = MagicMock()
     user_id = uuid.uuid4()
     status = MagicMock()
-    created_at_le = MagicMock()
-    created_at_ge = MagicMock()
-    joined_at_le = MagicMock()
-    joined_at_ge = MagicMock()
-    updated_at_le = MagicMock()
-    updated_at_ge = MagicMock()
+    created_at_le = datetime.now()
+    created_at_ge = datetime.now()
+    joined_at_le = datetime.now()
+    joined_at_ge = datetime.now()
+    updated_at_le = datetime.now()
+    updated_at_ge = datetime.now()
     expected_participants = [Participant(position_id=position_id, user_id=user_id)]
     mock_participant = MagicMock()
     mock_participant.unique.return_value.scalars.return_value.all.return_value = (

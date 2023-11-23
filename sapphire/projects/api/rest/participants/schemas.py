@@ -30,6 +30,5 @@ class ParticipantListFiltersRequest(BaseModel):
     created_at_ge: NaiveDatetime | Type[Empty] = Empty
     joined_at_le: NaiveDatetime | Type[Empty] = Empty
     joined_at_ge: NaiveDatetime | Type[Empty] = Empty
-
     updated_at_le: NaiveDatetime | Type[Empty] = Empty
     updated_at_ge: NaiveDatetime | Type[Empty] = Empty
