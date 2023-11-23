@@ -23,7 +23,7 @@ class MessengerDatabaseService(BaseDatabaseService):
         return [Chat, Member, Message]
 
 
-    async def chats_filters(
+    async def _get_chats_filters(
         self,
         user_id: uuid.UUID,
         members: set[uuid.UUID] | Type[Empty] = Empty,
@@ -35,7 +35,7 @@ class MessengerDatabaseService(BaseDatabaseService):
         return filters
 
 
-    async def count_chats(
+    async def get_chats_count(
             self,
             session: AsyncSession,
             user_id: uuid.UUID,
@@ -43,7 +43,7 @@ class MessengerDatabaseService(BaseDatabaseService):
     ) -> int:
         query = select(func.count(Chat.id)) # pylint: disable=not-callable
 
-        filters = await self.chats_filters(user_id=user_id, members=members)
+        filters = await self._get_chats_filters(user_id=user_id, members=members)
         query = query.where(*filters)
 
         result = await session.scalar(query)
@@ -61,7 +61,7 @@ class MessengerDatabaseService(BaseDatabaseService):
     ) -> list[Chat]:
         query = select(Chat).order_by(Chat.created_at.desc())
 
-        filters = await self.chats_filters(user_id=user_id, members=members)
+        filters = await self._get_chats_filters(user_id=user_id, members=members)
         query = query.where(*filters)
 
         if page is not Empty and per_page is not Empty:

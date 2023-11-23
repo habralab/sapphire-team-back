@@ -26,15 +26,13 @@ async def get_chats(
             page=pagination.page,
             per_page=pagination.per_page,
         )
-        total_chats = await database_service.count_chats(
+        total_chats = await database_service.get_chats_count(
             session=session,
             user_id=jwt_data.user_id,
             members=filters.member,
         )
 
-    total_pages = total_chats // pagination.per_page
-    if total_chats % pagination.per_page > 0:
-        total_pages += 1
+    total_pages = -(total_chats // -pagination.per_page)
 
     chats = [ChatResponse.from_db_model(chat) for chat in db_chats]
     return ChatListResponse(
