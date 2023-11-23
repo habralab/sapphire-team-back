@@ -14,8 +14,8 @@ from autotests.utils import Empty
     pytest.lazy_fixture("oleg_activated_participants_rest_client"),
     pytest.lazy_fixture("matvey_participants_rest_client"),
     pytest.lazy_fixture("matvey_activated_participants_rest_client"),
-    pytest.lazy_fixture("participants_rest_client"),
-    pytest.lazy_fixture("random_participants_rest_client"),
+    pytest.lazy_fixture("projects_rest_client"),
+    pytest.lazy_fixture("random_projects_rest_client"),
 ))
 @pytest.mark.parametrize(
     (

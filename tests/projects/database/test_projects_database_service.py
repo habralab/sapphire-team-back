@@ -314,7 +314,7 @@ async def test_get_participants_with_all_filters(
     project = MagicMock()
     position_id = MagicMock()
     user_id = uuid.uuid4()
-    expected_participants = [Participant(position_id=position.id, user_id=user_id)]
+    expected_participants = [Participant(position_id=position_id, user_id=user_id)]
     mock_participant = MagicMock()
     mock_participant.unique.return_value.scalars.return_value.all.return_value = (
         expected_participants
@@ -324,7 +324,7 @@ async def test_get_participants_with_all_filters(
     expected_query = (
         select(Participant)
         .where(
-            Participant.position_id == position.id,
+            Participant.position_id == position_id,
             Participant.user_id == user_id,
             Participant.position_id.in_(
                 select(Position.id).where(Position.project_id == project.id)
