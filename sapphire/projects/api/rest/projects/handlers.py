@@ -1,4 +1,3 @@
-import math
 import pathlib
 
 import aiofiles
@@ -84,22 +83,31 @@ async def get_project(
 
 
 async def history(
+    request: fastapi.Request,
     project: Project = fastapi.Depends(get_path_project),
     pagination: Pagination = fastapi.Depends(pagination),
 ) -> ProjectHistoryListResponse:
-    offset = (pagination.page - 1) * pagination.per_page
-    history = [
-        ProjectHistoryResponse.model_validate(event)
-        for event in project.history[offset : offset + pagination.per_page]
-    ]
-    total_items = len(project.history)
-    total_pages = int(math.ceil(total_items / pagination.per_page))
+    database_service: ProjectsDatabaseService = request.app.service.database
+
+    async with database_service.transaction() as session:
+        project_history_db = await database_service.get_project_history(
+            session=session,
+            project_id=project.id,
+            page=pagination.page,
+            per_page=pagination.per_page,
+        )
+        total_project_history = await database_service.get_project_history_count(
+            session=session, project_id=project.id
+        )
+
+    history = [ProjectHistoryResponse.model_validate(event) for event in project_history_db]
+    total_pages = -(total_project_history // -pagination.per_page)
     return ProjectHistoryListResponse(
         data=history,
         page=pagination.page,
         per_page=pagination.per_page,
+        total_items=total_project_history,
         total_pages=total_pages,
-        total_items=total_items,
     )
 
 

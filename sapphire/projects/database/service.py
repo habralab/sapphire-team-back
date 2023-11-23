@@ -554,6 +554,38 @@ class ProjectsDatabaseService(BaseDatabaseService):
 
         return list(result.unique().scalars().all())
 
+    async def get_project_history_count(
+        self, session: AsyncSession, project_id: uuid.UUID
+    ) -> int:
+        query = (
+            select(func.count(ProjectHistory.id)).where(ProjectHistory.project_id == project_id) # pylint: disable=not-callable
+        )
+
+        result = await session.scalar(query)
+
+        return result
+
+    async def get_project_history(
+        self,
+        session: AsyncSession,
+        project_id: uuid.UUID,
+        page: int | Type[Empty] = Empty,
+        per_page: int | Type[Empty] = Empty,
+    ) -> list[ProjectHistory]:
+        query = (
+            select(ProjectHistory)
+            .where(ProjectHistory.project_id == project_id)
+            .order_by(ProjectHistory.created_at.desc())
+        )
+
+        if page is not Empty and per_page is not Empty:
+            offset = (page - 1) * per_page
+            query = query.limit(per_page).offset(offset)
+
+        result = await session.execute(query)
+
+        return list(result.unique().scalars().all())
+
     async def get_user_statistic(self, session: AsyncSession, user_id: uuid.UUID) -> UserStatistic:
         stmt = select(
             func.count(Project.id),  # pylint: disable=not-callable
