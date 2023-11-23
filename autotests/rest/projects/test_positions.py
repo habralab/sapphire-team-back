@@ -1,9 +1,11 @@
 import uuid
 from datetime import datetime, timedelta
+from http import HTTPStatus
 from typing import Type
 
 import pytest
 
+from autotests.clients.rest.exceptions import ResponseException
 from autotests.clients.rest.projects.client import ProjectsRestClient
 from autotests.clients.rest.projects.models import ProjectStatusEnum
 from autotests.utils import Empty
@@ -75,3 +77,40 @@ async def test_get_positions(
             assert (position.closed_at is not None) == is_closed
         if specialization_ids is not Empty:
             assert position.specialization_id in specialization_ids
+
+
+@pytest.mark.parametrize("client", (
+    pytest.lazy_fixture("oleg_projects_rest_client"),
+    pytest.lazy_fixture("oleg_activated_projects_rest_client"),
+    pytest.lazy_fixture("matvey_projects_rest_client"),
+    pytest.lazy_fixture("matvey_activated_projects_rest_client"),
+    pytest.lazy_fixture("projects_rest_client"),
+    pytest.lazy_fixture("random_projects_rest_client"),
+))
+@pytest.mark.asyncio
+async def test_get_position(
+        project_id: uuid.UUID,
+        position_id: uuid.UUID,
+        client: ProjectsRestClient,
+):
+    position = await client.get_position(position_id=position_id)
+
+    assert position.id == position_id
+    assert position.project.id == project_id
+
+
+@pytest.mark.parametrize("client", (
+    pytest.lazy_fixture("oleg_projects_rest_client"),
+    pytest.lazy_fixture("oleg_activated_projects_rest_client"),
+    pytest.lazy_fixture("matvey_projects_rest_client"),
+    pytest.lazy_fixture("matvey_activated_projects_rest_client"),
+    pytest.lazy_fixture("projects_rest_client"),
+    pytest.lazy_fixture("random_projects_rest_client"),
+))
+@pytest.mark.asyncio
+async def test_get_position_not_found(client: ProjectsRestClient):
+    with pytest.raises(ResponseException) as exception:
+        await client.get_position(position_id=uuid.uuid4())
+
+    assert exception.value.status_code == HTTPStatus.NOT_FOUND
+    assert exception.value.body == b'{"detail":"Not found."}'

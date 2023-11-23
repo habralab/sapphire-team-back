@@ -122,7 +122,7 @@ class TestProjectFlow:
     @pytest.mark.asyncio
     async def test_create_position(self, oleg_projects_rest_client: ProjectsRestClient):
         project_id: uuid.UUID = self.CONTEXT["project_id"]
-        
+
         specialization_id = uuid.uuid4()
         position = await oleg_projects_rest_client.create_position(
             project_id=project_id,
@@ -132,12 +132,11 @@ class TestProjectFlow:
         self.CONTEXT["position_id"] = position.id
         self.CONTEXT["position_specialization_id"] = specialization_id
 
-        assert position.project_id == project_id
+        assert position.project.id == project_id
         assert position.specialization_id == specialization_id
         assert position.closed_at is None
 
     @pytest.mark.dependency(depends=["TestProjectFlow::test_create_position"])
-    @pytest.mark.skip("Not implemented")
     @pytest.mark.asyncio
     async def test_get_position(self, projects_rest_client: ProjectsRestClient):
         project_id: uuid.UUID = self.CONTEXT["project_id"]
@@ -147,14 +146,11 @@ class TestProjectFlow:
         position = await projects_rest_client.get_position(position_id=position_id)
 
         assert position.id == position_id
-        assert position.project_id == project_id
+        assert position.project.id == project_id
         assert position.specialization_id == position_specialization_id
         assert position.closed_at is None
 
-    @pytest.mark.dependency(depends=[
-        "TestProjectFlow::test_create_position",
-        # TODO: Replace to :"TestProjectFlow::test_get_position"
-    ])
+    @pytest.mark.dependency(depends=["TestProjectFlow::test_get_position"])
     @pytest.mark.asyncio
     async def test_get_positions(self, projects_rest_client: ProjectsRestClient):
         project_id: uuid.UUID = self.CONTEXT["project_id"]
@@ -165,14 +161,11 @@ class TestProjectFlow:
 
         assert len(positions.data) == 1
         assert positions.data[0].id == position_id
-        assert positions.data[0].project_id == project_id
+        assert positions.data[0].project.id == project_id
         assert positions.data[0].specialization_id == position_specialization_id
         assert positions.data[0].closed_at is None
 
-    @pytest.mark.dependency(depends=[
-        "TestProjectFlow::test_create_position",
-        # TODO: Replace to: "TestProjectFlow::test_get_positions",
-    ])
+    @pytest.mark.dependency(depends=["TestProjectFlow::test_get_positions"])
     @pytest.mark.asyncio
     async def test_create_first_request_to_join(
             self,
@@ -669,11 +662,10 @@ class TestProjectFlow:
         position = await oleg_projects_rest_client.remove_position(position_id=position_id)
 
         assert position.id == position_id
-        assert position.project_id == project_id
+        assert position.project.id == project_id
         assert position.closed_at is not None
 
     @pytest.mark.dependency(depends=["TestProjectFlow::test_close_position"])
-    @pytest.mark.skip("Not implemented")
     @pytest.mark.asyncio
     async def test_get_closed_position(self, projects_rest_client: ProjectsRestClient):
         project_id: uuid.UUID = self.CONTEXT["project_id"]
@@ -682,13 +674,10 @@ class TestProjectFlow:
         position = await projects_rest_client.get_position(position_id=position_id)
 
         assert position.id == position_id
-        assert position.project_id == project_id
+        assert position.project.id == project_id
         assert position.closed_at is not None
 
-    @pytest.mark.dependency(depends=[
-        "TestProjectFlow::test_close_position",
-        # TODO: Replace to "TestProjectFlow::test_get_closed_position", 
-    ])
+    @pytest.mark.dependency(depends=["TestProjectFlow::test_get_closed_position"])
     @pytest.mark.asyncio
     async def test_close_project(self, oleg_projects_rest_client: ProjectsRestClient):
         project_id: uuid.UUID = self.CONTEXT["project_id"]
