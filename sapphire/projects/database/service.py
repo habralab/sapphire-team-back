@@ -135,9 +135,8 @@ class ProjectsDatabaseService(BaseDatabaseService):
         await session.refresh(project)
         return project
 
-    async def get_positions(
+    async def _get_positions_filters(
             self,
-            session: AsyncSession,
             project_id: uuid.UUID | Type[Empty] = Empty,
             is_closed: bool | Type[Empty] = Empty,
             specialization_ids: list[uuid.UUID] | Type[Empty] = Empty,
@@ -149,9 +148,7 @@ class ProjectsDatabaseService(BaseDatabaseService):
             project_deadline_ge: datetime | Type[Empty] = Empty,
             project_deadline_le: datetime | Type[Empty] = Empty,
             project_status: ProjectStatusEnum | Type[Empty] = Empty,
-            page: int = 1,
-            per_page: int = 10,
-    ) -> list[Position]:
+    ) -> list:
         filters = []
         skill_filters = []
         project_filters = []
@@ -215,7 +212,73 @@ class ProjectsDatabaseService(BaseDatabaseService):
                 Position.project_id.in_(select(Project.id).where(*project_filters))
             )
 
+        return filters
+
+    async def get_positions_count(
+            self,
+            session: AsyncSession,
+            project_id: uuid.UUID | Type[Empty] = Empty,
+            is_closed: bool | Type[Empty] = Empty,
+            specialization_ids: list[uuid.UUID] | Type[Empty] = Empty,
+            skill_ids: list[uuid.UUID] | Type[Empty] = Empty,
+            project_query_text: str | Type[Empty] = Empty,
+            project_startline_ge: datetime | Type[Empty] = Empty,
+            project_startline_le: datetime | Type[Empty] = Empty,
+            project_deadline_ge: datetime | Type[Empty] = Empty,
+            project_deadline_le: datetime | Type[Empty] = Empty,
+            project_status: ProjectStatusEnum | Type[Empty] = Empty,
+    ) -> int:
+        filters = await self._get_positions_filters(
+            project_id=project_id,
+            is_closed=is_closed,
+            specialization_ids=specialization_ids,
+            skill_ids=skill_ids,
+            project_query_text=project_query_text,
+            project_startline_ge=project_startline_ge,
+            project_startline_le=project_startline_le,
+            project_deadline_ge=project_deadline_ge,
+            project_deadline_le=project_deadline_le,
+            project_status=project_status,
+        )
+
+        statement = select(func.count(Position.id)).where(*filters) # pylint: disable=not-callable
+        result = await session.scalar(statement)
+        return result
+
+    async def get_positions(
+            self,
+            session: AsyncSession,
+            project_id: uuid.UUID | Type[Empty] = Empty,
+            is_closed: bool | Type[Empty] = Empty,
+            specialization_ids: list[uuid.UUID] | Type[Empty] = Empty,
+            skill_ids: list[uuid.UUID] | Type[Empty] = Empty,
+            project_query_text: str | Type[Empty] = Empty,
+            project_startline_ge: datetime | Type[Empty] = Empty,
+            project_startline_le: datetime | Type[Empty] = Empty,
+            project_deadline_ge: datetime | Type[Empty] = Empty,
+            project_deadline_le: datetime | Type[Empty] = Empty,
+            project_status: ProjectStatusEnum | Type[Empty] = Empty,
+            page: int = 1,
+            per_page: int = 10,
+    ) -> list[Position]:
+        filters = await self._get_positions_filters(
+            project_id=project_id,
+            is_closed=is_closed,
+            specialization_ids=specialization_ids,
+            skill_ids=skill_ids,
+            project_query_text=project_query_text,
+            project_startline_ge=project_startline_ge,
+            project_startline_le=project_startline_le,
+            project_deadline_ge=project_deadline_ge,
+            project_deadline_le=project_deadline_le,
+            project_status=project_status,
+        )
+
         statement = select(Position).where(*filters)
+
+        offset = (page - 1) * per_page
+        statement = statement.limit(per_page).offset(offset)
+
         result = await session.execute(statement)
         return list(result.unique().scalars().all())
 
