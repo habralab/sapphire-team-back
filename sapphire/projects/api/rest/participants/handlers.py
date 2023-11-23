@@ -2,6 +2,7 @@ from collections import defaultdict
 
 import fastapi
 
+from sapphire.common.api.dependencies.pagination import Pagination, pagination
 from sapphire.common.api.exceptions import HTTPForbidden, HTTPNotFound
 from sapphire.common.jwt.dependencies.rest import is_auth
 from sapphire.common.jwt.models import JWTData
@@ -154,5 +155,5 @@ async def get_participants(
             per_page=pagination.per_page,
             **filters.model_dump(),
         )
-    
+
     return ParticipantListResponse.model_validate(participants_db)
