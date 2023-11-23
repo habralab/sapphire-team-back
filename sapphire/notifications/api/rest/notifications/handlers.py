@@ -3,20 +3,18 @@ import fastapi
 from sapphire.common.api.dependencies.pagination import Pagination, pagination
 from sapphire.common.jwt.dependencies.rest import is_auth
 from sapphire.common.jwt.models import JWTData
-from sapphire.notifications.api.rest.schemas import (
-    Notification,
-    NotificationFilters,
-    NotificationListModel,
-)
+from sapphire.notifications.database.models import Notification
 from sapphire.notifications.database.service import NotificationsDatabaseService
+from .dependencies import get_path_notification
+from .schemas import NotificationResponse, NotificationFiltersRequest, NotificationListResponse
 
 
 async def get_notifications(
         request: fastapi.Request,
-        filters: NotificationFilters = fastapi.Depends(NotificationFilters),
+        filters: NotificationFiltersRequest = fastapi.Depends(NotificationFiltersRequest),
         jwt_data: JWTData = fastapi.Depends(is_auth),
         pagination: Pagination = fastapi.Depends(pagination),
-) -> NotificationListModel:
+) -> NotificationListResponse:
     database_service: NotificationsDatabaseService = request.app.service.database
 
     async with database_service.transaction() as session:
@@ -28,10 +26,19 @@ async def get_notifications(
             recipient_id=jwt_data.user_id
         )
 
-    notifications = [Notification.model_validate(notification) for notification in notifications]
+    notifications = [
+        NotificationResponse.model_validate(notification)
+        for notification in notifications
+    ]
 
-    return NotificationListModel(
+    return NotificationListResponse(
         data=notifications,
         page=pagination.page,
         per_page=pagination.per_page,
     )
+
+
+async def get_notification(
+        notification: Notification = fastapi.Depends(get_path_notification),
+) -> NotificationResponse:
+    return NotificationResponse.model_validate(notification)

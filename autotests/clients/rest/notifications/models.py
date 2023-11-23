@@ -12,7 +12,7 @@ class HealthResponse(BaseModel):
     version: constr(pattern=r"^\d+\.\d+\.\d+$")
 
 
-class NotificationModel(BaseModel):
+class NotificationResponse(BaseModel):
     id: uuid.UUID
     type: str
     recipient_id: uuid.UUID
@@ -23,4 +23,4 @@ class NotificationModel(BaseModel):
 
 
 class NotificationListResponse(PaginatedResponse):
-    data: list[NotificationModel]
+    data: list[NotificationResponse]

@@ -8,7 +8,7 @@ from sapphire.common.api.schemas.paginated import PaginatedResponse
 from sapphire.common.utils.empty import Empty
 
 
-class Notification(BaseModel):
+class NotificationResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     id: uuid.UUID
@@ -20,9 +20,9 @@ class Notification(BaseModel):
     updated_at: datetime
 
 
-class NotificationFilters(BaseModel):
+class NotificationFiltersRequest(BaseModel):
     is_read: bool | Type[Empty] = Empty
 
 
-class NotificationListModel(PaginatedResponse):
-    data: list[Notification]
+class NotificationListResponse(PaginatedResponse):
+    data: list[NotificationResponse]
