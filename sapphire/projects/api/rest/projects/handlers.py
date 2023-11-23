@@ -9,6 +9,7 @@ from sapphire.common.api.dependencies.pagination import Pagination, pagination
 from sapphire.common.api.exceptions import HTTPForbidden
 from sapphire.common.jwt.dependencies.rest import is_activated
 from sapphire.common.jwt.models import JWTData
+from sapphire.projects.api.rest.schemas import ProjectResponse
 from sapphire.projects.database.models import Project
 from sapphire.projects.database.service import ProjectsDatabaseService
 
@@ -20,7 +21,6 @@ from .schemas import (
     ProjectListFiltersRequest,
     ProjectListResponse,
     ProjectPartialUpdateRequest,
-    ProjectResponse,
 )
 
 

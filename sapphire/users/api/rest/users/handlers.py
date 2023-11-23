@@ -9,6 +9,7 @@ from fastapi.responses import FileResponse
 from sapphire.common.api.exceptions import HTTPForbidden
 from sapphire.common.jwt.dependencies.rest import get_jwt_data, is_auth
 from sapphire.common.jwt.models import JWTData
+from sapphire.users.api.rest.dependencies import update_jwt
 from sapphire.users.api.rest.schemas import UserResponse
 from sapphire.users.database.models import User
 from sapphire.users.database.service import UsersDatabaseService
@@ -28,6 +29,7 @@ async def get_user(
 
 async def update_user(
         request: fastapi.Request,
+        response: fastapi.Response,
         jwt_data: JWTData = fastapi.Depends(is_auth),
         user: User = fastapi.Depends(get_path_user),
         data: UserUpdateRequest = fastapi.Body(embed=False),
@@ -48,6 +50,7 @@ async def update_user(
         )
         if not user.is_activated:
             user.activate()
+            await update_jwt(request=request, response=response, jwt_data=jwt_data, user=user)
 
     return UserResponse.from_db_model(user)
 

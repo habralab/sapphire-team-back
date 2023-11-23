@@ -6,6 +6,7 @@ from pydantic import BaseModel, ConfigDict, Field, NaiveDatetime
 
 from sapphire.common.api.schemas.paginated import PaginatedResponse
 from sapphire.common.utils.empty import Empty
+from sapphire.projects.api.rest.schemas import ProjectResponse
 from sapphire.projects.database.models import ParticipantStatusEnum, ProjectStatusEnum
 
 
@@ -27,20 +28,6 @@ class CreateProjectRequest(BaseModel):
     owner_id: uuid.UUID
     startline: NaiveDatetime
     deadline: NaiveDatetime | None = None
-
-
-class ProjectResponse(BaseModel):
-    model_config = ConfigDict(from_attributes=True)
-
-    id: uuid.UUID
-    name: str
-    description: str | None
-    owner_id: uuid.UUID
-    startline: NaiveDatetime
-    deadline: NaiveDatetime | None
-    created_at: NaiveDatetime
-    updated_at: NaiveDatetime
-    status: ProjectStatusEnum
 
 
 class ProjectHistoryResponse(BaseModel):

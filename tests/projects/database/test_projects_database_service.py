@@ -82,7 +82,7 @@ async def test_get_projects_without_pagination(database_service: ProjectsDatabas
     result = MagicMock()
     project_id = uuid.uuid4()
     expected_projects = [Project(id=project_id, name="test", owner_id=uuid.uuid4())]
-    expected_query = select(Project).order_by(desc(Project.created_at))
+    expected_query = select(Project).order_by(desc(Project.created_at)).limit(10).offset(0)
     result.unique.return_value.scalars.return_value.all.return_value = expected_projects
     session.execute = AsyncMock()
     session.execute.return_value = result

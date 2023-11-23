@@ -66,7 +66,7 @@ class ReviewResponse(BaseModel):
 
 class PositionResponse(BaseModel):
     id: uuid.UUID
-    project_id: uuid.UUID
+    project: ProjectResponse
     specialization_id: uuid.UUID
     skills: list[uuid.UUID]
     closed_at: datetime | None
