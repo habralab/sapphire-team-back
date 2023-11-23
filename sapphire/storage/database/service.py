@@ -21,6 +21,35 @@ class StorageDatabaseService(BaseDatabaseService):
     def get_models(self) -> list[Type[Base]]:
         return [Skill, Specialization, SpecializationGroup]
 
+    async def _get_specializations_filters(
+            self,
+            query_text: str | Type[Empty] = Empty,
+            group_id: uuid.UUID | Type[Empty] = Empty,
+    ) -> list:
+        filters = []
+        if query_text is not Empty:
+            filters.append(Specialization.name.contains(query_text))
+
+        if group_id is not Empty:
+            filters.append(Specialization.group_id == group_id)
+
+        return filters
+
+    async def get_specializations_count(
+            self,
+            session: AsyncSession,
+            query_text: str | Type[Empty] = Empty,
+            group_id: uuid.UUID | Type[Empty] = Empty,
+    ) -> int:
+        query = select(func.count(Specialization)) # pylint: disable=not-callable
+
+        filters = await self._get_specializations_filters(query_text=query_text, group_id=group_id)
+
+        query = query.where(*filters)
+        result = await session.scalar(query)
+
+        return result
+
     async def get_specializations(
             self,
             session: AsyncSession,
@@ -31,12 +60,7 @@ class StorageDatabaseService(BaseDatabaseService):
     ) -> list[Specialization]:
         query = select(Specialization).order_by(desc(Specialization.created_at))
 
-        filters = []
-        if query_text is not Empty:
-            filters.append(Specialization.name.contains(query_text))
-
-        if group_id is not Empty:
-            filters.append(Specialization.group_id == group_id)
+        filters = await self._get_specializations_filters(query_text=query_text, group_id=group_id)
 
         query = query.where(*filters)
 

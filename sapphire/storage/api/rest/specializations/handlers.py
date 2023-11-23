@@ -23,7 +23,11 @@ async def get_specializations(
         paginated_specializations = await database_service.get_specializations(
             session=session, page=page, per_page=per_page, **filters.model_dump(),
         )
+        total_specializations = await database_service.get_specializations_count(
+            session=session, **filters.model_dump()
+        )
 
+    total_pages = -(total_specializations // -per_page)
     specializations = [
             SpecializationResponse.model_validate(s) for s in paginated_specializations
         ]
@@ -32,4 +36,6 @@ async def get_specializations(
         data=specializations,
         page=page,
         per_page=per_page,
+        total_items=total_specializations,
+        total_pages=total_pages,
     )
