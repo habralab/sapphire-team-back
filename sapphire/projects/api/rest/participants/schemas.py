@@ -4,8 +4,8 @@ from typing import Type
 from pydantic import BaseModel, NaiveDatetime
 
 from sapphire.common.api.schemas.paginated import PaginatedResponse
-from sapphire.projects.api.rest.projects.schemas import ParticipantResponse
 from sapphire.common.utils.empty import Empty
+from sapphire.projects.api.rest.projects.schemas import ParticipantResponse
 from sapphire.projects.database.models import ParticipantStatusEnum
 
 
