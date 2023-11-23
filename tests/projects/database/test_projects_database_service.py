@@ -351,11 +351,21 @@ async def test_get_participants_with_all_filters(
         position_id=position_id,
         user_id=user_id,
         project_id=project.id,
+        status=status,
+        created_at_le=created_at_le,
+        created_at_ge=created_at_ge,
+        joined_at_le=joined_at_le,
+        joined_at_ge=joined_at_ge,
+        updated_at_le=updated_at_le,
+        updated_at_ge=updated_at_ge,
     )
 
     assert participants == expected_participants
     
     query = session.execute.call_args_list[0].args[0]
+    print(query)
+    print("AAAAAAAAAAAAAAAAAAAA")
+    print(expected_query)
     assert expected_query.compare(query)
 
 
