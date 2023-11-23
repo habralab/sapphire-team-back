@@ -333,7 +333,7 @@ async def test_get_participants_with_all_filters(
         .where(
             Participant.user_id == user_id,
             Participant.position_id == position_id,
-            Participant.project_id.in_(
+            Participant.position_id.in_(
                 select(Position.id).where(Position.project_id == project.id)
             ),
             Participant.status == status,
