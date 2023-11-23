@@ -363,9 +363,6 @@ async def test_get_participants_with_all_filters(
     assert participants == expected_participants
     
     query = session.execute.call_args_list[0].args[0]
-    print(query)
-    print("AAAAAAAAAAAAAAAAAAAA")
-    print(expected_query)
     assert expected_query.compare(query)
 
 
