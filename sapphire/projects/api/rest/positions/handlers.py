@@ -1,5 +1,3 @@
-import math
-
 import fastapi
 
 from sapphire.common.api.dependencies.pagination import Pagination, pagination

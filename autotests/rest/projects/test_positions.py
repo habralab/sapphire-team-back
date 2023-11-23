@@ -1,11 +1,11 @@
-from http import HTTPStatus
 import uuid
 from datetime import datetime, timedelta
+from http import HTTPStatus
 from typing import Type
 
 import pytest
-from autotests.clients.rest.exceptions import ResponseException
 
+from autotests.clients.rest.exceptions import ResponseException
 from autotests.clients.rest.projects.client import ProjectsRestClient
 from autotests.clients.rest.projects.models import ProjectStatusEnum
 from autotests.utils import Empty
