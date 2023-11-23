@@ -2,7 +2,7 @@ import pathlib
 import uuid
 from typing import Any, Type
 
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from sapphire.common.database.service import BaseDatabaseService
@@ -35,6 +35,27 @@ class NotificationsDatabaseService(BaseDatabaseService):
 
         return notification
 
+    async def _get_notifications_filters(
+        self, recipient_id: uuid.UUID, is_read: bool | Type[Empty] = Empty
+    ) -> list:
+        filters = [Notification.recipient_id == recipient_id]
+        if is_read is not Empty:
+            filters.append(Notification.is_read == is_read)
+
+        return filters
+
+    async def get_notifications_count(
+            self,
+            session: AsyncSession,
+            recipient_id: uuid.UUID,
+            is_read: bool | Type[Empty] = Empty,
+    ) -> int:
+        filters = await self._get_notifications_filters(recipient_id=recipient_id, is_read=is_read)
+        stmt = select(func.count(Notification.id)).where(*filters) # pylint: disable=not-callable
+        result = await session.scalar(stmt)
+
+        return result
+
     async def get_notifications(
             self,
             session: AsyncSession,
@@ -43,10 +64,7 @@ class NotificationsDatabaseService(BaseDatabaseService):
             page: int | Type[Empty] = Empty,
             per_page: int | Type[Empty] = Empty,
     ) -> list[Notification]:
-        filters = [Notification.recipient_id == recipient_id]
-        if is_read is not Empty:
-            filters.append(Notification.is_read == is_read)
-
+        filters = await self._get_notifications_filters(recipient_id=recipient_id, is_read=is_read)
         stmt = select(Notification).where(*filters)
 
         if page is not Empty and per_page is not Empty:
