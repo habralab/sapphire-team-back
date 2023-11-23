@@ -61,10 +61,20 @@ async def get_projects(
             per_page=pagination.per_page,
             **filters.model_dump(),
         )
+        total_projects = await database_service.get_projects_count(
+            session=session, **filters.model_dump()
+        )
 
+    total_pages = -(total_projects // -pagination.per_page)
     projects = [ProjectResponse.model_validate(project_db) for project_db in projects_db]
 
-    return ProjectListResponse(data=projects, page=pagination.page, per_page=pagination.per_page)
+    return ProjectListResponse(
+        data=projects,
+        page=pagination.page,
+        per_page=pagination.per_page,
+        total_items=total_projects,
+        total_pages=total_pages,
+    )
 
 
 async def get_project(

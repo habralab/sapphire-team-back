@@ -31,7 +31,8 @@ disable=missing-class-docstring,
         arguments-differ,
         unused-argument,
         too-many-ancestors,
-        c-extension-no-member
+        c-extension-no-member,
+        too-many-public-methods
 extension-pkg-whitelist=pydantic
 
 [REPORTS]
