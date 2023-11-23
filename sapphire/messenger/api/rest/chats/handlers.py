@@ -23,10 +23,27 @@ async def get_chats(
             session=session,
             user_id=jwt_data.user_id,
             members=filters.member,
+            page=pagination.page,
+            per_page=pagination.per_page,
+        )
+        total_chats = await database_service.count_chats(
+            session=session,
+            user_id=jwt_data.user_id,
+            members=filters.member,
         )
 
+    total_pages = total_chats // pagination.per_page
+    if total_chats % pagination.per_page > 0:
+        total_pages += 1
+
     chats = [ChatResponse.from_db_model(chat) for chat in db_chats]
-    return ChatListResponse(data=chats, page=pagination.page, per_page=pagination.per_page)
+    return ChatListResponse(
+        data=chats,
+        page=pagination.page,
+        per_page=pagination.per_page,
+        total_items=total_chats,
+        total_pages=total_pages,
+    )
 
 
 async def get_chat(chat: Chat = fastapi.Depends(path_chat_is_member)):

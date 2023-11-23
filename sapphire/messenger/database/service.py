@@ -2,7 +2,7 @@ import pathlib
 import uuid
 from typing import Type
 
-from sqlalchemy import or_, select
+from sqlalchemy import func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from sapphire.common.database.service import BaseDatabaseService
@@ -22,18 +22,51 @@ class MessengerDatabaseService(BaseDatabaseService):
     def get_models(self) -> list[Type[Base]]:
         return [Chat, Member, Message]
 
+
+    async def chats_filters(
+        self,
+        user_id: uuid.UUID,
+        members: set[uuid.UUID] | Type[Empty] = Empty,
+    ) -> list:
+        filters = [Member.user_id == user_id, Member.chat_id == Chat.id]
+        if members is not Empty and len(members) > 0:
+            filters.append(or_(*(Member.user_id == member for member in members)))
+
+        return filters
+
+
+    async def count_chats(
+            self,
+            session: AsyncSession,
+            user_id: uuid.UUID,
+            members: set[uuid.UUID] | Type[Empty] = Empty,
+    ) -> int:
+        query = select(func.count(Chat.id)) # pylint: disable=not-callable
+
+        filters = await self.chats_filters(user_id=user_id, members=members)
+        query = query.where(*filters)
+
+        result = await session.scalar(query)
+
+        return result
+
+
     async def get_chats(
             self,
             session: AsyncSession,
             user_id: uuid.UUID,
             members: set[uuid.UUID] | Type[Empty] = Empty,
+            page: int | Type[Empty] = Empty,
+            per_page: int | Type[Empty] = Empty,
     ) -> list[Chat]:
-        query = select(Chat).where(Member.user_id == user_id, Member.chat_id == Chat.id)
+        query = select(Chat).order_by(Chat.created_at.desc())
 
-        filters = []
-        if members is not Empty and len(members) > 0:
-            filters.append(or_(*(Member.user_id == member for member in members)))
+        filters = await self.chats_filters(user_id=user_id, members=members)
         query = query.where(*filters)
+
+        if page is not Empty and per_page is not Empty:
+            offset = (page - 1) * per_page
+            query = query.limit(per_page).offset(offset)
 
         result = await session.execute(query)
 
