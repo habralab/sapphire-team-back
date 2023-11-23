@@ -143,6 +143,34 @@ class StorageDatabaseService(BaseDatabaseService):
 
         return result.unique().scalar_one_or_none()
 
+    async def _get_skills_filters(
+        self,
+        query_text: str | Type[Empty] = Empty,
+        skill_ids: list[uuid.UUID] | Type[Empty] = Empty,
+    ) -> list:
+        filters = []
+        if query_text is not Empty:
+            filters.append(Skill.name.contains(query_text))
+        if skill_ids is not Empty:
+            filters.append(or_(*(Skill.id == id_ for id_ in skill_ids)))
+
+        return filters
+
+    async def get_skills_count(
+        self,
+        session: AsyncSession,
+        query_text: str | Type[Empty] = Empty,
+        skill_ids: list[uuid.UUID] | Type[Empty] = Empty,
+    ) -> int:
+        query = select(func.count(Skill)) # pylint: disable=not-callable
+
+        filters = await self._get_skills_filters(query_text=query_text, skill_ids=skill_ids)
+
+        query = query.where(*filters)
+        result = await session.scalar(query)
+
+        return result
+
     async def get_skills(
         self,
         session: AsyncSession,
@@ -153,11 +181,7 @@ class StorageDatabaseService(BaseDatabaseService):
     ) -> list[Skill]:
         query = select(Skill).order_by(desc(Skill.created_at))
 
-        filters = []
-        if query_text is not Empty:
-            filters.append(Skill.name.contains(query_text))
-        if skill_ids is not Empty:
-            filters.append(or_(*(Skill.id == id_ for id_ in skill_ids)))
+        filters = await self._get_skills_filters(query_text=query_text, skill_ids=skill_ids)
 
         query = query.where(*filters)
         skills = await session.execute(query)
