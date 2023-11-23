@@ -2,7 +2,7 @@ import pathlib
 import uuid
 from typing import Type
 
-from sqlalchemy import desc, or_, select
+from sqlalchemy import desc, func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from sapphire.common.database.service import BaseDatabaseService
@@ -59,6 +59,35 @@ class StorageDatabaseService(BaseDatabaseService):
 
         return result.unique().scalar_one_or_none()
 
+    async def _get_specialization_groups_filters(
+        self, query_text: str | Type[Empty] = Empty
+    ) -> list:
+        filters = []
+        if query_text is not Empty:
+            filters.append(or_(
+                SpecializationGroup.name.contains(query_text),
+                SpecializationGroup.name_en.contains(query_text),
+            ))
+
+        return filters
+
+    async def get_specialization_groups_count(
+        self,
+        session: AsyncSession,
+        query_text: str | Type[Empty] = Empty,
+    ) -> list[SpecializationGroup]:
+        query = (
+            select(func.count(SpecializationGroup.id)) # pylint: disable=not-callable
+            .order_by(desc(SpecializationGroup.created_at))
+        )
+
+        filters = await self._get_specialization_groups_filters(query_text=query_text)
+        query = query.where(*filters)
+
+        result = await session.execute(query)
+
+        return result
+
     async def get_specialization_groups(
         self,
         session: AsyncSession,
@@ -68,13 +97,7 @@ class StorageDatabaseService(BaseDatabaseService):
     ) -> list[SpecializationGroup]:
         query = select(SpecializationGroup).order_by(desc(SpecializationGroup.created_at))
 
-        filters = []
-        if query_text is not Empty:
-            filters.append(or_(
-                SpecializationGroup.name.contains(query_text),
-                SpecializationGroup.name_en.contains(query_text),
-            ))
-
+        filters = await self._get_specialization_groups_filters(query_text=query_text)
         query = query.where(*filters)
 
         if page is not Empty and per_page is not Empty:
