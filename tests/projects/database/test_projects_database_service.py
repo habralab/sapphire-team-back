@@ -314,6 +314,13 @@ async def test_get_participants_with_all_filters(
     project = MagicMock()
     position_id = MagicMock()
     user_id = uuid.uuid4()
+    status = MagicMock()
+    created_at_le = MagicMock()
+    created_at_ge = MagicMock()
+    joined_at_le = MagicMock()
+    joined_at_ge = MagicMock()
+    updated_at_le = MagicMock()
+    updated_at_ge = MagicMock()
     expected_participants = [Participant(position_id=position_id, user_id=user_id)]
     mock_participant = MagicMock()
     mock_participant.unique.return_value.scalars.return_value.all.return_value = (
@@ -324,11 +331,18 @@ async def test_get_participants_with_all_filters(
     expected_query = (
         select(Participant)
         .where(
-            Participant.position_id == position_id,
             Participant.user_id == user_id,
-            Participant.position_id.in_(
+            Participant.position_id == position_id,
+            Participant.project_id.in_(
                 select(Position.id).where(Position.project_id == project.id)
             ),
+            Participant.status == status,
+            Participant.created_at <= created_at_le,
+            Participant.created_at >= created_at_ge,
+            Participant.joined_at <= joined_at_le,
+            Participant.joined_at >= joined_at_ge,
+            Participant.updated_at <= updated_at_le,
+            Participant.updated_at >= updated_at_ge,
         )
     )
 
