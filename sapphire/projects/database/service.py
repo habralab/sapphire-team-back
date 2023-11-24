@@ -180,8 +180,8 @@ class ProjectsDatabaseService(BaseDatabaseService):
 
         if project_query_text is not Empty:
             project_filters.append(or_(
-                Project.name.contains(project_query_text),
-                Project.description.contains(project_query_text),
+                Project.name.icontains(project_query_text),
+                Project.description.icontains(project_query_text),
             ))
         if project_startline_ge is not Empty:
             project_filters.append(Project.startline >= project_startline_ge)
@@ -515,8 +515,8 @@ class ProjectsDatabaseService(BaseDatabaseService):
         if query_text is not Empty:
             filters.append(
                 or_(
-                    Project.name.contains(query_text),
-                    Project.description.contains(query_text),
+                    Project.name.icontains(query_text),
+                    Project.description.icontains(query_text),
                 )
             )
         if owner_id is not Empty:
