@@ -569,8 +569,8 @@ class ProjectsDatabaseService(BaseDatabaseService):
         self,
         session: AsyncSession,
         project_id: uuid.UUID,
-        page: int | Type[Empty] = Empty,
-        per_page: int | Type[Empty] = Empty,
+        page: int = 1,
+        per_page: int = 10,
     ) -> list[ProjectHistory]:
         query = (
             select(ProjectHistory)
@@ -578,9 +578,8 @@ class ProjectsDatabaseService(BaseDatabaseService):
             .order_by(ProjectHistory.created_at.desc())
         )
 
-        if page is not Empty and per_page is not Empty:
-            offset = (page - 1) * per_page
-            query = query.limit(per_page).offset(offset)
+        offset = (page - 1) * per_page
+        query = query.limit(per_page).offset(offset)
 
         result = await session.execute(query)
 

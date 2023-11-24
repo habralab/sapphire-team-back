@@ -53,17 +53,16 @@ class MessengerDatabaseService(BaseDatabaseService):
             session: AsyncSession,
             user_id: uuid.UUID,
             members: set[uuid.UUID] | Type[Empty] = Empty,
-            page: int | Type[Empty] = Empty,
-            per_page: int | Type[Empty] = Empty,
+            page: int = 1,
+            per_page: int = 10,
     ) -> list[Chat]:
         query = select(Chat).order_by(Chat.created_at.desc())
 
         filters = await self._get_chats_filters(user_id=user_id, members=members)
         query = query.where(*filters)
 
-        if page is not Empty and per_page is not Empty:
-            offset = (page - 1) * per_page
-            query = query.limit(per_page).offset(offset)
+        offset = (page - 1) * per_page
+        query = query.limit(per_page).offset(offset)
 
         result = await session.execute(query)
 
@@ -103,16 +102,15 @@ class MessengerDatabaseService(BaseDatabaseService):
             self,
             session: AsyncSession,
             chat_id: uuid.UUID,
-            page: int | Type[Empty] = Empty,
-            per_page: int | Type[Empty] = Empty,
+            page: int = 1,
+            per_page: int = 10,
     ) -> list[Message]:
         query = (
             select(Message).where(Message.chat_id == chat_id).order_by(Message.created_at.desc())
         )
 
-        if page is not Empty and per_page is not Empty:
-            offset = (page - 1) * per_page
-            query = query.limit(per_page).offset(offset)
+        offset = (page - 1) * per_page
+        query = query.limit(per_page).offset(offset)
 
         result = await session.execute(query)
 

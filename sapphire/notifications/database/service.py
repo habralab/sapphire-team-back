@@ -61,15 +61,14 @@ class NotificationsDatabaseService(BaseDatabaseService):
             session: AsyncSession,
             recipient_id: uuid.UUID,
             is_read: bool | Type[Empty] = Empty,
-            page: int | Type[Empty] = Empty,
-            per_page: int | Type[Empty] = Empty,
+            page: int = 1,
+            per_page: int = 10,
     ) -> list[Notification]:
         filters = await self._get_notifications_filters(recipient_id=recipient_id, is_read=is_read)
         stmt = select(Notification).where(*filters)
 
-        if page is not Empty and per_page is not Empty:
-            offset = (page - 1) * per_page
-            stmt = stmt.limit(per_page).offset(offset)
+        offset = (page - 1) * per_page
+        stmt = stmt.limit(per_page).offset(offset)
 
         result = await session.execute(stmt)
 

@@ -54,9 +54,9 @@ class StorageDatabaseService(BaseDatabaseService):
             self,
             session: AsyncSession,
             query_text: str | Type[Empty] = Empty,
-            page: int | Type[Empty] = Empty,
-            per_page: int | Type[Empty] = Empty,
             group_id: uuid.UUID | Type[Empty] = Empty,
+            page: int = 1,
+            per_page: int = 10,
     ) -> list[Specialization]:
         query = select(Specialization).order_by(desc(Specialization.created_at))
 
@@ -64,9 +64,8 @@ class StorageDatabaseService(BaseDatabaseService):
 
         query = query.where(*filters)
 
-        if page is not None and per_page is not None:
-            offset = (page - 1) * per_page
-            query = query.limit(per_page).offset(offset)
+        offset = (page - 1) * per_page
+        query = query.limit(per_page).offset(offset)
 
         specializations = await session.execute(query)
 
@@ -116,17 +115,16 @@ class StorageDatabaseService(BaseDatabaseService):
         self,
         session: AsyncSession,
         query_text: str | Type[Empty] = Empty,
-        page: int | Type[Empty] = Empty,
-        per_page: int | Type[Empty] = Empty,
+        page: int = 1,
+        per_page: int = 10,
     ) -> list[SpecializationGroup]:
         query = select(SpecializationGroup).order_by(desc(SpecializationGroup.created_at))
 
         filters = await self._get_specialization_groups_filters(query_text=query_text)
         query = query.where(*filters)
 
-        if page is not Empty and per_page is not Empty:
-            offset = (page - 1) * per_page
-            query = query.limit(per_page).offset(offset)
+        offset = (page - 1) * per_page
+        query = query.limit(per_page).offset(offset)
 
         specialization_groups = await session.execute(query)
 
@@ -176,8 +174,8 @@ class StorageDatabaseService(BaseDatabaseService):
         session: AsyncSession,
         query_text: str | Type[Empty] = Empty,
         skill_ids: list[uuid.UUID] | Type[Empty] = Empty,
-        page: int | Type[Empty] = Empty,
-        per_page: int | Type[Empty] = Empty,
+        page: int = 1,
+        per_page: int = 10,
     ) -> list[Skill]:
         query = select(Skill).order_by(desc(Skill.created_at))
 
@@ -186,9 +184,8 @@ class StorageDatabaseService(BaseDatabaseService):
         query = query.where(*filters)
         skills = await session.execute(query)
 
-        if page is not Empty and per_page is not Empty:
-            offset = (page - 1) * per_page
-            query = query.limit(per_page).offset(offset)
+        offset = (page - 1) * per_page
+        query = query.limit(per_page).offset(offset)
 
         return list(skills.unique().scalars().all())
 

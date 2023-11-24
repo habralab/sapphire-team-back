@@ -11,6 +11,9 @@ from sapphire.storage.database.service import StorageDatabaseService
 async def test_get_specialization_groups_without_filters(database_service: StorageDatabaseService):
     session = MagicMock()
     name = "Developer"
+    page = 1
+    per_page = 10
+    offset = (page - 1) * per_page
 
     expected_specialization_groups = [SpecializationGroup(name=name)]
     mock_specialization_group = MagicMock()
@@ -20,7 +23,12 @@ async def test_get_specialization_groups_without_filters(database_service: Stora
 
     session.execute = AsyncMock(return_value=mock_specialization_group)
 
-    expected_query = select(SpecializationGroup).order_by(desc(SpecializationGroup.created_at))
+    expected_query = (
+        select(SpecializationGroup)
+        .order_by(desc(SpecializationGroup.created_at))
+        .limit(per_page)
+        .offset(offset)
+    )
 
     specialization_groups = await database_service.get_specialization_groups(session=session)
 
