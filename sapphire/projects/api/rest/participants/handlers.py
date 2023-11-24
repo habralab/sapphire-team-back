@@ -159,7 +159,9 @@ async def get_participants(
             session=session, **filters.model_dump(),
         )
 
-    participants = [ParticipantResponse.model_validate(participant_db) for participant_db in participants_db]
+    participants = [
+        ParticipantResponse.model_validate(participant_db) for participant_db in participants_db
+    ]
     total_pages = -(total_participants // -pagination.per_page)
 
     return ParticipantListResponse(
