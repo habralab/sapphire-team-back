@@ -28,7 +28,10 @@ class StorageDatabaseService(BaseDatabaseService):
     ) -> list:
         filters = []
         if query_text is not Empty:
-            filters.append(Specialization.name.contains(query_text))
+            filters.append(or_(
+                Specialization.name.icontains(query_text),
+                Specialization.name_en.icontains(query_text),
+            ))
 
         if group_id is not Empty:
             filters.append(Specialization.group_id == group_id)
@@ -88,8 +91,8 @@ class StorageDatabaseService(BaseDatabaseService):
         filters = []
         if query_text is not Empty:
             filters.append(or_(
-                SpecializationGroup.name.contains(query_text),
-                SpecializationGroup.name_en.contains(query_text),
+                SpecializationGroup.name.icontains(query_text),
+                SpecializationGroup.name_en.icontains(query_text),
             ))
 
         return filters
@@ -145,7 +148,7 @@ class StorageDatabaseService(BaseDatabaseService):
     ) -> list:
         filters = []
         if query_text is not Empty:
-            filters.append(Skill.name.contains(query_text))
+            filters.append(Skill.name.icontains(query_text))
         if skill_ids is not Empty:
             filters.append(or_(*(Skill.id == id_ for id_ in skill_ids)))
 
