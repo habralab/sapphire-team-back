@@ -48,6 +48,10 @@ class ProjectListResponse(PaginatedResponse):
     data: list[ProjectResponse]
 
 
+class ParticipantListResponse(PaginatedResponse):
+    data: list[ParticipantResponse]
+
+
 class CreateReviewRequest(BaseModel):
     project_id: uuid.UUID
     user_id: uuid.UUID

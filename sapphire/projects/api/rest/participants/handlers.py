@@ -146,7 +146,7 @@ async def get_participants(
     request: fastapi.Request,
     pagination: Pagination = fastapi.Depends(pagination),
     filters: ParticipantListFiltersRequest = fastapi.Depends(ParticipantListFiltersRequest),
-):
+) -> ParticipantListResponse:
     database_service: ProjectsDatabaseService = request.app.service.database
     async with database_service.transaction() as session:
         participants_db = await database_service.get_projects(

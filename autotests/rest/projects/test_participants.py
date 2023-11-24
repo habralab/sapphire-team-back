@@ -5,6 +5,7 @@ from typing import Type
 import pytest
 from faker import Faker
 
+from autotests.clients.rest.projects.client import ProjectsRestClient
 from autotests.clients.rest.projects.enums import ParticipantStatusEnum
 from autotests.utils import Empty
 
@@ -29,7 +30,7 @@ from autotests.utils import Empty
             uuid.uuid4(),
             uuid.uuid4(),
             uuid.uuid4(),
-            ParticipantStatusEnum.ACTIVE,
+            ParticipantStatusEnum.JOINED,
             datetime.utcnow(),
             datetime.utcnow() - timedelta(days=30),
             datetime.utcnow(),
@@ -43,7 +44,7 @@ from autotests.utils import Empty
 )
 @pytest.mark.asyncio
 async def test_get_participants(
-        client: ParticipantsRestClient,
+        client: ProjectsRestClient,
         user_id: uuid.UUID | Type[Empty],
         position_id: uuid.UUID | Type[Empty],
         project_id: uuid.UUID | Type[Empty],
