@@ -370,7 +370,42 @@ class ProjectsDatabaseService(BaseDatabaseService):
             joined_at_ge: datetime | Type[Empty] = Empty,
             updated_at_le: datetime | Type[Empty] = Empty,
             updated_at_ge: datetime | Type[Empty] = Empty,
+            page: int = 1,
+            per_page: int = 10,
     ) -> list[Participant]:
+        filters = await self._get_participants_filters(
+            position_id=position_id,
+            user_id=user_id,
+            project_id=project_id,
+            status=status,
+            created_at_le=created_at_le,
+            created_at_ge=created_at_ge,
+            joined_at_le=joined_at_le,
+            joined_at_ge=joined_at_ge,
+            updated_at_le=updated_at_le,
+            updated_at_ge=updated_at_ge,
+        )
+        query = select(Participant).where(*filters)
+
+        offset = (page - 1) * per_page
+        query = query.limit(per_page).offset(offset)
+
+        result = await session.execute(query)
+        return list(result.unique().scalars().all())
+
+    async def _get_participants_filters(
+        self,
+        position_id: uuid.UUID | Type[Empty] = Empty,
+        user_id: uuid.UUID | Type[Empty] = Empty,
+        project_id: uuid.UUID | Type[Empty] = Empty,
+        status: ParticipantStatusEnum | Type[Empty] = Empty,
+        created_at_le: datetime | Type[Empty] = Empty,
+        created_at_ge: datetime | Type[Empty] = Empty,
+        joined_at_le: datetime | Type[Empty] = Empty,
+        joined_at_ge: datetime | Type[Empty] = Empty,
+        updated_at_le: datetime | Type[Empty] = Empty,
+        updated_at_ge: datetime | Type[Empty] = Empty,
+    ) -> list:
         filters = []
 
         if user_id is not Empty:
@@ -395,9 +430,41 @@ class ProjectsDatabaseService(BaseDatabaseService):
         if updated_at_ge is not Empty:
             filters.append(Participant.updated_at >= updated_at_ge)
 
-        query = select(Participant).where(*filters)
-        result = await session.execute(query)
-        return list(result.unique().scalars().all())
+        return filters
+
+    async def get_participants_count(
+        self,
+        session: AsyncSession,
+        position_id: uuid.UUID | Type[Empty] = Empty,
+        user_id: uuid.UUID | Type[Empty] = Empty,
+        project_id: uuid.UUID | Type[Empty] = Empty,
+        status: ParticipantStatusEnum | Type[Empty] = Empty,
+        created_at_le: datetime | Type[Empty] = Empty,
+        created_at_ge: datetime | Type[Empty] = Empty,
+        joined_at_le: datetime | Type[Empty] = Empty,
+        joined_at_ge: datetime | Type[Empty] = Empty,
+        updated_at_le: datetime | Type[Empty] = Empty,
+        updated_at_ge: datetime | Type[Empty] = Empty,
+        page: int = 1,
+        per_page: int = 10, 
+    ) -> int:
+        query = select(func.count(Participant.id))  # pylint: disable=not-callable
+        filters = await self._get_participants_filters(
+            position_id=position_id,
+            user_id=user_id,
+            project_id=project_id,
+            status=status,
+            created_at_le=created_at_le,
+            created_at_ge=created_at_ge,
+            joined_at_le=joined_at_le,
+            joined_at_ge=joined_at_ge,
+            updated_at_le=updated_at_le,
+            updated_at_ge=updated_at_ge,
+        )
+        query = query.where(*filters)
+
+        result = await session.scalar(query)
+        return result
 
     async def create_participant(
             self,

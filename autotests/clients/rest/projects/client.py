@@ -16,8 +16,8 @@ from .models import (
     CreateProjectRequest,
     CreateReviewRequest,
     HealthResponse,
-    ParticipantResponse,
     ParticipantListResponse,
+    ParticipantResponse,
     PositionListResponse,
     PositionResponse,
     ProjectListResponse,
@@ -277,7 +277,7 @@ class ProjectsRestClient(BaseRestClient):
             page: int = 1,
             per_page: int = 10,
     ) -> ParticipantListResponse:
-        path = "/api/rest/projects/"
+        path = "/api/rest/participants/"
         params = {
             "user_id": user_id,
             "position_id": position_id,
