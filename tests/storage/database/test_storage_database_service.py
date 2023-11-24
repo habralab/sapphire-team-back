@@ -60,8 +60,8 @@ async def test_get_specialization_groups_with_all_filters(
         select(SpecializationGroup)
         .order_by(desc(SpecializationGroup.created_at))
         .where(or_(
-            SpecializationGroup.name.contains(name),
-            SpecializationGroup.name_en.contains(name),
+            SpecializationGroup.name.icontains(name),
+            SpecializationGroup.name_en.icontains(name),
         ))
         .limit(per_page)
         .offset(offset)

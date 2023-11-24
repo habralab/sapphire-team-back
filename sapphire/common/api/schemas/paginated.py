@@ -7,5 +7,5 @@ class PaginatedResponse(BaseModel):
     data: list[Any]
     page: int
     per_page: int
-    total_pages: int | None = None
-    total_items: int | None = None
+    total_pages: int
+    total_items: int
