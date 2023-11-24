@@ -446,7 +446,7 @@ class ProjectsDatabaseService(BaseDatabaseService):
         updated_at_le: datetime | Type[Empty] = Empty,
         updated_at_ge: datetime | Type[Empty] = Empty,
         page: int = 1,
-        per_page: int = 10, 
+        per_page: int = 10,
     ) -> int:
         query = select(func.count(Participant.id))  # pylint: disable=not-callable
         filters = await self._get_participants_filters(
