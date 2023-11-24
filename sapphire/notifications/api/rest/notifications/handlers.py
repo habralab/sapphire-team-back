@@ -29,9 +29,15 @@ async def get_notifications(
             per_page=pagination.per_page,
             session=session,
             is_read=filters.is_read,
-            recipient_id=jwt_data.user_id
+            recipient_id=jwt_data.user_id,
+        )
+        total_notifications = await database_service.get_notifications_count(
+            session=session,
+            is_read=filters.is_read,
+            recipient_id=jwt_data.user_id,
         )
 
+    total_pages = -(total_notifications // -pagination.per_page)
     notifications = [
         NotificationResponse.model_validate(notification)
         for notification in notifications
@@ -41,6 +47,8 @@ async def get_notifications(
         data=notifications,
         page=pagination.page,
         per_page=pagination.per_page,
+        total_items=total_notifications,
+        total_pages=total_pages,
     )
 
 

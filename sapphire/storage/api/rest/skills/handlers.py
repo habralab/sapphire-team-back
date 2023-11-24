@@ -26,11 +26,19 @@ async def get_skills(
             page=page,
             per_page=per_page,
         )
+        total_skills = await database_service.get_skills_count(
+            session=session,
+            query_text=filters.query_text,
+            skill_ids=filters.id,
+        )
 
+    total_pages = -(total_skills // -per_page)
     skills = [SkillResponse.model_validate(s) for s in paginated_skills]
 
     return SkillListResponse(
         data=skills,
         page=page,
         per_page=per_page,
+        total_skills=total_skills,
+        total_pages=total_pages,
     )
