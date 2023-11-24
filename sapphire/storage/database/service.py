@@ -179,10 +179,11 @@ class StorageDatabaseService(BaseDatabaseService):
         filters = await self._get_skills_filters(query_text=query_text, skill_ids=skill_ids)
 
         query = query.where(*filters)
-        skills = await session.execute(query)
 
         offset = (page - 1) * per_page
         query = query.limit(per_page).offset(offset)
+
+        skills = await session.execute(query)
 
         return list(skills.unique().scalars().all())
 
