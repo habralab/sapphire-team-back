@@ -24,19 +24,26 @@ async def get_positions(
     database_service: ProjectsDatabaseService = request.app.service.database
 
     async with database_service.transaction() as session:
-        positions = await database_service.get_positions(
+        db_positions = await database_service.get_positions(
             session=session,
             page=pagination.page,
             per_page=pagination.per_page,
             **filters.model_dump(),
         )
+        total_positions = await database_service.get_positions_count(
+            session=session,
+            **filters.model_dump(),
+        )
 
-    data = [PositionResponse.from_db_model(position) for position in positions]
+    total_pages = -(total_positions // -pagination.per_page)
+    positions = [PositionResponse.from_db_model(position) for position in db_positions]
 
     return PositionListResponse(
-        data=data,
+        data=positions,
         page=pagination.page,
         per_page=pagination.per_page,
+        total_items=total_positions,
+        total_pages=total_pages,
     )
 
 
@@ -67,7 +74,7 @@ async def create_position(
 
 async def get_position(
         position: Position = fastapi.Depends(get_path_position),
-):
+) -> PositionResponse:
     return PositionResponse.from_db_model(position)
 
 

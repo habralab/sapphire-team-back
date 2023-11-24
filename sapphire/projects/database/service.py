@@ -135,22 +135,20 @@ class ProjectsDatabaseService(BaseDatabaseService):
         await session.refresh(project)
         return project
 
-    async def get_positions(
+    async def _get_positions_filters(
             self,
-            session: AsyncSession,
             project_id: uuid.UUID | Type[Empty] = Empty,
             is_closed: bool | Type[Empty] = Empty,
             specialization_ids: list[uuid.UUID] | Type[Empty] = Empty,
             skill_ids: list[uuid.UUID] | Type[Empty] = Empty,
+            joined_user_id: uuid.UUID | Type[Empty] = Empty,
             project_query_text: str | Type[Empty] = Empty,
             project_startline_ge: datetime | Type[Empty] = Empty,
             project_startline_le: datetime | Type[Empty] = Empty,
             project_deadline_ge: datetime | Type[Empty] = Empty,
             project_deadline_le: datetime | Type[Empty] = Empty,
             project_status: ProjectStatusEnum | Type[Empty] = Empty,
-            page: int = 1,
-            per_page: int = 10,
-    ) -> list[Position]:
+    ) -> list:
         filters = []
         skill_filters = []
         project_filters = []
@@ -168,6 +166,17 @@ class ProjectsDatabaseService(BaseDatabaseService):
 
         if skill_ids is not Empty:
             skill_filters.append(PositionSkill.skill_id.in_(skill_ids))
+
+        if joined_user_id is not Empty:
+            filters.append(or_(
+                Position.project_id.in_(select(Project.id).where(
+                    Project.owner_id == joined_user_id,
+                )),
+                Position.id.in_(select(Participant.position_id).where(
+                    Participant.user_id == joined_user_id,
+                    Participant.status == ParticipantStatusEnum.JOINED,
+                ))
+            ))
 
         if project_query_text is not Empty:
             project_filters.append(or_(
@@ -203,7 +212,77 @@ class ProjectsDatabaseService(BaseDatabaseService):
                 Position.project_id.in_(select(Project.id).where(*project_filters))
             )
 
-        statement = select(Position).where(*filters)
+        return filters
+
+    async def get_positions_count(
+            self,
+            session: AsyncSession,
+            project_id: uuid.UUID | Type[Empty] = Empty,
+            is_closed: bool | Type[Empty] = Empty,
+            specialization_ids: list[uuid.UUID] | Type[Empty] = Empty,
+            skill_ids: list[uuid.UUID] | Type[Empty] = Empty,
+            joined_user_id: uuid.UUID | Type[Empty] = Empty,
+            project_query_text: str | Type[Empty] = Empty,
+            project_startline_ge: datetime | Type[Empty] = Empty,
+            project_startline_le: datetime | Type[Empty] = Empty,
+            project_deadline_ge: datetime | Type[Empty] = Empty,
+            project_deadline_le: datetime | Type[Empty] = Empty,
+            project_status: ProjectStatusEnum | Type[Empty] = Empty,
+    ) -> int:
+        filters = await self._get_positions_filters(
+            project_id=project_id,
+            is_closed=is_closed,
+            specialization_ids=specialization_ids,
+            skill_ids=skill_ids,
+            joined_user_id=joined_user_id,
+            project_query_text=project_query_text,
+            project_startline_ge=project_startline_ge,
+            project_startline_le=project_startline_le,
+            project_deadline_ge=project_deadline_ge,
+            project_deadline_le=project_deadline_le,
+            project_status=project_status,
+        )
+
+        statement = select(func.count(Position.id)).where(*filters) # pylint: disable=not-callable
+        result = await session.scalar(statement)
+        return result
+
+    async def get_positions(
+            self,
+            session: AsyncSession,
+            project_id: uuid.UUID | Type[Empty] = Empty,
+            is_closed: bool | Type[Empty] = Empty,
+            specialization_ids: list[uuid.UUID] | Type[Empty] = Empty,
+            skill_ids: list[uuid.UUID] | Type[Empty] = Empty,
+            joined_user_id: uuid.UUID | Type[Empty] = Empty,
+            project_query_text: str | Type[Empty] = Empty,
+            project_startline_ge: datetime | Type[Empty] = Empty,
+            project_startline_le: datetime | Type[Empty] = Empty,
+            project_deadline_ge: datetime | Type[Empty] = Empty,
+            project_deadline_le: datetime | Type[Empty] = Empty,
+            project_status: ProjectStatusEnum | Type[Empty] = Empty,
+            page: int = 1,
+            per_page: int = 10,
+    ) -> list[Position]:
+        filters = await self._get_positions_filters(
+            project_id=project_id,
+            is_closed=is_closed,
+            specialization_ids=specialization_ids,
+            skill_ids=skill_ids,
+            joined_user_id=joined_user_id,
+            project_query_text=project_query_text,
+            project_startline_ge=project_startline_ge,
+            project_startline_le=project_startline_le,
+            project_deadline_ge=project_deadline_ge,
+            project_deadline_le=project_deadline_le,
+            project_status=project_status,
+        )
+
+        statement = select(Position).where(*filters).order_by(Position.created_at.desc())
+
+        offset = (page - 1) * per_page
+        statement = statement.limit(per_page).offset(offset)
+
         result = await session.execute(statement)
         return list(result.unique().scalars().all())
 
@@ -348,27 +427,23 @@ class ProjectsDatabaseService(BaseDatabaseService):
 
         return participant
 
-    async def get_projects(
-        self,
-        session: AsyncSession,
-        query_text: str | Type[Empty] = Empty,
-        owner_id: uuid.UUID | Type[Empty] = Empty,
-        user_id: uuid.UUID | Type[Empty] = Empty,
-        startline_le: datetime | Type[Empty] = Empty,
-        startline_ge: datetime | Type[Empty] = Empty,
-        deadline_le: datetime | Type[Empty] = Empty,
-        deadline_ge: datetime | Type[Empty] = Empty,
-        status: ProjectStatusEnum | Type[Empty] = Empty,
-        position_skill_ids: list[uuid.UUID] | Type[Empty] = Empty,
-        position_specialization_ids: list[uuid.UUID] | Type[Empty] = Empty,
-        participant_user_ids: list[uuid.UUID] | Type[Empty] = Empty,
-        page: int = 1,
-        per_page: int = 10,
-    ) -> list[Project]:
+    async def _get_projects_filters(
+            self,
+            query_text: str | Type[Empty] = Empty,
+            owner_id: uuid.UUID | Type[Empty] = Empty,
+            user_id: uuid.UUID | Type[Empty] = Empty,
+            startline_le: datetime | Type[Empty] = Empty,
+            startline_ge: datetime | Type[Empty] = Empty,
+            deadline_le: datetime | Type[Empty] = Empty,
+            deadline_ge: datetime | Type[Empty] = Empty,
+            status: ProjectStatusEnum | Type[Empty] = Empty,
+            position_skill_ids: list[uuid.UUID] | Type[Empty] = Empty,
+            position_specialization_ids: list[uuid.UUID] | Type[Empty] = Empty,
+            participant_user_ids: list[uuid.UUID] | Type[Empty] = Empty,
+    ) -> list:
         filters = []
         position_filters = []
         participant_filters = []
-        query = select(Project).order_by(Project.created_at.desc())
 
         if query_text is not Empty:
             filters.append(
@@ -430,7 +505,105 @@ class ProjectsDatabaseService(BaseDatabaseService):
                 Project.id.in_(select(Position.project_id).where(*position_filters))
             )
 
+        return filters
+
+    async def get_projects_count(
+        self,
+        session: AsyncSession,
+        query_text: str | Type[Empty] = Empty,
+        owner_id: uuid.UUID | Type[Empty] = Empty,
+        user_id: uuid.UUID | Type[Empty] = Empty,
+        startline_le: datetime | Type[Empty] = Empty,
+        startline_ge: datetime | Type[Empty] = Empty,
+        deadline_le: datetime | Type[Empty] = Empty,
+        deadline_ge: datetime | Type[Empty] = Empty,
+        status: ProjectStatusEnum | Type[Empty] = Empty,
+        position_skill_ids: list[uuid.UUID] | Type[Empty] = Empty,
+        position_specialization_ids: list[uuid.UUID] | Type[Empty] = Empty,
+        participant_user_ids: list[uuid.UUID] | Type[Empty] = Empty,
+    ) -> int:
+        query = select(func.count(Project.id))  # pylint: disable=not-callable
+        filters = await self._get_projects_filters(
+            query_text=query_text,
+            owner_id=owner_id,
+            user_id=user_id,
+            startline_le=startline_le,
+            startline_ge=startline_ge,
+            deadline_le=deadline_le,
+            deadline_ge=deadline_ge,
+            status=status,
+            position_skill_ids=position_skill_ids,
+            position_specialization_ids=position_specialization_ids,
+            participant_user_ids=participant_user_ids,
+        )
         query = query.where(*filters)
+
+        result = await session.scalar(query)
+        return result
+
+    async def get_projects(
+        self,
+        session: AsyncSession,
+        query_text: str | Type[Empty] = Empty,
+        owner_id: uuid.UUID | Type[Empty] = Empty,
+        user_id: uuid.UUID | Type[Empty] = Empty,
+        startline_le: datetime | Type[Empty] = Empty,
+        startline_ge: datetime | Type[Empty] = Empty,
+        deadline_le: datetime | Type[Empty] = Empty,
+        deadline_ge: datetime | Type[Empty] = Empty,
+        status: ProjectStatusEnum | Type[Empty] = Empty,
+        position_skill_ids: list[uuid.UUID] | Type[Empty] = Empty,
+        position_specialization_ids: list[uuid.UUID] | Type[Empty] = Empty,
+        participant_user_ids: list[uuid.UUID] | Type[Empty] = Empty,
+        page: int = 1,
+        per_page: int = 10,
+    ) -> list[Project]:
+        query = select(Project).order_by(Project.created_at.desc())
+        filters = await self._get_projects_filters(
+            query_text=query_text,
+            owner_id=owner_id,
+            user_id=user_id,
+            startline_le=startline_le,
+            startline_ge=startline_ge,
+            deadline_le=deadline_le,
+            deadline_ge=deadline_ge,
+            status=status,
+            position_skill_ids=position_skill_ids,
+            position_specialization_ids=position_specialization_ids,
+            participant_user_ids=participant_user_ids,
+        )
+        query = query.where(*filters)
+
+        offset = (page - 1) * per_page
+        query = query.limit(per_page).offset(offset)
+
+        result = await session.execute(query)
+
+        return list(result.unique().scalars().all())
+
+    async def get_project_history_count(
+        self, session: AsyncSession, project_id: uuid.UUID
+    ) -> int:
+        query = (
+            select(func.count(ProjectHistory.id)).where(ProjectHistory.project_id == project_id) # pylint: disable=not-callable
+        )
+
+        result = await session.scalar(query)
+
+        return result
+
+    async def get_project_history(
+        self,
+        session: AsyncSession,
+        project_id: uuid.UUID,
+        page: int = 1,
+        per_page: int = 10,
+    ) -> list[ProjectHistory]:
+        query = (
+            select(ProjectHistory)
+            .where(ProjectHistory.project_id == project_id)
+            .order_by(ProjectHistory.created_at.desc())
+        )
 
         offset = (page - 1) * per_page
         query = query.limit(per_page).offset(offset)
