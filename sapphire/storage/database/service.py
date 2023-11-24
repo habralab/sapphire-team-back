@@ -99,10 +99,7 @@ class StorageDatabaseService(BaseDatabaseService):
         session: AsyncSession,
         query_text: str | Type[Empty] = Empty,
     ) -> int:
-        query = (
-            select(func.count(SpecializationGroup.id)) # pylint: disable=not-callable
-            .order_by(desc(SpecializationGroup.created_at))
-        )
+        query = select(func.count(SpecializationGroup.id))  # pylint: disable=not-callable
 
         filters = await self._get_specialization_groups_filters(query_text=query_text)
         query = query.where(*filters)

@@ -32,8 +32,6 @@ async def get_positions(
         )
         total_positions = await database_service.get_positions_count(
             session=session,
-            page=pagination.page,
-            per_page=pagination.per_page,
             **filters.model_dump(),
         )
 

@@ -221,6 +221,7 @@ class ProjectsDatabaseService(BaseDatabaseService):
             is_closed: bool | Type[Empty] = Empty,
             specialization_ids: list[uuid.UUID] | Type[Empty] = Empty,
             skill_ids: list[uuid.UUID] | Type[Empty] = Empty,
+            joined_user_id: uuid.UUID | Type[Empty] = Empty,
             project_query_text: str | Type[Empty] = Empty,
             project_startline_ge: datetime | Type[Empty] = Empty,
             project_startline_le: datetime | Type[Empty] = Empty,
@@ -233,6 +234,7 @@ class ProjectsDatabaseService(BaseDatabaseService):
             is_closed=is_closed,
             specialization_ids=specialization_ids,
             skill_ids=skill_ids,
+            joined_user_id=joined_user_id,
             project_query_text=project_query_text,
             project_startline_ge=project_startline_ge,
             project_startline_le=project_startline_le,
@@ -252,6 +254,7 @@ class ProjectsDatabaseService(BaseDatabaseService):
             is_closed: bool | Type[Empty] = Empty,
             specialization_ids: list[uuid.UUID] | Type[Empty] = Empty,
             skill_ids: list[uuid.UUID] | Type[Empty] = Empty,
+            joined_user_id: uuid.UUID | Type[Empty] = Empty,
             project_query_text: str | Type[Empty] = Empty,
             project_startline_ge: datetime | Type[Empty] = Empty,
             project_startline_le: datetime | Type[Empty] = Empty,
@@ -266,6 +269,7 @@ class ProjectsDatabaseService(BaseDatabaseService):
             is_closed=is_closed,
             specialization_ids=specialization_ids,
             skill_ids=skill_ids,
+            joined_user_id=joined_user_id,
             project_query_text=project_query_text,
             project_startline_ge=project_startline_ge,
             project_startline_le=project_startline_le,
@@ -495,7 +499,7 @@ class ProjectsDatabaseService(BaseDatabaseService):
         position_specialization_ids: list[uuid.UUID] | Type[Empty] = Empty,
         participant_user_ids: list[uuid.UUID] | Type[Empty] = Empty,
     ) -> int:
-        query = select(func.count(Project)) # pylint: disable=not-callable
+        query = select(func.count(Project.id))  # pylint: disable=not-callable
         filters = await self._get_projects_filters(
             query_text=query_text,
             owner_id=owner_id,
