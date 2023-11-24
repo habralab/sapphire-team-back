@@ -38,7 +38,7 @@ async def get_notifications(
         )
 
     total_pages = -(total_notifications // -pagination.per_page)
-    notifications = [Notification.model_validate(notification) for notification in notifications]
+    notifications = [NotificationResponse.model_validate(notification) for notification in notifications]
 
     return NotificationListResponse(
         data=notifications,
