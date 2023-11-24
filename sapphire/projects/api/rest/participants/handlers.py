@@ -149,7 +149,7 @@ async def get_participants(
 ) -> ParticipantListResponse:
     database_service: ProjectsDatabaseService = request.app.service.database
     async with database_service.transaction() as session:
-        participants_db = await database_service.get_projects(
+        participants_db = await database_service.get_participants(
             session=session,
             page=pagination.page,
             per_page=pagination.per_page,
