@@ -2,6 +2,7 @@ from collections import defaultdict
 
 import fastapi
 
+from sapphire.common.api.dependencies.pagination import Pagination, pagination
 from sapphire.common.api.exceptions import HTTPForbidden, HTTPNotFound
 from sapphire.common.jwt.dependencies.rest import is_auth
 from sapphire.common.jwt.models import JWTData
@@ -11,7 +12,12 @@ from sapphire.projects.database.models import Participant, ParticipantStatusEnum
 from sapphire.projects.database.service import ProjectsDatabaseService
 
 from .dependencies import get_path_participant
-from .schemas import CreateParticipantRequest, UpdateParticipantRequest
+from .schemas import (
+    CreateParticipantRequest,
+    ParticipantListFiltersRequest,
+    ParticipantListResponse,
+    UpdateParticipantRequest,
+)
 
 
 async def create_participant(
@@ -134,3 +140,34 @@ async def update_participant(
             await participant_notification_send(project=project, participant=participant)
 
     return ParticipantResponse.model_validate(participant)
+
+
+async def get_participants(
+    request: fastapi.Request,
+    pagination: Pagination = fastapi.Depends(pagination),
+    filters: ParticipantListFiltersRequest = fastapi.Depends(ParticipantListFiltersRequest),
+) -> ParticipantListResponse:
+    database_service: ProjectsDatabaseService = request.app.service.database
+    async with database_service.transaction() as session:
+        participants_db = await database_service.get_participants(
+            session=session,
+            page=pagination.page,
+            per_page=pagination.per_page,
+            **filters.model_dump(),
+        )
+        total_participants = await database_service.get_participants_count(
+            session=session, **filters.model_dump(),
+        )
+
+    participants = [
+        ParticipantResponse.model_validate(participant_db) for participant_db in participants_db
+    ]
+    total_pages = -(total_participants // -pagination.per_page)
+
+    return ParticipantListResponse(
+        data=participants,
+        page=pagination.page,
+        per_page=pagination.per_page,
+        total_items=total_participants,
+        total_pages=total_pages,
+    )

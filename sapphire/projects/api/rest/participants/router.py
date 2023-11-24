@@ -5,6 +5,9 @@ from . import handlers
 router = fastapi.APIRouter()
 
 router.add_api_route(
+    path="/", methods=["GET"], endpoint=handlers.get_participants,
+)
+router.add_api_route(
     path="/", methods=["POST"], endpoint=handlers.create_participant,
 )
 router.add_api_route(

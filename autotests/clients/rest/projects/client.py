@@ -16,6 +16,7 @@ from .models import (
     CreateProjectRequest,
     CreateReviewRequest,
     HealthResponse,
+    ParticipantListResponse,
     ParticipantResponse,
     PositionListResponse,
     PositionResponse,
@@ -260,3 +261,37 @@ class ProjectsRestClient(BaseRestClient):
         path = f"/api/rest/users/{user_id}/statistic"
 
         return await self.rest_get(path=path, response_model=UserStatisticResponse)
+
+    async def get_participants(
+            self,
+            position_id: uuid.UUID | Type[Empty] = Empty,
+            user_id: uuid.UUID | Type[Empty] = Empty,
+            project_id: uuid.UUID | Type[Empty] = Empty,
+            status: ParticipantStatusEnum | Type[Empty] = Empty,
+            created_at_le: datetime | Type[Empty] = Empty,
+            created_at_ge: datetime | Type[Empty] = Empty,
+            joined_at_le: datetime | Type[Empty] = Empty,
+            joined_at_ge: datetime | Type[Empty] = Empty,
+            updated_at_le: datetime | Type[Empty] = Empty,
+            updated_at_ge: datetime | Type[Empty] = Empty,
+            page: int = 1,
+            per_page: int = 10,
+    ) -> ParticipantListResponse:
+        path = "/api/rest/participants/"
+        params = {
+            "user_id": user_id,
+            "position_id": position_id,
+            "project_id": project_id,
+            "status": status.value if status is not Empty else Empty,
+            "created_at_le": created_at_le,
+            "created_at_ge": created_at_ge,
+            "joined_at_le": joined_at_le,
+            "joined_at_ge": joined_at_ge,
+            "updated_at_le": updated_at_le,
+            "updated_at_ge":  updated_at_ge,
+            "page": page,
+            "per_page": per_page,
+        }
+
+        params = {key: value for key, value in params.items() if value is not Empty}
+        return await self.rest_get(path=path, params=params, response_model=ParticipantListResponse)
