@@ -11,6 +11,7 @@ from sapphire.storage.api.schemas.specializations import SpecializationResponse
 class SpecializationFiltersRequest(BaseModel):
     query_text: str | Type[Empty] = Empty
     group_id: uuid.UUID | Type[Empty] = Empty
+    id: list[uuid.UUID] | Type[Empty] = Empty
 
 
 class SpecializationListResponse(PaginatedResponse):
