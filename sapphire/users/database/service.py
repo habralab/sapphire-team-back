@@ -2,7 +2,7 @@ import pathlib
 import uuid
 from typing import Set, Type
 
-from sqlalchemy import delete, select
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from sapphire.common.database.service import BaseDatabaseService
@@ -104,13 +104,14 @@ class UsersDatabaseService(BaseDatabaseService):
         user: User,
         skills: Set[uuid.UUID] = frozenset(),
     ) -> Set[uuid.UUID]:
-        stmt = delete(UserSkill).where(UserSkill.user_id == user.id)
-        await session.execute(stmt)
+        async with session.begin_nested():
+            user.skills = []
+            session.add(user)
 
-        new_skills = [UserSkill(user=user, skill_id=skill) for skill in skills]
-        user.skills = new_skills
-
-        session.add(user)
+        async with session.begin_nested():
+            new_skills = [UserSkill(user=user, skill_id=skill) for skill in skills]
+            user.skills = new_skills
+            session.add(user)
 
         return skills
 

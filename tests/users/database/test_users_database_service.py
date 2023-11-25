@@ -105,8 +105,6 @@ async def test_update_skills(database_service: UsersDatabaseService):
     new_skills = {uuid.uuid4() for _ in range(5)}
 
     session = MagicMock()
-    expected_query = delete(UserSkill).where(UserSkill.user_id == user.id)
-    session.execute = AsyncMock()
 
     skills = await database_service.update_user_skills(
         session=session,
@@ -114,10 +112,9 @@ async def test_update_skills(database_service: UsersDatabaseService):
         skills=new_skills,
     )
  
-    session.execute.assert_awaited_once()
-    assert len(session.execute.call_args_list[0].args) == 1
-    query = session.execute.call_args_list[0].args[0]
-    assert expected_query.compare(query)
+    assert len(session.add.call_args_list) == 2
+    assert session.add.call_args_list[0].args == (user,)
+    assert session.add.call_args_list[1].args == (user,)
 
     expected_user_skills = {(user.id, new_skill) for new_skill in new_skills}
     actual_user_skills = {(user_skill.user.id, user_skill.skill_id) for user_skill in user.skills}
