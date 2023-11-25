@@ -477,6 +477,83 @@ class TestProjectFlow:
 
     @pytest.mark.dependency(depends=["TestProjectFlow::test_get_third_accepted_request_to_join"])
     @pytest.mark.asyncio
+    async def test_create_random_request_to_join(
+            self,
+            random_id: uuid.UUID,
+            random_projects_rest_client: ProjectsRestClient,
+    ):
+        position_id: uuid.UUID = self.CONTEXT["position_id"]
+
+        participant = await random_projects_rest_client.create_request_to_join_position(
+            position_id=position_id,
+        )
+
+        self.CONTEXT["new_participant_id"] = participant.id
+
+        assert participant.position_id == position_id
+        assert participant.user_id == random_id
+        assert participant.status == ParticipantStatusEnum.REQUEST
+
+    @pytest.mark.dependency(depends=["TestProjectFlow::test_create_random_request_to_join"])
+    @pytest.mark.asyncio
+    async def test_get_random_request_to_join(
+            self,
+            random_id: uuid.UUID,
+            random_projects_rest_client: ProjectsRestClient,
+    ):
+        position_id: uuid.UUID = self.CONTEXT["position_id"]
+        participant_id: uuid.UUID = self.CONTEXT["new_participant_id"]
+
+        participant = await random_projects_rest_client.get_participant(
+            participant_id=participant_id,
+        )
+
+        assert participant.id == participant_id
+        assert participant.position_id == position_id
+        assert participant.user_id == random_id
+        assert participant.status == ParticipantStatusEnum.REQUEST
+
+    @pytest.mark.dependency(depends=["TestProjectFlow::test_get_random_request_to_join"])
+    @pytest.mark.asyncio
+    async def test_random_accept_request_to_join(
+            self,
+            random_id: uuid.UUID,
+            oleg_projects_rest_client: ProjectsRestClient,
+    ):
+        position_id: uuid.UUID = self.CONTEXT["position_id"]
+        participant_id: uuid.UUID = self.CONTEXT["new_participant_id"]
+
+        participant = await oleg_projects_rest_client.update_participant(
+            participant_id=participant_id,
+            status=ParticipantStatusEnum.JOINED,
+        )
+
+        assert participant.id == participant_id
+        assert participant.position_id == position_id
+        assert participant.user_id == random_id
+        assert participant.status == ParticipantStatusEnum.JOINED
+
+    @pytest.mark.dependency(depeds=["TestProjectFlow::test_random_accept_request_to_join"])
+    @pytest.mark.asyncio
+    async def test_get_random_accepted_request_to_join(
+            self,
+            random_id: uuid.UUID,
+            random_projects_rest_client: ProjectsRestClient,
+    ):
+        position_id: uuid.UUID = self.CONTEXT["position_id"]
+        participant_id: uuid.UUID = self.CONTEXT["new_participant_id"]
+
+        participant = await random_projects_rest_client.get_participant(
+            participant_id=participant_id,
+        )
+
+        assert participant.id == participant_id
+        assert participant.position_id == position_id
+        assert participant.user_id == random_id
+        assert participant.status == ParticipantStatusEnum.JOINED
+
+    @pytest.mark.dependency(depends=["TestProjectFlow::test_get_random_accepted_request_to_join"])
+    @pytest.mark.asyncio
     async def test_leave_position_by_participant(
             self,
             matvey_id: uuid.UUID,
@@ -798,7 +875,7 @@ class TestPositionSkillsFlow:
             oleg_projects_rest_client: ProjectsRestClient,
             position_id: uuid.UUID,
     ):
-        new_skills = {uuid.uuid4() for _ in range(10)}
+        new_skills = {uuid.uuid4() for _ in range(5)}
 
         skills = await oleg_projects_rest_client.update_position_skills(
             position_id=position_id,
@@ -813,42 +890,74 @@ class TestPositionSkillsFlow:
     @pytest.mark.asyncio
     async def test_get_position_skills(
             self,
-            oleg_projects_rest_client: ProjectsRestClient,
+            projects_rest_client: ProjectsRestClient,
             position_id: uuid.UUID,
     ):
         position_skills: set[uuid.UUID] = self.CONTEXT["skills"]
 
-        skills = await oleg_projects_rest_client.get_position_skills(position_id=position_id)
+        skills = await projects_rest_client.get_position_skills(position_id=position_id)
 
         assert skills == position_skills
 
     @pytest.mark.dependency(depends=["TestPositionSkillsFlow::test_get_position_skills"])
+    @pytest.mark.asyncio
+    async def test_add_new_position_skills(
+            self,
+            oleg_projects_rest_client: ProjectsRestClient,
+            position_id: uuid.UUID,
+    ):
+        position_skills: set[uuid.UUID] = self.CONTEXT["skills"]
+        position_skills |= {uuid.uuid4() for _ in range(5)}
+
+        skills = await oleg_projects_rest_client.update_position_skills(
+            position_id=position_id,
+            skills=position_skills,
+        )
+
+        self.CONTEXT["skills"] = position_skills
+
+        assert skills == position_skills
+
+    @pytest.mark.dependency(depends=["TestPositionSkillsFlow::test_add_new_position_skills"])
+    @pytest.mark.asyncio
+    async def test_get_new_position_skills(
+            self,
+            projects_rest_client: ProjectsRestClient,
+            position_id: uuid.UUID,
+    ):
+        position_skills: set[uuid.UUID] = self.CONTEXT["skills"]
+
+        skills = await projects_rest_client.get_position_skills(position_id=position_id)
+
+        assert skills == position_skills
+
+    @pytest.mark.dependency(depends=["TestPositionSkillsFlow::test_get_new_position_skills"])
     @pytest.mark.asyncio
     async def test_empty_position_skills(
             self,
             oleg_projects_rest_client: ProjectsRestClient,
             position_id: uuid.UUID,
     ):
-        new_skills = set()
+        position_skills = set()
 
         skills = await oleg_projects_rest_client.update_position_skills(
             position_id=position_id,
-            skills=new_skills,
+            skills=position_skills,
         )
 
-        self.CONTEXT["skills"] = new_skills
+        self.CONTEXT["skills"] = position_skills
 
-        assert skills == new_skills
+        assert skills == position_skills
 
     @pytest.mark.dependency(depends=["TestPositionSkillsFlow::test_empty_position_skills"])
     @pytest.mark.asyncio
     async def test_get_empty_position_skills(
             self,
-            oleg_projects_rest_client: ProjectsRestClient,
+            projects_rest_client: ProjectsRestClient,
             position_id: uuid.UUID,
     ):
         position_skills: set[uuid.UUID] = self.CONTEXT["skills"]
 
-        skills = await oleg_projects_rest_client.get_position_skills(position_id=position_id)
+        skills = await projects_rest_client.get_position_skills(position_id=position_id)
 
         assert skills == position_skills
