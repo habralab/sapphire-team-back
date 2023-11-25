@@ -134,22 +134,85 @@ class TestUserSkillsFlow:
             oleg_id: uuid.UUID,
             oleg_users_rest_client: UsersRestClient,
     ):
-        new_skills = {uuid.uuid4() for _ in range(10)}
+        new_skills = {uuid.uuid4() for _ in range(5)}
 
         skills = await oleg_users_rest_client.update_user_skills(
             user_id=oleg_id,
             skills=new_skills,
         )
 
-        self.CONTEXT["new_skills"] = new_skills
+        self.CONTEXT["user_skills"] = new_skills
 
         assert skills == new_skills
 
     @pytest.mark.dependency(depends=["TestUserSkillsFlow::test_update_user_skills"])
     @pytest.mark.asyncio
     async def test_get_user_skills(self, oleg_id: uuid.UUID, users_rest_client: UsersRestClient):
-        new_skills: set[uuid.UUID] = self.CONTEXT["new_skills"]
+        user_skills: set[uuid.UUID] = self.CONTEXT["user_skills"]
 
         skills = await users_rest_client.get_user_skills(user_id=oleg_id)
 
-        assert skills == new_skills
+        assert skills == user_skills
+
+    @pytest.mark.dependency(depends=["TestUserSkillsFlow::test_get_user_skills"])
+    @pytest.mark.asyncio
+    async def test_add_new_user_skills(
+            self,
+            oleg_id: uuid.UUID,
+            oleg_users_rest_client: UsersRestClient,
+    ):
+        user_skills = self.CONTEXT["user_skills"]
+        user_skills |= {uuid.uuid4() for _ in range(5)}
+
+        skills = await oleg_users_rest_client.update_user_skills(
+            user_id=oleg_id,
+            skills=user_skills,
+        )
+
+        self.CONTEXT["user_skills"] = user_skills
+
+        assert skills == user_skills
+
+    @pytest.mark.dependency(depends=["TestUserSkillsFlow::test_add_new_user_skills"])
+    @pytest.mark.asyncio
+    async def test_get_new_user_skills(
+            self,
+            oleg_id: uuid.UUID,
+            users_rest_client: UsersRestClient,
+    ):
+        user_skills: set[uuid.UUID] = self.CONTEXT["user_skills"]
+
+        skills = await users_rest_client.get_user_skills(user_id=oleg_id)
+
+        assert skills == user_skills
+
+    @pytest.mark.dependency(depends=["TestUserSkillsFlow::test_get_new_user_skills"])
+    @pytest.mark.asyncio
+    async def test_empty_user_skills(
+            self,
+            oleg_id: uuid.UUID,
+            oleg_users_rest_client: UsersRestClient,
+    ):
+        user_skills = set()
+
+        skills = await oleg_users_rest_client.update_user_skills(
+            user_id=oleg_id,
+            skills=user_skills,
+        )
+
+        self.CONTEXT["skills"] = user_skills
+
+        assert skills == user_skills
+
+    @pytest.mark.dependency(depends=["TestUserSkillsFlow::test_empty_user_skills"])
+    @pytest.mark.asyncio
+    async def test_get_empty_user_skills(
+            self,
+            oleg_id: uuid.UUID,
+            users_rest_client: UsersRestClient,
+    ):
+        user_skills: set[uuid.UUID] = self.CONTEXT["skills"]
+
+        skills = await users_rest_client.get_user_skills(user_id=oleg_id)
+
+        assert skills == user_skills

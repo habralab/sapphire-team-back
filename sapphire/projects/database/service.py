@@ -4,7 +4,7 @@ from datetime import datetime
 from typing import Set, Type
 
 from pydantic import BaseModel, NonNegativeInt, confloat, conint
-from sqlalchemy import delete, desc, distinct, func, or_, select
+from sqlalchemy import desc, distinct, func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from sapphire.common.database.service import BaseDatabaseService
@@ -328,13 +328,18 @@ class ProjectsDatabaseService(BaseDatabaseService):
             position: Position,
             skills: Set[uuid.UUID] = frozenset(),
     ):
-        stmt = delete(PositionSkill).where(PositionSkill.position_id == position.id)
-        await session.execute(stmt)
+        async with session.begin_nested():
+            position.skills = []
+            session.add(position)
 
-        new_skills = [PositionSkill(position=position, skill_id=skill_id) for skill_id in skills]
-        position.skills = new_skills
+        async with session.begin_nested():
+            new_skills = [
+                PositionSkill(position=position, skill_id=skill_id)
+                for skill_id in skills
+            ]
+            position.skills = new_skills
+            session.add(position)
 
-        session.add(position)
         return skills
 
     async def get_participant(
@@ -523,7 +528,7 @@ class ProjectsDatabaseService(BaseDatabaseService):
             filters.append(Project.owner_id == owner_id)
         if user_id is not Empty:
             filters.append(or_(
-                Project.owner_id == owner_id,
+                Project.owner_id == user_id,
                 Project.id.in_(select(Position.project_id).where(
                     Position.id.in_(select(Participant.position_id).where(
                         Participant.user_id == user_id,
