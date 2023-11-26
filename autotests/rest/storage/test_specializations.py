@@ -8,11 +8,11 @@ from autotests.utils import Empty
 
 
 @pytest.mark.parametrize(
-    ("query_text", "group_id",),
+    ("query_text", "group_id"),
     (
         (Empty, Empty),
         ("Developer", uuid.uuid4()),
-    )
+    ),
 )
 @pytest.mark.asyncio
 async def test_specializations(
@@ -22,5 +22,5 @@ async def test_specializations(
 ):
     await storage_rest_client.get_specializations(
         query_text=query_text,
-        group_id=group_id
+        group_id=group_id,
     )
