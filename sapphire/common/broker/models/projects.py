@@ -10,6 +10,7 @@ class ParticipantNotificationData(BaseModel):
     user_id: uuid.UUID
     position_id: uuid.UUID
     project_id: uuid.UUID
+    project_name: str
 
 
 class ParticipantNotificationType(str, enum.Enum):
