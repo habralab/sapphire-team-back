@@ -150,7 +150,8 @@ class ProjectsBrokerService(BaseBrokerProducerService):
         return ParticipantNotificationData(
             user_id=participant.user_id,
             position_id=participant.position_id,
-            project_id=project.id
+            project_id=project.id,
+            project_name=project.name,
         )
 
     async def send_create_chat(
