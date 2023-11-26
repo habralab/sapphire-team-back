@@ -13,6 +13,7 @@ class SpecializationFiltersRequest(BaseModel):
     query_text: str | Type[Empty] = Empty
     group_id: uuid.UUID | Type[Empty] = Empty
     id: list[uuid.UUID] | Type[Empty] = Field(fastapi.Query(Empty))
+    exclude_id: list[uuid.UUID] | Type[Empty] = Field(fastapi.Query(Empty))
 
 
 class SpecializationListResponse(PaginatedResponse):

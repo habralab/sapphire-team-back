@@ -26,6 +26,7 @@ class StorageDatabaseService(BaseDatabaseService):
             query_text: str | Type[Empty] = Empty,
             group_id: uuid.UUID | Type[Empty] = Empty,
             specialization_ids: list[uuid.UUID] | Type[Empty] = Empty,
+            exclude_specialization_ids: list[uuid.UUID] | Type[Empty] = Empty,
     ) -> list:
         filters = []
         if query_text is not Empty:
@@ -40,6 +41,9 @@ class StorageDatabaseService(BaseDatabaseService):
         if specialization_ids is not Empty:
             filters.append(or_(*(Specialization.id == id_ for id_ in specialization_ids)))
 
+        if exclude_specialization_ids is not Empty:
+            filters.append(Specialization.id.not_in(exclude_specialization_ids))
+
         return filters
 
     async def get_specializations_count(
@@ -47,6 +51,7 @@ class StorageDatabaseService(BaseDatabaseService):
             session: AsyncSession,
             query_text: str | Type[Empty] = Empty,
             specialization_ids: list[uuid.UUID] | Type[Empty] = Empty,
+            exclude_specialization_ids: list[uuid.UUID] | Type[Empty] = Empty,
             group_id: uuid.UUID | Type[Empty] = Empty,
     ) -> int:
         query = select(func.count(Specialization.id)) # pylint: disable=not-callable
@@ -55,6 +60,7 @@ class StorageDatabaseService(BaseDatabaseService):
             query_text=query_text,
             group_id=group_id,
             specialization_ids=specialization_ids,
+            exclude_specialization_ids=exclude_specialization_ids,
         )
 
         query = query.where(*filters)
@@ -68,6 +74,7 @@ class StorageDatabaseService(BaseDatabaseService):
             query_text: str | Type[Empty] = Empty,
             group_id: uuid.UUID | Type[Empty] = Empty,
             specialization_ids: list[uuid.UUID] | Type[Empty] = Empty,
+            exclude_specialization_ids: list[uuid.UUID] | Type[Empty] = Empty,
             page: int = 1,
             per_page: int = 10,
     ) -> list[Specialization]:
@@ -77,6 +84,7 @@ class StorageDatabaseService(BaseDatabaseService):
             query_text=query_text,
             group_id=group_id,
             specialization_ids=specialization_ids,
+            exclude_specialization_ids=exclude_specialization_ids,
         )
 
         query = query.where(*filters)

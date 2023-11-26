@@ -36,11 +36,15 @@ class StorageRestClient(BaseRestClient):
             self,
             query_text: str | type[Empty] = Empty,
             group_id: uuid.UUID | Type[Empty] = Empty,
+            specialization_ids: list[uuid.UUID] | Type[Empty] = Empty,
+            exclude_specialization_ids: list[uuid.UUID] | Type[Empty] = Empty,
     ) -> SpecializationListResponse:
         path = "/api/rest/specializations/"
         params = {
             "query_text": query_text,
-            "group_id": group_id
+            "group_id": group_id,
+            "id": specialization_ids,
+            "exclude_id": exclude_specialization_ids,
         }
         params = {key: value for key, value in params.items() if value is not Empty}
 

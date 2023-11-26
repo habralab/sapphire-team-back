@@ -532,6 +532,7 @@ class ProjectsDatabaseService(BaseDatabaseService):
                 Project.id.in_(select(Position.project_id).where(
                     Position.id.in_(select(Participant.position_id).where(
                         Participant.user_id == user_id,
+                        Participant.status == ParticipantStatusEnum.JOINED,
                     )),
                 )),
             ))

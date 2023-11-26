@@ -23,6 +23,7 @@ async def get_specializations(
             "query_text": filters.query_text,
             "group_id": filters.group_id,
             "specialization_ids": filters.id,
+            "exclude_specialization_ids": filters.exclude_id,
         }
         paginated_specializations = await database_service.get_specializations(
             **params,
