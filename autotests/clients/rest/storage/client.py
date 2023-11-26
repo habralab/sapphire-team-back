@@ -21,9 +21,11 @@ class StorageRestClient(BaseRestClient):
     async def get_specialization_groups(
         self,
         query_text: str | Type[Empty] = Empty,
+        group_ids: list[uuid.UUID] | Type[Empty] = Empty,
+        exclude_group_ids: list[uuid.UUID] | Type[Empty] = Empty,
     ) -> SpecializationGroupListResponse:
         path = "/api/rest/spec-groups/"
-        params = {"query_text": query_text}
+        params = {"query_text": query_text, "id": group_ids, "exclude_id": exclude_group_ids}
         params = {key: value for key, value in params.items() if value is not Empty}
 
         return await self.rest_get(

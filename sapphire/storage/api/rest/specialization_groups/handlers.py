@@ -20,6 +20,7 @@ async def get_specialization_groups(
             "session": session,
             "query_text": filters.query_text,
             "group_ids": filters.id,
+            "exclude_group_ids": filters.exclude_id,
         }
         paginated_specialization_groups = await database_service.get_specialization_groups(
             **params,
