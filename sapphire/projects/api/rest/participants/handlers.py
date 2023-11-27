@@ -121,7 +121,7 @@ async def update_participant(
 
         notification_send_map = {
             ParticipantStatusEnum.JOINED: {
-                participant.user_id: broker_service.send_participant_joined,
+                participant.position.project.owner_id: broker_service.send_participant_joined,
             },
             ParticipantStatusEnum.DECLINED: {
                 participant.user_id: broker_service.send_participant_declined,
