@@ -38,7 +38,7 @@ class ProjectsBrokerService(BaseBrokerProducerService):
         project: Project,
         participant: Participant,
     ) -> None:
-        """RECIPIENTS: PROJECT OWNER AND PARTICIPANTS"""
+        """RECIPIENTS: PARTICIPANTS"""
         await self._send_email(
             recipients=[p.user_id for p in project.joined_participants],
             email_type=EmailType.PARTICIPANT_JOINED,
