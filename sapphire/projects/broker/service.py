@@ -152,6 +152,7 @@ class ProjectsBrokerService(BaseBrokerProducerService):
             position_id=participant.position_id,
             project_id=project.id,
             project_name=project.name,
+            owner_id=project.owner_id,
         )
 
     async def send_create_chat(
