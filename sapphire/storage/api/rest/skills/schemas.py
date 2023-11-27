@@ -24,3 +24,4 @@ class SkillListResponse(PaginatedResponse):
 class SkillsFiltersRequest(BaseModel):
     query_text: str | Type[Empty] = Empty
     id: list[uuid.UUID] | Type[Empty] = Field(fastapi.Query(Empty))
+    exclude_id: list[uuid.UUID] | Type[Empty] = Field(fastapi.Query(Empty))

@@ -26,6 +26,7 @@ class StorageDatabaseService(BaseDatabaseService):
             query_text: str | Type[Empty] = Empty,
             group_id: uuid.UUID | Type[Empty] = Empty,
             specialization_ids: list[uuid.UUID] | Type[Empty] = Empty,
+            exclude_specialization_ids: list[uuid.UUID] | Type[Empty] = Empty,
     ) -> list:
         filters = []
         if query_text is not Empty:
@@ -40,6 +41,9 @@ class StorageDatabaseService(BaseDatabaseService):
         if specialization_ids is not Empty:
             filters.append(or_(*(Specialization.id == id_ for id_ in specialization_ids)))
 
+        if exclude_specialization_ids is not Empty:
+            filters.append(Specialization.id.not_in(exclude_specialization_ids))
+
         return filters
 
     async def get_specializations_count(
@@ -47,6 +51,7 @@ class StorageDatabaseService(BaseDatabaseService):
             session: AsyncSession,
             query_text: str | Type[Empty] = Empty,
             specialization_ids: list[uuid.UUID] | Type[Empty] = Empty,
+            exclude_specialization_ids: list[uuid.UUID] | Type[Empty] = Empty,
             group_id: uuid.UUID | Type[Empty] = Empty,
     ) -> int:
         query = select(func.count(Specialization.id)) # pylint: disable=not-callable
@@ -55,6 +60,7 @@ class StorageDatabaseService(BaseDatabaseService):
             query_text=query_text,
             group_id=group_id,
             specialization_ids=specialization_ids,
+            exclude_specialization_ids=exclude_specialization_ids,
         )
 
         query = query.where(*filters)
@@ -68,6 +74,7 @@ class StorageDatabaseService(BaseDatabaseService):
             query_text: str | Type[Empty] = Empty,
             group_id: uuid.UUID | Type[Empty] = Empty,
             specialization_ids: list[uuid.UUID] | Type[Empty] = Empty,
+            exclude_specialization_ids: list[uuid.UUID] | Type[Empty] = Empty,
             page: int = 1,
             per_page: int = 10,
     ) -> list[Specialization]:
@@ -77,6 +84,7 @@ class StorageDatabaseService(BaseDatabaseService):
             query_text=query_text,
             group_id=group_id,
             specialization_ids=specialization_ids,
+            exclude_specialization_ids=exclude_specialization_ids,
         )
 
         query = query.where(*filters)
@@ -103,6 +111,7 @@ class StorageDatabaseService(BaseDatabaseService):
             self,
             query_text: str | Type[Empty] = Empty,
             group_ids: list[uuid.UUID] | Type[Empty] = Empty,
+            exclude_group_ids: list[uuid.UUID] | Type[Empty] = Empty,
     ) -> list:
         filters = []
 
@@ -113,6 +122,8 @@ class StorageDatabaseService(BaseDatabaseService):
             ))
         if group_ids is not Empty:
             filters.append(or_(*(SpecializationGroup.id == id_ for id_ in group_ids)))
+        if exclude_group_ids is not Empty:
+            filters.append(SpecializationGroup.id.not_in(exclude_group_ids))
 
         return filters
 
@@ -121,12 +132,14 @@ class StorageDatabaseService(BaseDatabaseService):
         session: AsyncSession,
         query_text: str | Type[Empty] = Empty,
         group_ids: list[uuid.UUID] | Type[Empty] = Empty,
+        exclude_group_ids: list[uuid.UUID] | Type[Empty] = Empty,
     ) -> int:
         query = select(func.count(SpecializationGroup.id))  # pylint: disable=not-callable
 
         filters = await self._get_specialization_groups_filters(
             query_text=query_text,
             group_ids=group_ids,
+            exclude_group_ids=exclude_group_ids,
         )
         query = query.where(*filters)
 
@@ -139,6 +152,7 @@ class StorageDatabaseService(BaseDatabaseService):
         session: AsyncSession,
         query_text: str | Type[Empty] = Empty,
         group_ids: list[uuid.UUID] | Type[Empty] = Empty,
+        exclude_group_ids: list[uuid.UUID] | Type[Empty] = Empty,
         page: int = 1,
         per_page: int = 10,
     ) -> list[SpecializationGroup]:
@@ -147,6 +161,7 @@ class StorageDatabaseService(BaseDatabaseService):
         filters = await self._get_specialization_groups_filters(
             query_text=query_text,
             group_ids=group_ids,
+            exclude_group_ids=exclude_group_ids,
         )
 
         query = query.where(*filters)
@@ -173,6 +188,7 @@ class StorageDatabaseService(BaseDatabaseService):
         self,
         query_text: str | Type[Empty] = Empty,
         skill_ids: list[uuid.UUID] | Type[Empty] = Empty,
+        exclude_skill_ids: list[uuid.UUID] | Type[Empty] = Empty,
     ) -> list:
         filters = []
 
@@ -180,6 +196,8 @@ class StorageDatabaseService(BaseDatabaseService):
             filters.append(Skill.name.icontains(query_text))
         if skill_ids is not Empty:
             filters.append(or_(*(Skill.id == id_ for id_ in skill_ids)))
+        if exclude_skill_ids is not Empty:
+            filters.append(Skill.id.not_in(exclude_skill_ids))
 
         return filters
 
@@ -188,10 +206,15 @@ class StorageDatabaseService(BaseDatabaseService):
         session: AsyncSession,
         query_text: str | Type[Empty] = Empty,
         skill_ids: list[uuid.UUID] | Type[Empty] = Empty,
+        exclude_skill_ids: list[uuid.UUID] | Type[Empty] = Empty,
     ) -> int:
         query = select(func.count(Skill.id)) # pylint: disable=not-callable
 
-        filters = await self._get_skills_filters(query_text=query_text, skill_ids=skill_ids)
+        filters = await self._get_skills_filters(
+            query_text=query_text,
+            skill_ids=skill_ids,
+            exclude_skill_ids=exclude_skill_ids,
+        )
 
         query = query.where(*filters)
         result = await session.scalar(query)
@@ -203,12 +226,17 @@ class StorageDatabaseService(BaseDatabaseService):
         session: AsyncSession,
         query_text: str | Type[Empty] = Empty,
         skill_ids: list[uuid.UUID] | Type[Empty] = Empty,
+        exclude_skill_ids: list[uuid.UUID] | Type[Empty] = Empty,
         page: int = 1,
         per_page: int = 10,
     ) -> list[Skill]:
         query = select(Skill).order_by(desc(Skill.created_at))
 
-        filters = await self._get_skills_filters(query_text=query_text, skill_ids=skill_ids)
+        filters = await self._get_skills_filters(
+            query_text=query_text,
+            skill_ids=skill_ids,
+            exclude_skill_ids=exclude_skill_ids,
+        )
 
         query = query.where(*filters)
 

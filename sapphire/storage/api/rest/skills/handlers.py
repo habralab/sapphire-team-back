@@ -19,18 +19,14 @@ async def get_skills(
     per_page = pagination.per_page
 
     async with database_service.transaction() as session:
-        skills = await database_service.get_skills(
-            session=session,
-            query_text=filters.query_text,
-            skill_ids=filters.id,
-            page=page,
-            per_page=per_page,
-        )
-        total_items = await database_service.get_skills_count(
-            session=session,
-            query_text=filters.query_text,
-            skill_ids=filters.id,
-        )
+        params = {
+            "session": session,
+            "query_text": filters.query_text,
+            "skill_ids": filters.id,
+            "exclude_skill_ids": filters.exclude_id,
+        }
+        skills = await database_service.get_skills(**params, page=page, per_page=per_page)
+        total_items = await database_service.get_skills_count(**params)
 
     total_pages = -(total_items // -per_page)
     data = [SkillResponse.model_validate(s) for s in skills]
