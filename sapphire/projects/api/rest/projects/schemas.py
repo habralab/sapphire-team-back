@@ -60,6 +60,12 @@ class ProjectListFiltersRequest(BaseModel):
     position_specialization_ids: list[uuid.UUID] | Type[Empty] = Field(fastapi.Query(Empty))
     participant_user_ids: list[uuid.UUID] | Type[Empty] = Field(fastapi.Query(Empty))
 
+    def model_dump_with_statuses_field_instead_of_status(self):
+        data = self.dict(exclude_unset=True)
+        if 'status' in data:
+            data['statuses'] = data.pop('status')
+        return data
+
 
 class ProjectPartialUpdateRequest(BaseModel):
     status: ProjectStatusEnum | Type[Empty] = Empty

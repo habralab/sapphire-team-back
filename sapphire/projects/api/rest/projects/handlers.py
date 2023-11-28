@@ -58,10 +58,10 @@ async def get_projects(
             session=session,
             page=pagination.page,
             per_page=pagination.per_page,
-            **filters.model_dump(),
+            **filters.model_dump_with_statuses_field_instead_of_status(),
         )
         total_projects = await database_service.get_projects_count(
-            session=session, **filters.model_dump()
+            session=session, **filters.model_dump_with_statuses_field_instead_of_status()
         )
 
     total_pages = -(total_projects // -pagination.per_page)
