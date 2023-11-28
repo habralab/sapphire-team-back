@@ -52,6 +52,23 @@ async def get_notifications(
     )
 
 
+async def get_notifications_count(
+        request: fastapi.Request,
+        filters: NotificationFiltersRequest = fastapi.Depends(NotificationFiltersRequest),
+        jwt_data: JWTData = fastapi.Depends(is_auth),
+) -> int:
+    database_service: NotificationsDatabaseService = request.app.service.database
+
+    async with database_service.transaction() as session:
+        total_notifications = await database_service.get_notifications_count(
+            session=session,
+            is_read=filters.is_read,
+            recipient_id=jwt_data.user_id,
+        )
+
+    return total_notifications
+
+
 async def get_notification(
         notification: Notification = fastapi.Depends(get_path_notification),
 ) -> NotificationResponse:
