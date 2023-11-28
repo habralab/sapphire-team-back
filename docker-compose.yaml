@@ -67,6 +67,7 @@ services:
     deploy:
       labels:
         - "traefik.enable=true"
+        - "traefik.constraint-label-stack=${ENV}"
         - "traefik.http.routers.kafka.rule=PathPrefix(`${KAFKA_UI_ROOT_PATH:-/kafka}`)"
         - "traefik.http.routers.kafka.entrypoints=web" 
         - "traefik.http.services.kafka.loadbalancer.server.port=8080"
@@ -98,6 +99,7 @@ services:
     deploy:
       labels:
         - "traefik.enable=true"
+        - "traefik.constraint-label-stack=${ENV}"
         - "traefik.http.middlewares.users-stripprefix.stripprefix.prefixes=${USERS_ROOT_PATH:-/users}"
         - "traefik.http.routers.users.rule=PathPrefix(`${USERS_ROOT_PATH:-/users}`)"
         - "traefik.http.routers.users.middlewares=users-stripprefix"
@@ -125,6 +127,7 @@ services:
     deploy:
       labels:
         - "traefik.enable=true"
+        - "traefik.constraint-label-stack=${ENV}"
         - "traefik.http.middlewares.storage-stripprefix.stripprefix.prefixes=${STORAGE_ROOT_PATH:-/storage}"
         - "traefik.http.routers.storage.rule=PathPrefix(`${STORAGE_ROOT_PATH:-/storage}`)"
         - "traefik.http.routers.storage.middlewares=storage-stripprefix"
@@ -157,6 +160,7 @@ services:
     deploy:
       labels:
         - "traefik.enable=true"
+        - "traefik.constraint-label-stack=${ENV}"
         - "traefik.http.middlewares.projects-stripprefix.stripprefix.prefixes=${PROJECTS_ROOT_PATH:-/projects}"
         - "traefik.http.routers.projects.rule=PathPrefix(`${PROJECTS_ROOT_PATH:-/projects}`)"
         - "traefik.http.routers.projects.middlewares=projects-stripprefix"
@@ -186,6 +190,7 @@ services:
     deploy:
       labels:
         - "traefik.enable=true"
+        - "traefik.constraint-label-stack=${ENV}"
         - "traefik.http.middlewares.notifications-stripprefix.stripprefix.prefixes=${NOTIFICATIONS_ROOT_PATH:-/notifications}"
         - "traefik.http.routers.notifications.rule=PathPrefix(`${NOTIFICATIONS_ROOT_PATH:-/notifications}`)"
         - "traefik.http.routers.notifications.middlewares=notifications-stripprefix"
@@ -215,6 +220,7 @@ services:
     deploy:
       labels:
         - "traefik.enable=true"
+        - "traefik.constraint-label-stack=${ENV}"
         - "traefik.http.middlewares.messenger-stripprefix.stripprefix.prefixes=${MESSENGER_ROOT_PATH:-/messenger}"
         - "traefik.http.routers.messenger.rule=PathPrefix(`${MESSENGER_ROOT_PATH:-/messenger}`)"
         - "traefik.http.routers.messenger.middlewares=messenger-stripprefix"
@@ -256,6 +262,7 @@ services:
     deploy:
       labels:
         - "traefik.enable=true"
+        - "traefik.constraint-label-stack=${ENV}"
         - "traefik.http.routers.swagger.rule=PathPrefix(`${SWAGGER_ROOT_PATH:-/swagger}`)"
         - "traefik.http.routers.swagger.entrypoints=web" 
         - "traefik.http.services.swagger.loadbalancer.server.port=8080"
@@ -277,6 +284,7 @@ services:
       - "--providers.docker.swarmMode=true"
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
+      - "--providers.docker.constraints=Label(`traefik.constraint-label-stack`, `${ENV}`)"
     deploy:
       update_config:
         order: start-first
