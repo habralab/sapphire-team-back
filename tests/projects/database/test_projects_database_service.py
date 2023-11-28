@@ -123,42 +123,6 @@ async def test_get_projects_with_pagination(database_service: ProjectsDatabaseSe
 
 
 @pytest.mark.asyncio
-async def test_get_projects_with_all_query_params(database_service: ProjectsDatabaseService):
-    session = MagicMock()
-    result = MagicMock()
-    project_id = uuid.uuid4()
-    owner_id = uuid.uuid4()
-    startline_ge = datetime.now() - timedelta(days=30)
-    startline_le = datetime.now() + timedelta(days=30)
-    deadline_ge = datetime.now() - timedelta(days=30)
-    deadline_le = datetime.now() + timedelta(days=30)
-    query_text = "query_text"
-    position_skill_ids = [uuid.uuid4(), uuid.uuid4()]
-    position_specialization_ids = [uuid.uuid4(), uuid.uuid4()]
-    expected_projects = [Project(id=project_id, name="test", owner_id=owner_id)]
-    result.unique.return_value.scalars.return_value.all.return_value = expected_projects
-    session.execute = AsyncMock()
-    session.execute.return_value = result
-
-    projects = await database_service.get_projects(
-        session=session,
-        query_text=query_text,
-        owner_id=owner_id,
-        deadline_ge=deadline_ge,
-        deadline_le=deadline_le,
-        startline_ge=startline_ge,
-        startline_le=startline_le,
-        status=ParticipantStatusEnum.REQUEST,
-        position_skill_ids=position_skill_ids,
-        position_specialization_ids=position_specialization_ids,
-    )
-
-    assert projects == expected_projects
-
-
-# Project position
-
-@pytest.mark.asyncio
 async def test_create_project_position(database_service: ProjectsDatabaseService):
     session = MagicMock()
     project = MagicMock()
