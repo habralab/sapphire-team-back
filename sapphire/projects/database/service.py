@@ -508,7 +508,7 @@ class ProjectsDatabaseService(BaseDatabaseService):
             startline_ge: datetime | Type[Empty] = Empty,
             deadline_le: datetime | Type[Empty] = Empty,
             deadline_ge: datetime | Type[Empty] = Empty,
-            status: ProjectStatusEnum | Type[Empty] = Empty,
+            statuses: list[ProjectStatusEnum] | Type[Empty] = Empty,
             position_skill_ids: list[uuid.UUID] | Type[Empty] = Empty,
             position_specialization_ids: list[uuid.UUID] | Type[Empty] = Empty,
             participant_user_ids: list[uuid.UUID] | Type[Empty] = Empty,
@@ -544,7 +544,7 @@ class ProjectsDatabaseService(BaseDatabaseService):
             filters.append(Project.deadline <= deadline_le)
         if deadline_ge is not Empty:
             filters.append(Project.deadline >= deadline_ge)
-        if status is not Empty:
+        if statuses is not Empty:
             history_query = (
                 select(ProjectHistory)
                 .distinct(ProjectHistory.project_id)
@@ -553,7 +553,7 @@ class ProjectsDatabaseService(BaseDatabaseService):
             )
             filters.extend([
                 Project.id == history_query.c.project_id,
-                status == history_query.c.status,
+                history_query.c.status.in_(statuses),
             ])
 
         if position_specialization_ids is not Empty:
@@ -590,7 +590,7 @@ class ProjectsDatabaseService(BaseDatabaseService):
         startline_ge: datetime | Type[Empty] = Empty,
         deadline_le: datetime | Type[Empty] = Empty,
         deadline_ge: datetime | Type[Empty] = Empty,
-        status: ProjectStatusEnum | Type[Empty] = Empty,
+        statuses: list[ProjectStatusEnum] | Type[Empty] = Empty,
         position_skill_ids: list[uuid.UUID] | Type[Empty] = Empty,
         position_specialization_ids: list[uuid.UUID] | Type[Empty] = Empty,
         participant_user_ids: list[uuid.UUID] | Type[Empty] = Empty,
@@ -604,7 +604,7 @@ class ProjectsDatabaseService(BaseDatabaseService):
             startline_ge=startline_ge,
             deadline_le=deadline_le,
             deadline_ge=deadline_ge,
-            status=status,
+            statuses=statuses,
             position_skill_ids=position_skill_ids,
             position_specialization_ids=position_specialization_ids,
             participant_user_ids=participant_user_ids,
@@ -624,7 +624,7 @@ class ProjectsDatabaseService(BaseDatabaseService):
         startline_ge: datetime | Type[Empty] = Empty,
         deadline_le: datetime | Type[Empty] = Empty,
         deadline_ge: datetime | Type[Empty] = Empty,
-        status: ProjectStatusEnum | Type[Empty] = Empty,
+        statuses: list[ProjectStatusEnum] | Type[Empty] = Empty,
         position_skill_ids: list[uuid.UUID] | Type[Empty] = Empty,
         position_specialization_ids: list[uuid.UUID] | Type[Empty] = Empty,
         participant_user_ids: list[uuid.UUID] | Type[Empty] = Empty,
@@ -640,7 +640,7 @@ class ProjectsDatabaseService(BaseDatabaseService):
             startline_ge=startline_ge,
             deadline_le=deadline_le,
             deadline_ge=deadline_ge,
-            status=status,
+            statuses=statuses,
             position_skill_ids=position_skill_ids,
             position_specialization_ids=position_specialization_ids,
             participant_user_ids=participant_user_ids,

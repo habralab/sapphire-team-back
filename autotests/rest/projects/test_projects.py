@@ -23,7 +23,7 @@ from autotests.utils import Empty
 @pytest.mark.parametrize(
     (
         "text", "owner_id", "user_id", "startline_ge", "startline_le", "deadline_ge", "deadline_le",
-        "status", "position_skill_ids", "position_specialization_ids",
+        "statuses", "position_skill_ids", "position_specialization_ids",
         "participant_user_ids", "page", "per_page",
     ),
     (
@@ -36,7 +36,7 @@ from autotests.utils import Empty
             datetime.utcnow() + timedelta(days=7),
             datetime.utcnow() + timedelta(days=30),
             datetime.utcnow() + timedelta(days=90),
-            ProjectStatusEnum.FINISHED,
+            [ProjectStatusEnum.FINISHED],
             [],
             [],
             [],
@@ -55,7 +55,7 @@ async def test_get_projects(
         startline_le: datetime | Type[Empty],
         deadline_ge: datetime | Type[Empty],
         deadline_le: datetime | Type[Empty],
-        status: ProjectStatusEnum | Type[Empty],
+        statuses: list[ProjectStatusEnum] | Type[Empty],
         position_skill_ids: list[uuid.UUID] | Type[Empty],
         position_specialization_ids: list[uuid.UUID] | Type[Empty],
         participant_user_ids: list[uuid.UUID] | Type[Empty],
@@ -70,7 +70,7 @@ async def test_get_projects(
         startline_le=startline_le,
         deadline_ge=deadline_ge,
         deadline_le=deadline_le,
-        status=status,
+        statuses=statuses,
         position_skill_ids=position_skill_ids,
         position_specialization_ids=position_specialization_ids,
         participant_user_ids=participant_user_ids,
@@ -81,8 +81,8 @@ async def test_get_projects(
     for project in projects.data:
         if owner_id is not Empty:
             assert project.owner_id == owner_id
-        if status is not Empty:
-            assert project.status == status
+        if statuses is not Empty:
+            assert project.status in statuses
         if startline_ge is not Empty:
             assert project.startline >= startline_ge
         if startline_le is not Empty:
