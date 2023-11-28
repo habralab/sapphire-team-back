@@ -53,6 +53,35 @@ async def test_get_notifications_not_authenticated(
     assert exception.value.body == b'{"detail":"Not authenticated."}'
 
 
+@pytest.mark.parametrize("client", (
+        pytest.lazy_fixture("oleg_notifications_rest_client"),
+        pytest.lazy_fixture("oleg_activated_notifications_rest_client"),
+        pytest.lazy_fixture("matvey_notifications_rest_client"),
+        pytest.lazy_fixture("matvey_activated_notifications_rest_client"),
+        pytest.lazy_fixture("random_notifications_rest_client"),
+))
+@pytest.mark.parametrize("is_read", (Empty, True, False))
+@pytest.mark.asyncio
+async def test_get_notifications_count(
+        client: NotificationsRestClient,
+        is_read: bool | Type[Empty],
+):
+    notifications_count = await client.get_notifications_count(is_read=is_read)
+
+    assert isinstance(notifications_count, int)
+
+
+@pytest.mark.asyncio
+async def test_get_notifications_count_not_authenticated(
+        notifications_rest_client: NotificationsRestClient,
+):
+    with pytest.raises(ResponseException) as exception:
+        await notifications_rest_client.get_notifications_count()
+
+    assert exception.value.status_code == HTTPStatus.UNAUTHORIZED
+    assert exception.value.body == b'{"detail":"Not authenticated."}'
+
+
 @pytest.mark.parametrize(("client", "recipient_id", "notification_id"), (
     (
         pytest.lazy_fixture("oleg_notifications_rest_client"),
