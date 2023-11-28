@@ -52,8 +52,6 @@ async def callback(
 
     database_service: UsersDatabaseService = request.app.service.database
 
-    cache_service: UsersCacheService = request.app.service.cache
-
     token = await habr_oauth2.get_token(code=code)
     if token is None:
         raise fastapi.HTTPException(
@@ -97,10 +95,6 @@ async def callback(
                           expires=jwt_methods.access_token_expires_utc)
     response = set_cookie(response=response, name="refresh_token", value=refresh_token,
                           expires=jwt_methods.refresh_token_expires_utc)
-
-    cache_valid = await cache_service.validate_state(state=state)
-    if not cache_valid:
-        raise fastapi.HTTPException(status_code=fastapi.status.HTTP_400_BAD_REQUEST)
 
     return AuthorizeResponse(
         user=UserResponse.from_db_model(user=db_user),
