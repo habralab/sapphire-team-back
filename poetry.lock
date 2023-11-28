@@ -1194,13 +1194,13 @@ files = [
 
 [[package]]
 name = "py-fast-grpc"
-version = "0.3.2"
+version = "0.3.4"
 description = "gRPC simple and easy to use Python framework"
 optional = false
 python-versions = ">=3.11,<4.0"
 files = [
-    {file = "py_fast_grpc-0.3.2-py3-none-any.whl", hash = "sha256:2199647d7d50be3691660526f1d39f752fd5282475af13b6971b50226abfdf14"},
-    {file = "py_fast_grpc-0.3.2.tar.gz", hash = "sha256:ea974c27144c0ecbbcc45ee4f28db9d5af3d69731178dfa0ae9c9d9e46fc3524"},
+    {file = "py_fast_grpc-0.3.4-py3-none-any.whl", hash = "sha256:26c5bb6eb9612564d717083cc1dbdebf1aabd954365f6ccc500b65b3add61a8f"},
+    {file = "py_fast_grpc-0.3.4.tar.gz", hash = "sha256:eb4d520acc96590b14c742abc386c5bde0143c0b694606a4907d1b7ce894f702"},
 ]
 
 [package.dependencies]
@@ -2128,4 +2128,4 @@ sqlite = ["aiosqlite"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "de58c6b256873b75a267f64631cc8044429d70e94f4e27333aefa780a45e30b1"
+content-hash = "0889f155050ba3933bb5aca37b130605628d59046e92b85ac2a7361662d13895"

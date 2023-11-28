@@ -2,7 +2,7 @@ import pathlib
 import uuid
 from typing import Any, Type
 
-from sqlalchemy import func, select
+from sqlalchemy import desc, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from sapphire.common.database.service import BaseDatabaseService
@@ -65,7 +65,7 @@ class NotificationsDatabaseService(BaseDatabaseService):
             per_page: int = 10,
     ) -> list[Notification]:
         filters = await self._get_notifications_filters(recipient_id=recipient_id, is_read=is_read)
-        stmt = select(Notification).where(*filters)
+        stmt = select(Notification).order_by(desc(Notification.created_at)).where(*filters)
 
         offset = (page - 1) * per_page
         stmt = stmt.limit(per_page).offset(offset)

@@ -18,6 +18,7 @@ jobs:
     steps:
       - name: Set environment variables
         run: |
+          echo "ENV=production" >> $GITHUB_ENV
           echo "PORT=${PORT_PRODUCTION}" >> $GITHUB_ENV
           echo "HABR_OAUTH2_CLIENT_ID_NAME=${HABR_OAUTH2_CLIENT_ID_NAME_PRODUCTION}" >> $GITHUB_ENV
           echo "HABR_OAUTH2_CLIENT_SECRET_NAME=${HABR_OAUTH2_CLIENT_SECRET_NAME_PRODUCTION}" >> $GITHUB_ENV

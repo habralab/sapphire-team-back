@@ -10,10 +10,10 @@ class GetUserRequest(BaseModel):
 class UserResponse(BaseModel):
     id: uuid.UUID
     email: EmailStr
-    first_name: str | None
-    last_name: str | None
+    first_name: str | None = None
+    last_name: str | None = None
     is_activated: bool
 
-    about: str | None
-    main_specialization_id: uuid.UUID | None
-    secondary_specialization_id: uuid.UUID | None
+    about: str | None = None
+    main_specialization_id: uuid.UUID | None = None
+    secondary_specialization_id: uuid.UUID | None = None

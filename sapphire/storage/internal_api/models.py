@@ -11,7 +11,7 @@ class SpecializationGroupResponse(BaseModel):
     id: uuid.UUID
     name: str
     name_en: str
-    habr_id: PositiveInt | None
+    habr_id: PositiveInt | None = None
 
 
 class GetSpecializationRequest(BaseModel):
@@ -22,7 +22,7 @@ class SpecializationResponse(BaseModel):
     id: uuid.UUID
     name: str
     name_en: str
-    habr_id: PositiveInt | None
+    habr_id: PositiveInt | None = None
 
 
 class GetSkillRequest(BaseModel):
@@ -32,4 +32,4 @@ class GetSkillRequest(BaseModel):
 class SkillResponse(BaseModel):
     id: uuid.UUID
     name: str
-    habr_id: PositiveInt | None
+    habr_id: PositiveInt | None = None
