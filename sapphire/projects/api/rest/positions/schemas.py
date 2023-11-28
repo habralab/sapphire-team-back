@@ -21,7 +21,7 @@ class PositionListFiltersRequest(BaseModel):
     project_startline_le: NaiveDatetime | Type[Empty] = Empty
     project_deadline_ge: NaiveDatetime | Type[Empty] = Empty
     project_deadline_le: NaiveDatetime | Type[Empty] = Empty
-    project_status: list[ProjectStatusEnum] | Type[Empty] = Empty
+    project_status: list[ProjectStatusEnum] | Type[Empty] = Field(fastapi.Query(Empty))
 
 
 class PositionResponse(BaseModel):

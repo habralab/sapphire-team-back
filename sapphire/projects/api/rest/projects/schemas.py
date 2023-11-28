@@ -55,7 +55,7 @@ class ProjectListFiltersRequest(BaseModel):
     startline_le: NaiveDatetime | Type[Empty] = Empty
     deadline_ge: NaiveDatetime | Type[Empty] = Empty
     deadline_le: NaiveDatetime | Type[Empty] = Empty
-    status: list[ProjectStatusEnum] | Type[Empty] = Empty
+    status: list[ProjectStatusEnum] | Type[Empty] = Field(fastapi.Query(Empty))
     position_skill_ids: list[uuid.UUID] | Type[Empty] = Field(fastapi.Query(Empty))
     position_specialization_ids: list[uuid.UUID] | Type[Empty] = Field(fastapi.Query(Empty))
     participant_user_ids: list[uuid.UUID] | Type[Empty] = Field(fastapi.Query(Empty))
