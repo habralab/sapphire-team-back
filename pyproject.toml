@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "sapphire"
-version = "0.0.0"
+version = "1.0.0"
 description = "Backend for developer collaboration service"
 authors = ["Oleg Yurchik <oleg@yurchik.space>"]
 readme = "README.md"
