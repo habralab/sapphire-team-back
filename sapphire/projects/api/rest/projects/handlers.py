@@ -54,15 +54,26 @@ async def get_projects(
     database_service: ProjectsDatabaseService = request.app.service.database
 
     async with database_service.transaction() as session:
+        params = {
+            "session": session,
+            "query_text": filters.query_text,
+            "owner_id": filters.owner_id,
+            "user_id": filters.user_id,
+            "startline_le": filters.startline_le,
+            "startline_ge": filters.startline_ge,
+            "deadline_le": filters.deadline_le,
+            "deadline_ge": filters.deadline_ge,
+            "statuses": filters.status,
+            "position_skill_ids": filters.position_skill_ids,
+            "position_specialization_ids": filters.position_specialization_ids,
+            "participant_user_ids": filters.participant_user_ids,
+        }
         projects_db = await database_service.get_projects(
-            session=session,
             page=pagination.page,
             per_page=pagination.per_page,
-            **filters.model_dump(),
+            **params,
         )
-        total_projects = await database_service.get_projects_count(
-            session=session, **filters.model_dump()
-        )
+        total_projects = await database_service.get_projects_count(**params)
 
     total_pages = -(total_projects // -pagination.per_page)
     projects = [ProjectResponse.model_validate(project_db) for project_db in projects_db]

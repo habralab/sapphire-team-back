@@ -24,16 +24,25 @@ async def get_positions(
     database_service: ProjectsDatabaseService = request.app.service.database
 
     async with database_service.transaction() as session:
+        params = {
+            "session": session,
+            "project_id": filters.project_id,
+            "specialization_ids": filters.specialization_ids,
+            "skill_ids": filters.skill_ids,
+            "joined_user_id": filters.joined_user_id,
+            "project_query_text": filters.project_query_text,
+            "project_startline_ge": filters.project_startline_ge,
+            "project_startline_le": filters.project_startline_le,
+            "project_deadline_ge": filters.project_deadline_ge,
+            "project_deadline_le": filters.project_deadline_le,
+            "project_statuses": filters.project_status,
+        }
         db_positions = await database_service.get_positions(
-            session=session,
+            **params,
             page=pagination.page,
             per_page=pagination.per_page,
-            **filters.model_dump(),
         )
-        total_positions = await database_service.get_positions_count(
-            session=session,
-            **filters.model_dump(),
-        )
+        total_positions = await database_service.get_positions_count(**params)
 
     total_pages = -(total_positions // -pagination.per_page)
     positions = [PositionResponse.from_db_model(position) for position in db_positions]

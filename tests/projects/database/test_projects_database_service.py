@@ -148,7 +148,7 @@ async def test_get_projects_with_all_query_params(database_service: ProjectsData
         deadline_le=deadline_le,
         startline_ge=startline_ge,
         startline_le=startline_le,
-        status=ParticipantStatusEnum.REQUEST,
+        statuses=[ParticipantStatusEnum.REQUEST],
         position_skill_ids=position_skill_ids,
         position_specialization_ids=position_specialization_ids,
     )
