@@ -1,6 +1,6 @@
 import pathlib
-from facet import ServiceMixin
 
+from facet import ServiceMixin
 from fast_grpc import FastGRPCService, StatusCode, grpc_method
 
 from sapphire.common.internal_api.service import BaseInternalAPIService

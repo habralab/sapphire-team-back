@@ -4,6 +4,7 @@ import typer
 from loguru import logger
 
 from sapphire.common.jwt.methods import get_jwt_methods
+from sapphire.users.internal_api import client as users_client
 
 from . import api, broker, database
 from .service import get_service
@@ -18,11 +19,13 @@ def run(ctx: typer.Context):
     database_service = database.get_service(settings=settings)
     jwt_methods = get_jwt_methods(settings=settings)
     broker_service = broker.get_service(loop=loop, settings=settings)
+    users_internal_api_client = users_client.get_client(settings=settings)
     api_service = api.get_service(
         database=database_service,
         jwt_methods=jwt_methods,
         settings=settings,
-        broker_service=broker_service
+        broker_service=broker_service,
+        users_internal_api_client=users_internal_api_client,
     )
     projects_service = get_service(api=api_service, broker=broker_service)
 

@@ -14,8 +14,7 @@ class BaseCacheService(ServiceMixin):
 
     async def stop(self):
         if self.redis:
-            self.redis.close()
-            await self.redis.wait_closed()
+            await self.redis.close()
             self.redis = None
 
     async def set(self, key: str, value: Any):

@@ -1,11 +1,12 @@
 import pathlib
-from facet import ServiceMixin
 
+from facet import ServiceMixin
 from fast_grpc import FastGRPCService, StatusCode, grpc_method
 
 from sapphire.common.internal_api.service import BaseInternalAPIService
 from sapphire.users.database.service import UsersDatabaseService
 from sapphire.users.settings import UsersSettings
+
 from .models import GetUserRequest, UserResponse
 
 

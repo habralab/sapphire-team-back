@@ -1,17 +1,19 @@
 import enum
 import uuid
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, EmailStr
 
 
 class ParticipantNotificationData(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
-    user_id: uuid.UUID
-    position_id: uuid.UUID
     project_id: uuid.UUID
-    owner_id: uuid.UUID
     project_name: str
+    position_id: uuid.UUID
+    participant_id: uuid.UUID
+    participant_email: EmailStr
+    owner_id: uuid.UUID
+    owner_email: EmailStr
 
 
 class ParticipantNotificationType(str, enum.Enum):

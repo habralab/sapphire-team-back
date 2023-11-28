@@ -17,6 +17,7 @@ from .settings import UsersSettings, get_settings
 def run(ctx: typer.Context):
     settings: UsersSettings = ctx.obj["settings"]
 
+    loop = asyncio.get_event_loop()
     database_service = database.get_service(settings=settings)
     habr_oauth2 = get_oauth2_backend(settings=settings)
     habr_client = get_habr_client(settings=settings)
@@ -35,7 +36,7 @@ def run(ctx: typer.Context):
     internal_api_service = internal_api.get_service(database=database_service, settings=settings)
     users_service = get_service(api=api_service, internal_api=internal_api_service)
 
-    asyncio.run(users_service.run())
+    loop.run_until_complete(users_service.run())
 
 
 def settings_callback(ctx: typer.Context):

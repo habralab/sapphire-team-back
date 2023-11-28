@@ -19,24 +19,33 @@ class ProjectsBrokerService(BaseBrokerProducerService):
     async def send_participant_requested(
         self,
         project: Project,
-        participant: Participant
+        participant: Participant,
+        participant_email: str,
+        owner_email: str,
     ) -> None:
         """RECIPIENTS: ONLY OWNER"""
         await self._send_email(
-            recipients=[project.owner_id], email_type=EmailType.PARTICIPANT_REQUESTED
+            recipients=[project.owner_id],
+            email_type=EmailType.PARTICIPANT_REQUESTED,
         )
 
         await self._send_notification_to_recipients(
             notification_type=ParticipantNotificationType.REQUESTED,
             recipients=[project.owner_id],
             notification_data=await self._create_participant_notification_data(
-                project, participant
+                project=project,
+                participant=participant,
+                participant_email=participant_email,
+                owner_email=owner_email,
             ),
         )
 
-    async def send_participant_joined(self,
-        project: Project,
-        participant: Participant,
+    async def send_participant_joined(
+            self,
+            project: Project,
+            participant: Participant,
+            participant_email: str,
+            owner_email: str,
     ) -> None:
         """RECIPIENTS: PARTICIPANTS"""
         await self._send_email(
@@ -48,13 +57,19 @@ class ProjectsBrokerService(BaseBrokerProducerService):
             notification_type=ParticipantNotificationType.JOINED,
             recipients=[project.owner_id] + [p.user_id for p in project.joined_participants],
             notification_data=await self._create_participant_notification_data(
-                project, participant,
+                project=project,
+                participant=participant,
+                participant_email=participant_email,
+                owner_email=owner_email,
             ),
         )
 
-    async def send_participant_declined(self,
-        project: Project,
-        participant: Participant,
+    async def send_participant_declined(
+            self,
+            project: Project,
+            participant: Participant,
+            participant_email: str,
+            owner_email: str,
     ) -> None:
         """RECIPIENTS: ONLY OWNER"""
         await self._send_email(
@@ -65,13 +80,19 @@ class ProjectsBrokerService(BaseBrokerProducerService):
             notification_type=ParticipantNotificationType.PARTICIPANT_DECLINED,
             recipients=[project.owner_id],
             notification_data=await self._create_participant_notification_data(
-                project, participant
+                project=project,
+                participant=participant,
+                participant_email=participant_email,
+                owner_email=owner_email,
             ),
         )
 
-    async def send_owner_declined(self,
-        project: Project,
-        participant: Participant,
+    async def send_owner_declined(
+            self,
+            project: Project,
+            participant: Participant,
+            participant_email: str,
+            owner_email: str,
     ) -> None:
         """RECIPIENTS: ONLY PARTICIPANT"""
         await self._send_email(
@@ -82,13 +103,19 @@ class ProjectsBrokerService(BaseBrokerProducerService):
             notification_type=ParticipantNotificationType.OWNER_DECLINED,
             recipients=[participant.user_id],
             notification_data=await self._create_participant_notification_data(
-                project, participant
+                project=project,
+                participant=participant,
+                participant_email=participant_email,
+                owner_email=owner_email,
             ),
         )
 
-    async def send_participant_left(self,
-        project: Project,
-        participant: Participant,
+    async def send_participant_left(
+            self,
+            project: Project,
+            participant: Participant,
+            participant_email: str,
+            owner_email: str,
     ) -> None:
         """RECIPIENTS: PROJECT OWNER AND PARTICIPANTS"""
         await self._send_email(
@@ -100,13 +127,19 @@ class ProjectsBrokerService(BaseBrokerProducerService):
             notification_type=ParticipantNotificationType.PARTICIPANT_LEFT,
             recipients=[project.owner_id] + [p.user_id for p in project.joined_participants],
             notification_data=await self._create_participant_notification_data(
-                project, participant
+                project=project,
+                participant=participant,
+                participant_email=participant_email,
+                owner_email=owner_email,
             ),
         )
 
-    async def send_owner_excluded(self,
-        project: Project,
-        participant: Participant,
+    async def send_owner_excluded(
+            self,
+            project: Project,
+            participant: Participant,
+            participant_email: str,
+            owner_email: str,
     ) -> None:
         """RECIPIENTS: PROJECT OWNER AND PARTICIPANTS"""
         await self._send_email(
@@ -118,7 +151,10 @@ class ProjectsBrokerService(BaseBrokerProducerService):
             notification_type=ParticipantNotificationType.OWNER_EXCLUDED,
             recipients=[project.owner_id] + [p.user_id for p in project.joined_participants],
             notification_data=await self._create_participant_notification_data(
-                project, participant
+                project=project,
+                participant=participant,
+                participant_email=participant_email,
+                owner_email=owner_email,
             ),
         )
 
@@ -145,14 +181,19 @@ class ProjectsBrokerService(BaseBrokerProducerService):
 
     @staticmethod
     async def _create_participant_notification_data(
-         project: Project, participant: Participant,
+        project: Project,
+        participant: Participant,
+        participant_email: str,
+        owner_email: str,
     ) -> ParticipantNotificationData:
         return ParticipantNotificationData(
-            user_id=participant.user_id,
-            position_id=participant.position_id,
             project_id=project.id,
             project_name=project.name,
+            position_id=participant.position_id,
+            participant_id=participant.user_id,
+            participant_email=participant_email,
             owner_id=project.owner_id,
+            owner_email=owner_email,
         )
 
     async def send_create_chat(
@@ -162,6 +203,7 @@ class ProjectsBrokerService(BaseBrokerProducerService):
     ) -> None:
         chat_data = CreateChat(is_personal=is_personal, members_ids=members_ids)
         await self.send(topic="chats", message=chat_data)
+
 
 def get_service(
         loop: asyncio.AbstractEventLoop,
