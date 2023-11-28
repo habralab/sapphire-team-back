@@ -20,14 +20,13 @@ from autotests.utils import Empty
     pytest.lazy_fixture("random_projects_rest_client"),
 ))
 @pytest.mark.parametrize(
-    ("project_id", "is_closed", "specialization_ids", "skill_ids", "joined_user_id",
-     "project_query_text", "project_startline_ge", "project_startline_le", "project_deadline_ge",
-     "project_deadline_le", "project_status", "page", "per_page"),
+    ("project_id", "specialization_ids", "skill_ids", "joined_user_id", "project_query_text",
+     "project_startline_ge", "project_startline_le", "project_deadline_ge", "project_deadline_le",
+     "project_statuses", "page", "per_page"),
     (
-        (Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, 1, 10),
+        (Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, Empty, 1, 10),
         (
             Empty,
-            False,
             [uuid.uuid4(), uuid.uuid4()],
             [uuid.uuid4(), uuid.uuid4()],
             uuid.uuid4(),
@@ -36,7 +35,7 @@ from autotests.utils import Empty
             datetime.now() + timedelta(days=30),
             datetime.now() + timedelta(days=30),
             datetime.now() + timedelta(days=90),
-            ProjectStatusEnum.PREPARATION,
+            [ProjectStatusEnum.PREPARATION],
             1,
             10,
         ),
@@ -46,7 +45,6 @@ from autotests.utils import Empty
 async def test_get_positions(
         client: ProjectsRestClient,
         project_id: uuid.UUID | Type[Empty],
-        is_closed: bool | Type[Empty],
         specialization_ids: list[uuid.UUID] | Type[Empty],
         skill_ids: list[uuid.UUID] | Type[Empty],
         joined_user_id: uuid.UUID | Type[Empty],
@@ -55,13 +53,12 @@ async def test_get_positions(
         project_startline_le: datetime | Type[Empty],
         project_deadline_ge: datetime | Type[Empty],
         project_deadline_le: datetime | Type[Empty],
-        project_status: ProjectStatusEnum | Type[Empty],
+        project_statuses: list[ProjectStatusEnum] | Type[Empty],
         page: int,
         per_page: int,
 ):
     positions = await client.get_positions(
         project_id=project_id,
-        is_closed=is_closed,
         specialization_ids=specialization_ids,
         skill_ids=skill_ids,
         joined_user_id=joined_user_id,
@@ -70,16 +67,16 @@ async def test_get_positions(
         project_startline_le=project_startline_le,
         project_deadline_ge=project_deadline_ge,
         project_deadline_le=project_deadline_le,
-        project_status=project_status,
+        project_statuses=project_statuses,
         page=page,
         per_page=per_page,
     )
 
     for position in positions.data:
-        if is_closed is not Empty:
-            assert (position.closed_at is not None) == is_closed
         if specialization_ids is not Empty:
             assert position.specialization_id in specialization_ids
+        if project_statuses is not Empty:
+            assert position.project.status in project_statuses
 
 
 @pytest.mark.parametrize("client", (

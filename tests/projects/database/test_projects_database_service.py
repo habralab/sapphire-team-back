@@ -96,6 +96,33 @@ async def test_get_projects_without_pagination(database_service: ProjectsDatabas
 
 
 @pytest.mark.asyncio
+async def test_get_projects_with_pagination(database_service: ProjectsDatabaseService):
+    session = MagicMock()
+    result = MagicMock()
+    project_id = uuid.uuid4()
+    expected_projects = [Project(id=project_id, name="test", owner_id=uuid.uuid4())]
+    page = 1
+    per_page = 10
+    offset = (page - 1) * per_page
+    expected_query = (
+        select(Project)
+        .order_by(desc(Project.created_at))
+        .limit(per_page)
+        .offset(offset)
+    )
+    result.unique.return_value.scalars.return_value.all.return_value = expected_projects
+    session.execute = AsyncMock()
+    session.execute.return_value = result
+
+    projects = await database_service.get_projects(session=session, page=page, per_page=per_page)
+
+    assert projects == expected_projects
+
+    query = session.execute.call_args_list[0].args[0]
+    assert expected_query.compare(query)
+
+
+@pytest.mark.asyncio
 async def test_get_projects_with_all_query_params(database_service: ProjectsDatabaseService):
     session = MagicMock()
     result = MagicMock()
@@ -127,33 +154,6 @@ async def test_get_projects_with_all_query_params(database_service: ProjectsData
     )
 
     assert projects == expected_projects
-
-
-@pytest.mark.asyncio
-async def test_get_projects_with_pagination(database_service: ProjectsDatabaseService):
-    session = MagicMock()
-    result = MagicMock()
-    project_id = uuid.uuid4()
-    expected_projects = [Project(id=project_id, name="test", owner_id=uuid.uuid4())]
-    page = 1
-    per_page = 10
-    offset = (page - 1) * per_page
-    expected_query = (
-        select(Project)
-        .order_by(desc(Project.created_at))
-        .limit(per_page)
-        .offset(offset)
-    )
-    result.unique.return_value.scalars.return_value.all.return_value = expected_projects
-    session.execute = AsyncMock()
-    session.execute.return_value = result
-
-    projects = await database_service.get_projects(session=session, page=page, per_page=per_page)
-
-    assert projects == expected_projects
-
-    query = session.execute.call_args_list[0].args[0]
-    assert expected_query.compare(query)
 
 
 # Project position

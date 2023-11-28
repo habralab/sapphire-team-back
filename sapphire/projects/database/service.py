@@ -138,7 +138,6 @@ class ProjectsDatabaseService(BaseDatabaseService):
     async def _get_positions_filters(
             self,
             project_id: uuid.UUID | Type[Empty] = Empty,
-            is_closed: bool | Type[Empty] = Empty,
             specialization_ids: list[uuid.UUID] | Type[Empty] = Empty,
             skill_ids: list[uuid.UUID] | Type[Empty] = Empty,
             joined_user_id: uuid.UUID | Type[Empty] = Empty,
@@ -147,7 +146,7 @@ class ProjectsDatabaseService(BaseDatabaseService):
             project_startline_le: datetime | Type[Empty] = Empty,
             project_deadline_ge: datetime | Type[Empty] = Empty,
             project_deadline_le: datetime | Type[Empty] = Empty,
-            project_status: ProjectStatusEnum | Type[Empty] = Empty,
+            project_statuses: list[ProjectStatusEnum] | Type[Empty] = Empty,
     ) -> list:
         filters = []
         skill_filters = []
@@ -155,12 +154,6 @@ class ProjectsDatabaseService(BaseDatabaseService):
 
         if project_id is not Empty:
             filters.append(Position.project_id == project_id)
-        if is_closed is not Empty:
-            filters.append(
-                Position.closed_at is not None
-                if is_closed else
-                Position.closed_at is None
-            )
         if specialization_ids is not Empty:
             filters.append(Position.specialization_id.in_(specialization_ids))
 
@@ -191,7 +184,7 @@ class ProjectsDatabaseService(BaseDatabaseService):
             project_filters.append(Project.deadline >= project_deadline_ge)
         if project_deadline_le is not Empty:
             project_filters.append(Project.deadline <= project_deadline_le)
-        if project_status is not Empty:
+        if project_statuses is not Empty:
             history_query = (
                 select(ProjectHistory)
                 .distinct(ProjectHistory.project_id)
@@ -200,7 +193,7 @@ class ProjectsDatabaseService(BaseDatabaseService):
             )
             project_filters.extend([
                 Project.id == history_query.c.project_id,
-                project_status == history_query.c.status,
+                history_query.c.status.in_(project_statuses),
             ])
 
         if skill_filters:
@@ -218,7 +211,6 @@ class ProjectsDatabaseService(BaseDatabaseService):
             self,
             session: AsyncSession,
             project_id: uuid.UUID | Type[Empty] = Empty,
-            is_closed: bool | Type[Empty] = Empty,
             specialization_ids: list[uuid.UUID] | Type[Empty] = Empty,
             skill_ids: list[uuid.UUID] | Type[Empty] = Empty,
             joined_user_id: uuid.UUID | Type[Empty] = Empty,
@@ -227,11 +219,10 @@ class ProjectsDatabaseService(BaseDatabaseService):
             project_startline_le: datetime | Type[Empty] = Empty,
             project_deadline_ge: datetime | Type[Empty] = Empty,
             project_deadline_le: datetime | Type[Empty] = Empty,
-            project_status: ProjectStatusEnum | Type[Empty] = Empty,
+            project_statuses: list[ProjectStatusEnum] | Type[Empty] = Empty,
     ) -> int:
         filters = await self._get_positions_filters(
             project_id=project_id,
-            is_closed=is_closed,
             specialization_ids=specialization_ids,
             skill_ids=skill_ids,
             joined_user_id=joined_user_id,
@@ -240,7 +231,7 @@ class ProjectsDatabaseService(BaseDatabaseService):
             project_startline_le=project_startline_le,
             project_deadline_ge=project_deadline_ge,
             project_deadline_le=project_deadline_le,
-            project_status=project_status,
+            project_statuses=project_statuses,
         )
 
         statement = select(func.count(Position.id)).where(*filters) # pylint: disable=not-callable
@@ -251,7 +242,6 @@ class ProjectsDatabaseService(BaseDatabaseService):
             self,
             session: AsyncSession,
             project_id: uuid.UUID | Type[Empty] = Empty,
-            is_closed: bool | Type[Empty] = Empty,
             specialization_ids: list[uuid.UUID] | Type[Empty] = Empty,
             skill_ids: list[uuid.UUID] | Type[Empty] = Empty,
             joined_user_id: uuid.UUID | Type[Empty] = Empty,
@@ -260,13 +250,12 @@ class ProjectsDatabaseService(BaseDatabaseService):
             project_startline_le: datetime | Type[Empty] = Empty,
             project_deadline_ge: datetime | Type[Empty] = Empty,
             project_deadline_le: datetime | Type[Empty] = Empty,
-            project_status: ProjectStatusEnum | Type[Empty] = Empty,
+            project_statuses: list[ProjectStatusEnum] | Type[Empty] = Empty,
             page: int = 1,
             per_page: int = 10,
     ) -> list[Position]:
         filters = await self._get_positions_filters(
             project_id=project_id,
-            is_closed=is_closed,
             specialization_ids=specialization_ids,
             skill_ids=skill_ids,
             joined_user_id=joined_user_id,
@@ -275,7 +264,7 @@ class ProjectsDatabaseService(BaseDatabaseService):
             project_startline_le=project_startline_le,
             project_deadline_ge=project_deadline_ge,
             project_deadline_le=project_deadline_le,
-            project_status=project_status,
+            project_statuses=project_statuses,
         )
 
         statement = select(Position).where(*filters).order_by(Position.created_at.desc())
