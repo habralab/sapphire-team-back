@@ -129,8 +129,6 @@ async def test_get_projects_with_all_query_params(database_service: ProjectsData
     assert projects == expected_projects
 
 
-# Project position
-
 @pytest.mark.asyncio
 async def test_get_projects_with_pagination(database_service: ProjectsDatabaseService):
     session = MagicMock()
@@ -157,6 +155,8 @@ async def test_get_projects_with_pagination(database_service: ProjectsDatabaseSe
     query = session.execute.call_args_list[0].args[0]
     assert expected_query.compare(query)
 
+
+# Project position
 
 @pytest.mark.asyncio
 async def test_create_project_position(database_service: ProjectsDatabaseService):
