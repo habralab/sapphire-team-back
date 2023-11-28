@@ -477,47 +477,47 @@ class TestProjectFlow:
 
     @pytest.mark.dependency(depends=["TestProjectFlow::test_get_third_accepted_request_to_join"])
     @pytest.mark.asyncio
-    async def test_create_random_request_to_join(
+    async def test_create_owner_request_to_join(
             self,
-            random_id: uuid.UUID,
-            random_projects_rest_client: ProjectsRestClient,
+            oleg_id: uuid.UUID,
+            oleg_projects_rest_client: ProjectsRestClient,
     ):
         position_id: uuid.UUID = self.CONTEXT["position_id"]
 
-        participant = await random_projects_rest_client.create_request_to_join_position(
+        participant = await oleg_projects_rest_client.create_request_to_join_position(
             position_id=position_id,
         )
 
         self.CONTEXT["new_participant_id"] = participant.id
 
         assert participant.position_id == position_id
-        assert participant.user_id == random_id
+        assert participant.user_id == oleg_id
         assert participant.status == ParticipantStatusEnum.REQUEST
 
-    @pytest.mark.dependency(depends=["TestProjectFlow::test_create_random_request_to_join"])
+    @pytest.mark.dependency(depends=["TestProjectFlow::test_create_owner_request_to_join"])
     @pytest.mark.asyncio
-    async def test_get_random_request_to_join(
+    async def test_get_owner_request_to_join(
             self,
-            random_id: uuid.UUID,
-            random_projects_rest_client: ProjectsRestClient,
+            oleg_id: uuid.UUID,
+            oleg_projects_rest_client: ProjectsRestClient,
     ):
         position_id: uuid.UUID = self.CONTEXT["position_id"]
         participant_id: uuid.UUID = self.CONTEXT["new_participant_id"]
 
-        participant = await random_projects_rest_client.get_participant(
+        participant = await oleg_projects_rest_client.get_participant(
             participant_id=participant_id,
         )
 
         assert participant.id == participant_id
         assert participant.position_id == position_id
-        assert participant.user_id == random_id
+        assert participant.user_id == oleg_id
         assert participant.status == ParticipantStatusEnum.REQUEST
 
-    @pytest.mark.dependency(depends=["TestProjectFlow::test_get_random_request_to_join"])
+    @pytest.mark.dependency(depends=["TestProjectFlow::test_get_owner_request_to_join"])
     @pytest.mark.asyncio
-    async def test_random_accept_request_to_join(
+    async def test_owner_accept_request_to_join(
             self,
-            random_id: uuid.UUID,
+            oleg_id: uuid.UUID,
             oleg_projects_rest_client: ProjectsRestClient,
     ):
         position_id: uuid.UUID = self.CONTEXT["position_id"]
@@ -530,29 +530,29 @@ class TestProjectFlow:
 
         assert participant.id == participant_id
         assert participant.position_id == position_id
-        assert participant.user_id == random_id
+        assert participant.user_id == oleg_id
         assert participant.status == ParticipantStatusEnum.JOINED
 
-    @pytest.mark.dependency(depeds=["TestProjectFlow::test_random_accept_request_to_join"])
+    @pytest.mark.dependency(depeds=["TestProjectFlow::test_owner_accept_request_to_join"])
     @pytest.mark.asyncio
-    async def test_get_random_accepted_request_to_join(
+    async def test_get_owner_accepted_request_to_join(
             self,
-            random_id: uuid.UUID,
-            random_projects_rest_client: ProjectsRestClient,
+            oleg_id: uuid.UUID,
+            oleg_projects_rest_client: ProjectsRestClient,
     ):
         position_id: uuid.UUID = self.CONTEXT["position_id"]
         participant_id: uuid.UUID = self.CONTEXT["new_participant_id"]
 
-        participant = await random_projects_rest_client.get_participant(
+        participant = await oleg_projects_rest_client.get_participant(
             participant_id=participant_id,
         )
 
         assert participant.id == participant_id
         assert participant.position_id == position_id
-        assert participant.user_id == random_id
+        assert participant.user_id == oleg_id
         assert participant.status == ParticipantStatusEnum.JOINED
 
-    @pytest.mark.dependency(depends=["TestProjectFlow::test_get_random_accepted_request_to_join"])
+    @pytest.mark.dependency(depends=["TestProjectFlow::test_get_owner_accepted_request_to_join"])
     @pytest.mark.asyncio
     async def test_leave_position_by_participant(
             self,

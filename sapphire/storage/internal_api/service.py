@@ -1,31 +1,30 @@
 import pathlib
 
-from fast_grpc import FastGRPCService, grpc_method
+from facet import ServiceMixin
+from fast_grpc import FastGRPCService, StatusCode, grpc_method
 
 from sapphire.common.internal_api.service import BaseInternalAPIService
 from sapphire.storage.database.service import StorageDatabaseService
 from sapphire.storage.settings import StorageSettings
 
 from .models import (
-    SkillRequest,
+    GetSkillRequest,
+    GetSpecializationGroupRequest,
+    GetSpecializationRequest,
     SkillResponse,
-    SpecializationGroupRequest,
     SpecializationGroupResponse,
-    SpecializationRequest,
     SpecializationResponse,
 )
 
 
 class StorageGRPCService(FastGRPCService):
+    name = "Storage"
+    root_path = pathlib.Path(__file__).parent
+    proto_path = root_path / "grpc"
+    grpc_path = root_path / "grpc"
+
     def __init__(self, database: StorageDatabaseService):
         self._database = database
-
-        root_path = pathlib.Path(__file__).parent
-        super().__init__(
-            name="Storage",
-            proto_path=root_path / "grpc",
-            grpc_path=root_path / "grpc",
-        )
 
     @property
     def database(self):
@@ -34,7 +33,7 @@ class StorageGRPCService(FastGRPCService):
     @grpc_method(name="GetSpecializationGroup")
     async def get_specialization_group(
             self,
-            request: SpecializationGroupRequest,
+            request: GetSpecializationGroupRequest,
             context,
     ) -> SpecializationGroupResponse:
         async with self._database.transaction() as session:
@@ -44,7 +43,10 @@ class StorageGRPCService(FastGRPCService):
             )
 
         if specialization_group is None:
-            await context.abort(code=404, details="Specialization group not found.")
+            await context.abort(
+                code=StatusCode.NOT_FOUND,
+                details="Specialization group not found.",
+            )
 
         return SpecializationGroupResponse(
             id=specialization_group.id,
@@ -56,7 +58,7 @@ class StorageGRPCService(FastGRPCService):
     @grpc_method(name="GetSpecialization")
     async def get_specialization(
             self,
-            request: SpecializationRequest,
+            request: GetSpecializationRequest,
             context,
     ) -> SpecializationResponse:
         async with self._database.transaction() as session:
@@ -66,7 +68,7 @@ class StorageGRPCService(FastGRPCService):
             )
 
         if specialization is None:
-            await context.abort(code=404, details="Specialization not found.")
+            await context.abort(code=StatusCode.NOT_FOUND, details="Specialization not found.")
 
         return SpecializationResponse(
             id=specialization.id,
@@ -76,12 +78,12 @@ class StorageGRPCService(FastGRPCService):
         )
 
     @grpc_method(name="GetSkill")
-    async def get_skill(self, request: SkillRequest, context) -> SkillResponse:
+    async def get_skill(self, request: GetSkillRequest, context) -> SkillResponse:
         async with self._database.transaction() as session:
             skill = await self._database.get_skill(session=session, habr_id=request.habr_id)
 
         if skill is None:
-            await context.abort(code=404, details="Skill not found.")
+            await context.abort(code=StatusCode.NOT_FOUND, details="Skill not found.")
 
         return SkillResponse(id=skill.id, name=skill.name, habr_id=skill.habr_id)
 
@@ -103,6 +105,12 @@ class StorageInternalAPIService(BaseInternalAPIService):
     @property
     def database(self) -> StorageDatabaseService:
         return self._database
+
+    @property
+    def dependencies(self) -> list[ServiceMixin]:
+        return [
+            self._database,
+        ]
 
 
 def get_service(

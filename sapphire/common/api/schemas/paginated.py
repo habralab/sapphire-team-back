@@ -1,11 +1,11 @@
 from typing import Any
 
-from pydantic import BaseModel
+from pydantic import BaseModel, NonNegativeInt, PositiveInt
 
 
 class PaginatedResponse(BaseModel):
     data: list[Any]
-    page: int
-    per_page: int
-    total_pages: int
-    total_items: int
+    page: PositiveInt
+    per_page: PositiveInt
+    total_pages: NonNegativeInt
+    total_items: NonNegativeInt

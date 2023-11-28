@@ -1,5 +1,8 @@
+**/*_pb2.py
+**/*_pb2_grpc.py
+**/*.proto
+**/*.pyc
 *.db
-*.pyc
 *.sqlite3
 .env
 .idea

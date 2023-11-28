@@ -8,6 +8,7 @@ from sapphire.common.cache.settings import BaseCacheSettings
 from sapphire.common.database.settings import BaseDatabaseSettings
 from sapphire.common.habr.settings import HabrSettings
 from sapphire.common.habr_career.settings import HabrCareerSettings
+from sapphire.common.internal_api.settings import BaseInternalAPISettings
 from sapphire.common.jwt.settings import JWTSettings
 from sapphire.common.utils.rsa256 import generate_rsa_keys
 
@@ -16,8 +17,7 @@ refresh_token = generate_rsa_keys()
 
 
 class UsersSettings(BaseAPISettings, BaseDatabaseSettings, JWTSettings, HabrSettings,
-                    HabrCareerSettings, BaseCacheSettings,
-):
+                    HabrCareerSettings, BaseCacheSettings, BaseInternalAPISettings):
     model_config = SettingsConfigDict(env_file=".env", extra="allow", secrets_dir="/run/secrets")
 
     db_dsn: AnyUrl = AnyUrl("sqlite+aiosqlite:///users.sqlite3")

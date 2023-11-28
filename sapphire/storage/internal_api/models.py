@@ -3,7 +3,7 @@ import uuid
 from pydantic import BaseModel, PositiveInt
 
 
-class SpecializationGroupRequest(BaseModel):
+class GetSpecializationGroupRequest(BaseModel):
     habr_id: PositiveInt
 
 
@@ -14,7 +14,7 @@ class SpecializationGroupResponse(BaseModel):
     habr_id: PositiveInt | None
 
 
-class SpecializationRequest(BaseModel):
+class GetSpecializationRequest(BaseModel):
     habr_id: PositiveInt
 
 
@@ -25,7 +25,7 @@ class SpecializationResponse(BaseModel):
     habr_id: PositiveInt | None
 
 
-class SkillRequest(BaseModel):
+class GetSkillRequest(BaseModel):
     habr_id: PositiveInt
 
 

@@ -7,7 +7,7 @@ from sapphire.common.habr.client import get_habr_client
 from sapphire.common.habr_career.client import get_habr_career_client
 from sapphire.common.jwt.methods import get_jwt_methods
 
-from . import api, cache, database
+from . import api, cache, database, internal_api
 from .oauth2.habr import get_oauth2_backend
 from .service import get_service
 from .settings import UsersSettings, get_settings
@@ -17,6 +17,7 @@ from .settings import UsersSettings, get_settings
 def run(ctx: typer.Context):
     settings: UsersSettings = ctx.obj["settings"]
 
+    loop = asyncio.get_event_loop()
     database_service = database.get_service(settings=settings)
     habr_oauth2 = get_oauth2_backend(settings=settings)
     habr_client = get_habr_client(settings=settings)
@@ -32,9 +33,10 @@ def run(ctx: typer.Context):
         settings=settings,
         cache=cache_service
     )
-    users_service = get_service(api=api_service)
+    internal_api_service = internal_api.get_service(database=database_service, settings=settings)
+    users_service = get_service(api=api_service, internal_api=internal_api_service)
 
-    asyncio.run(users_service.run())
+    loop.run_until_complete(users_service.run())
 
 
 def settings_callback(ctx: typer.Context):
@@ -49,5 +51,6 @@ def get_cli() -> typer.Typer:
     cli.command(name="run")(run)
     cli.add_typer(api.get_cli(), name="api")
     cli.add_typer(database.get_cli(), name="database")
+    cli.add_typer(internal_api.get_cli(), name="internal-api")
 
     return cli
