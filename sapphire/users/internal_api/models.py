@@ -12,7 +12,7 @@ class UserResponse(BaseModel):
     email: EmailStr
     first_name: str | None = None
     last_name: str | None = None
-    is_activated: bool
+    is_activated: bool = False
 
     about: str | None = None
     main_specialization_id: uuid.UUID | None = None

@@ -26,7 +26,7 @@ class UsersDatabaseService(BaseDatabaseService):
             session: AsyncSession,
             user_id: uuid.UUID | Type[Empty] = Empty,
             email: str | Type[Empty] = Empty,
-    ):
+    ) -> User | None:
         filters = []
         if user_id is not Empty:
             filters.append(User.id == user_id)
