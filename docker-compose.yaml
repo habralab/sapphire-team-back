@@ -70,7 +70,6 @@ services:
         - "traefik.http.routers.kafka.rule=PathPrefix(`${KAFKA_UI_ROOT_PATH:-/kafka}`)"
         - "traefik.http.routers.kafka.entrypoints=web" 
         - "traefik.http.services.kafka.loadbalancer.server.port=8080"
-        - "env=${ENV:-local}"
       replicas: 1
 
   users:
@@ -104,7 +103,6 @@ services:
         - "traefik.http.routers.users.middlewares=users-stripprefix"
         - "traefik.http.routers.users.entrypoints=web" 
         - "traefik.http.services.users.loadbalancer.server.port=8000"
-        - "env=${ENV:-local}"
       update_config:
         order: start-first
       replicas: 1
@@ -132,7 +130,6 @@ services:
         - "traefik.http.routers.storage.middlewares=storage-stripprefix"
         - "traefik.http.routers.storage.entrypoints=web" 
         - "traefik.http.services.storage.loadbalancer.server.port=8000"
-        - "env=${ENV:-local}"
       update_config:
         order: start-first
       replicas: 1
@@ -165,7 +162,6 @@ services:
         - "traefik.http.routers.projects.middlewares=projects-stripprefix"
         - "traefik.http.routers.projects.entrypoints=web" 
         - "traefik.http.services.projects.loadbalancer.server.port=8000"
-        - "env=${ENV:-local}"
       update_config:
         order: start-first
       replicas: 1
@@ -195,7 +191,6 @@ services:
         - "traefik.http.routers.notifications.middlewares=notifications-stripprefix"
         - "traefik.http.routers.notifications.entrypoints=web" 
         - "traefik.http.services.notifications.loadbalancer.server.port=8000"
-        - "env=${ENV:-local}"
       update_config:
         order: start-first
       replicas: 1
@@ -225,7 +220,6 @@ services:
         - "traefik.http.routers.messenger.middlewares=messenger-stripprefix"
         - "traefik.http.routers.messenger.entrypoints=web" 
         - "traefik.http.services.messenger.loadbalancer.server.port=8000"
-        - "env=${ENV:-local}"
       update_config:
         order: start-first
       replicas: 1
@@ -265,7 +259,6 @@ services:
         - "traefik.http.routers.swagger.rule=PathPrefix(`${SWAGGER_ROOT_PATH:-/swagger}`)"
         - "traefik.http.routers.swagger.entrypoints=web" 
         - "traefik.http.services.swagger.loadbalancer.server.port=8080"
-        - "env=${ENV:-local}"
       update_config:
         order: start-first
       replicas: 1
