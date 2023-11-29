@@ -73,14 +73,13 @@ async def callback(
         ]
         habr_user_info, habr_career_user_info = await asyncio.gather(*coros)
         first_name, last_name = None, None
-        if habr_user_info or habr_career_user_info:
-            habr_user_full_name = (
-                getattr(habr_career_user_info, "full_name", None) or
-                getattr(habr_user_info, "full_name", None)
-            )
-            if habr_user_full_name is not None:
-                first_name, *last_name = habr_user_full_name.split(maxsplit=1)
-                last_name = last_name[0] if last_name else None
+        habr_user_full_name = (
+            getattr(habr_career_user_info, "full_name", None) or
+            getattr(habr_user_info, "full_name", None)
+        )
+        if habr_user_full_name is not None:
+            first_name, *last_name = habr_user_full_name.split(maxsplit=1)
+            last_name = last_name[0] if last_name else None
 
         async with database_service.transaction() as session:
             db_user = await database_service.create_user(
