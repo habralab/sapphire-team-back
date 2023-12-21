@@ -23,6 +23,26 @@ services:
     deploy:
       replicas: 1
 
+  glitchtip:
+    image: glitchtip/glitchtip
+    environment:
+      SECRET_KEY: secret_key
+      DATABASE_URL: ${GLITCHTIP_DB_DSN:-postgres://glitchtip:P@ssw0rd@database:5432/glitchtip}
+      GLITCHTIP_DOMAIN: ${GLITCHTIP_ROOT_URL:-http://localhost:3000/glitchtip}
+      GLITCHTIP_URL: ${GLITCHTIP_ROOT_URL:-http://localhost:3000/glitchtip}
+      PORT: 8000
+    deploy:
+      labels:
+        - "traefik.enable=true"
+        # - "traefik.http.middlewares.glitchtip-stripprefix.stripprefix.prefixes=${GLITCHTIP_ROOT_PATH:-/glitchtip}"
+        - "traefik.http.routers.glitchtip.rule=PathPrefix(`${GLITCHTIP_ROOT_PATH:-/glitchtip}`)"
+        # - "traefik.http.routers.glitchtip.middlewares=glitchtip-stripprefix"
+        - "traefik.http.routers.glitchtip.entrypoints=web" 
+        - "traefik.http.routers.glitchtip-static.rule=PathPrefix(`/static`)"
+        - "traefik.http.routers.glitchtip-static.entrypoints=web"
+        - "traefik.http.services.glitchtip.loadbalancer.server.port=8000"
+      replicas: 1
+
   zookeeper:
     image: confluentinc/cp-zookeeper:7.5.0
     user: 0:0

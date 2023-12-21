@@ -141,6 +141,14 @@ GRANT ALL PRIVILEGES ON DATABASE service_name TO service_name;
 ALTER DATABASE service_name OWNER TO service_name;
 ```
 
+Create database for glitchtip
+```shell
+CREATE ROLE glitchtip WITH LOGIN ENCRYPTED PASSWORD 'P@ssw0rd';
+CREATE DATABASE glitchtip;
+GRANT ALL PRIVILEGES ON DATABASE glitchtip TO glitchtip;
+ALTER DATABASE glitchtip OWNER TO glitchtip;
+```
+
 For autotests you should install all autotests fixtures from every service: Users, Projects,
 Notifications, Messenger
 ```shell
