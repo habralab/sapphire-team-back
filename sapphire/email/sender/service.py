@@ -6,12 +6,11 @@ import aiosmtplib
 import backoff
 from facet import ServiceMixin
 
-from sapphire.email.settings import EmailSettings
-
+from .settings import Settings
 from .templates import Template
 
 
-class EmailSenderService(ServiceMixin):
+class Service(ServiceMixin):
     TEMPLATES = ()
 
     def __init__(
@@ -55,8 +54,8 @@ class EmailSenderService(ServiceMixin):
             await asyncio.gather(*coroutines)
 
 
-def get_service(settings: EmailSettings) -> EmailSenderService:
-    return EmailSenderService(
+def get_service(settings: Settings) -> Service:
+    return Service(
         sender=settings.email_sender,
         hostname=settings.email_hostname,
         port=settings.email_port,

@@ -1,12 +1,10 @@
 from sapphire.common.broker.settings import BaseBrokerConsumerSettings
 
-from . import broker, sender
-
 
 class Settings(BaseBrokerConsumerSettings):
-    broker: broker.Settings
-    sender: sender.Settings
-    
+    consumer_servers: list[str] = ["localhost:9091"]
+    topics: list[str] = ["email"]
+
 
 def get_settings() -> Settings:
     return Settings()

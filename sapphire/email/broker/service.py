@@ -4,24 +4,24 @@ from typing import Iterable
 from facet import ServiceMixin
 
 from sapphire.common.broker.service import BaseBrokerConsumerService
-from sapphire.email.sender.service import EmailSenderService
-from sapphire.email.settings import EmailSettings
+from sapphire.email import sender
 
-from .handlers import EmailBrokerHandler
+from .handlers import SendEmailHandler
+from .settings import Settings
 
 
-class EmailBrokerService(BaseBrokerConsumerService):
+class Service(BaseBrokerConsumerService):
     def __init__(
             self,
-            sender: EmailSenderService,
-            loop: asyncio.AbstractEventLoop,
+            sender: sender.Service,
             servers: Iterable[str],
             topics: Iterable[str],
+            loop: asyncio.AbstractEventLoop | None = None,
     ):
         self._sender = sender
 
         handlers = (
-            EmailBrokerHandler(sender=sender, topics=topics),
+            SendEmailHandler(sender=sender, topics=topics),
         )
         super().__init__(loop=loop, servers=servers, topics=topics, handlers=handlers)
 
@@ -32,16 +32,16 @@ class EmailBrokerService(BaseBrokerConsumerService):
         ]
 
     @property
-    def sender(self) -> EmailSenderService:
+    def sender(self) -> sender.Service:
         return self._sender
 
 
 def get_service(
-        loop: asyncio.AbstractEventLoop,
-        sender: EmailSenderService,
-        settings: EmailSettings,
-) -> EmailBrokerService:
-    return EmailBrokerService(
+        sender: sender.Service,
+        settings: Settings,
+        loop: asyncio.AbstractEventLoop | None = None,
+) -> Service:
+    return Service(
         sender=sender,
         loop=loop,
         servers=settings.consumer_servers,

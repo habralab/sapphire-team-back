@@ -13,16 +13,16 @@ from .handler import BaseBrokerHandler
 class BaseBrokerConsumerService(ServiceMixin):
     def __init__(
         self,
-        loop: asyncio.AbstractEventLoop,
         servers: Iterable[str],
         topics: Iterable[str],
         handlers: Iterable[BaseBrokerHandler] = (),
+        loop: asyncio.AbstractEventLoop | None = None,
     ):
         self._handlers = handlers
 
         self._consumer = aiokafka.AIOKafkaConsumer(
             *topics,
-            loop=loop,
+            loop=loop or asyncio.get_event_loop(),
             bootstrap_servers=",".join(servers),
         )
 

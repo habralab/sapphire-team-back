@@ -5,11 +5,11 @@ from loguru import logger
 
 from sapphire.common.broker.handler import BaseBrokerHandler
 from sapphire.common.broker.models.email import Email
-from sapphire.email.sender.service import EmailSenderService
+from sapphire.email import sender
 
 
-class EmailBrokerHandler(BaseBrokerHandler):
-    def __init__(self, sender: EmailSenderService, topics: Iterable[str] | None = None):
+class SendEmailHandler(BaseBrokerHandler):
+    def __init__(self, sender: sender.Service, topics: Iterable[str] | None = None):
         self._sender = sender
 
         super().__init__(topics=topics)
@@ -24,5 +24,5 @@ class EmailBrokerHandler(BaseBrokerHandler):
         await self._sender.send(template=template, data=email.data, recipients=email.to)
 
     @property
-    def sender(self) -> EmailSenderService:
+    def sender(self) -> sender.Service:
         return self._sender
