@@ -3,11 +3,11 @@ import typer
 from sapphire.common.database.cli import get_fixtures_cli, get_migrations_cli
 
 from .service import get_service
+from .settings import get_settings
 
 
 def service_callback(ctx: typer.Context):
-    settings = ctx.obj["settings"]
-
+    settings = get_settings()
     database_servise = get_service(settings=settings)
     ctx.obj["database"] = database_servise
 

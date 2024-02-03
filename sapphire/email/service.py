@@ -1,4 +1,4 @@
-from asyncio import AbstractEventLoop
+import asyncio
 
 from facet import ServiceMixin
 
@@ -27,8 +27,8 @@ class Service(ServiceMixin):
         return self._sender
 
 
-def get_service(loop: AbstractEventLoop, settings: Settings) -> Service:
+def get_service(loop: asyncio.AbstractEventLoop, settings: Settings) -> Service:
     sender_service = sender.get_service(settings=settings.sender)
     broker_service = broker.get_service(loop=loop, sender=sender_service, settings=settings.broker)
-    
+
     return Service(broker=broker_service, sender=sender_service)

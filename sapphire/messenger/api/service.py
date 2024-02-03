@@ -6,16 +6,16 @@ from facet import ServiceMixin
 from sapphire.common.api.service import BaseAPIService
 from sapphire.common.jwt import JWTMethods
 from sapphire.common.utils.package import get_version
-from sapphire.messenger.database.service import MessengerDatabaseService
-from sapphire.messenger.settings import MessengerSettings
+from sapphire.messenger import database
 
 from . import health, router
+from .settings import Settings
 
 
-class MessengerAPIService(BaseAPIService):
+class Service(BaseAPIService):
     def __init__(
         self,
-        database: MessengerDatabaseService,
+        database: database.Service,
         jwt_methods: JWTMethods,
         version: str = "0.0.0",
         root_url: str = "http://localhost",
@@ -46,7 +46,7 @@ class MessengerAPIService(BaseAPIService):
         ]
 
     @property
-    def database(self) -> MessengerDatabaseService:
+    def database(self) -> database.Service:
         return self._database
 
     @property
@@ -55,11 +55,11 @@ class MessengerAPIService(BaseAPIService):
 
 
 def get_service(
-    database: MessengerDatabaseService,
+    database: database.Service,
     jwt_methods: JWTMethods,
-    settings: MessengerSettings,
-) -> MessengerAPIService:
-    return MessengerAPIService(
+    settings: Settings,
+) -> Service:
+    return Service(
         database=database,
         jwt_methods=jwt_methods,
         version=get_version() or "0.0.0",

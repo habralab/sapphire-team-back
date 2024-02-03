@@ -5,15 +5,15 @@ import fastapi
 from sapphire.common.api.exceptions import HTTPForbidden, HTTPNotFound
 from sapphire.common.jwt.dependencies.rest import is_auth
 from sapphire.common.jwt.models import JWTData
+from sapphire.messenger import database
 from sapphire.messenger.database.models import Chat
-from sapphire.messenger.database.service import MessengerDatabaseService
 
 
 async def get_path_chat(
         request: fastapi.Request,
         chat_id: uuid.UUID = fastapi.Path(),
 ) -> Chat:
-    database_service: MessengerDatabaseService = request.app.service.database
+    database_service: database.Service = request.app.service.database
 
     async with database_service.transaction() as session:
         db_chat = await database_service.get_chat(session=session, chat_id=chat_id)
