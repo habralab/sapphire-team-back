@@ -7,7 +7,7 @@ from sapphire.common.database.settings import BaseDatabaseSettings
 class Settings(BaseDatabaseSettings):
     model_config = SettingsConfigDict(env_file=".env", secrets_dir="/run/secrets", extra="ignore")
 
-    dsn: AnyUrl = AnyUrl("sqlite+aiosqlite:///messenger.sqlite3")
+    dsn: AnyUrl = AnyUrl("sqlite+aiosqlite:///notifications.sqlite3")
 
 
 def get_settings() -> Settings:

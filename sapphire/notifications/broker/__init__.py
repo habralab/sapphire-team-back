@@ -1,2 +1,2 @@
-from .cli import get_cli
-from .service import get_service
+from .service import Service, get_service
+from .settings import Settings, get_settings

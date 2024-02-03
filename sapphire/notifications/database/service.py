@@ -7,12 +7,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from sapphire.common.database.service import BaseDatabaseService
 from sapphire.common.utils.empty import Empty
-from sapphire.notifications.settings import NotificationsSettings
 
 from .models import Base, Notification
+from .settings import Settings
 
 
-class NotificationsDatabaseService(BaseDatabaseService):
+class Service(BaseDatabaseService):
     def get_alembic_config_path(self) -> pathlib.Path:
         return pathlib.Path(__file__).parent / "migrations"
 
@@ -100,5 +100,5 @@ class NotificationsDatabaseService(BaseDatabaseService):
         session.add(notification)
 
 
-def get_service(settings: NotificationsSettings) -> NotificationsDatabaseService:
-    return NotificationsDatabaseService(dsn=str(settings.db_dsn))
+def get_service(settings: Settings) -> Service:
+    return Service(dsn=str(settings.db_dsn))

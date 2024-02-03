@@ -1,24 +1,15 @@
-import asyncio
 from typing import Iterable
 
 import aiokafka
-from loguru import logger
 
-from sapphire.common.api.websocket.connection_storage.storage import WebsocketConnectionStorage
 from sapphire.common.broker.handler import BaseBrokerHandler
 from sapphire.common.broker.models.notification import Notification
-from sapphire.notifications.database.service import NotificationsDatabaseService
+from sapphire.notifications import database
 
 
 class NotificationsBrokerHandler(BaseBrokerHandler):
-    def __init__(
-            self,
-            database: NotificationsDatabaseService,
-            websocket_connection_storage: WebsocketConnectionStorage,
-            topics: Iterable[str] | None = None,
-    ):
+    def __init__(self, database: database.Service, topics: Iterable[str] | None = None):
         self._database = database
-        self._websocket_connection_storage = websocket_connection_storage
 
         super().__init__(topics=topics)
 
@@ -34,21 +25,7 @@ class NotificationsBrokerHandler(BaseBrokerHandler):
             )
 
         notification = Notification.model_validate(db_notification)
-        ws_connections = self._websocket_connection_storage.get_connections(
-            user_id=notification.recipient_id,
-        )
-        coros = [
-            logger.catch(
-                ws_connection.send_json
-            )(data=notification.model_dump_json())
-            for ws_connection in ws_connections
-        ]
-        await asyncio.gather(*coros)
 
     @property
-    def database(self) -> NotificationsDatabaseService:
+    def database(self) -> database.Service:
         return self._database
-
-    @property
-    def websocket_connection_storage(self) -> WebsocketConnectionStorage:
-        return self._websocket_connection_storage

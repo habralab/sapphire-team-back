@@ -1,11 +1,14 @@
+import asyncio
+
 from facet import ServiceMixin
 
-from .api.service import NotificationsAPIService
-from .broker.service import NotificationsBrokerService
+from sapphire.common.jwt.methods import get_jwt_methods
+from . import api, broker, database
+from .settings import Settings
 
 
-class NotificationsService(ServiceMixin):
-    def __init__(self, api: NotificationsAPIService, broker: NotificationsBrokerService):
+class Service(ServiceMixin):
+    def __init__(self, api: api.Service, broker: broker.Service):
         self._api = api
         self._broker = broker
 
@@ -17,16 +20,25 @@ class NotificationsService(ServiceMixin):
         ]
 
     @property
-    def api(self) -> NotificationsAPIService:
+    def api(self) -> api.Service:
         return self._api
 
     @property
-    def broker(self) -> NotificationsBrokerService:
+    def broker(self) -> broker.Service:
         return self._broker
 
 
-def get_service(
-        api: NotificationsAPIService,
-        broker: NotificationsBrokerService,
-) -> NotificationsService:
-    return NotificationsService(api=api, broker=broker)
+def get_service(loop: asyncio.AbstractEventLoop, settings: Settings) -> Service:
+    jwt_methods = get_jwt_methods(settings=settings.jwt)
+    database_service = database.get_service(settings=settings.database)
+    api_service = api.get_service(
+        database=database_service,
+        jwt_methods=jwt_methods,
+        settings=settings.api,
+    )
+    broker_service = broker.get_service(
+        loop=loop,
+        database=database_service,
+        settings=settings.broker,
+    )
+    return Service(api=api_service, broker=broker_service)

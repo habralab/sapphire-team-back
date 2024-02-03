@@ -1,7 +1,6 @@
 from pydantic_settings import BaseSettings
 
-from . import email, messenger
-from .notifications.settings import NotificationsSettings
+from . import email, messenger, notifications
 from .projects.settings import ProjectsSettings
 from .storage.settings import StorageSettings
 from .users.settings import UsersSettings
@@ -10,7 +9,7 @@ from .users.settings import UsersSettings
 class Settings(BaseSettings):
     email: email.Settings
     messenger: messenger.Settings
-    notifications: NotificationsSettings
+    notifications: notifications.Settings
     projects: ProjectsSettings
     storage: StorageSettings
     users: UsersSettings
