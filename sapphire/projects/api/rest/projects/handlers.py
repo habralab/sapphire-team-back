@@ -9,8 +9,8 @@ from sapphire.common.api.exceptions import HTTPForbidden
 from sapphire.common.jwt.dependencies.rest import is_activated
 from sapphire.common.jwt.models import JWTData
 from sapphire.projects.api.rest.schemas import ProjectResponse
+from sapphire.projects import database
 from sapphire.projects.database.models import Project
-from sapphire.projects.database.service import ProjectsDatabaseService
 
 from .dependencies import get_path_project, path_project_is_owner
 from .schemas import (
@@ -28,7 +28,7 @@ async def create_project(
     jwt_data: JWTData = fastapi.Depends(is_activated),
     data: CreateProjectRequest = fastapi.Body(embed=False),
 ) -> ProjectResponse:
-    database_service: ProjectsDatabaseService = request.app.service.database
+    database_service: database.Service = request.app.service.database
 
     if data.owner_id != jwt_data.user_id:
         raise HTTPForbidden()
@@ -51,7 +51,7 @@ async def get_projects(
     pagination: Pagination = fastapi.Depends(pagination),
     filters: ProjectListFiltersRequest = fastapi.Depends(ProjectListFiltersRequest),
 ) -> ProjectListResponse:
-    database_service: ProjectsDatabaseService = request.app.service.database
+    database_service: database.Service = request.app.service.database
 
     async with database_service.transaction() as session:
         params = {
@@ -98,7 +98,7 @@ async def history(
     project: Project = fastapi.Depends(get_path_project),
     pagination: Pagination = fastapi.Depends(pagination),
 ) -> ProjectHistoryListResponse:
-    database_service: ProjectsDatabaseService = request.app.service.database
+    database_service: database.Service = request.app.service.database
 
     async with database_service.transaction() as session:
         project_history_db = await database_service.get_project_history(
@@ -127,7 +127,7 @@ async def partial_update_project(
     project: Project = fastapi.Depends(path_project_is_owner),
     data: ProjectPartialUpdateRequest = fastapi.Body(embed=False)
 ) -> ProjectResponse:
-    database_service: ProjectsDatabaseService = request.app.service.database
+    database_service: database.Service = request.app.service.database
 
     async with database_service.transaction() as session:
         project = await database_service.update_project(
@@ -154,7 +154,7 @@ async def upload_project_avatar(
         avatar: fastapi.UploadFile = fastapi.File(...),
 ) -> ProjectResponse:
 
-    database_service: ProjectsDatabaseService = request.app.service.database
+    database_service: database.Service = request.app.service.database
     media_dir_path: pathlib.Path = request.app.service.media_dir_path
     load_file_chunk_size: int = request.app.service.load_file_chunk_size
 
@@ -182,7 +182,7 @@ async def delete_project_avatar(
 ) -> ProjectResponse:
 
     if project.avatar is not None:
-        database_service: ProjectsDatabaseService = request.app.service.database
+        database_service: database.Service = request.app.service.database
         original_avatar_file_path = project.avatar
         async with database_service.transaction() as session:
             project = await database_service.update_project(

@@ -6,10 +6,9 @@ from sapphire.common.api.dependencies.pagination import Pagination, pagination
 from sapphire.common.api.exceptions import HTTPForbidden, HTTPNotFound
 from sapphire.common.jwt.dependencies.rest import is_auth
 from sapphire.common.jwt.models import JWTData
+from sapphire.projects import broker, database
 from sapphire.projects.api.rest.projects.schemas import ParticipantResponse
-from sapphire.projects.broker.service import ProjectsBrokerService
 from sapphire.projects.database.models import Participant, ParticipantStatusEnum
-from sapphire.projects.database.service import ProjectsDatabaseService
 from sapphire.users.internal_api.client.service import UsersInternalAPIClient
 
 from .dependencies import get_path_participant
@@ -26,8 +25,8 @@ async def create_participant(
     jwt_data: JWTData = fastapi.Depends(is_auth),
     data: CreateParticipantRequest = fastapi.Body(embed=False),
 ) -> ParticipantResponse:
-    broker_service: ProjectsBrokerService = request.app.service.broker
-    database_service: ProjectsDatabaseService = request.app.service.database
+    broker_service: broker.Service = request.app.service.broker
+    database_service: database.Service = request.app.service.database
     users_internal_api_client: UsersInternalAPIClient = (
         request.app.service.users_internal_api_client
     )
@@ -92,8 +91,8 @@ async def update_participant(
     jwt_data: JWTData = fastapi.Depends(is_auth),
     participant: Participant = fastapi.Depends(get_path_participant),
 ) -> ParticipantResponse:
-    broker_service: ProjectsBrokerService = request.app.service.broker
-    database_service: ProjectsDatabaseService = request.app.service.database
+    broker_service: broker.Service = request.app.service.broker
+    database_service: database.Service = request.app.service.database
     users_internal_api_client: UsersInternalAPIClient = (
         request.app.service.users_internal_api_client
     )
@@ -169,7 +168,7 @@ async def get_participants(
     pagination: Pagination = fastapi.Depends(pagination),
     filters: ParticipantListFiltersRequest = fastapi.Depends(ParticipantListFiltersRequest),
 ) -> ParticipantListResponse:
-    database_service: ProjectsDatabaseService = request.app.service.database
+    database_service: database.Service = request.app.service.database
     async with database_service.transaction() as session:
         participants_db = await database_service.get_participants(
             session=session,
