@@ -6,9 +6,10 @@ from .service import get_service
 
 
 def service_callback(ctx: typer.Context):
-    settings = ctx.obj["settings"]
+    settings = ctx.obj["settings"].database
     database_service = get_service(settings=settings)
 
+    ctx.obj["settings"] = settings
     ctx.obj["database"] = database_service
 
 

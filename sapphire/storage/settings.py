@@ -1,16 +1,14 @@
-from pydantic import AnyUrl
-from pydantic_settings import SettingsConfigDict
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
-from sapphire.common.api.settings import BaseAPISettings
-from sapphire.common.database.settings import BaseDatabaseSettings
-from sapphire.common.internal_api.settings import BaseInternalAPISettings
+from . import api, database
 
 
-class StorageSettings(BaseAPISettings, BaseDatabaseSettings, BaseInternalAPISettings):
-    model_config = SettingsConfigDict(secrets_dir="/run/secrets")
+class Settings(BaseSettings):
+    model_config = SettingsConfigDict(env_file=".env", secrets_dir="/run/secrets", extra="ignore")
 
-    db_dsn: AnyUrl = AnyUrl("sqlite+aiosqlite:///storage.sqlite3")
+    api: api.Settings
+    database: database.Settings
 
 
-def get_settings() -> StorageSettings:
-    return StorageSettings()
+def get_settings() -> Settings:
+    return Settings()

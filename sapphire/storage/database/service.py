@@ -8,10 +8,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sapphire.common.database.service import BaseDatabaseService
 from sapphire.common.utils.empty import Empty
 from sapphire.storage.database.models import Base, Skill, Specialization, SpecializationGroup
-from sapphire.storage.settings import StorageSettings
+from .settings import Settings
 
 
-class StorageDatabaseService(BaseDatabaseService):
+class Service(BaseDatabaseService):
     def get_alembic_config_path(self) -> pathlib.Path:
         return pathlib.Path(__file__).parent / "migrations"
 
@@ -255,5 +255,5 @@ class StorageDatabaseService(BaseDatabaseService):
         return result.unique().scalar_one_or_none()
 
 
-def get_service(settings: StorageSettings) -> StorageDatabaseService:
-    return StorageDatabaseService(dsn=str(settings.db_dsn))
+def get_service(settings: Settings) -> Service:
+    return Service(dsn=str(settings.dsn))
