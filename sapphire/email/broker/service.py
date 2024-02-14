@@ -44,6 +44,6 @@ def get_service(
     return Service(
         sender=sender,
         loop=loop,
-        servers=settings.consumer_servers,
+        servers=settings.servers,
         topics=settings.topics,
     )

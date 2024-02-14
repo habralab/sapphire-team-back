@@ -7,4 +7,6 @@ from sapphire.common.api.settings import BaseAPISettings
 
 class Settings(BaseAPISettings):
     media_dir_path: pathlib.Path = pathlib.Path("/media")
-    load_file_chunk_size: PositiveInt = 1024 * 1024 # 1 Mb
+    load_file_chunk_size: PositiveInt = 1024 * 1024  # 1 Mb
+
+    oauth2_habr_callback_url: str = ""

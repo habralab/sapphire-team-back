@@ -7,11 +7,9 @@ from sapphire.common.api.utils import set_cookie
 from sapphire.common.habr import HabrClient
 from sapphire.common.habr_career import HabrCareerClient
 from sapphire.common.jwt import JWTMethods
+from sapphire.users import cache, database, oauth2 
 from sapphire.users.api.rest.auth.schemas import AuthorizeResponse
 from sapphire.users.api.rest.schemas import UserResponse
-from sapphire.users.cache.service import UsersCacheService
-from sapphire.users.database.service import UsersDatabaseService
-from sapphire.users.oauth2.habr import OAuth2HabrBackend
 
 router = fastapi.APIRouter()
 
@@ -21,16 +19,16 @@ async def authorize(
         request: fastapi.Request,
         redirect_url: str | None = fastapi.Query(None),
 ):
-    habr_oauth2: OAuth2HabrBackend = request.app.service.habr_oauth2
-    habr_oauth2_callback_url: str = request.app.service.habr_oauth2_callback_url
+    oauth2_habr: oauth2.habr.Service = request.app.service.oauth2_habr
+    oauth2_habr_callback_url: str = request.app.service.oauth2_habr_callback_url
 
-    cache_service: UsersCacheService = request.app.service.cache
+    cache_service: cache.Service = request.app.service.cache
 
     state = await cache_service.set_state()
 
     if redirect_url is None:
-        redirect_url = habr_oauth2_callback_url
-    authorization_url = habr_oauth2.get_authorization_url(
+        redirect_url = oauth2_habr_callback_url
+    authorization_url = oauth2_habr.get_authorization_url(
         redirect_url=redirect_url,
         state=state,
     )
@@ -47,19 +45,19 @@ async def callback(
 ) -> AuthorizeResponse:
     habr_client: HabrClient = request.app.service.habr_client
     habr_career_client: HabrCareerClient = request.app.service.habr_career_client
-    habr_oauth2: OAuth2HabrBackend = request.app.service.habr_oauth2
+    oauth2_habr: oauth2.habr.Service = request.app.service.oauth2_habr
     jwt_methods: JWTMethods = request.app.service.jwt_methods
 
-    database_service: UsersDatabaseService = request.app.service.database
+    database_service: database.Service = request.app.service.database
 
-    token = await habr_oauth2.get_token(code=code)
+    token = await oauth2_habr.get_token(code=code)
     if token is None:
         raise fastapi.HTTPException(
             status_code=fastapi.status.HTTP_401_UNAUTHORIZED,
             detail="Not authenticated.",
         )
 
-    habr_user = await habr_oauth2.get_user_info(token)
+    habr_user = await oauth2_habr.get_user_info(token)
     async with database_service.transaction() as session:
         db_user = await database_service.get_user(
             session=session,

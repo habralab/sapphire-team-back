@@ -1,8 +1,7 @@
 import pydantic
 
-from sapphire.users.settings import UsersSettings
-
-from .base import OAuth2BaseBackend
+from sapphire.common.oauth2.service import BaseOAuth2Service
+from .settings import Settings
 
 
 class HabrUser(pydantic.BaseModel):
@@ -13,7 +12,7 @@ class HabrUser(pydantic.BaseModel):
     is_email_confirmed: bool
 
 
-class OAuth2HabrBackend(OAuth2BaseBackend):
+class Service(BaseOAuth2Service):
     authorization_url = "https://account.habr.com/oauth/authorize/"
     token_url = "https://account.habr.com/oauth/token/"
     grant_type = "authorization_code"
@@ -34,8 +33,8 @@ class OAuth2HabrBackend(OAuth2BaseBackend):
         )
 
 
-def get_oauth2_backend(settings: UsersSettings) -> OAuth2HabrBackend:
-    return OAuth2HabrBackend(
-        client_id=settings.habr_oauth2_client_id,
-        client_secret=settings.habr_oauth2_client_secret,
+def get_service(settings: Settings) -> Service:
+    return Service(
+        client_id=settings.client_id,
+        client_secret=settings.client_secret,
     )

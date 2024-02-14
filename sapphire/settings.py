@@ -1,17 +1,12 @@
-from pydantic_settings import BaseSettings
+from pydantic import BaseModel
 
-from . import email, messenger, notifications, projects, storage
-from .users.settings import UsersSettings
+from . import email, messenger, notifications, projects, storage, users
 
 
-class Settings(BaseSettings):
+class Settings(BaseModel):
     email: email.Settings
     messenger: messenger.Settings
     notifications: notifications.Settings
     projects: projects.Settings
     storage: storage.Settings
-    users: UsersSettings
-
-
-def get_settings() -> Settings:
-    return Settings()
+    users: users.Settings

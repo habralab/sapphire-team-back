@@ -3,7 +3,7 @@ import yarl
 from sapphire.common.http_client import HTTPClient
 
 
-class OAuth2BaseBackend(HTTPClient):
+class BaseOAuth2Service(HTTPClient):
     authorization_url: str
     token_url: str
     grant_type: str

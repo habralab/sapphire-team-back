@@ -1,10 +1,11 @@
 import uuid
 
 from sapphire.common.cache.service import BaseCacheService
-from sapphire.users.settings import UsersSettings
+
+from .settings import Settings
 
 
-class UsersCacheService(BaseCacheService):
+class Service(BaseCacheService):
     async def set_state(self) -> str:
         state = str(uuid.uuid4())
         key = f"users:auth:oauth2:habr:state:{state}"
@@ -20,5 +21,5 @@ class UsersCacheService(BaseCacheService):
         return False
 
 
-def get_service(settings: UsersSettings) -> UsersCacheService:
-    return UsersCacheService(cache_url=settings.cache_url)
+def get_service(settings: Settings) -> Service:
+    return Service(url=str(settings.url))

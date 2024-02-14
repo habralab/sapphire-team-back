@@ -3,6 +3,7 @@ import asyncio
 import typer
 from loguru import logger
 
+from sapphire.common.utils.settings import get_settings
 from . import database
 from .service import get_service
 from .settings import Settings
@@ -18,14 +19,22 @@ def run(ctx: typer.Context):
     loop.run_until_complete(messenger_service.run())
 
 
-def settings_callback(ctx: typer.Context):
-    ctx.obj["settings"] = ctx.obj["settings"].messenger
+def callback(ctx: typer.Context):
+    ctx.obj = ctx.obj or {}
+
+    if "loop" not in ctx.obj:
+        ctx.obj["loop"] = asyncio.get_event_loop()
+
+    if settings := ctx.obj.get("settings"):
+        ctx.obj["settings"] = settings.messenger
+    else:
+        ctx.obj["settings"] = get_settings(Settings)
 
 
 def get_cli() -> typer.Typer:
     cli = typer.Typer()
 
-    cli.callback()(settings_callback)
+    cli.callback()(callback)
     cli.command(name="run")(run)
     cli.add_typer(database.get_cli(), name="database")
 

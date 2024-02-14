@@ -1,14 +1,8 @@
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic import BaseModel
 
 from . import api, database
 
 
-class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_file=".env", secrets_dir="/run/secrets", extra="ignore")
-
+class Settings(BaseModel):
     api: api.Settings
     database: database.Settings
-
-
-def get_settings() -> Settings:
-    return Settings()

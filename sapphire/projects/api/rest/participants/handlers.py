@@ -9,7 +9,6 @@ from sapphire.common.jwt.models import JWTData
 from sapphire.projects import broker, database
 from sapphire.projects.api.rest.projects.schemas import ParticipantResponse
 from sapphire.projects.database.models import Participant, ParticipantStatusEnum
-from sapphire.users.internal_api.client.service import UsersInternalAPIClient
 
 from .dependencies import get_path_participant
 from .schemas import (
@@ -27,9 +26,6 @@ async def create_participant(
 ) -> ParticipantResponse:
     broker_service: broker.Service = request.app.service.broker
     database_service: database.Service = request.app.service.database
-    users_internal_api_client: UsersInternalAPIClient = (
-        request.app.service.users_internal_api_client
-    )
 
     async with database_service.transaction() as session:
         position = await database_service.get_position(

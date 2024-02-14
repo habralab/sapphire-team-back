@@ -1,5 +1,5 @@
-from pydantic_settings import BaseSettings
+from pydantic import BaseModel
 
 
-class HabrCareerSettings(BaseSettings):
-    habr_career_api_key: str = ""
+class HabrCareerSettings(BaseModel):
+    api_key: str = ""

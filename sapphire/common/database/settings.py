@@ -1,6 +1,5 @@
-from pydantic import AnyUrl
-from pydantic_settings import BaseSettings
+from pydantic import AnyUrl, BaseModel
 
 
-class BaseDatabaseSettings(BaseSettings):
+class BaseDatabaseSettings(BaseModel):
     dsn: AnyUrl

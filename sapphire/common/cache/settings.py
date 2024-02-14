@@ -1,6 +1,5 @@
-from pydantic import AnyUrl
-from pydantic_settings import BaseSettings
+from pydantic import AnyUrl, BaseModel
 
 
-class BaseCacheSettings(BaseSettings):
-    cache_url: AnyUrl = AnyUrl("redis://localhost:6379/0")
+class BaseCacheSettings(BaseModel):
+    url: AnyUrl = AnyUrl("redis://localhost:6379/0")
