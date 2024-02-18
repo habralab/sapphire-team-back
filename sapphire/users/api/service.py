@@ -82,7 +82,7 @@ class Service(BaseAPIService):
         return self._oauth2_habr
 
     @property
-    def habr_oauth2_callback_url(self) -> str:
+    def oauth2_habr_callback_url(self) -> str:
         return self._oauth2_habr_callback_url
 
     @property

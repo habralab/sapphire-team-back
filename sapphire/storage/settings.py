@@ -1,8 +1,9 @@
 from pydantic import BaseModel
 
-from . import api, database
+from .api import Settings as APISettings
+from .database import Settings as DatabaseSettings
 
 
 class Settings(BaseModel):
-    api: api.Settings
-    database: database.Settings
+    api: APISettings = APISettings()
+    database: DatabaseSettings = DatabaseSettings()

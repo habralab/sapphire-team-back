@@ -1,8 +1,9 @@
 from pydantic import BaseModel
 
-from . import broker, sender
+from .broker import Settings as BrokerSettings
+from .sender import Settings as SenderSettings
 
 
 class Settings(BaseModel):
-    broker: broker.Settings
-    sender: sender.Settings
+    broker: BrokerSettings = BrokerSettings()
+    sender: SenderSettings = SenderSettings()

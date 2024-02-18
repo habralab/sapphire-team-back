@@ -31,6 +31,6 @@ def get_service(
     return Service(
         loop=loop,
         database=database,
-        servers=settings.consumer_servers,
+        servers=settings.servers,
         topics=settings.topics,
     )

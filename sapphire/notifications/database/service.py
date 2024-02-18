@@ -101,4 +101,4 @@ class Service(BaseDatabaseService):
 
 
 def get_service(settings: Settings) -> Service:
-    return Service(dsn=str(settings.db_dsn))
+    return Service(dsn=str(settings.dsn))

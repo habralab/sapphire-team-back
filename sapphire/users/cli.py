@@ -26,7 +26,7 @@ def callback(ctx: typer.Context):
         ctx.obj["loop"] = asyncio.get_event_loop()
 
     if settings := ctx.obj.get("settings"):
-        ctx.obj["settings"] = settings.storage
+        ctx.obj["settings"] = settings.users
     else:
         ctx.obj["settings"] = get_settings(Settings)
 

@@ -101,8 +101,8 @@ docker build -t sapphire --target slim .
 
 Create secrets (you can get any values from `.env.example`)
 ```shell
-echo "any_client_id" | docker secret create habr_oauth2_client_id -
-echo "any_client_secret" | docker secret create habr_oauth2_client_secret -
+echo "any_client_id" | docker secret create oauth2_habr_client_id -
+echo "any_client_secret" | docker secret create oauth2_habr_client_secret -
 echo "any_api_key" | docker secret create habr_api_key -
 echo "any_api_key" | docker secret create habr_career_api_key -
 echo "any_password" | docker secret create postgresql_password -
@@ -119,8 +119,7 @@ mkdir -p database_data
 mkdir -p broker_data/kafka/data
 mkdir -p broker_data/zookeeper/data
 mkdir -p broker_data/zookeeper/log
-mkdir -p users_data/media
-mkdir -p projects_data/media
+mkdir -p media
 ```
 
 And run

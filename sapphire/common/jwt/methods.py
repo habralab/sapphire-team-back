@@ -82,10 +82,10 @@ class JWTMethods:
 
 def get_jwt_methods(settings: JWTSettings) -> JWTMethods:
     return JWTMethods(
-        access_token_private_key=settings.jwt_access_token_private_key,
-        access_token_public_key=settings.jwt_access_token_public_key,
-        refresh_token_private_key=settings.jwt_refresh_token_private_key,
-        refresh_token_public_key=settings.jwt_refresh_token_public_key,
-        access_token_expires=settings.jwt_access_token_expires,
-        refresh_token_expires=settings.jwt_refresh_token_expires,
+        access_token_private_key=settings.access_token_private_key,
+        access_token_public_key=settings.access_token_public_key,
+        refresh_token_private_key=settings.refresh_token_private_key,
+        refresh_token_public_key=settings.refresh_token_public_key,
+        access_token_expires=settings.access_token_expires,
+        refresh_token_expires=settings.refresh_token_expires,
     )

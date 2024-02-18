@@ -1,7 +1,7 @@
-**/*_pb2.py
-**/*_pb2_grpc.py
-**/*.proto
-**/*.pyc
+*_pb2.py
+*_pb2_grpc.py
+*.proto
+*.pyc
 *.db
 *.sqlite3
 .env
@@ -14,6 +14,5 @@ broker_data
 database_data
 redis_data
 projects_data
+media
 pyrightconfig.json
-sapphire/storage/internal_api/grpc/*
-users_data

@@ -1,12 +1,17 @@
 from pydantic import BaseModel
 
-from . import email, messenger, notifications, projects, storage, users
+from .email import Settings as EmailSettings
+from .messenger import Settings as MessengerSettings
+from .notifications import Settings as NotificationsSettings
+from .projects import Settings as ProjectsSettings
+from .storage import Settings as StorageSettings
+from .users import Settings as UsersSettings
 
 
 class Settings(BaseModel):
-    email: email.Settings
-    messenger: messenger.Settings
-    notifications: notifications.Settings
-    projects: projects.Settings
-    storage: storage.Settings
-    users: users.Settings
+    email: EmailSettings = EmailSettings()
+    messenger: MessengerSettings = MessengerSettings()
+    notifications: NotificationsSettings = NotificationsSettings()
+    projects: ProjectsSettings = ProjectsSettings()
+    storage: StorageSettings = StorageSettings()
+    users: UsersSettings = UsersSettings()

@@ -209,7 +209,4 @@ def get_service(
         loop: asyncio.AbstractEventLoop,
         settings: Settings,
 ) -> Service:
-    return Service(
-        loop=loop,
-        servers=settings.producer_servers,
-    )
+    return Service(loop=loop, servers=settings.servers)

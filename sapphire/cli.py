@@ -1,4 +1,6 @@
 import asyncio
+import pathlib
+from typing import Optional
 
 import typer
 from loguru import logger
@@ -19,7 +21,14 @@ def run(ctx: typer.Context):
     loop.run_until_complete(users_service.run())
 
 
-def callback(ctx: typer.Context):
+def callback(
+        ctx: typer.Context,
+        env: Optional[pathlib.Path] = typer.Option(
+            None,
+            "--env", "-e",
+            help="`.env` config file location",
+        ),
+):
     ctx.obj = ctx.obj or {}
 
     if "loop" not in ctx.obj:
@@ -28,7 +37,7 @@ def callback(ctx: typer.Context):
     if settings := ctx.obj.get("settings"):
         ctx.obj["settings"] = settings.sapphire
     else:
-        ctx.obj["settings"] = get_settings(Settings)
+        ctx.obj["settings"] = get_settings(Settings, env_file=env)
 
 
 def get_cli() -> typer.Typer:
