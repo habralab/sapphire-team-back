@@ -37,6 +37,7 @@ redis = ">=4.2.0rc1"
 pydantic = {version = "^2.5.1", extras = ["email"]}
 py-fast-grpc = "^0.3.4"
 cryptography = "^41.0.7"
+python-socketio = "^5.11.1"
 
 [tool.poetry.extras]
 sqlite = ["aiosqlite"]

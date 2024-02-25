@@ -8,7 +8,7 @@ from loguru import logger
 from sapphire.common.api.uvicorn_server import UvicornServer
 
 
-class BaseWebSocketService(ServiceMixin):
+class BaseSocketIOService(ServiceMixin):
     def __init__(
         self,
         title: str,
