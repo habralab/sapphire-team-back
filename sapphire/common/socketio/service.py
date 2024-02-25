@@ -14,7 +14,7 @@ class BaseSocketIOService(ServiceMixin):
         root_path: str = "",
         allowed_origins: Iterable[str] = (),
         port: int = 8000,
-        handlers: dict[str, Coroutine] = {},
+        handlers: dict[str, Coroutine] | None = None,
     ):
         self._root_path = root_path
         self._port = port
@@ -22,8 +22,9 @@ class BaseSocketIOService(ServiceMixin):
             async_mode="asgi",
             cors_allowed_origins=allowed_origins,
         )
-        for handler_name, handler_coroutine in handlers.items():
-            self._server.on(handler_name, handler_coroutine)
+        if handlers:
+            for handler_name, handler_coroutine in handlers.items():
+                self._server.on(handler_name, handler_coroutine)
 
     def get_app(self) -> socketio.ASGIApp:
         sio_app = socketio.ASGIApp(
