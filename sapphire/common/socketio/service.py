@@ -11,7 +11,7 @@ from sapphire.common.uvicorn_server import UvicornServer
 class BaseSocketIOService(ServiceMixin):
     def __init__(
         self,
-        root_path: str = '',
+        root_path: str = "",
         allowed_origins: Iterable[str] = (),
         port: int = 8000,
     ):
@@ -27,7 +27,7 @@ class BaseSocketIOService(ServiceMixin):
             socketio_server=self._server,
             socketio_path=self._root_path,
         )
-        
+
         self.register_handlers()
 
         return sio_app
