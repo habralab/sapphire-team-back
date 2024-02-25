@@ -39,6 +39,8 @@ class Project(Base):
         order_by="desc(ProjectHistory.created_at)",
         lazy=False,
     )
+    owner: Mapped["User"] = relationship("User")
+
     last_history: Mapped["ProjectHistory"] = relationship(
         back_populates="project",
         order_by="desc(ProjectHistory.created_at)",
