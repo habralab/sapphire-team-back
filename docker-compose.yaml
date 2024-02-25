@@ -76,34 +76,45 @@ services:
   sapphire:
     image: ${SAPPHIRE_IMAGE:-sapphire}
     environment:
+      MESSENGER__API__PORT: "8000"
       MESSENGER__API__ROOT_URL: ${MESSENGER__API__ROOT_URL:-http://localhost:3000/messenger}
       MESSENGER__API__ROOT_PATH: ${MESSENGER__API__ROOT_PATH:-/messenger}
       MESSENGER__API__ALLOWED_ORIGINS: ${MESSENGER__API__ALLOWED_ORIGINS:-["http://localhost:3000"]}
       MESSENGER__BROKER__SERVERS: '["kafka:9091"]'
       MESSENGER__BROKER__TOPICS: '["chats"]'
       MESSENGER__DATABASE__DSN: ${MESSENGER__DATABASE__DSN:-postgresql+asyncpg://messenger:P%40ssw0rd@database:5432/messenger}
+      NOTIFICATIONS__API__PORT: "8010"
       NOTIFICATIONS__API__ROOT_URL: ${NOTIFICATIONS__API__ROOT_URL:-http://localhost:3000/notifications}
       NOTIFICATIONS__API__ROOT_PATH: ${NOTIFICATIONS__API__ROOT_PATH:-/notifications}
       NOTIFICATIONS__API__ALLOWED_ORIGINS: ${NOTIFICATIONS__API__ALLOWED_ORIGINS:-["http://localhost:3000"]}
       NOTIFICATIONS__BROKER__SERVERS: '["kafka:9091"]'
       NOTIFICATIONS__BROKER__TOPICS: '["notifications"]'
       NOTIFICATIONS__DATABASE__DSN: ${NOTIFICATIONS__DATABASE__DSN:-postgresql+asyncpg://notifications:P%40ssw0rd@database:5432/notifications}
+      PROJECTS__API__PORT: "8020"
       PROJECTS__API__ROOT_URL: ${PROJECTS__API__ROOT_URL:-http://localhost:3000/projects}
       PROJECTS__API__ROOT_PATH: ${PROJECTS__API__ROOT_PATH:-/projects}
       PROJECTS__API__ALLOWED_ORIGINS: ${PROJECTS__API__ALLOWED_ORIGINS:-["http://localhost:3000"]}
+      PROJECTS__API__MEDIA_DIR_PATH: "/projects/media"
       PROJECTS__BROKER__SERVERS: '["kafka:9091"]'
       PROJECTS__DATABASE__DSN: ${PROJECTS__DATABASE__DSN:-postgresql+asyncpg://projects:P%40ssw0rd@database:5432/projects}
+      STORAGE__API__PORT: "8030"
       STORAGE__API__ROOT_URL: ${STORAGE__API__ROOT_URL:-http://localhost:3000/storage}
       STORAGE__API__ROOT_PATH: ${STORAGE__API__ROOT_PATH:-/storage}
       STORAGE__API__ALLOWED_ORIGINS: ${STORAGE__API__ALLOWED_ORIGINS:-["http://localhost:3000"]}
       STORAGE__DATABASE__DSN: ${STORAGE__DATABASE__DSN:-postgresql+asyncpg://storage:P%40ssw0rd@database:5432/storage}
+      USERS__API__PORT: "8040"
       USERS__API__ROOT_URL: ${USERS__API__ROOT_URL:-http://localhost:3000/users}
       USERS__API__ROOT_PATH: ${USERS__API__ROOT_PATH:-/users}
       USERS__API__ALLOWED_ORIGINS: ${USERS__API__ALLOWED_ORIGINS:-["http://localhost:3000"]}
       USERS__API__OAUTH2_HABR_CALLBACK_URL: ${USERS__API__OAUTH2_HABR_CALLBACK_URL:-http://localhost:3000/users/api/rest/auth/oauth2/habr/callback}
+      USERS__API__MEDIA_DIR_PATH: "/users/media"
       USERS__CACHE__URL: "redis://redis:6379/0"
       USERS__DATABASE__DSN: ${USERS__DATABASE__DSN:-postgresql+asyncpg://users:P%40ssw0rd@database:5432/users}
     secrets:
+      - target: users__habr__api_key
+        source: habr_api_key
+      - target: users__habr_career__api_key
+        source: habr_career_api_key
       - target: users__jwt__access_token_public_key
         source: jwt_access_token_public_key
       - target: users__jwt__access_token_private_key
@@ -112,6 +123,10 @@ services:
         source: jwt_refresh_token_public_key
       - target: users__jwt__refresh_token_private_key
         source: jwt_refresh_token_private_key
+      - target: users__oauth2_habr__client_id
+        source: oauth2_habr_client_id
+      - target: users__oauth2_habr__client_secret
+        source: oauth2_habr_client_secret
       - target: storage__jwt__access_token_public_key
         source: jwt_access_token_public_key
       - target: storage__jwt__access_token_private_key
@@ -145,7 +160,8 @@ services:
       - target: messenger__jwt__refresh_token_private_key
         source: jwt_refresh_token_private_key
     volumes:
-      - ${USERS__API__MEDIA_DIR_PATH:-./media}:/media
+      - ${PROJECTS_MEDIA_DIR_PATH:-./projects_data/media}:/projects/media
+      - ${USERS_MEDIA_DIR_PATH:-./users_data/media}:/users/media
     command: ["run"]
     healthcheck:
       test: >
@@ -217,13 +233,13 @@ services:
             "name": "Messenger",
           },
         ]
-      BASE_URL: ${SWAGGER__API__ROOT_PATH:-/swagger}
+      BASE_URL: ${SWAGGER_ROOT_PATH:-/swagger}
     healthcheck:
-      test: curl --fail http://localhost:8080${SWAGGER__API__ROOT_PATH:-/swagger}
+      test: curl --fail http://localhost:8080${SWAGGER_ROOT_PATH:-/swagger}
     deploy:
       labels:
         - "traefik.enable=true"
-        - "traefik.http.routers.swagger.rule=PathPrefix(`${SWAGGER__API__ROOT_PATH:-/swagger}`)"
+        - "traefik.http.routers.swagger.rule=PathPrefix(`${SWAGGER_ROOT_PATH:-/swagger}`)"
         - "traefik.http.routers.swagger.entrypoints=web" 
         - "traefik.http.services.swagger.loadbalancer.server.port=8080"
       update_config:

@@ -1,6 +1,6 @@
 import uuid
 
-from pydantic import AnyHttpUrl, AnyUrl
+from pydantic import AnyHttpUrl
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -19,9 +19,6 @@ class AutotestsSettings(BaseSettings):
     projects_base_url: AnyHttpUrl
     storage_base_url: AnyHttpUrl
     users_base_url: AnyHttpUrl
-
-    messenger_websocket_url: AnyUrl
-    notifications_websocket_url: AnyUrl
 
     oauth2_habr_callback_url: str = ""
 

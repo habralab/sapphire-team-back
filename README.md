@@ -45,7 +45,7 @@ docker build -t sapphire --target full .
 
 **Lint**
 ```shell
-docker run sapphire pylint ./sapphire ./autotests ./tests
+docker run sapphire pylint sapphire autotests tests
 ```
 
 **Isort**
@@ -55,19 +55,19 @@ docker run sapphire isort .
 
 **Unit tests**
 ```shell
-docker run sapphire pytest ./tests
+docker run sapphire pytest tests
 ```
 
 **Autotests**
 ```shell
-docker run sapphire pytest ./autotests
+docker run sapphire pytest autotests
 ```
 
 ### Test: Python
 
 **Lint**
 ```shell
-pylint ./sapphire ./autotests ./tests
+pylint sapphire autotests tests
 ```
 
 **Isort**
@@ -77,12 +77,12 @@ isort .
 
 **Unit tests**
 ```shell
-pytest ./tests
+pytest tests
 ```
 
 **Autotests**
 ```shell
-pytest ./autotests
+pytest autotests
 ```
 
 ## Run
@@ -119,7 +119,8 @@ mkdir -p database_data
 mkdir -p broker_data/kafka/data
 mkdir -p broker_data/zookeeper/data
 mkdir -p broker_data/zookeeper/log
-mkdir -p media
+mkdir -p projects_data/media
+mkdir -p users_data/media
 ```
 
 And run
@@ -141,12 +142,13 @@ ALTER DATABASE service_name OWNER TO service_name;
 ```
 
 Apply migrations for every service: `storage`, `users`, `projects`, `notifications` and `messenger`
+inside service containers
 ```shell
 poetry run python -m sapphire <service> database migrations apply
 ```
 
-For autotests you should install all autotests fixtures from every service: Users, Projects,
-Notifications, Messenger
+For autotests you should install all autotests fixtures from every service: `users`, `projects`,
+`notifications`, `messenger` inside service containers
 ```shell
 poetry run python -m sapphire <service> database fixtures apply autotests
 ```
