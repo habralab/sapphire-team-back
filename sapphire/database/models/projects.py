@@ -27,7 +27,7 @@ class Project(Base):
     id: Mapped[uuid.UUID] = mapped_column(default=uuid.uuid4, primary_key=True)
     name: Mapped[str]
     description: Mapped[str | None]
-    owner_id: Mapped[uuid.UUID] = mapped_column("User")
+    owner_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"))
     startline: Mapped[datetime]
     deadline: Mapped[datetime | None]
     created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
