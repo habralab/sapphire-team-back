@@ -11,43 +11,36 @@ from sapphire.common.api.uvicorn_server import UvicornServer
 class BaseSocketIOService(ServiceMixin):
     def __init__(
         self,
-        title: str,
         root_path: str = '',
         allowed_origins: Iterable[str] = (),
         port: int = 8000,
     ):
-        self._title = title
         self._root_path = root_path
-        self._allowed_origins = allowed_origins
         self._port = port
-        self._server = self._get_server()
-
-    def _get_server(self) -> socketio.AsyncServer:
-        sio_server = socketio.AsyncServer(
-            async_mode='asgi',
-            cors_allowed_origins=self._allowed_origins,
+        self._server = socketio.AsyncServer(
+            async_mode="asgi",
+            cors_allowed_origins=allowed_origins,
         )
-
-        return sio_server
 
     def get_app(self) -> socketio.ASGIApp:
         sio_app = socketio.ASGIApp(
             socketio_server=self._server,
             socketio_path=self._root_path,
         )
+        
+        self.register_handlers()
 
         return sio_app
 
+    def register_handlers(self):
+        pass
+
     async def start(self):
-        config = uvicorn.Config(app=self.get_app(), host='0.0.0.0', port=self._port)
+        config = uvicorn.Config(app=self.get_app(), host="0.0.0.0", port=self._port)
         server = UvicornServer(config)
 
-        logger.info("Start Web Socket service {name}", name=self._title)
+        logger.info("Start Socket IO service")
         self.add_task(server.serve())
 
     async def stop(self):
-        logger.info("Stop Web Socket service {name}", name=self._title)
-
-    @property
-    def server(self):
-        return self._server
+        logger.info("Stop Socket IO service")
