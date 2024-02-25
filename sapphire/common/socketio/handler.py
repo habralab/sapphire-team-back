@@ -12,4 +12,4 @@ class BaseSocketIOHandler:
 
     @property
     def handle(self):
-        return self._handle 
+        return self._handle
