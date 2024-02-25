@@ -5,6 +5,8 @@ import uvicorn
 from facet import ServiceMixin
 from loguru import logger
 
+from sapphire.common.uvicorn_server import UvicornServer
+
 
 class BaseSocketIOService(ServiceMixin):
     def __init__(
@@ -35,7 +37,7 @@ class BaseSocketIOService(ServiceMixin):
 
     async def start(self):
         config = uvicorn.Config(app=self.get_app(), host="0.0.0.0", port=self._port)
-        server = uvicorn.Server(config)
+        server = UvicornServer(config)
 
         logger.info("Start Socket IO service")
         self.add_task(server.serve())
