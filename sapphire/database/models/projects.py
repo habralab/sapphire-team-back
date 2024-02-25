@@ -137,13 +137,14 @@ class Participant(Base):
 
     id: Mapped[uuid.UUID] = mapped_column(default=uuid.uuid4, primary_key=True)
     position_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("positions.id"))
-    user_id: Mapped[uuid.UUID]
+    user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"))
     status: Mapped[ParticipantStatusEnum] = mapped_column(Enum(ParticipantStatusEnum))
     created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
     updated_at: Mapped[datetime] = mapped_column(default=datetime.utcnow, onupdate=datetime.utcnow)
     joined_at: Mapped[datetime | None]
 
     position: Mapped[Position] = relationship(back_populates="participants", lazy=False)
+    user: Mapped["User"] = relationship("User")
 
     __table_args__ = (
         Index("participants__position_id_idx", "position_id", postgresql_using="hash"),

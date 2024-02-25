@@ -47,9 +47,10 @@ class Member(Base):
     __tablename__ = "chat_members"
 
     id: Mapped[uuid.UUID] = mapped_column(default=uuid.uuid4, primary_key=True)
-    user_id: Mapped[uuid.UUID]
+    user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"))
     chat_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("chats.id"))
     leave_at: Mapped[datetime | None]
     join_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
 
     chat: Mapped[Chat] = relationship(Chat, back_populates="members")
+    user: Mapped["User"] = relationship("User")
