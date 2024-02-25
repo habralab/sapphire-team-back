@@ -1,4 +1,4 @@
-from typing import Coroutine, Iterable
+from typing import Iterable
 
 import socketio
 import uvicorn
@@ -7,6 +7,8 @@ from loguru import logger
 
 from sapphire.common.uvicorn_server import UvicornServer
 
+from .handler import BaseSocketIOHandler
+
 
 class BaseSocketIOService(ServiceMixin):
     def __init__(
@@ -14,7 +16,7 @@ class BaseSocketIOService(ServiceMixin):
         root_path: str = "",
         allowed_origins: Iterable[str] = (),
         port: int = 8000,
-        handlers: dict[str, Coroutine] | None = None,
+        handlers: list[BaseSocketIOHandler] = [],
     ):
         self._root_path = root_path
         self._port = port
@@ -22,9 +24,8 @@ class BaseSocketIOService(ServiceMixin):
             async_mode="asgi",
             cors_allowed_origins=allowed_origins,
         )
-        if handlers:
-            for handler_name, handler_coroutine in handlers.items():
-                self._server.on(handler_name, handler_coroutine)
+        for handler in handlers:
+            self._server.on(handler.name, handler.handler)
 
     def get_app(self) -> socketio.ASGIApp:
         sio_app = socketio.ASGIApp(
