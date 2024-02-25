@@ -1,4 +1,4 @@
-from typing import Iterable
+from typing import Coroutine, Iterable
 
 import socketio
 import uvicorn
@@ -14,6 +14,7 @@ class BaseSocketIOService(ServiceMixin):
         root_path: str = "",
         allowed_origins: Iterable[str] = (),
         port: int = 8000,
+        handlers: dict[str, Coroutine] = {},
     ):
         self._root_path = root_path
         self._port = port
@@ -21,19 +22,15 @@ class BaseSocketIOService(ServiceMixin):
             async_mode="asgi",
             cors_allowed_origins=allowed_origins,
         )
+        for handler_name, handler_coroutine in handlers.items():
+            self._server.on(handler_name, handler_coroutine)
 
     def get_app(self) -> socketio.ASGIApp:
         sio_app = socketio.ASGIApp(
             socketio_server=self._server,
             socketio_path=self._root_path,
         )
-
-        self.register_handlers()
-
         return sio_app
-
-    def register_handlers(self):
-        pass
 
     async def start(self):
         config = uvicorn.Config(app=self.get_app(), host="0.0.0.0", port=self._port)
