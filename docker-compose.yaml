@@ -104,14 +104,6 @@ services:
       USERS__CACHE__URL: "redis://redis:6379/0"
       USERS__DATABASE__DSN: ${USERS__DATABASE__DSN:-postgresql+asyncpg://users:P%40ssw0rd@database:5432/users}
     secrets:
-      - target: users__oauth2_habr__client_id
-        source: oauth2_habr_client_id
-      - target: users__oauth2_habr__client_secret
-        source: oauth2_habr_client_secret
-      - target: users__habr__api_key
-        source: habr_api_key
-      - target: users__habr_career__api_key
-        source: habr_career_api_key
       - target: users__jwt__access_token_public_key
         source: jwt_access_token_public_key
       - target: users__jwt__access_token_private_key

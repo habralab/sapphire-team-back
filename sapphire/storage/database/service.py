@@ -8,6 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sapphire.common.database.service import BaseDatabaseService
 from sapphire.common.utils.empty import Empty
 from sapphire.storage.database.models import Base, Skill, Specialization, SpecializationGroup
+
 from .settings import Settings
 
 

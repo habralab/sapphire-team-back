@@ -4,11 +4,11 @@ import aiokafka
 
 from sapphire.common.broker.handler import BaseBrokerHandler
 from sapphire.common.broker.models.notification import Notification
-from sapphire.notifications import database
+from sapphire.notifications.database import Service as DatabaseService
 
 
 class NotificationsBrokerHandler(BaseBrokerHandler):
-    def __init__(self, database: database.Service, topics: Iterable[str] | None = None):
+    def __init__(self, database: DatabaseService, topics: Iterable[str] | None = None):
         self._database = database
 
         super().__init__(topics=topics)
@@ -27,5 +27,5 @@ class NotificationsBrokerHandler(BaseBrokerHandler):
         notification = Notification.model_validate(db_notification)
 
     @property
-    def database(self) -> database.Service:
+    def database(self) -> DatabaseService:
         return self._database

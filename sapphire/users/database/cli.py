@@ -2,6 +2,7 @@ import typer
 
 from sapphire.common.database.cli import get_fixtures_cli, get_migrations_cli
 from sapphire.common.utils.settings import get_settings
+
 from .service import get_service
 from .settings import Settings
 

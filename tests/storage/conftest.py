@@ -1,8 +1,9 @@
 import pytest
 
-from sapphire.storage.settings import StorageSettings
+from sapphire.common.utils.settings import get_settings
+from sapphire.storage import Settings
 
 
 @pytest.fixture()
-def settings() -> StorageSettings:
-    return StorageSettings()
+def settings() -> Settings:
+    return get_settings(Settings)

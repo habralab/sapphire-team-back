@@ -7,7 +7,7 @@ from sapphire.common.api.utils import set_cookie
 from sapphire.common.habr import HabrClient
 from sapphire.common.habr_career import HabrCareerClient
 from sapphire.common.jwt import JWTMethods
-from sapphire.users import cache, database, oauth2 
+from sapphire.users import cache, database, oauth2
 from sapphire.users.api.rest.auth.schemas import AuthorizeResponse
 from sapphire.users.api.rest.schemas import UserResponse
 

@@ -45,7 +45,7 @@ docker build -t sapphire --target full .
 
 **Lint**
 ```shell
-docker run sapphire pylint /app/sapphire /app/autotests /app/tests
+docker run sapphire pylint ./sapphire ./autotests ./tests
 ```
 
 **Isort**
@@ -55,19 +55,19 @@ docker run sapphire isort .
 
 **Unit tests**
 ```shell
-docker run sapphire pytest /app/tests
+docker run sapphire pytest ./tests
 ```
 
 **Autotests**
 ```shell
-docker run sapphire pytest /app/autotests
+docker run sapphire pytest ./autotests
 ```
 
 ### Test: Python
 
 **Lint**
 ```shell
-pylint /app/sapphire /app/autotests /app/tests
+pylint ./sapphire ./autotests ./tests
 ```
 
 **Isort**
@@ -77,12 +77,12 @@ isort .
 
 **Unit tests**
 ```shell
-pytest /app/tests
+pytest ./tests
 ```
 
 **Autotests**
 ```shell
-pytest /app/autotests
+pytest ./autotests
 ```
 
 ## Run
@@ -138,6 +138,11 @@ CREATE ROLE service_name WITH LOGIN ENCRYPTED PASSWORD 'P@ssw0rd';
 CREATE DATABASE service_name;
 GRANT ALL PRIVILEGES ON DATABASE service_name TO service_name;
 ALTER DATABASE service_name OWNER TO service_name;
+```
+
+Apply migrations for every service: `storage`, `users`, `projects`, `notifications` and `messenger`
+```shell
+poetry run python -m sapphire <service> database migrations apply
 ```
 
 For autotests you should install all autotests fixtures from every service: Users, Projects,

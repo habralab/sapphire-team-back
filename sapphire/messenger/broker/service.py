@@ -3,6 +3,7 @@ from typing import Iterable
 
 from sapphire.common.broker.service import BaseBrokerConsumerService
 from sapphire.messenger import database
+
 from .handler import MessengerBrokerHandler
 from .settings import Settings
 

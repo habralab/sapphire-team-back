@@ -12,6 +12,7 @@ from sapphire.common.broker.models.projects import (
 )
 from sapphire.common.broker.service import BaseBrokerProducerService
 from sapphire.projects.database.models import Participant, Project
+
 from .settings import Settings
 
 

@@ -9,9 +9,9 @@ from fastapi.responses import FileResponse
 from sapphire.common.api.exceptions import HTTPForbidden
 from sapphire.common.jwt.dependencies.rest import get_jwt_data, is_auth
 from sapphire.common.jwt.models import JWTData
+from sapphire.users import database
 from sapphire.users.api.rest.dependencies import update_jwt
 from sapphire.users.api.rest.schemas import UserResponse
-from sapphire.users import database
 from sapphire.users.database.models import User
 
 from .dependencies import get_path_user

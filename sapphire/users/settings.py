@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from sapphire.common.habr.settings import HabrSettings
 from sapphire.common.habr_career.settings import HabrCareerSettings
 from sapphire.common.jwt.settings import JWTSettings
+
 from .api import Settings as APISettings
 from .cache import Settings as CacheSettings
 from .database import Settings as DatabaseSettings

@@ -4,6 +4,7 @@ import typer
 from loguru import logger
 
 from sapphire.common.utils.settings import get_settings
+
 from . import database
 from .service import get_service
 from .settings import Settings

@@ -4,11 +4,11 @@ import aiokafka
 
 from sapphire.common.broker.handler import BaseBrokerHandler
 from sapphire.common.broker.models.messenger import CreateChat
-from sapphire.messenger import database
+from sapphire.messenger.database import Service as DatabaseService
 
 
 class MessengerBrokerHandler(BaseBrokerHandler):
-    def __init__(self, database: database.Service, topics: Iterable[str] | None = None):
+    def __init__(self, database: DatabaseService, topics: Iterable[str] | None = None):
         self._database = database
         super().__init__(topics=topics)
 
@@ -22,5 +22,5 @@ class MessengerBrokerHandler(BaseBrokerHandler):
             )
 
     @property
-    def database(self) -> database.Service:
+    def database(self) -> DatabaseService:
         return self._database

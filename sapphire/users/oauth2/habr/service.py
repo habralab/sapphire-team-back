@@ -1,6 +1,7 @@
 import pydantic
 
 from sapphire.common.oauth2.service import BaseOAuth2Service
+
 from .settings import Settings
 
 

@@ -533,7 +533,7 @@ class TestProjectFlow:
         assert participant.user_id == oleg_id
         assert participant.status == ParticipantStatusEnum.JOINED
 
-    @pytest.mark.dependency(depeds=["TestProjectFlow::test_owner_accept_request_to_join"])
+    @pytest.mark.dependency(depends=["TestProjectFlow::test_owner_accept_request_to_join"])
     @pytest.mark.asyncio
     async def test_get_owner_accepted_request_to_join(
             self,

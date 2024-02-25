@@ -62,7 +62,7 @@ class Service(BaseAPIService):
 
     @property
     def broker(self) -> broker.Service:
-        return self._broker_service
+        return self._broker
 
     @property
     def media_dir_path(self) -> pathlib.Path:

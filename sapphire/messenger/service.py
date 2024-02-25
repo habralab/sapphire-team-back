@@ -3,6 +3,7 @@ from asyncio import AbstractEventLoop
 from facet import ServiceMixin
 
 from sapphire.common.jwt.methods import get_jwt_methods
+
 from . import api, broker, database
 from .settings import Settings
 

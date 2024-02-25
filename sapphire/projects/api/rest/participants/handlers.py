@@ -52,9 +52,6 @@ async def create_participant(
             detail="Participant already send request to project or joined in project",
         )
 
-    participant_data = await users_internal_api_client.get_user(user_id=jwt_data.user_id)
-    owner_data = await users_internal_api_client.get_user(user_id=position.project.owner_id)
-
     async with database_service.transaction() as session:
         participant = await database_service.create_participant(
             session=session,
@@ -64,8 +61,8 @@ async def create_participant(
         await broker_service.send_participant_requested(
             project=position.project,
             participant=participant,
-            participant_email=participant_data.email,
-            owner_email=owner_data.email,
+            participant_email="test@example.com",  # TODO: implement  # pylint: disable=fixme
+            owner_email="test@example.com",  # TODO: implement  # pylint: disable=fixme
         )
         await broker_service.send_create_chat(
             is_personal=True,
@@ -89,9 +86,6 @@ async def update_participant(
 ) -> ParticipantResponse:
     broker_service: broker.Service = request.app.service.broker
     database_service: database.Service = request.app.service.database
-    users_internal_api_client: UsersInternalAPIClient = (
-        request.app.service.users_internal_api_client
-    )
 
     project_owner_nodes = {
         # New expected status : Required current statuses
@@ -114,11 +108,6 @@ async def update_participant(
 
     if participant.status not in required_statuses:
         raise HTTPForbidden()
-
-    participant_data = await users_internal_api_client.get_user(user_id=participant.user_id)
-    owner_data = await users_internal_api_client.get_user(
-        user_id=participant.position.project.owner_id,
-    )
 
     async with database_service.transaction() as session:
         participant = await database_service.update_participant_status(
@@ -152,8 +141,8 @@ async def update_participant(
             await participant_notification_send(
                 project=project,
                 participant=participant,
-                participant_email=participant_data.email,
-                owner_email=owner_data.email,
+                participant_email="test@mail.ru",  # TODO: Implement  # pylint: disable=fixme
+                owner_email="test@mail.ru",  # TODO: Implement  # pylint: disable=fixme
             )
 
     return ParticipantResponse.model_validate(participant)

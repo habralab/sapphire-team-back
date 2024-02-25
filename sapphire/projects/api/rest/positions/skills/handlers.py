@@ -2,11 +2,11 @@ import uuid
 
 import fastapi
 
+from sapphire.projects import database
 from sapphire.projects.api.rest.positions.dependencies import (
     get_path_position,
     path_position_is_owner,
 )
-from sapphire.projects import database
 from sapphire.projects.database.models import Position
 
 
