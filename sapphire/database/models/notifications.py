@@ -7,11 +7,6 @@ from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 from .base import Base
 
-# class Base(DeclarativeBase):
-#     type_annotation_map = {
-#         dict[str, Any]: JSON,
-#     }
-
 
 class Notification(Base):
     __tablename__ = "notifications"

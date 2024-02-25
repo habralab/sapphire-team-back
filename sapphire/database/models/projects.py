@@ -21,10 +21,6 @@ class ParticipantStatusEnum(str, enum.Enum):
     LEFT = "left"
 
 
-# class Base(DeclarativeBase):
-#     pass
-
-
 class Project(Base):
     __tablename__ = "projects"
 

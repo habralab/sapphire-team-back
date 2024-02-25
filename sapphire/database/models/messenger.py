@@ -6,9 +6,6 @@ from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 from .base import Base
 
-# class Base(DeclarativeBase):
-#     pass
-
 
 class Chat(Base):
     __tablename__ = "chats"
