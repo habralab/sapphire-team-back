@@ -164,7 +164,7 @@ class Review(Base):
     updated_at: Mapped[datetime] = mapped_column(default=datetime.utcnow, onupdate=datetime.utcnow)
 
     project: Mapped[Project] = relationship(back_populates="reviews", lazy=False)
-    from_user = Mapped["User"] = relationship("User")
+    from_user = Mapped["User"] = relationship("User", back_populates="reviews", lazy=False)
     to_user = Mapped["User"] = relationship("User")
 
     __table_args__ = (
