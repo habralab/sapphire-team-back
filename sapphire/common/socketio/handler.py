@@ -1,15 +1,10 @@
-from typing import Callable
-
-
 class BaseSocketIOHandler:
-    def __init__(self, event: str, handle: Callable):
+    def __init__(self, event: str):
         self._event = event
-        self._handle = handle
+
+    async def handle(self):
+        pass
 
     @property
     def event(self):
         return self._event
-
-    @property
-    def handle(self):
-        return self._handle
