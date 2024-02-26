@@ -7,17 +7,17 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from sapphire.common.database.service import BaseDatabaseService
 from sapphire.common.utils.empty import Empty
+from sapphire.database.models import Base, Chat, Member, Message
 
-from .models import Base, Chat, Member, Message
 from .settings import Settings
 
 
 class Service(BaseDatabaseService):
     def get_alembic_config_path(self) -> pathlib.Path:
-        return pathlib.Path(__file__).parent / "migrations"
+        return pathlib.Path(__file__).parent.parent.parent / "database" / "migrations"
 
     def get_fixtures_directory_path(self) -> pathlib.Path:
-        return pathlib.Path(__file__).parent / "fixtures"
+        return pathlib.Path(__file__).parent.parent.parent / "database" / "fixtures"
 
     def get_models(self) -> list[Type[Base]]:
         return [Chat, Member, Message]
