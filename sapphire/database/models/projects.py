@@ -87,7 +87,7 @@ class Position(Base):
 
     id: Mapped[uuid.UUID] = mapped_column(default=uuid.uuid4, primary_key=True)
     project_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("projects.id"))
-    specialization_id: Mapped[uuid.UUID]
+    specialization_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("specializations.id"))
     closed_at: Mapped[datetime | None]
     created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
     updated_at: Mapped[datetime] = mapped_column(default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -105,6 +105,7 @@ class Position(Base):
     )
     skills: Mapped[list["PositionSkill"]] = relationship(back_populates="position", lazy=False,
                                                          cascade="all, delete-orphan")
+    specialization = Mapped["Specialization"] = relationship("Specialization")
 
     __table_args__ = (
         Index("positions__project_id_idx", "project_id", postgresql_using="hash"),
@@ -117,11 +118,12 @@ class PositionSkill(Base):
     __tablename__ = "positions_skills"
 
     position_id: Mapped[str] = mapped_column(ForeignKey("positions.id"), primary_key=True)
-    skill_id: Mapped[uuid.UUID] = mapped_column(primary_key=True)
+    skill_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("skills.id"), primary_key=True)
     created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
     updated_at: Mapped[datetime] = mapped_column(default=datetime.utcnow, onupdate=datetime.utcnow)
 
     position: Mapped[Position] = relationship(back_populates="skills", lazy=False)
+    skill: Mapped["Skill"] = relationship(lazy=False)
 
     __table_args__ = (
         Index("positions_skills__position_id_idx", "position_id", postgresql_using="hash"),
@@ -154,14 +156,16 @@ class Review(Base):
 
     id: Mapped[uuid.UUID] = mapped_column(default=uuid.uuid4, primary_key=True)
     project_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("projects.id"))
-    from_user_id: Mapped[uuid.UUID]
-    to_user_id: Mapped[uuid.UUID]
+    from_user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"))
+    to_user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"))
     rate: Mapped[int]
     text: Mapped[str]
     created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
     updated_at: Mapped[datetime] = mapped_column(default=datetime.utcnow, onupdate=datetime.utcnow)
 
     project: Mapped[Project] = relationship(back_populates="reviews", lazy=False)
+    from_user = Mapped["User"] = relationship("User")
+    to_user = Mapped["User"] = relationship("User")
 
     __table_args__ = (
         Index("reviews__project_id_idx", "project_id", postgresql_using="hash"),

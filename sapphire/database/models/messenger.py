@@ -32,12 +32,13 @@ class Message(Base):
 
     id: Mapped[uuid.UUID] = mapped_column(default=uuid.uuid4, primary_key=True)
     chat_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("chats.id"))
-    user_id: Mapped[uuid.UUID]
+    member_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("chat_members.id"))
     text: Mapped[str] = mapped_column(String(2048))
     created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
     updated_at: Mapped[datetime] = mapped_column(default=datetime.utcnow, onupdate=datetime.utcnow)
 
     chat: Mapped[Chat] = relationship(Chat, back_populates="messages")
+    member: Mapped["Member"] = relationship("Member", back_populates="messages")
 
 
 class Member(Base):
