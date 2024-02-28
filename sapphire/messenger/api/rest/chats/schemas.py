@@ -1,8 +1,7 @@
 import uuid
-from datetime import datetime
 from typing import Type
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import AwareDatetime, BaseModel, ConfigDict
 
 from sapphire.common.api.schemas.paginated import PaginatedResponse
 from sapphire.common.utils.empty import Empty
@@ -16,8 +15,8 @@ class MessageResponse(BaseModel):
     chat_id: uuid.UUID
     user_id: uuid.UUID
     text: str
-    created_at: datetime
-    updated_at: datetime
+    created_at: AwareDatetime
+    updated_at: AwareDatetime
 
 
 class ChatResponse(BaseModel):
@@ -27,7 +26,7 @@ class ChatResponse(BaseModel):
     is_personal: bool
     members: list[uuid.UUID]
     last_message: MessageResponse | None
-    created_at: datetime
+    created_at: AwareDatetime
 
     @classmethod
     def from_db_model(cls, chat: Chat) -> "ChatResponse":
