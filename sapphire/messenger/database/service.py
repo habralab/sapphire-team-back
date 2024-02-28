@@ -11,7 +11,6 @@ from sapphire.database.models import Base, Chat, Member, Message
 
 from .settings import Settings
 
-
 class Service(BaseDatabaseService):
     def get_alembic_config_path(self) -> pathlib.Path:
         return pathlib.Path(__file__).parent.parent.parent / "database" / "migrations"

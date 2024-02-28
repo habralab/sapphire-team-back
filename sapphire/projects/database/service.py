@@ -9,7 +9,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from sapphire.common.database.service import BaseDatabaseService
 from sapphire.common.utils.empty import Empty
-
 from sapphire.database.models import (
     Base,
     Participant,
@@ -21,6 +20,7 @@ from sapphire.database.models import (
     ProjectStatusEnum,
     Review,
 )
+
 from .settings import Settings
 
 
