@@ -26,7 +26,7 @@ def test_fake_access_token(jwt_methods: JWTMethods):
 def test_not_user_id_access_token(settings: JWTSettings, jwt_methods: JWTMethods):
     fake_access_token = jwt.encode(
         {"something": "like this"},
-        settings.jwt_access_token_private_key,
+        settings.access_token_private_key,
         algorithm="RS256",
     )
     jwt_data = jwt_methods.decode_access_token(fake_access_token)
@@ -53,7 +53,7 @@ def test_fake_refresh_token(jwt_methods: JWTMethods):
 def test_not_user_id_refresh_token(settings: JWTSettings, jwt_methods: JWTMethods):
     fake_refresh_token = jwt.encode(
         {"something": "like this"},
-        settings.jwt_access_token_private_key,
+        settings.access_token_private_key,
         algorithm="RS256",
     )
     jwt_data = jwt_methods.decode_refresh_token(fake_refresh_token)

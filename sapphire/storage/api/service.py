@@ -5,16 +5,16 @@ from facet import ServiceMixin
 
 from sapphire.common.api.service import BaseAPIService
 from sapphire.common.utils.package import get_version
-from sapphire.storage.database.service import StorageDatabaseService
-from sapphire.storage.settings import StorageSettings
+from sapphire.storage import database
 
 from . import health, router
+from .settings import Settings
 
 
-class StorageAPIService(BaseAPIService):
+class Service(BaseAPIService):
     def __init__(
         self,
-        database: StorageDatabaseService,
+        database: database.Service,
         version: str = "0.0.0.0",
         root_url: str = "http://localhost",
         root_path: str = "",
@@ -43,15 +43,12 @@ class StorageAPIService(BaseAPIService):
         ]
 
     @property
-    def database(self) -> StorageDatabaseService:
+    def database(self) -> database.Service:
         return self._database
 
 
-def get_service(
-        database: StorageDatabaseService,
-        settings: StorageSettings,
-) -> StorageAPIService:
-    return StorageAPIService(
+def get_service(database: database.Service, settings: Settings) -> Service:
+    return Service(
         database=database,
         version=get_version() or "0.0.0",
         root_url=str(settings.root_url),

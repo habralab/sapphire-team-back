@@ -9,10 +9,10 @@ from fastapi.responses import FileResponse
 from sapphire.common.api.exceptions import HTTPForbidden
 from sapphire.common.jwt.dependencies.rest import get_jwt_data, is_auth
 from sapphire.common.jwt.models import JWTData
+from sapphire.users import database
 from sapphire.users.api.rest.dependencies import update_jwt
 from sapphire.users.api.rest.schemas import UserResponse
 from sapphire.users.database.models import User
-from sapphire.users.database.service import UsersDatabaseService
 
 from .dependencies import get_path_user
 from .schemas import UserUpdateRequest
@@ -37,7 +37,7 @@ async def update_user(
     if user.id != jwt_data.user_id:
         raise HTTPForbidden()
 
-    database_service: UsersDatabaseService = request.app.service.database
+    database_service: database.Service = request.app.service.database
     async with database_service.transaction() as session:
         user = await database_service.update_user(
             user=user,
@@ -71,7 +71,7 @@ async def upload_user_avatar(
     if jwt_data.user_id != user.id:
         raise HTTPForbidden()
 
-    database_service: UsersDatabaseService = request.app.service.database
+    database_service: database.Service = request.app.service.database
     media_dir_path: pathlib.Path = request.app.service.media_dir_path
     load_file_chunk_size: int = request.app.service.load_file_chunk_size
 
@@ -102,7 +102,7 @@ async def delete_user_avatar(
         raise HTTPForbidden()
 
     if user.avatar is not None:
-        database_service: UsersDatabaseService = request.app.service.database
+        database_service: database.Service = request.app.service.database
         original_avatar_file_path = user.avatar
         async with database_service.transaction() as session:
             user = await database_service.update_user(
@@ -120,7 +120,7 @@ async def get_user_skills(
         request: fastapi.Request,
         user: User = fastapi.Depends(get_path_user),
 ) -> set[uuid.UUID]:
-    database_service: UsersDatabaseService = request.app.service.database
+    database_service: database.Service = request.app.service.database
     async with database_service.transaction() as session:
         skills = await database_service.get_user_skills(
             session=session,
@@ -139,7 +139,7 @@ async def update_user_skills(
     if user.id != jwt_data.user_id:
         raise HTTPForbidden()
 
-    database_service: UsersDatabaseService = request.app.service.database
+    database_service: database.Service = request.app.service.database
     async with database_service.transaction() as session:
         skills = await database_service.update_user_skills(
             session=session,

@@ -1,11 +1,15 @@
+import asyncio
+
 from facet import ServiceMixin
 
-from .api.service import ProjectsAPIService
-from .broker.service import ProjectsBrokerService
+from sapphire.common.jwt.methods import get_jwt_methods
+
+from . import api, broker, database
+from .settings import Settings
 
 
-class ProjectsService(ServiceMixin):
-    def __init__(self, api: ProjectsAPIService, broker: ProjectsBrokerService):
+class Service(ServiceMixin):
+    def __init__(self, api: api.Service, broker: broker.Service):
         self._api = api
         self._broker = broker
 
@@ -17,13 +21,22 @@ class ProjectsService(ServiceMixin):
         ]
 
     @property
-    def api(self) -> ProjectsAPIService:
+    def api(self) -> api.Service:
         return self._api
 
     @property
-    def broker(self) -> ProjectsBrokerService:
+    def broker(self) -> broker.Service:
         return self._broker
 
 
-def get_service(api: ProjectsAPIService, broker: ProjectsBrokerService) -> ProjectsService:
-    return ProjectsService(api=api, broker=broker)
+def get_service(loop: asyncio.AbstractEventLoop, settings: Settings) -> Service:
+    jwt_methods = get_jwt_methods(settings=settings.jwt)
+    database_service = database.get_service(settings=settings.database)
+    broker_service = broker.get_service(loop=loop, settings=settings.broker)
+    api_service = api.get_service(
+        database=database_service,
+        jwt_methods=jwt_methods,
+        broker=broker_service,
+        settings=settings.api,
+    )
+    return Service(api=api_service, broker=broker_service)

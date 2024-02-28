@@ -1,9 +1,14 @@
 import pytest
 
-from sapphire.projects.database.service import ProjectsDatabaseService
-from sapphire.projects.settings import ProjectsSettings
+from sapphire.common.utils.settings import get_settings
+from sapphire.projects.database import Service, Settings
 
 
 @pytest.fixture()
-def database_service(settings: ProjectsSettings) -> ProjectsDatabaseService:
-    return ProjectsDatabaseService(dsn=str(settings.db_dsn))
+def settings() -> Settings:
+    return get_settings(Settings)
+
+
+@pytest.fixture()
+def service(settings: Settings) -> Service:
+    return Service(dsn=str(settings.dsn))

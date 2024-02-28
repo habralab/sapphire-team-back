@@ -1,13 +1,18 @@
 import uuid
 
-from pydantic import AnyHttpUrl, AnyUrl
-from pydantic_settings import SettingsConfigDict
-
-from sapphire.common.jwt.settings import JWTSettings
+from pydantic import AnyHttpUrl
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
-class AutotestsSettings(JWTSettings):
-    model_config = SettingsConfigDict(extra="allow", env_file=".env", secrets_dir="/run/secrets")
+class AutotestsSettings(BaseSettings):
+    model_config = SettingsConfigDict(
+        env_nested_delimiter="__",
+        extra="ignore",
+        env_file=".env",
+        secrets_dir="/run/secrets",
+    )
+
+    jwt_access_token_private_key: str
 
     messenger_base_url: AnyHttpUrl
     notifications_base_url: AnyHttpUrl
@@ -15,10 +20,7 @@ class AutotestsSettings(JWTSettings):
     storage_base_url: AnyHttpUrl
     users_base_url: AnyHttpUrl
 
-    messenger_websocket_url: AnyUrl
-    notifications_websocket_url: AnyUrl
-
-    habr_oauth2_callback_url: str = ""
+    oauth2_habr_callback_url: str = ""
 
     imap_server: str = "imap.gmail.com"
     imap_ssl: bool = True

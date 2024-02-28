@@ -2,12 +2,12 @@ import uuid
 
 import fastapi
 
+from sapphire.projects import database
 from sapphire.projects.api.rest.positions.dependencies import (
     get_path_position,
     path_position_is_owner,
 )
 from sapphire.projects.database.models import Position
-from sapphire.projects.database.service import ProjectsDatabaseService
 
 
 async def update_position_skills(
@@ -15,7 +15,7 @@ async def update_position_skills(
         position: Position = fastapi.Depends(path_position_is_owner),
         data: set[uuid.UUID] = fastapi.Body(embed=False),
 ) -> set[uuid.UUID]:
-    database_service: ProjectsDatabaseService = request.app.service.database
+    database_service: database.Service = request.app.service.database
 
     async with database_service.transaction() as session:
         skills = await database_service.update_position_skills(

@@ -8,10 +8,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sapphire.common.database.service import BaseDatabaseService
 from sapphire.common.utils.empty import Empty
 from sapphire.users.database.models import Base, Profile, User, UserSkill
-from sapphire.users.settings import UsersSettings
+
+from .settings import Settings
 
 
-class UsersDatabaseService(BaseDatabaseService):
+class Service(BaseDatabaseService):
     def get_alembic_config_path(self) -> pathlib.Path:
         return pathlib.Path(__file__).parent / "migrations"
 
@@ -116,5 +117,5 @@ class UsersDatabaseService(BaseDatabaseService):
         return skills
 
 
-def get_service(settings: UsersSettings) -> UsersDatabaseService:
-    return UsersDatabaseService(dsn=str(settings.db_dsn))
+def get_service(settings: Settings) -> Service:
+    return Service(dsn=str(settings.dsn))

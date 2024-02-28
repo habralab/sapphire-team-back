@@ -1,12 +1,12 @@
 import fastapi
 
 from sapphire.common.api.dependencies.pagination import Pagination, pagination
+from sapphire.storage import database
 from sapphire.storage.api.rest.specializations.schemas import (
     SpecializationFiltersRequest,
     SpecializationListResponse,
 )
 from sapphire.storage.api.schemas.specializations import SpecializationResponse
-from sapphire.storage.database.service import StorageDatabaseService
 
 
 async def get_specializations(
@@ -15,7 +15,7 @@ async def get_specializations(
     filters: SpecializationFiltersRequest = fastapi.Depends(SpecializationFiltersRequest),
 ) -> SpecializationListResponse:
 
-    database_service: StorageDatabaseService = request.app.service.database
+    database_service: database.Service = request.app.service.database
 
     async with database_service.transaction() as session:
         params = {

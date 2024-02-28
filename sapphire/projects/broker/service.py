@@ -12,10 +12,11 @@ from sapphire.common.broker.models.projects import (
 )
 from sapphire.common.broker.service import BaseBrokerProducerService
 from sapphire.projects.database.models import Participant, Project
-from sapphire.projects.settings import ProjectsSettings
+
+from .settings import Settings
 
 
-class ProjectsBrokerService(BaseBrokerProducerService):
+class Service(BaseBrokerProducerService):
     async def send_participant_requested(
         self,
         project: Project,
@@ -207,9 +208,6 @@ class ProjectsBrokerService(BaseBrokerProducerService):
 
 def get_service(
         loop: asyncio.AbstractEventLoop,
-        settings: ProjectsSettings,
-) -> ProjectsBrokerService:
-    return ProjectsBrokerService(
-        loop=loop,
-        servers=settings.producer_servers,
-    )
+        settings: Settings,
+) -> Service:
+    return Service(loop=loop, servers=settings.servers)

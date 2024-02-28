@@ -5,15 +5,15 @@ import fastapi
 from sapphire.common.api.exceptions import HTTPForbidden, HTTPNotFound
 from sapphire.common.jwt.dependencies.rest import is_auth
 from sapphire.common.jwt.models import JWTData
+from sapphire.projects import database
 from sapphire.projects.database.models import Project
-from sapphire.projects.database.service import ProjectsDatabaseService
 
 
 async def get_path_project(
         request: fastapi.Request,
         project_id: uuid.UUID = fastapi.Path(),
 ) -> Project:
-    database_service: ProjectsDatabaseService = request.app.service.database
+    database_service: database.Service = request.app.service.database
 
     async with database_service.transaction() as session:
         db_project = await database_service.get_project(session=session, project_id=project_id)
