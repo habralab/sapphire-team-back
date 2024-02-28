@@ -105,7 +105,7 @@ class Position(Base):
     )
     skills: Mapped[list["PositionSkill"]] = relationship(back_populates="position", lazy=False,
                                                          cascade="all, delete-orphan")
-    specialization = Mapped["Specialization"] = relationship("Specialization")
+    specialization: Mapped["Specialization"] = relationship("Specialization")
 
     __table_args__ = (
         Index("positions__project_id_idx", "project_id", postgresql_using="hash"),
@@ -164,8 +164,8 @@ class Review(Base):
     updated_at: Mapped[datetime] = mapped_column(default=datetime.utcnow, onupdate=datetime.utcnow)
 
     project: Mapped[Project] = relationship(back_populates="reviews", lazy=False)
-    from_user = Mapped["User"] = relationship("User", back_populates="reviews", lazy=False)
-    to_user = Mapped["User"] = relationship("User")
+    from_user: Mapped["User"] = relationship("User", back_populates="reviews", lazy=False)
+    to_user: Mapped["User"] = relationship("User")
 
     __table_args__ = (
         Index("reviews__project_id_idx", "project_id", postgresql_using="hash"),

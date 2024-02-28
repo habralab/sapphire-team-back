@@ -45,8 +45,8 @@ class Profile(Base):
     updated_at: Mapped[datetime] = mapped_column(default=datetime.utcnow, onupdate=datetime.utcnow)
 
     user: Mapped[User] = relationship(back_populates="profile", lazy=False)
-    main_specialization_id: relationship("Specialization")
-    secondary_specialization_id: relationship("Specialization")
+    main_specialization: Mapped["Specialization"] = relationship("Specialization")
+    secondary_specialization: Mapped["Specialization"] = relationship("Specialization")
 
 
 class UserSkill(Base):
@@ -58,4 +58,4 @@ class UserSkill(Base):
     updated_at: Mapped[datetime] = mapped_column(default=datetime.utcnow, onupdate=datetime.utcnow)
 
     user: Mapped[User] = relationship(back_populates="skills", lazy=False)
-    skill: Mapped[Skill] = relationship(back_populates="users", lazy=False)
+    skill: Mapped["Skill"] = relationship(back_populates="users", lazy=False)
