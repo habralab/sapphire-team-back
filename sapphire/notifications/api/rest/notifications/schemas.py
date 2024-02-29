@@ -1,8 +1,7 @@
 import uuid
-from datetime import datetime
 from typing import Any, Literal, Type
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import AwareDatetime, BaseModel, ConfigDict
 
 from sapphire.common.api.schemas.paginated import PaginatedResponse
 from sapphire.common.utils.empty import Empty
@@ -20,8 +19,8 @@ class NotificationResponse(BaseModel):
     recipient_id: uuid.UUID
     data: dict[str, Any]
     is_read: bool
-    created_at: datetime
-    updated_at: datetime
+    created_at: AwareDatetime
+    updated_at: AwareDatetime
 
 
 class NotificationFiltersRequest(BaseModel):

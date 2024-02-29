@@ -1,6 +1,6 @@
 import pathlib
 import uuid
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Set, Type
 
 from pydantic import BaseModel, NonNegativeInt, confloat, conint
@@ -305,7 +305,7 @@ class Service(BaseDatabaseService):
         return position
 
     async def remove_position(self, session: AsyncSession, position: Position) -> Position:
-        position.closed_at = datetime.utcnow()
+        position.closed_at = datetime.now(tz=timezone.utc)
 
         session.add(position)
 
@@ -483,7 +483,7 @@ class Service(BaseDatabaseService):
     ) -> Participant:
         participant.status = status
         if status == ParticipantStatusEnum.JOINED:
-            participant.joined_at = datetime.utcnow()
+            participant.joined_at = datetime.now(tz=timezone.utc)
         session.add(participant)
 
         return participant

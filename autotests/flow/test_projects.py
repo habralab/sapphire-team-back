@@ -1,7 +1,7 @@
 import asyncio
 import io
 import uuid
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from http import HTTPStatus
 
 import backoff
@@ -46,8 +46,8 @@ class TestProjectFlow:
     ):
         name = faker.job() + " Сервис"
         description = faker.text()
-        startline = datetime.utcnow() + timedelta(days=30)
-        deadline = datetime.utcnow() + timedelta(days=90)
+        startline = datetime.now(tz=timezone.utc) + timedelta(days=30)
+        deadline = datetime.now(tz=timezone.utc) + timedelta(days=90)
 
         project = await oleg_activated_projects_rest_client.create_project(
             owner_id=oleg_id,

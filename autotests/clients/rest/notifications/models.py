@@ -1,11 +1,9 @@
 import uuid
-from datetime import datetime
-from typing import Any, Literal, Type
+from typing import Any, Literal
 
-from pydantic import BaseModel, constr
+from pydantic import AwareDatetime, BaseModel, constr
 
 from autotests.clients.rest.models import PaginatedResponse
-from autotests.utils import Empty
 
 
 class HealthResponse(BaseModel):
@@ -23,8 +21,8 @@ class NotificationResponse(BaseModel):
     recipient_id: uuid.UUID
     data: dict[str, Any]
     is_read: bool
-    created_at: datetime
-    updated_at: datetime
+    created_at: AwareDatetime
+    updated_at: AwareDatetime
 
 
 class NotificationListResponse(PaginatedResponse):

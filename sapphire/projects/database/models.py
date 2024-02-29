@@ -1,8 +1,8 @@
 import enum
 import uuid
-from datetime import datetime
+from datetime import datetime, timezone
 
-from sqlalchemy import Enum, ForeignKey, Index
+from sqlalchemy import DateTime, Enum, ForeignKey, Index
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 
@@ -20,7 +20,9 @@ class ParticipantStatusEnum(str, enum.Enum):
 
 
 class Base(DeclarativeBase):
-    pass
+    type_annotation_map = {
+        datetime: DateTime(timezone=True),
+    }
 
 
 class Project(Base):
@@ -32,8 +34,11 @@ class Project(Base):
     owner_id: Mapped[uuid.UUID]
     startline: Mapped[datetime]
     deadline: Mapped[datetime | None]
-    created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
-    updated_at: Mapped[datetime] = mapped_column(default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at: Mapped[datetime] = mapped_column(default=lambda: datetime.now(tz=timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(
+        default=lambda: datetime.now(tz=timezone.utc),
+        onupdate=lambda: datetime.now(tz=timezone.utc),
+    )
     avatar: Mapped[str | None]
 
     history: Mapped[list["ProjectHistory"]] = relationship(
@@ -73,7 +78,9 @@ class ProjectHistory(Base):
     id: Mapped[uuid.UUID] = mapped_column(default=uuid.uuid4, primary_key=True)
     project_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("projects.id"))
     status: Mapped[ProjectStatusEnum] = mapped_column(Enum(ProjectStatusEnum))
-    created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
+    created_at: Mapped[datetime] = mapped_column(
+        default=lambda: datetime.now(tz=timezone.utc),
+    )
 
     project: Mapped[Project] = relationship(back_populates="history", lazy=False)
 
@@ -89,8 +96,11 @@ class Position(Base):
     project_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("projects.id"))
     specialization_id: Mapped[uuid.UUID]
     closed_at: Mapped[datetime | None]
-    created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
-    updated_at: Mapped[datetime] = mapped_column(default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at: Mapped[datetime] = mapped_column(default=lambda: datetime.now(tz=timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(
+        default=lambda: datetime.now(tz=timezone.utc),
+        onupdate=lambda: datetime.now(tz=timezone.utc),
+    )
 
     project: Mapped[Project] = relationship(back_populates="positions", lazy=False)
     participants: Mapped[list["Participant"]] = relationship(back_populates="position",
@@ -118,8 +128,11 @@ class PositionSkill(Base):
 
     position_id: Mapped[str] = mapped_column(ForeignKey("positions.id"), primary_key=True)
     skill_id: Mapped[uuid.UUID] = mapped_column(primary_key=True)
-    created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
-    updated_at: Mapped[datetime] = mapped_column(default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at: Mapped[datetime] = mapped_column(default=lambda: datetime.now(tz=timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(
+        default=lambda: datetime.now(tz=timezone.utc),
+        onupdate=lambda: datetime.now(tz=timezone.utc),
+    )
 
     position: Mapped[Position] = relationship(back_populates="skills", lazy=False)
 
@@ -137,8 +150,11 @@ class Participant(Base):
     position_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("positions.id"))
     user_id: Mapped[uuid.UUID]
     status: Mapped[ParticipantStatusEnum] = mapped_column(Enum(ParticipantStatusEnum))
-    created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
-    updated_at: Mapped[datetime] = mapped_column(default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at: Mapped[datetime] = mapped_column(default=lambda: datetime.now(tz=timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(
+        default=lambda: datetime.now(tz=timezone.utc),
+        onupdate=lambda: datetime.now(tz=timezone.utc),
+    )
     joined_at: Mapped[datetime | None]
 
     position: Mapped[Position] = relationship(back_populates="participants", lazy=False)
@@ -157,8 +173,11 @@ class Review(Base):
     to_user_id: Mapped[uuid.UUID]
     rate: Mapped[int]
     text: Mapped[str]
-    created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
-    updated_at: Mapped[datetime] = mapped_column(default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at: Mapped[datetime] = mapped_column(default=lambda: datetime.now(tz=timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(
+        default=lambda: datetime.now(tz=timezone.utc),
+        onupdate=lambda: datetime.now(tz=timezone.utc),
+    )
 
     project: Mapped[Project] = relationship(back_populates="reviews", lazy=False)
 
