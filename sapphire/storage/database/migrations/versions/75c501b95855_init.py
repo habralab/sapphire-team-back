@@ -23,7 +23,7 @@ def upgrade() -> None:
         sa.Column("id", sa.Uuid(), nullable=False),
         sa.Column("habr_id", sa.Integer(), nullable=False),
         sa.Column("name", sa.String(), nullable=False),
-        sa.Column("created_at", sa.DateTime(), nullable=False),
+        sa.Column("created_at", sa.DateTime(timezone=True), nullable=False),
         sa.PrimaryKeyConstraint("id"),
         sa.UniqueConstraint("habr_id"),
     )
@@ -32,7 +32,7 @@ def upgrade() -> None:
         sa.Column("habr_id", sa.Integer(), nullable=False),
         sa.Column("name", sa.String(), nullable=False),
         sa.Column("name_en", sa.String(), nullable=False),
-        sa.Column("created_at", sa.DateTime(), nullable=False),
+        sa.Column("created_at", sa.DateTime(timezone=True), nullable=False),
         sa.PrimaryKeyConstraint("id"),
         sa.UniqueConstraint("habr_id"),
     )
@@ -42,7 +42,7 @@ def upgrade() -> None:
         sa.Column("name", sa.String(), nullable=False),
         sa.Column("name_en", sa.String(), nullable=False),
         sa.Column("group_id", sa.Uuid(), nullable=True),
-        sa.Column("created_at", sa.DateTime(), nullable=False),
+        sa.Column("created_at", sa.DateTime(timezone=True), nullable=False),
         sa.ForeignKeyConstraint(["group_id"], ["specialization_groups.id"]),
         sa.PrimaryKeyConstraint("id"),
         sa.UniqueConstraint("habr_id"),
