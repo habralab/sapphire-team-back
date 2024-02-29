@@ -1,6 +1,6 @@
 import uuid
 
-from pydantic import BaseModel, ConfigDict, Field, NaiveDatetime
+from pydantic import AwareDatetime, BaseModel, ConfigDict, Field
 
 
 class CreateReviewRequest(BaseModel):
@@ -19,5 +19,5 @@ class ReviewResponse(BaseModel):
     to_user_id: uuid.UUID
     rate: int = Field(ge=1, le=5)
     text: str
-    created_at: NaiveDatetime
-    updated_at: NaiveDatetime
+    created_at: AwareDatetime
+    updated_at: AwareDatetime

@@ -1,19 +1,21 @@
 import uuid
-from datetime import datetime
+from datetime import datetime, timezone
 
-from sqlalchemy import ForeignKey, String
+from sqlalchemy import DateTime, ForeignKey, String
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 
 class Base(DeclarativeBase):
-    pass
+    type_annotation_map = {
+        datetime: DateTime(timezone=True),
+    }
 
 
 class Chat(Base):
     __tablename__ = "chats"
 
     id: Mapped[uuid.UUID] = mapped_column(default=uuid.uuid4, primary_key=True)
-    created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
+    created_at: Mapped[datetime] = mapped_column(default=lambda: datetime.now(tz=timezone.utc))
     is_personal: Mapped[bool]
 
     messages: Mapped[list["Message"]] = relationship(
@@ -36,8 +38,11 @@ class Message(Base):
     chat_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("chats.id"))
     user_id: Mapped[uuid.UUID]
     text: Mapped[str] = mapped_column(String(2048))
-    created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
-    updated_at: Mapped[datetime] = mapped_column(default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at: Mapped[datetime] = mapped_column(default=lambda: datetime.now(tz=timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(
+        default=lambda: datetime.now(tz=timezone.utc),
+        onupdate=lambda: datetime.now(tz=timezone.utc),
+    )
 
     chat: Mapped[Chat] = relationship(Chat, back_populates="messages")
 
@@ -49,6 +54,6 @@ class Member(Base):
     user_id: Mapped[uuid.UUID]
     chat_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("chats.id"))
     leave_at: Mapped[datetime | None]
-    join_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
+    join_at: Mapped[datetime] = mapped_column(default=lambda: datetime.now(tz=timezone.utc))
 
     chat: Mapped[Chat] = relationship(Chat, back_populates="members")

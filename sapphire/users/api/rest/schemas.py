@@ -1,6 +1,6 @@
 import uuid
 
-from pydantic import BaseModel, ConfigDict, EmailStr, NaiveDatetime
+from pydantic import AwareDatetime, BaseModel, ConfigDict, EmailStr
 
 from sapphire.users.database.models import User
 
@@ -17,8 +17,8 @@ class UserResponse(BaseModel):
     about: str | None
     main_specialization_id: uuid.UUID | None
     secondary_specialization_id: uuid.UUID | None
-    updated_at: NaiveDatetime
-    created_at: NaiveDatetime
+    updated_at: AwareDatetime
+    created_at: AwareDatetime
 
     @classmethod
     def from_db_model(cls, user: User, with_email: bool = True) -> "UserResponse":

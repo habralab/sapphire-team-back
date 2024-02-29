@@ -25,8 +25,8 @@ def upgrade() -> None:
         sa.Column("recipient_id", sa.Uuid(), nullable=False),
         sa.Column("data", sa.JSON(), nullable=False),
         sa.Column("is_read", sa.Boolean(), nullable=False),
-        sa.Column("created_at", sa.DateTime(), nullable=False),
-        sa.Column("updated_at", sa.DateTime(), nullable=False),
+        sa.Column("created_at", sa.DateTime(timezone=True), nullable=False),
+        sa.Column("updated_at", sa.DateTime(timezone=True), nullable=False),
         sa.PrimaryKeyConstraint("id"),
     )
     # ### end Alembic commands ###

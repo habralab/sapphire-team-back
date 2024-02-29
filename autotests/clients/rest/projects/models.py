@@ -1,8 +1,7 @@
 import uuid
-from datetime import datetime
 from typing import Annotated, Literal
 
-from pydantic import BaseModel, Field, NaiveDatetime, NonNegativeInt, constr
+from pydantic import AwareDatetime, BaseModel, Field, NonNegativeInt, constr
 
 from autotests.clients.rest.models import PaginatedResponse
 
@@ -18,8 +17,8 @@ class CreateProjectRequest(BaseModel):
     name: str
     description: str | None
     owner_id: uuid.UUID | None
-    startline: NaiveDatetime
-    deadline: NaiveDatetime | None
+    startline: AwareDatetime
+    deadline: AwareDatetime | None
 
 
 class ParticipantResponse(BaseModel):
@@ -27,9 +26,9 @@ class ParticipantResponse(BaseModel):
     position_id: uuid.UUID
     user_id: uuid.UUID
     status: ParticipantStatusEnum
-    joined_at: NaiveDatetime | None
-    created_at: datetime
-    updated_at: datetime
+    joined_at: AwareDatetime | None
+    created_at: AwareDatetime
+    updated_at: AwareDatetime
 
 
 class ProjectResponse(BaseModel):
@@ -37,10 +36,10 @@ class ProjectResponse(BaseModel):
     name: str
     description: str | None
     owner_id: uuid.UUID
-    startline: datetime
-    deadline: datetime | None
-    created_at: NaiveDatetime
-    updated_at: NaiveDatetime
+    startline: AwareDatetime
+    deadline: AwareDatetime | None
+    created_at: AwareDatetime
+    updated_at: AwareDatetime
     status: ProjectStatusEnum
 
 
@@ -73,9 +72,9 @@ class PositionResponse(BaseModel):
     project: ProjectResponse
     specialization_id: uuid.UUID
     skills: list[uuid.UUID]
-    closed_at: datetime | None
-    created_at: datetime
-    updated_at: datetime
+    closed_at: AwareDatetime | None
+    created_at: AwareDatetime
+    updated_at: AwareDatetime
 
 
 class PositionListResponse(PaginatedResponse):

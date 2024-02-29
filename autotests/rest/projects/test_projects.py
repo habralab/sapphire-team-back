@@ -1,5 +1,5 @@
 import uuid
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from http import HTTPStatus
 from typing import Type
 
@@ -32,10 +32,10 @@ from autotests.utils import Empty
             "test",
             uuid.uuid4(),
             uuid.uuid4(),
-            datetime.utcnow(),
-            datetime.utcnow() + timedelta(days=7),
-            datetime.utcnow() + timedelta(days=30),
-            datetime.utcnow() + timedelta(days=90),
+            datetime.now(tz=timezone.utc),
+            datetime.now(tz=timezone.utc) + timedelta(days=7),
+            datetime.now(tz=timezone.utc) + timedelta(days=30),
+            datetime.now(tz=timezone.utc) + timedelta(days=90),
             [ProjectStatusEnum.FINISHED],
             [],
             [],
@@ -111,7 +111,7 @@ async def test_create_project_forbidden(
         await client.create_project(
             name=faker.job(),
             owner_id=owner_id,
-            startline=datetime.now() + timedelta(days=30),
+            startline=datetime.now(tz=timezone.utc) + timedelta(days=30),
         )
 
     assert exception.value.status_code == HTTPStatus.FORBIDDEN

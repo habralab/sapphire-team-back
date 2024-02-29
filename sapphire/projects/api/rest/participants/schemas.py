@@ -1,7 +1,7 @@
 import uuid
 from typing import Type
 
-from pydantic import BaseModel, NaiveDatetime
+from pydantic import AwareDatetime, BaseModel
 
 from sapphire.common.api.schemas.paginated import PaginatedResponse
 from sapphire.common.utils.empty import Empty
@@ -26,9 +26,9 @@ class ParticipantListFiltersRequest(BaseModel):
     position_id: uuid.UUID | Type[Empty] = Empty
     project_id: uuid.UUID | Type[Empty] = Empty
     status: ParticipantStatusEnum | Type[Empty] = Empty
-    created_at_le: NaiveDatetime | Type[Empty] = Empty
-    created_at_ge: NaiveDatetime | Type[Empty] = Empty
-    joined_at_le: NaiveDatetime | Type[Empty] = Empty
-    joined_at_ge: NaiveDatetime | Type[Empty] = Empty
-    updated_at_le: NaiveDatetime | Type[Empty] = Empty
-    updated_at_ge: NaiveDatetime | Type[Empty] = Empty
+    created_at_le: AwareDatetime | Type[Empty] = Empty
+    created_at_ge: AwareDatetime | Type[Empty] = Empty
+    joined_at_le: AwareDatetime | Type[Empty] = Empty
+    joined_at_ge: AwareDatetime | Type[Empty] = Empty
+    updated_at_le: AwareDatetime | Type[Empty] = Empty
+    updated_at_ge: AwareDatetime | Type[Empty] = Empty

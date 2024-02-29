@@ -1,7 +1,7 @@
 import os
 import pathlib
 import uuid
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
@@ -37,8 +37,8 @@ async def test_create_project(service: Service):
     name = "Any name"
     owner_id = uuid.uuid4()
     description = "Any description"
-    startline = datetime.now()
-    deadline = datetime.now()
+    startline = datetime.now(tz=timezone.utc)
+    deadline = datetime.now(tz=timezone.utc)
 
     project = await service.create_project(
         session=session,
@@ -128,10 +128,10 @@ async def test_get_projects_with_all_query_params(service: Service):
     result = MagicMock()
     project_id = uuid.uuid4()
     owner_id = uuid.uuid4()
-    startline_ge = datetime.now() - timedelta(days=30)
-    startline_le = datetime.now() + timedelta(days=30)
-    deadline_ge = datetime.now() - timedelta(days=30)
-    deadline_le = datetime.now() + timedelta(days=30)
+    startline_ge = datetime.now(tz=timezone.utc) - timedelta(days=30)
+    startline_le = datetime.now(tz=timezone.utc) + timedelta(days=30)
+    deadline_ge = datetime.now(tz=timezone.utc) - timedelta(days=30)
+    deadline_le = datetime.now(tz=timezone.utc) + timedelta(days=30)
     query_text = "query_text"
     position_skill_ids = [uuid.uuid4(), uuid.uuid4()]
     position_specialization_ids = [uuid.uuid4(), uuid.uuid4()]

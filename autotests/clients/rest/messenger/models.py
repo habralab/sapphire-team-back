@@ -1,8 +1,7 @@
 import uuid
-from datetime import datetime
 from typing import Literal
 
-from pydantic import BaseModel, constr
+from pydantic import AwareDatetime, BaseModel, constr
 
 from autotests.clients.rest.models import PaginatedResponse
 
@@ -17,8 +16,8 @@ class MessageResponse(BaseModel):
     chat_id: uuid.UUID
     user_id: uuid.UUID
     text: str
-    created_at: datetime
-    updated_at: datetime
+    created_at: AwareDatetime
+    updated_at: AwareDatetime
 
 
 class ChatResponse(BaseModel):
@@ -26,7 +25,7 @@ class ChatResponse(BaseModel):
     is_personal: bool
     members: list[uuid.UUID]
     last_message: MessageResponse | None
-    created_at: datetime
+    created_at: AwareDatetime
 
 
 class ChatListResponse(PaginatedResponse):
