@@ -1,4 +1,3 @@
-import pathlib
 import uuid
 from typing import Set, Type
 
@@ -13,12 +12,6 @@ from .settings import Settings
 
 
 class Service(BaseDatabaseService):
-    def get_alembic_config_path(self) -> pathlib.Path:
-        return pathlib.Path(__file__).parent.parent.parent / "database" / "migrations"
-
-    def get_fixtures_directory_path(self) -> pathlib.Path:
-        return pathlib.Path(__file__).parent.parent.parent / "database" / "fixtures"
-
     def get_models(self) -> list[Type[Base]]:
         return [Profile, User, UserSkill]
 

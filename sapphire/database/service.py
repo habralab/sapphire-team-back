@@ -14,6 +14,8 @@ from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.orm import DeclarativeBase
 
+from .settings import Settings
+
 
 class FixtureFormatEnum(str, enum.Enum):
     YAML = "yaml"
@@ -30,7 +32,7 @@ class FixtureContent(BaseModel):
     data: list[dict[str, Any]]
 
 
-class BaseDatabaseService(ServiceMixin):
+class Service(ServiceMixin):
     FIXTURES_FORMATS_MAPPING = {
         FixtureFormatEnum.YAML: lambda filepath: list(yaml.safe_load_all(filepath)),
         FixtureFormatEnum.JSON: json.load,
@@ -151,3 +153,7 @@ class BaseDatabaseService(ServiceMixin):
 
     async def stop(self):
         logger.info("Stop Database service")
+
+
+def get_service(settings: Settings) -> Service:
+    return Service(dsn=str(settings.dsn))

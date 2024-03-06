@@ -1,4 +1,3 @@
-import pathlib
 import uuid
 from typing import Any, Type
 
@@ -7,21 +6,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from sapphire.common.database.service import BaseDatabaseService
 from sapphire.common.utils.empty import Empty
-from sapphire.database.models import Base, Notification
+from sapphire.database.models import Notification
 
 from .settings import Settings
 
 
 class Service(BaseDatabaseService):
-    def get_alembic_config_path(self) -> pathlib.Path:
-        return pathlib.Path(__file__).parent.parent.parent / "database" / "migrations"
-
-    def get_fixtures_directory_path(self) -> pathlib.Path:
-        return pathlib.Path(__file__).parent.parent.parent / "database" / "fixtures"
-
-    def get_models(self) -> list[Type[Base]]:
-        return [Notification]
-
     def create_notification(
             self,
             session: AsyncSession,
