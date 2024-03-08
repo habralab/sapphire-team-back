@@ -28,7 +28,7 @@ class UserStatistic(BaseModel):
     rate: confloat(ge=1, le=5)
 
 
-class Service(BaseDatabaseService):
+class Service(BaseDatabaseService):  # pylint: disable=abstract-method
     async def create_project(
             self,
             session: AsyncSession,

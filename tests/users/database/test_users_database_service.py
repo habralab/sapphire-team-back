@@ -5,19 +5,8 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
+from sapphire.database.models import Profile, User, UserSkill
 from sapphire.users.database import Service
-from sapphire.users.database.models import Profile, User, UserSkill
-
-
-def test_get_alembic_config_path(service: Service):
-    expected_path = (
-        pathlib.Path(os.curdir).absolute() / "sapphire" / "users" / "database" / "migrations"
-    )
-
-    path = service.get_alembic_config_path()
-
-    assert isinstance(path, pathlib.Path)
-    assert path == expected_path
 
 
 @pytest.mark.asyncio

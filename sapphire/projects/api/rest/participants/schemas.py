@@ -5,8 +5,8 @@ from pydantic import AwareDatetime, BaseModel
 
 from sapphire.common.api.schemas.paginated import PaginatedResponse
 from sapphire.common.utils.empty import Empty
+from sapphire.database.models import ParticipantStatusEnum
 from sapphire.projects.api.rest.projects.schemas import ParticipantResponse
-from sapphire.projects.database.models import ParticipantStatusEnum
 
 
 class CreateParticipantRequest(BaseModel):

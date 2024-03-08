@@ -6,15 +6,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from sapphire.common.database.service import BaseDatabaseService
 from sapphire.common.utils.empty import Empty
-from sapphire.database.models import Base, Profile, User, UserSkill
+from sapphire.database.models import Profile, User, UserSkill
 
 from .settings import Settings
 
 
-class Service(BaseDatabaseService):
-    def get_models(self) -> list[Type[Base]]:
-        return [Profile, User, UserSkill]
-
+class Service(BaseDatabaseService):  # pylint: disable=abstract-method
     async def get_user(
             self,
             session: AsyncSession,

@@ -1,5 +1,5 @@
 from pydantic import AnyUrl, BaseModel
 
 
-class BaseDatabaseSettings(BaseModel):
-    dsn: AnyUrl
+class Settings(BaseModel):
+    dsn: AnyUrl = AnyUrl("sqlite+aiosqlite:///db.sqlite3")

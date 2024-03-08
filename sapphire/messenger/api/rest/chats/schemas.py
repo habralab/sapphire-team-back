@@ -5,7 +5,7 @@ from pydantic import AwareDatetime, BaseModel, ConfigDict
 
 from sapphire.common.api.schemas.paginated import PaginatedResponse
 from sapphire.common.utils.empty import Empty
-from sapphire.messenger.database.models import Chat
+from sapphire.database.models import Chat
 
 
 class MessageResponse(BaseModel):

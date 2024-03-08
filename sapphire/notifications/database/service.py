@@ -11,7 +11,7 @@ from sapphire.database.models import Notification
 from .settings import Settings
 
 
-class Service(BaseDatabaseService):
+class Service(BaseDatabaseService):  # pylint: disable=abstract-method
     def create_notification(
             self,
             session: AsyncSession,

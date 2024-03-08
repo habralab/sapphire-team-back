@@ -3,8 +3,8 @@ import uuid
 import fastapi
 
 from sapphire.common.api.exceptions import HTTPNotFound
+from sapphire.database.models import Participant
 from sapphire.projects import database
-from sapphire.projects.database.models import Participant
 
 
 async def get_path_participant(

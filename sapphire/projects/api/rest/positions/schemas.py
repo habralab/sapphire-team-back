@@ -6,8 +6,8 @@ from pydantic import AwareDatetime, BaseModel, ConfigDict, Field
 
 from sapphire.common.api.schemas.paginated import PaginatedResponse
 from sapphire.common.utils.empty import Empty
+from sapphire.database.models import Position, ProjectStatusEnum
 from sapphire.projects.api.rest.schemas import ProjectResponse
-from sapphire.projects.database.models import Position, ProjectStatusEnum
 
 
 class PositionListFiltersRequest(BaseModel):

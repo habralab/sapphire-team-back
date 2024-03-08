@@ -43,15 +43,23 @@ class Profile(Base):
 
     user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"), primary_key=True)
     about: Mapped[str | None] = mapped_column(Text)
-    main_specialization_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("specializations.id"))
-    secondary_specialization_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("specializations.id"))
+    main_specialization_id: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("specializations.id"),
+    )
+    secondary_specialization_id: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("specializations.id"),
+    )
 
     created_at: Mapped[datetime] = mapped_column(default=now)
     updated_at: Mapped[datetime] = mapped_column(default=now, onupdate=now)
 
     user: Mapped[User] = relationship(back_populates="profile", lazy=False)
-    main_specialization: Mapped[Specialization] = relationship()
-    secondary_specialization: Mapped[Specialization] = relationship()
+    main_specialization: Mapped[Specialization] = relationship(
+        foreign_keys=[main_specialization_id],
+    )
+    secondary_specialization: Mapped[Specialization] = relationship(
+        foreign_keys=[secondary_specialization_id],
+    )
 
 
 class UserSkill(Base):
@@ -64,4 +72,3 @@ class UserSkill(Base):
     updated_at: Mapped[datetime] = mapped_column(default=now, onupdate=now)
 
     user: Mapped[User] = relationship(back_populates="skills", lazy=False)
-    skill: Mapped[Skill] = relationship(back_populates="users", lazy=False)

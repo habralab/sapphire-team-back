@@ -11,7 +11,7 @@ from sapphire.database.models import Skill, Specialization, SpecializationGroup
 from .settings import Settings
 
 
-class Service(BaseDatabaseService):
+class Service(BaseDatabaseService):  # pylint: disable=abstract-method
     async def _get_specializations_filters(
             self,
             query_text: str | Type[Empty] = Empty,

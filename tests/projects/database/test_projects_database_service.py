@@ -8,25 +8,14 @@ import pytest
 from sqlalchemy import desc
 from sqlalchemy.future import select
 
-from sapphire.projects.database import Service
-from sapphire.projects.database.models import (
+from sapphire.database.models import (
     Participant,
     ParticipantStatusEnum,
     Position,
     Project,
     Review,
 )
-
-
-def test_get_alembic_config_path(service: Service):
-    expected_path = (
-        pathlib.Path(os.curdir).absolute() / "sapphire" / "projects" / "database" / "migrations"
-    )
-
-    path = service.get_alembic_config_path()
-
-    assert isinstance(path, pathlib.Path)
-    assert path == expected_path
+from sapphire.projects.database import Service
 
 
 # Project

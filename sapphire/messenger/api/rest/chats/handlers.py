@@ -3,8 +3,8 @@ import fastapi
 from sapphire.common.api.dependencies.pagination import Pagination, pagination
 from sapphire.common.jwt.dependencies.rest import is_auth
 from sapphire.common.jwt.models import JWTData
+from sapphire.database.models import Chat
 from sapphire.messenger import database
-from sapphire.messenger.database.models import Chat
 
 from .dependencies import path_chat_is_member
 from .schemas import ChatListFiltersRequest, ChatListResponse, ChatResponse

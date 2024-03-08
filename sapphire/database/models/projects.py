@@ -52,7 +52,7 @@ class Project(Base):
     positions: Mapped[list["Position"]] = relationship(back_populates="project", join_depth=2,
                                                        lazy=False)
     reviews: Mapped[list["Review"]] = relationship(back_populates="project", lazy=False)
-    owner: Mapped[User] = relationship()
+    owner: Mapped[User] = relationship(foreign_keys=[owner_id])
 
     __table_args__ = (
         Index("projects__owner_id_idx", "owner_id", postgresql_using="hash"),
@@ -162,6 +162,7 @@ class Participant(Base):
         Index("participants__user_id_idx", "user_id", postgresql_using="hash"),
     )
 
+
 class Review(Base):
     __tablename__ = "reviews"
 
@@ -177,8 +178,8 @@ class Review(Base):
     updated_at: Mapped[datetime] = mapped_column(default=now, onupdate=now)
 
     project: Mapped[Project] = relationship(back_populates="reviews", lazy=False)
-    from_user: Mapped[User] = relationship(back_populates="reviews", lazy=False)
-    to_user: Mapped[User] = relationship()
+    from_user: Mapped[User] = relationship(foreign_keys=[from_user_id], lazy=False)
+    to_user: Mapped[User] = relationship(foreign_keys=[to_user_id])
 
     __table_args__ = (
         Index("reviews__project_id_idx", "project_id", postgresql_using="hash"),

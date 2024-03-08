@@ -60,3 +60,4 @@ class ChatMember(Base):
 
     user: Mapped[User] = relationship()
     chat: Mapped[Chat] = relationship(back_populates="members")
+    messages: Mapped[list[Message]] = relationship(back_populates="member")

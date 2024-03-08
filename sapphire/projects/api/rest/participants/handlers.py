@@ -6,9 +6,9 @@ from sapphire.common.api.dependencies.pagination import Pagination, pagination
 from sapphire.common.api.exceptions import HTTPForbidden, HTTPNotFound
 from sapphire.common.jwt.dependencies.rest import is_auth
 from sapphire.common.jwt.models import JWTData
+from sapphire.database.models import Participant, ParticipantStatusEnum
 from sapphire.projects import broker, database
 from sapphire.projects.api.rest.projects.schemas import ParticipantResponse
-from sapphire.projects.database.models import Participant, ParticipantStatusEnum
 
 from .dependencies import get_path_participant
 from .schemas import (

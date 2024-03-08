@@ -1,8 +1,8 @@
 import fastapi
 
 from sapphire.common.api.exceptions import HTTPNotFound
+from sapphire.database.models import ParticipantStatusEnum, ProjectStatusEnum
 from sapphire.projects import database
-from sapphire.projects.database.models import ParticipantStatusEnum, ProjectStatusEnum
 
 from .schemas import CreateReviewRequest, ReviewResponse
 

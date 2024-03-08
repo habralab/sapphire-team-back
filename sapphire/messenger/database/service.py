@@ -6,19 +6,19 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from sapphire.common.database.service import BaseDatabaseService
 from sapphire.common.utils.empty import Empty
-from sapphire.database.models import Chat, Member, Message
+from sapphire.database.models import Chat, ChatMember, Message
 
 from .settings import Settings
 
-class Service(BaseDatabaseService):
+class Service(BaseDatabaseService):  # pylint: disable=abstract-method
     async def _get_chats_filters(
         self,
         user_id: uuid.UUID,
         members: set[uuid.UUID] | Type[Empty] = Empty,
     ) -> list:
-        filters = [Member.user_id == user_id, Member.chat_id == Chat.id]
+        filters = [ChatMember.user_id == user_id, ChatMember.chat_id == Chat.id]
         if members is not Empty and len(members) > 0:
-            filters.append(or_(*(Member.user_id == member for member in members)))
+            filters.append(or_(*(ChatMember.user_id == member for member in members)))
 
         return filters
 
@@ -66,7 +66,7 @@ class Service(BaseDatabaseService):
         chat = Chat(is_personal=is_personal)
 
         for member_id in members_ids:
-            member = Member(user_id=member_id)
+            member = ChatMember(user_id=member_id)
             chat.members.append(member)
 
         session.add(chat)
