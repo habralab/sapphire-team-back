@@ -5,7 +5,7 @@ from sqlalchemy import ForeignKey, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .base import Base
-from .storage import Specialization, Skill
+from .storage import Specialization
 from .utils import now
 
 

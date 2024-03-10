@@ -10,6 +10,7 @@ from sapphire.database.models import Chat, ChatMember, Message
 
 from .settings import Settings
 
+
 class Service(BaseDatabaseService):  # pylint: disable=abstract-method
     async def _get_chats_filters(
         self,
@@ -109,14 +110,25 @@ class Service(BaseDatabaseService):  # pylint: disable=abstract-method
             self,
             session: AsyncSession,
             chat: Chat,
-            user_id: uuid.UUID,
+            member_id: uuid.UUID,
             text: str,
     ) -> Message:
-        message = Message(chat=chat, user_id=user_id, text=text)
+        message = Message(chat=chat, member_id=member_id, text=text)
 
         session.add(message)
 
         return message
+
+    async def get_chat_message(
+            self,
+            session: AsyncSession,
+            message_id: uuid.UUID,
+    ) -> Message | None:
+        query = select(Message).where(Message.id == message_id)
+
+        result = await session.execute(query)
+
+        return result.unique().scalar_one_or_none()
 
 
 def get_service(settings: Settings) -> Service:

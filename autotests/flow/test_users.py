@@ -16,28 +16,28 @@ class TestUserUpdateFlow:
             oleg_id: uuid.UUID,
             oleg_email: str,
             oleg_users_rest_client: UsersRestClient,
+            backend_specialization_id: uuid.UUID,
+            web_design_specialization_id: uuid.UUID,
     ):
         first_name = "Not-Oleg"
         last_name = "Not-Yurchik"
         about = "New about"
-        main_specialization_id = uuid.uuid4()
-        secondary_specialization_id = uuid.uuid4()
 
         user = await oleg_users_rest_client.update_user(
             user_id=oleg_id,
             first_name=first_name,
             last_name=last_name,
             about=about,
-            main_specialization_id=main_specialization_id,
-            secondary_specialization_id=secondary_specialization_id,
+            main_specialization_id=backend_specialization_id,
+            secondary_specialization_id=web_design_specialization_id,
         )
 
         self.CONTEXT.update({
             "first_name": first_name,
             "last_name": last_name,
             "about": about,
-            "main_specialization_id": main_specialization_id,
-            "secondary_specialization_id": secondary_specialization_id,
+            "main_specialization_id": backend_specialization_id,
+            "secondary_specialization_id": web_design_specialization_id,
         })
 
         assert user.id == oleg_id
@@ -45,8 +45,8 @@ class TestUserUpdateFlow:
         assert user.first_name == first_name
         assert user.last_name == last_name
         assert user.about == about
-        assert user.main_specialization_id == main_specialization_id
-        assert user.secondary_specialization_id == secondary_specialization_id
+        assert user.main_specialization_id == backend_specialization_id
+        assert user.secondary_specialization_id == web_design_specialization_id
 
     @pytest.mark.dependency(depends=["TestUserUpdateFlow::test_update_user"])
     @pytest.mark.asyncio
@@ -133,8 +133,10 @@ class TestUserSkillsFlow:
             self,
             oleg_id: uuid.UUID,
             oleg_users_rest_client: UsersRestClient,
+            python_skill_id: uuid.UUID,
+            git_skill_id: uuid.UUID,
     ):
-        new_skills = {uuid.uuid4() for _ in range(5)}
+        new_skills = {python_skill_id, git_skill_id}
 
         skills = await oleg_users_rest_client.update_user_skills(
             user_id=oleg_id,
@@ -160,9 +162,11 @@ class TestUserSkillsFlow:
             self,
             oleg_id: uuid.UUID,
             oleg_users_rest_client: UsersRestClient,
+            javascript_skill_id: uuid.UUID,
+            uiux_design_skill_id: uuid.UUID,
     ):
         user_skills = self.CONTEXT["user_skills"]
-        user_skills |= {uuid.uuid4() for _ in range(5)}
+        user_skills |= {javascript_skill_id, uiux_design_skill_id}
 
         skills = await oleg_users_rest_client.update_user_skills(
             user_id=oleg_id,

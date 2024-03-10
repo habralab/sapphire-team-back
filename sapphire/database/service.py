@@ -1,9 +1,9 @@
-from typing import Iterable, Type
 import pathlib
+from typing import Iterable, Type
 
 from sapphire.common.database.service import BaseDatabaseService
 
-from .models import Base, MODELS
+from .models import MODELS, Base
 from .settings import Settings
 
 

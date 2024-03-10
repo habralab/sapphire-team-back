@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Any
 
-from sqlalchemy import DateTime, JSON
+from sqlalchemy import JSON, DateTime
 from sqlalchemy.orm import DeclarativeBase
 
 

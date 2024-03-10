@@ -14,7 +14,6 @@ from .projects import (
 from .storage import Skill, Specialization, SpecializationGroup
 from .users import Profile, User, UserSkill
 
-
 MODELS = (
     # Messenger
     Chat,

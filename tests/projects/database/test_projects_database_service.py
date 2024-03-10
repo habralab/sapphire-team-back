@@ -8,15 +8,8 @@ import pytest
 from sqlalchemy import desc
 from sqlalchemy.future import select
 
-from sapphire.database.models import (
-    Participant,
-    ParticipantStatusEnum,
-    Position,
-    Project,
-    Review,
-)
+from sapphire.database.models import Participant, ParticipantStatusEnum, Position, Project, Review
 from sapphire.projects.database import Service
-
 
 # Project
 

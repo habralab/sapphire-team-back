@@ -44,7 +44,7 @@ class Message(Base):
     updated_at: Mapped[datetime] = mapped_column(default=now, onupdate=now)
 
     chat: Mapped[Chat] = relationship(back_populates="messages")
-    member: Mapped["ChatMember"] = relationship(back_populates="messages")
+    member: Mapped["ChatMember"] = relationship(back_populates="messages", lazy=False)
 
 
 class ChatMember(Base):

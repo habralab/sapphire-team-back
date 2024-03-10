@@ -6,7 +6,9 @@ services:
       - postgresql_password
     user: 0:0
     environment:
-      POSTGRES_PASSWORD_FILE: /run/secrets/postgresql_password
+      POSTGRES_USER: sapphire
+      POSTGRES_DB: sapphire
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:-P@ssw0rd}
     volumes:
       - ${DATABASE_DIR:-./database_data}:/var/lib/postgresql/data
     healthcheck:
@@ -76,32 +78,33 @@ services:
   sapphire:
     image: ${SAPPHIRE_IMAGE:-sapphire}
     environment:
+      DATABASE__DSN: ${DATABASE__DSN:-postgresql+asyncpg://sapphire:P%40ssw0rd@database:5432/sapphire}
       MESSENGER__API__PORT: "8000"
       MESSENGER__API__ROOT_URL: ${MESSENGER__API__ROOT_URL:-http://localhost:3000/messenger}
       MESSENGER__API__ROOT_PATH: ${MESSENGER__API__ROOT_PATH:-/messenger}
       MESSENGER__API__ALLOWED_ORIGINS: ${MESSENGER__API__ALLOWED_ORIGINS:-["http://localhost:3000"]}
       MESSENGER__BROKER__SERVERS: '["kafka:9091"]'
       MESSENGER__BROKER__TOPICS: '["chats"]'
-      MESSENGER__DATABASE__DSN: ${MESSENGER__DATABASE__DSN:-postgresql+asyncpg://messenger:P%40ssw0rd@database:5432/messenger}
+      MESSENGER__DATABASE__DSN: ${MESSENGER__DATABASE__DSN:-postgresql+asyncpg://sapphire:P%40ssw0rd@database:5432/sapphire}
       NOTIFICATIONS__API__PORT: "8010"
       NOTIFICATIONS__API__ROOT_URL: ${NOTIFICATIONS__API__ROOT_URL:-http://localhost:3000/notifications}
       NOTIFICATIONS__API__ROOT_PATH: ${NOTIFICATIONS__API__ROOT_PATH:-/notifications}
       NOTIFICATIONS__API__ALLOWED_ORIGINS: ${NOTIFICATIONS__API__ALLOWED_ORIGINS:-["http://localhost:3000"]}
       NOTIFICATIONS__BROKER__SERVERS: '["kafka:9091"]'
       NOTIFICATIONS__BROKER__TOPICS: '["notifications"]'
-      NOTIFICATIONS__DATABASE__DSN: ${NOTIFICATIONS__DATABASE__DSN:-postgresql+asyncpg://notifications:P%40ssw0rd@database:5432/notifications}
+      NOTIFICATIONS__DATABASE__DSN: ${NOTIFICATIONS__DATABASE__DSN:-postgresql+asyncpg://sapphire:P%40ssw0rd@database:5432/sapphire}
       PROJECTS__API__PORT: "8020"
       PROJECTS__API__ROOT_URL: ${PROJECTS__API__ROOT_URL:-http://localhost:3000/projects}
       PROJECTS__API__ROOT_PATH: ${PROJECTS__API__ROOT_PATH:-/projects}
       PROJECTS__API__ALLOWED_ORIGINS: ${PROJECTS__API__ALLOWED_ORIGINS:-["http://localhost:3000"]}
       PROJECTS__API__MEDIA_DIR_PATH: "/projects/media"
       PROJECTS__BROKER__SERVERS: '["kafka:9091"]'
-      PROJECTS__DATABASE__DSN: ${PROJECTS__DATABASE__DSN:-postgresql+asyncpg://projects:P%40ssw0rd@database:5432/projects}
+      PROJECTS__DATABASE__DSN: ${PROJECTS__DATABASE__DSN:-postgresql+asyncpg://sapphire:P%40ssw0rd@database:5432/sapphire}
       STORAGE__API__PORT: "8030"
       STORAGE__API__ROOT_URL: ${STORAGE__API__ROOT_URL:-http://localhost:3000/storage}
       STORAGE__API__ROOT_PATH: ${STORAGE__API__ROOT_PATH:-/storage}
       STORAGE__API__ALLOWED_ORIGINS: ${STORAGE__API__ALLOWED_ORIGINS:-["http://localhost:3000"]}
-      STORAGE__DATABASE__DSN: ${STORAGE__DATABASE__DSN:-postgresql+asyncpg://storage:P%40ssw0rd@database:5432/storage}
+      STORAGE__DATABASE__DSN: ${STORAGE__DATABASE__DSN:-postgresql+asyncpg://sapphire:P%40ssw0rd@database:5432/sapphire}
       USERS__API__PORT: "8040"
       USERS__API__ROOT_URL: ${USERS__API__ROOT_URL:-http://localhost:3000/users}
       USERS__API__ROOT_PATH: ${USERS__API__ROOT_PATH:-/users}
@@ -109,7 +112,7 @@ services:
       USERS__API__OAUTH2_HABR_CALLBACK_URL: ${USERS__API__OAUTH2_HABR_CALLBACK_URL:-http://localhost:3000/users/api/rest/auth/oauth2/habr/callback}
       USERS__API__MEDIA_DIR_PATH: "/users/media"
       USERS__CACHE__URL: "redis://redis:6379/0"
-      USERS__DATABASE__DSN: ${USERS__DATABASE__DSN:-postgresql+asyncpg://users:P%40ssw0rd@database:5432/users}
+      USERS__DATABASE__DSN: ${USERS__DATABASE__DSN:-postgresql+asyncpg://sapphire:P%40ssw0rd@database:5432/sapphire}
     secrets:
       - target: users__habr__api_key
         source: habr_api_key
@@ -278,9 +281,6 @@ secrets:
   habr_career_api_key:
     external: true
     name: ${HABR_CAREER_API_KEY_NAME:-habr_career_api_key}
-  postgresql_password:
-    external: true
-    name: ${POSTGRESQL_PASSWORD_NAME:-postgresql_password}
   jwt_access_token_private_key:
     external: true
     name: ${JWT_ACCESS_TOKEN_PRIVATE_KEY_NAME:-jwt_access_token_private_key}

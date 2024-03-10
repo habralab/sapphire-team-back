@@ -5,7 +5,7 @@ import fastapi
 from sapphire.common.api.exceptions import HTTPForbidden, HTTPNotFound
 from sapphire.common.jwt.dependencies.rest import is_auth
 from sapphire.common.jwt.models import JWTData
-from sapphire.database.models import Chat
+from sapphire.database.models import Chat, ChatMember
 from sapphire.messenger import database
 
 
@@ -26,8 +26,8 @@ async def get_path_chat(
 async def path_chat_is_member(
         jwt_data: JWTData = fastapi.Depends(is_auth),
         chat: Chat = fastapi.Depends(get_path_chat),
-) -> Chat:
-    if jwt_data.user_id not in {member.user_id for member in chat.members}:
-        raise HTTPForbidden()
-
-    return chat
+) -> ChatMember:
+    for member in chat.members:
+        if member.user_id == jwt_data.user_id:
+            return member
+    raise HTTPForbidden()
