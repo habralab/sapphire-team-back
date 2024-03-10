@@ -2,8 +2,6 @@ version: "3"
 services:
   database:
     image: postgres:16.0-bookworm
-    secrets:
-      - postgresql_password
     user: 0:0
     environment:
       POSTGRES_USER: sapphire
