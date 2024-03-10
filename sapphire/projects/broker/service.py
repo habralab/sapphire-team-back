@@ -11,7 +11,7 @@ from sapphire.common.broker.models.projects import (
     ParticipantNotificationType,
 )
 from sapphire.common.broker.service import BaseBrokerProducerService
-from sapphire.projects.database.models import Participant, Project
+from sapphire.database.models import Participant, Project
 
 from .settings import Settings
 

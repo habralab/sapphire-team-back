@@ -72,7 +72,7 @@ pylint sapphire autotests tests
 
 **Isort**
 ```shell
-isort .
+isort --check .
 ```
 
 **Unit tests**
@@ -105,7 +105,6 @@ echo "any_client_id" | docker secret create oauth2_habr_client_id -
 echo "any_client_secret" | docker secret create oauth2_habr_client_secret -
 echo "any_api_key" | docker secret create habr_api_key -
 echo "any_api_key" | docker secret create habr_career_api_key -
-echo "any_password" | docker secret create postgresql_password -
 echo "any_access_private_key" | docker secret create jwt_access_token_private_key -
 echo "any_access_public_key" | docker secret create jwt_access_token_public_key -
 echo "any_refresh_private_key" | docker secret create jwt_refresh_token_private_key -
@@ -128,37 +127,19 @@ And run
 docker stack deploy -c docker-compose.yaml sapphire
 ```
 
-Join to database service
+Wait when all services will be running, you can check it by `docker service ls`.
+
+Join to sapphire service
 ```shell
-docker exec -it -u postgres $(docker ps -q -f name=sapphire_database) psql
+docker exec -it $(docker ps -q -f name=sapphire_sapphire) bash
 ```
 
-Create database for every service: `storage`, `users`, `projects`, `notifications` and `messenger`
+Apply migrations
 ```shell
-CREATE ROLE service_name WITH LOGIN ENCRYPTED PASSWORD 'P@ssw0rd';
-CREATE DATABASE service_name;
-GRANT ALL PRIVILEGES ON DATABASE service_name TO service_name;
-ALTER DATABASE service_name OWNER TO service_name;
+poetry run python -m sapphire database migrations apply
 ```
 
-Apply migrations for every service: `storage`, `users`, `projects`, `notifications` and `messenger`
-inside service containers
+Apply fixtures
 ```shell
-poetry run python -m sapphire <service> database migrations apply
+poetry run python -m sapphire database fixtures apply storage autotests
 ```
-
-For autotests you should install all autotests fixtures from every service: `users`, `projects`,
-`notifications`, `messenger` inside service containers
-```shell
-poetry run python -m sapphire <service> database fixtures apply autotests
-```
-
-### Run: Python
-
-For running separate services, please, see documentation:
-1. [Storage](sapphire/storage/README.md)
-2. [Users](sapphire/users/README.md)
-3. [Projects](sapphire/projects/README.md)
-4. [Email](sapphire/email/README.md)
-5. [Notifications](sapphire/notifications/README.md)
-6. [Messenger](sapphire/messenger/README.md)

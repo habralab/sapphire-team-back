@@ -7,7 +7,7 @@ from loguru import logger
 
 from sapphire.common.utils.settings import get_settings
 
-from . import email, messenger, notifications, projects, storage, users
+from . import database, email, messenger, notifications, projects, storage, users
 from .service import get_service
 from .settings import Settings
 
@@ -46,6 +46,7 @@ def get_cli() -> typer.Typer:
 
     cli.callback()(callback)
     cli.command(name="run")(run)
+    cli.add_typer(database.get_cli(), name="database")
     cli.add_typer(email.get_cli(), name="email")
     cli.add_typer(messenger.get_cli(), name="messenger")
     cli.add_typer(notifications.get_cli(), name="notifications")

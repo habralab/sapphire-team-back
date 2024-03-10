@@ -3,9 +3,9 @@ import uuid
 import fastapi
 
 from sapphire.common.api.exceptions import HTTPForbidden, HTTPNotAuthenticated, HTTPNotFound
+from sapphire.database.models import User
 from sapphire.users import database
 from sapphire.users.api.rest.dependencies import get_jwt_user
-from sapphire.users.database.models import User
 
 
 async def get_path_user(

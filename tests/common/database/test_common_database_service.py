@@ -2,11 +2,11 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from sapphire.common.database.service import BaseDatabaseService
+from sapphire import database
 
 
 @pytest.mark.asyncio
-async def test_transaction(database_service: BaseDatabaseService):
+async def test_transaction(database_service: database.Service):
     session_mock = MagicMock()
     sessionmaker_mock_context = MagicMock()
     sessionmaker_mock_context.__aenter__.return_value = session_mock
@@ -22,7 +22,7 @@ async def test_transaction(database_service: BaseDatabaseService):
 
 
 @patch("sapphire.common.database.service.alembic_command")
-def test_create_migration(mock_alembic_command: MagicMock, database_service: BaseDatabaseService):
+def test_create_migration(mock_alembic_command: MagicMock, database_service: database.Service):
     message = "Any message"
     config = MagicMock()
 
@@ -42,7 +42,7 @@ def test_create_migration(mock_alembic_command: MagicMock, database_service: Bas
 
 
 @patch("sapphire.common.database.service.alembic_command")
-def test_migrate(mock_alembic_command: MagicMock, database_service: BaseDatabaseService):
+def test_migrate(mock_alembic_command: MagicMock, database_service: database.Service):
     config = MagicMock()
 
     with patch.object(

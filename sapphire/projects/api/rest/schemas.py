@@ -2,7 +2,7 @@ import uuid
 
 from pydantic import AwareDatetime, BaseModel, ConfigDict
 
-from sapphire.projects.database.models import ProjectStatusEnum
+from sapphire.database.models import ProjectStatusEnum
 
 
 class ProjectResponse(BaseModel):

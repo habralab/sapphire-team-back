@@ -13,7 +13,6 @@ from autotests.clients.rest.notifications.client import NotificationsRestClient
 from autotests.clients.rest.projects.client import ProjectsRestClient
 from autotests.clients.rest.storage.client import StorageRestClient
 from autotests.clients.rest.users.client import UsersRestClient
-from autotests.clients.websocket import WebsocketClient
 
 from .settings import AutotestsSettings
 
@@ -96,6 +95,36 @@ def oleg_notification_id(settings: AutotestsSettings) -> uuid.UUID:
 @pytest.fixture(scope="session")
 def matvey_notification_id(settings: AutotestsSettings) -> uuid.UUID:
     return settings.matvey_notification_id
+
+
+@pytest.fixture(scope="session")
+def backend_specialization_id() -> uuid.UUID:
+    return uuid.UUID("f9b5563c-d013-40ca-861c-a4b4e66391a5")
+
+
+@pytest.fixture(scope="session")
+def web_design_specialization_id() -> uuid.UUID:
+    return uuid.UUID("31c0da85-42b3-4f0d-9a3b-fe3c96ed241a")
+
+
+@pytest.fixture(scope="session")
+def git_skill_id() -> uuid.UUID:
+    return uuid.UUID("1a61ae08-1426-4a22-aa90-d299c7fdeabb")
+
+
+@pytest.fixture(scope="session")
+def javascript_skill_id() -> uuid.UUID:
+    return uuid.UUID("0a60259a-8092-47e5-9e5b-7bc53bb8ac96")
+
+
+@pytest.fixture(scope="session")
+def python_skill_id() -> uuid.UUID:
+    return uuid.UUID("1b21c2bd-b5e2-4641-9236-2b1d0d179dc6")
+
+
+@pytest.fixture(scope="session")
+def uiux_design_skill_id() -> uuid.UUID:
+    return uuid.UUID("78bc27b4-6ab6-49e8-9fbb-15e152edef1d")
 
 
 @pytest.fixture(scope="function")
@@ -447,126 +476,6 @@ def random_messenger_rest_client(
 ) -> MessengerRestClient:
     return MessengerRestClient(
         base_url=str(settings.messenger_base_url),
-        headers={"Authorization": f"Bearer {random_access_token}"},
-    )
-
-
-@pytest.fixture(scope="session")
-def messenger_websocket_client(settings: AutotestsSettings) -> WebsocketClient:
-    return WebsocketClient(str(settings.messenger_websocket_url))
-
-
-@pytest.fixture(scope="session")
-def oleg_messenger_websocket_client(
-        settings: AutotestsSettings,
-        oleg_access_token: str,
-) -> WebsocketClient:
-    return WebsocketClient(
-        str(settings.messenger_websocket_url),
-        headers={"Authorization": f"Bearer {oleg_access_token}"},
-    )
-
-
-@pytest.fixture(scope="session")
-def oleg_activated_messenger_websocket_client(
-        settings: AutotestsSettings,
-        oleg_activated_access_token: str,
-) -> WebsocketClient:
-    return WebsocketClient(
-        str(settings.messenger_websocket_url),
-        headers={"Authorization": f"Bearer {oleg_activated_access_token}"},
-    )
-
-
-@pytest.fixture(scope="session")
-def matvey_messenger_websocket_client(
-        settings: AutotestsSettings,
-        matvey_access_token: str,
-) -> WebsocketClient:
-    return WebsocketClient(
-        str(settings.messenger_websocket_url),
-        headers={"Authorization": f"Bearer {matvey_access_token}"},
-    )
-
-
-@pytest.fixture(scope="session")
-def matvey_activated_messenger_websocket_client(
-        settings: AutotestsSettings,
-        matvey_activated_access_token: str,
-) -> WebsocketClient:
-    return WebsocketClient(
-        str(settings.messenger_websocket_url),
-        headers={"Authorization": f"Bearer {matvey_activated_access_token}"},
-    )
-
-
-@pytest.fixture(scope="session")
-def random_messenger_websocket_client(
-        settings: AutotestsSettings,
-        random_access_token: str,
-) -> WebsocketClient:
-    return WebsocketClient(
-        str(settings.messenger_base_url),
-        headers={"Authorization": f"Bearer {random_access_token}"},
-    )
-
-
-@pytest.fixture(scope="session")
-def notifications_websocket_client(settings: AutotestsSettings) -> WebsocketClient:
-    return WebsocketClient(str(settings.notifications_websocket_url))
-
-
-@pytest.fixture(scope="session")
-def oleg_notifications_websocket_client(
-        settings: AutotestsSettings,
-        oleg_access_token: str,
-) -> WebsocketClient:
-    return WebsocketClient(
-        str(settings.notifications_websocket_url),
-        headers={"Authorization": f"Bearer {oleg_access_token}"},
-    )
-
-
-@pytest.fixture(scope="session")
-def oleg_activated_notifications_websocket_client(
-        settings: AutotestsSettings,
-        oleg_activated_access_token: str,
-) -> WebsocketClient:
-    return WebsocketClient(
-        str(settings.notifications_websocket_url),
-        headers={"Authorization": f"Bearer {oleg_activated_access_token}"},
-    )
-
-
-@pytest.fixture(scope="session")
-def matvey_notifications_websocket_client(
-        settings: AutotestsSettings,
-        matvey_access_token: str,
-) -> WebsocketClient:
-    return WebsocketClient(
-        str(settings.notifications_websocket_url),
-        headers={"Authorization": f"Bearer {matvey_access_token}"},
-    )
-
-
-@pytest.fixture(scope="session")
-def matvey_activated_notifications_websocket_client(
-        settings: AutotestsSettings,
-        matvey_activated_access_token: str,
-) -> WebsocketClient:
-    return WebsocketClient(
-        str(settings.notifications_websocket_url),
-        headers={"Authorization": f"Bearer {matvey_activated_access_token}"},
-    )
-
-
-@pytest.fixture(scope="session")
-def random_notifications_websocket_client(
-        settings: AutotestsSettings,
-        random_access_token: str,
-) -> WebsocketClient:
-    return WebsocketClient(
-        str(settings.notifications_websocket_url),
         headers={"Authorization": f"Bearer {random_access_token}"},
     )
 

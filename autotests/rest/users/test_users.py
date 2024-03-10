@@ -101,21 +101,21 @@ async def test_update_user(
         faker: Faker,
         user_id: uuid.UUID,
         user_email: uuid.UUID,
+        backend_specialization_id: uuid.UUID,
+        web_design_specialization_id: uuid.UUID,
         client: UsersRestClient,
 ):
     first_name = faker.first_name_male()
     last_name = faker.last_name_male()
     about = faker.text()
-    main_specialization_id = uuid.uuid4()
-    secondary_specialization_id = uuid.uuid4()
 
     user = await client.update_user(
         user_id=user_id,
         first_name=first_name,
         last_name=last_name,
         about=about,
-        main_specialization_id=main_specialization_id,
-        secondary_specialization_id=secondary_specialization_id,
+        main_specialization_id=backend_specialization_id,
+        secondary_specialization_id=web_design_specialization_id,
     )
 
     assert user.id == user_id
@@ -123,8 +123,8 @@ async def test_update_user(
     assert user.first_name == first_name
     assert user.last_name == last_name
     assert user.about == about
-    assert user.main_specialization_id == main_specialization_id
-    assert user.secondary_specialization_id == secondary_specialization_id
+    assert user.main_specialization_id == backend_specialization_id
+    assert user.secondary_specialization_id == web_design_specialization_id
 
 
 @pytest.mark.parametrize("user_id", (
@@ -427,8 +427,14 @@ async def test_get_user_skills_not_found(client: UsersRestClient):
     (pytest.lazy_fixture("matvey_id"), pytest.lazy_fixture("matvey_activated_users_rest_client")),
 ))
 @pytest.mark.asyncio
-async def test_update_user_skills(user_id: uuid.UUID, client: UsersRestClient):
-    skills = {uuid.uuid4() for _ in range(10)}
+async def test_update_user_skills(
+        user_id: uuid.UUID,
+        client: UsersRestClient,
+        git_skill_id: uuid.UUID,
+        javascript_skill_id: uuid.UUID,
+        uiux_design_skill_id: uuid.UUID,
+):
+    skills = {git_skill_id, javascript_skill_id, uiux_design_skill_id}
 
     response = await client.update_user_skills(user_id=user_id, skills=skills)
 
@@ -442,10 +448,11 @@ async def test_update_user_skills(user_id: uuid.UUID, client: UsersRestClient):
 @pytest.mark.asyncio
 async def test_update_user_skills_not_authenticated(
         user_id: uuid.UUID,
+        git_skill_id: uuid.UUID,
         users_rest_client: UsersRestClient,
 ):
     with pytest.raises(ResponseException) as exception:
-        await users_rest_client.update_user_skills(user_id=user_id, skills={uuid.uuid4()})
+        await users_rest_client.update_user_skills(user_id=user_id, skills={git_skill_id})
 
     assert exception.value.status_code == HTTPStatus.UNAUTHORIZED
     assert exception.value.body == b'{"detail":"Not authenticated."}'
@@ -477,10 +484,11 @@ async def test_update_user_skills_not_found(client: UsersRestClient):
 @pytest.mark.asyncio
 async def test_update_user_skills_forbidden(
         user_id: uuid.UUID,
+        python_skill_id: uuid.UUID,
         client: UsersRestClient,
 ):
     with pytest.raises(ResponseException) as exception:
-        await client.update_user_skills(user_id=user_id, skills={uuid.uuid4()})
+        await client.update_user_skills(user_id=user_id, skills={python_skill_id})
 
     assert exception.value.status_code == HTTPStatus.FORBIDDEN
     assert exception.value.body == b'{"detail":"Forbidden."}'

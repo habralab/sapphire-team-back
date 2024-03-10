@@ -4,8 +4,8 @@ from sapphire.common.api.utils import set_cookie
 from sapphire.common.jwt.dependencies.rest import get_jwt_data
 from sapphire.common.jwt.methods import JWTMethods
 from sapphire.common.jwt.models import JWTData
+from sapphire.database.models import User
 from sapphire.users import database
-from sapphire.users.database.models import User
 
 
 async def get_jwt_user(

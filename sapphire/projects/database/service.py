@@ -1,4 +1,3 @@
-import pathlib
 import uuid
 from datetime import datetime, timezone
 from typing import Set, Type
@@ -9,9 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from sapphire.common.database.service import BaseDatabaseService
 from sapphire.common.utils.empty import Empty
-
-from .models import (
-    Base,
+from sapphire.database.models import (
     Participant,
     ParticipantStatusEnum,
     Position,
@@ -21,6 +18,7 @@ from .models import (
     ProjectStatusEnum,
     Review,
 )
+
 from .settings import Settings
 
 
@@ -30,16 +28,7 @@ class UserStatistic(BaseModel):
     rate: confloat(ge=1, le=5)
 
 
-class Service(BaseDatabaseService):
-    def get_alembic_config_path(self) -> pathlib.Path:
-        return pathlib.Path(__file__).parent / "migrations"
-
-    def get_fixtures_directory_path(self) -> pathlib.Path:
-        return pathlib.Path(__file__).parent / "fixtures"
-
-    def get_models(self) -> list[Type[Base]]:
-        return [Participant, Position, Project, ProjectHistory, Review]
-
+class Service(BaseDatabaseService):  # pylint: disable=abstract-method
     async def create_project(
             self,
             session: AsyncSession,
