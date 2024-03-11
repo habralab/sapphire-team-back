@@ -7,7 +7,7 @@ from loguru import logger
 
 from sapphire.common.uvicorn_server import UvicornServer
 
-from .handler import BaseSocketIOHandler
+from .namespace import BaseNamespace
 
 
 class BaseSocketIOService(ServiceMixin):
@@ -16,7 +16,7 @@ class BaseSocketIOService(ServiceMixin):
         root_path: str = "",
         allowed_origins: Iterable[str] = (),
         port: int = 8000,
-        handlers: Iterable[BaseSocketIOHandler] = (),
+        namespaces: Iterable[BaseNamespace] = (),
     ):
         self._root_path = root_path
         self._port = port
@@ -24,8 +24,8 @@ class BaseSocketIOService(ServiceMixin):
             async_mode="asgi",
             cors_allowed_origins=allowed_origins,
         )
-        for handler in handlers:
-            self._server.on(handler.event, handler.handle)
+        for namespace in namespaces:
+            self._server.register_namespace(namespace(namespace.namespace_name))
 
     def get_app(self) -> socketio.ASGIApp:
         sio_app = socketio.ASGIApp(
