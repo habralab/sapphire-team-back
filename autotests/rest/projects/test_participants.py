@@ -1,9 +1,8 @@
 import uuid
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Type
 
 import pytest
-from faker import Faker
 
 from autotests.clients.rest.projects.client import ProjectsRestClient
 from autotests.clients.rest.projects.enums import ParticipantStatusEnum
@@ -31,12 +30,12 @@ from autotests.utils import Empty
             uuid.uuid4(),
             uuid.uuid4(),
             ParticipantStatusEnum.JOINED,
-            datetime.utcnow(),
-            datetime.utcnow() - timedelta(days=30),
-            datetime.utcnow(),
-            datetime.utcnow() - timedelta(days=7),
-            datetime.utcnow(),
-            datetime.utcnow() - timedelta(days=15),
+            datetime.now(tz=timezone.utc),
+            datetime.now(tz=timezone.utc) - timedelta(days=30),
+            datetime.now(tz=timezone.utc),
+            datetime.now(tz=timezone.utc) - timedelta(days=7),
+            datetime.now(tz=timezone.utc),
+            datetime.now(tz=timezone.utc) - timedelta(days=15),
             1,
             10,
         ),

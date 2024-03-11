@@ -9,35 +9,33 @@ from sapphire.common.habr.client import HabrClient
 from sapphire.common.habr_career.client import HabrCareerClient
 from sapphire.common.jwt import JWTMethods
 from sapphire.common.utils.package import get_version
-from sapphire.users.cache.service import UsersCacheService
-from sapphire.users.database.service import UsersDatabaseService
-from sapphire.users.oauth2.habr import OAuth2HabrBackend
-from sapphire.users.settings import UsersSettings
+from sapphire.users import cache, database, oauth2
 
 from . import health, router
+from .settings import Settings
 
 
-class UsersAPIService(BaseAPIService):
+class Service(BaseAPIService):
     def __init__(
             self,
-            database: UsersDatabaseService,
-            habr_oauth2: OAuth2HabrBackend,
+            database: database.Service,
+            cache: cache.Service,
+            oauth2_habr: oauth2.habr.Service,
             habr_client: HabrClient,
             habr_career_client: HabrCareerClient,
-            cache: UsersCacheService,
             jwt_methods: JWTMethods,
             media_dir_path: pathlib.Path = pathlib.Path("/media"),
             load_file_chunk_size: int = 1024 * 1024,
             version: str = "0.0.0",
             root_url: str = "http://localhost",
-            habr_oauth2_callback_url: str = "",
+            oauth2_habr_callback_url: str = "",
             root_path: str = "",
             allowed_origins: Iterable[str] = (),
             port: int = 8000,
     ):
         self._database = database
-        self._habr_oauth2 = habr_oauth2
-        self._habr_oauth2_callback_url = habr_oauth2_callback_url
+        self._oauth2_habr = oauth2_habr
+        self._oauth2_habr_callback_url = oauth2_habr_callback_url
         self._habr_client = habr_client
         self._habr_career_client = habr_career_client
         self._jwt_methods = jwt_methods
@@ -62,22 +60,30 @@ class UsersAPIService(BaseAPIService):
     def dependencies(self) -> list[ServiceMixin]:
         return [
             self._database,
-            self._habr_oauth2,
+            self._oauth2_habr,
             self._habr_client,
             self._cache,
         ]
 
     @property
-    def database(self) -> UsersDatabaseService:
+    def database(self) -> database.Service:
         return self._database
 
     @property
-    def habr_oauth2(self) -> OAuth2HabrBackend:
-        return self._habr_oauth2
+    def cache(self) -> cache.Service:
+        return self._cache
 
     @property
-    def habr_oauth2_callback_url(self) -> str:
-        return self._habr_oauth2_callback_url
+    def jwt_methods(self) -> JWTMethods:
+        return self._jwt_methods
+
+    @property
+    def oauth2_habr(self) -> oauth2.habr.Service:
+        return self._oauth2_habr
+
+    @property
+    def oauth2_habr_callback_url(self) -> str:
+        return self._oauth2_habr_callback_url
 
     @property
     def habr_client(self) -> HabrClient:
@@ -86,14 +92,6 @@ class UsersAPIService(BaseAPIService):
     @property
     def habr_career_client(self) -> HabrCareerClient:
         return self._habr_career_client
-
-    @property
-    def cache(self) -> UsersCacheService:
-        return self._cache
-
-    @property
-    def jwt_methods(self) -> JWTMethods:
-        return self._jwt_methods
 
     @property
     def media_dir_path(self) -> pathlib.Path:
@@ -105,25 +103,25 @@ class UsersAPIService(BaseAPIService):
 
 
 def get_service(
-        database: UsersDatabaseService,
-        habr_oauth2: OAuth2HabrBackend,
+        database: database.Service,
+        cache: cache.Service,
+        oauth2_habr: oauth2.habr.Service,
         habr_client: HabrClient,
         habr_career_client: HabrCareerClient,
         jwt_methods: JWTMethods,
-        settings: UsersSettings,
-        cache: UsersCacheService,
-) -> UsersAPIService:
-    return UsersAPIService(
+        settings: Settings,
+) -> Service:
+    return Service(
         database=database,
-        habr_oauth2=habr_oauth2,
+        cache=cache,
+        oauth2_habr=oauth2_habr,
         habr_client=habr_client,
         habr_career_client=habr_career_client,
-        habr_oauth2_callback_url=settings.habr_oauth2_callback_url,
+        oauth2_habr_callback_url=settings.oauth2_habr_callback_url,
         jwt_methods=jwt_methods,
         version=get_version() or "0.0.0",
         root_url=str(settings.root_url),
         root_path=settings.root_path,
         allowed_origins=settings.allowed_origins,
         port=settings.port,
-        cache=cache,
     )

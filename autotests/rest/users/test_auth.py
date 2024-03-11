@@ -22,7 +22,7 @@ async def test_oauth2_habr_authorize_redirect(
     assert location_url.host == "account.habr.com"
     assert location_url.path == "/oauth/authorize/"
     assert set(location_url.query.keys()) == {"client_id", "state", "redirect_uri", "response_type"}
-    assert location_url.query["redirect_uri"] == str(settings.habr_oauth2_callback_url)
+    assert location_url.query["redirect_uri"] == str(settings.oauth2_habr_callback_url)
     assert location_url.query["response_type"] == "code"
 
 

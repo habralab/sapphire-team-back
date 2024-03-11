@@ -1,11 +1,13 @@
+import asyncio
+
 from facet import ServiceMixin
 
-from .broker.service import EmailBrokerService
-from .sender.service import EmailSenderService
+from . import broker, sender
+from .settings import Settings
 
 
-class EmailService(ServiceMixin):
-    def __init__(self, broker: EmailBrokerService, sender: EmailSenderService):
+class Service(ServiceMixin):
+    def __init__(self, broker: broker.Service, sender: sender.Service):
         self._broker = broker
         self._sender = sender
 
@@ -17,13 +19,16 @@ class EmailService(ServiceMixin):
         ]
 
     @property
-    def broker(self) -> EmailBrokerService:
+    def broker(self) -> broker.Service:
         return self._broker
 
     @property
-    def sender(self) -> EmailSenderService:
+    def sender(self) -> sender.Service:
         return self._sender
 
 
-def get_service(broker: EmailBrokerService, sender: EmailSenderService) -> EmailService:
-    return EmailService(broker=broker, sender=sender)
+def get_service(loop: asyncio.AbstractEventLoop, settings: Settings) -> Service:
+    sender_service = sender.get_service(settings=settings.sender)
+    broker_service = broker.get_service(loop=loop, sender=sender_service, settings=settings.broker)
+
+    return Service(broker=broker_service, sender=sender_service)

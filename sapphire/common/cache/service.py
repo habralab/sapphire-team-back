@@ -5,12 +5,12 @@ from redis import asyncio as aioredis
 
 
 class BaseCacheService(ServiceMixin):
-    def __init__(self, cache_url: str):
-        self.cache_url = cache_url
+    def __init__(self, url: str):
+        self.url = url
         self.redis = None
 
     async def start(self):
-        self.redis = aioredis.from_url(str(self.cache_url))
+        self.redis = aioredis.from_url(self.url)
 
     async def stop(self):
         if self.redis:

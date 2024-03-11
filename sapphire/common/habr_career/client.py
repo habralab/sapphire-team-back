@@ -39,4 +39,4 @@ class HabrCareerClient(HTTPClient):
 
 
 def get_habr_career_client(settings: HabrCareerSettings) -> HabrCareerClient:
-    return HabrCareerClient(api_key=settings.habr_career_api_key)
+    return HabrCareerClient(api_key=settings.api_key)

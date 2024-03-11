@@ -1,8 +1,8 @@
 import uuid
 
-from pydantic import BaseModel, ConfigDict, NaiveDatetime
+from pydantic import AwareDatetime, BaseModel, ConfigDict
 
-from sapphire.projects.database.models import ProjectStatusEnum
+from sapphire.database.models import ProjectStatusEnum
 
 
 class ProjectResponse(BaseModel):
@@ -12,8 +12,8 @@ class ProjectResponse(BaseModel):
     name: str
     description: str | None
     owner_id: uuid.UUID
-    startline: NaiveDatetime
-    deadline: NaiveDatetime | None
-    created_at: NaiveDatetime
-    updated_at: NaiveDatetime
+    startline: AwareDatetime
+    deadline: AwareDatetime | None
+    created_at: AwareDatetime
+    updated_at: AwareDatetime
     status: ProjectStatusEnum

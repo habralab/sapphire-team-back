@@ -1,6 +1,5 @@
-import pathlib
 import uuid
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Set, Type
 
 from pydantic import BaseModel, NonNegativeInt, confloat, conint
@@ -9,10 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from sapphire.common.database.service import BaseDatabaseService
 from sapphire.common.utils.empty import Empty
-from sapphire.projects.settings import ProjectsSettings
-
-from .models import (
-    Base,
+from sapphire.database.models import (
     Participant,
     ParticipantStatusEnum,
     Position,
@@ -23,6 +19,8 @@ from .models import (
     Review,
 )
 
+from .settings import Settings
+
 
 class UserStatistic(BaseModel):
     ownership_projects_count: NonNegativeInt
@@ -30,16 +28,7 @@ class UserStatistic(BaseModel):
     rate: confloat(ge=1, le=5)
 
 
-class ProjectsDatabaseService(BaseDatabaseService):
-    def get_alembic_config_path(self) -> pathlib.Path:
-        return pathlib.Path(__file__).parent / "migrations"
-
-    def get_fixtures_directory_path(self) -> pathlib.Path:
-        return pathlib.Path(__file__).parent / "fixtures"
-
-    def get_models(self) -> list[Type[Base]]:
-        return [Participant, Position, Project, ProjectHistory, Review]
-
+class Service(BaseDatabaseService):  # pylint: disable=abstract-method
     async def create_project(
             self,
             session: AsyncSession,
@@ -305,7 +294,7 @@ class ProjectsDatabaseService(BaseDatabaseService):
         return position
 
     async def remove_position(self, session: AsyncSession, position: Position) -> Position:
-        position.closed_at = datetime.utcnow()
+        position.closed_at = datetime.now(tz=timezone.utc)
 
         session.add(position)
 
@@ -483,7 +472,7 @@ class ProjectsDatabaseService(BaseDatabaseService):
     ) -> Participant:
         participant.status = status
         if status == ParticipantStatusEnum.JOINED:
-            participant.joined_at = datetime.utcnow()
+            participant.joined_at = datetime.now(tz=timezone.utc)
         session.add(participant)
 
         return participant
@@ -744,5 +733,5 @@ class ProjectsDatabaseService(BaseDatabaseService):
         return result.unique().scalar_one_or_none()
 
 
-def get_service(settings: ProjectsSettings) -> ProjectsDatabaseService:
-    return ProjectsDatabaseService(dsn=str(settings.db_dsn))
+def get_service(settings: Settings) -> Service:
+    return Service(dsn=str(settings.dsn))

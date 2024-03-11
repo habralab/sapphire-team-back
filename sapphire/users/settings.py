@@ -1,34 +1,20 @@
-import pathlib
+from pydantic import BaseModel
 
-from pydantic import AnyUrl, PositiveInt
-from pydantic_settings import SettingsConfigDict
-
-from sapphire.common.api.settings import BaseAPISettings
-from sapphire.common.cache.settings import BaseCacheSettings
-from sapphire.common.database.settings import BaseDatabaseSettings
 from sapphire.common.habr.settings import HabrSettings
 from sapphire.common.habr_career.settings import HabrCareerSettings
-from sapphire.common.internal_api.settings import BaseInternalAPISettings
 from sapphire.common.jwt.settings import JWTSettings
-from sapphire.common.utils.rsa256 import generate_rsa_keys
 
-access_token = generate_rsa_keys()
-refresh_token = generate_rsa_keys()
-
-
-class UsersSettings(BaseAPISettings, BaseDatabaseSettings, JWTSettings, HabrSettings,
-                    HabrCareerSettings, BaseCacheSettings, BaseInternalAPISettings):
-    model_config = SettingsConfigDict(env_file=".env", extra="allow", secrets_dir="/run/secrets")
-
-    db_dsn: AnyUrl = AnyUrl("sqlite+aiosqlite:///users.sqlite3")
-
-    habr_oauth2_client_id: str = ""
-    habr_oauth2_client_secret: str = ""
-    habr_oauth2_callback_url: str = ""
-
-    media_dir_path: pathlib.Path = pathlib.Path("/media")
-    load_file_chunk_size: PositiveInt = 1024 * 1024  # 1 Mb
+from .api import Settings as APISettings
+from .cache import Settings as CacheSettings
+from .database import Settings as DatabaseSettings
+from .oauth2.habr import Settings as OAuth2HabrSettings
 
 
-def get_settings() -> UsersSettings:
-    return UsersSettings()
+class Settings(BaseModel):
+    api: APISettings = APISettings()
+    cache: CacheSettings = CacheSettings()
+    database: DatabaseSettings = DatabaseSettings()
+    jwt: JWTSettings = JWTSettings()
+    habr: HabrSettings = HabrSettings()
+    habr_career: HabrCareerSettings = HabrCareerSettings()
+    oauth2_habr: OAuth2HabrSettings = OAuth2HabrSettings()

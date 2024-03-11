@@ -1,46 +1,28 @@
 import os
 import pathlib
 import uuid
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 from sqlalchemy import desc
 from sqlalchemy.future import select
 
-from sapphire.projects.database.models import (
-    Participant,
-    ParticipantStatusEnum,
-    Position,
-    Project,
-    Review,
-)
-from sapphire.projects.database.service import ProjectsDatabaseService
-
-
-def test_get_alembic_config_path(database_service: ProjectsDatabaseService):
-    expected_path = (
-        pathlib.Path(os.curdir).absolute() / "sapphire" / "projects" / "database" / "migrations"
-    )
-
-    path = database_service.get_alembic_config_path()
-
-    assert isinstance(path, pathlib.Path)
-    assert path == expected_path
-
+from sapphire.database.models import Participant, ParticipantStatusEnum, Position, Project, Review
+from sapphire.projects.database import Service
 
 # Project
 
 @pytest.mark.asyncio
-async def test_create_project(database_service: ProjectsDatabaseService):
+async def test_create_project(service: Service):
     session = AsyncMock()
     name = "Any name"
     owner_id = uuid.uuid4()
     description = "Any description"
-    startline = datetime.now()
-    deadline = datetime.now()
+    startline = datetime.now(tz=timezone.utc)
+    deadline = datetime.now(tz=timezone.utc)
 
-    project = await database_service.create_project(
+    project = await service.create_project(
         session=session,
         name=name,
         owner_id=owner_id,
@@ -58,7 +40,7 @@ async def test_create_project(database_service: ProjectsDatabaseService):
 
 
 @pytest.mark.asyncio
-async def test_get_project(database_service: ProjectsDatabaseService):
+async def test_get_project(service: Service):
     session = MagicMock()
     result = MagicMock()
     project_id = uuid.uuid4()
@@ -68,7 +50,7 @@ async def test_get_project(database_service: ProjectsDatabaseService):
     session.execute = AsyncMock()
     session.execute.return_value = result
 
-    result_project = await database_service.get_project(
+    result_project = await service.get_project(
         session=session,
         project_id=project_id,
     )
@@ -77,7 +59,7 @@ async def test_get_project(database_service: ProjectsDatabaseService):
 
 
 @pytest.mark.asyncio
-async def test_get_projects_without_pagination(database_service: ProjectsDatabaseService):
+async def test_get_projects_without_pagination(service: Service):
     session = MagicMock()
     result = MagicMock()
     project_id = uuid.uuid4()
@@ -87,7 +69,7 @@ async def test_get_projects_without_pagination(database_service: ProjectsDatabas
     session.execute = AsyncMock()
     session.execute.return_value = result
 
-    projects = await database_service.get_projects(session=session)
+    projects = await service.get_projects(session=session)
 
     assert projects == expected_projects
 
@@ -96,7 +78,7 @@ async def test_get_projects_without_pagination(database_service: ProjectsDatabas
 
 
 @pytest.mark.asyncio
-async def test_get_projects_with_pagination(database_service: ProjectsDatabaseService):
+async def test_get_projects_with_pagination(service: Service):
     session = MagicMock()
     result = MagicMock()
     project_id = uuid.uuid4()
@@ -114,7 +96,7 @@ async def test_get_projects_with_pagination(database_service: ProjectsDatabaseSe
     session.execute = AsyncMock()
     session.execute.return_value = result
 
-    projects = await database_service.get_projects(session=session, page=page, per_page=per_page)
+    projects = await service.get_projects(session=session, page=page, per_page=per_page)
 
     assert projects == expected_projects
 
@@ -123,15 +105,15 @@ async def test_get_projects_with_pagination(database_service: ProjectsDatabaseSe
 
 
 @pytest.mark.asyncio
-async def test_get_projects_with_all_query_params(database_service: ProjectsDatabaseService):
+async def test_get_projects_with_all_query_params(service: Service):
     session = MagicMock()
     result = MagicMock()
     project_id = uuid.uuid4()
     owner_id = uuid.uuid4()
-    startline_ge = datetime.now() - timedelta(days=30)
-    startline_le = datetime.now() + timedelta(days=30)
-    deadline_ge = datetime.now() - timedelta(days=30)
-    deadline_le = datetime.now() + timedelta(days=30)
+    startline_ge = datetime.now(tz=timezone.utc) - timedelta(days=30)
+    startline_le = datetime.now(tz=timezone.utc) + timedelta(days=30)
+    deadline_ge = datetime.now(tz=timezone.utc) - timedelta(days=30)
+    deadline_le = datetime.now(tz=timezone.utc) + timedelta(days=30)
     query_text = "query_text"
     position_skill_ids = [uuid.uuid4(), uuid.uuid4()]
     position_specialization_ids = [uuid.uuid4(), uuid.uuid4()]
@@ -140,7 +122,7 @@ async def test_get_projects_with_all_query_params(database_service: ProjectsData
     session.execute = AsyncMock()
     session.execute.return_value = result
 
-    projects = await database_service.get_projects(
+    projects = await service.get_projects(
         session=session,
         query_text=query_text,
         owner_id=owner_id,
@@ -159,12 +141,12 @@ async def test_get_projects_with_all_query_params(database_service: ProjectsData
 # Project position
 
 @pytest.mark.asyncio
-async def test_create_project_position(database_service: ProjectsDatabaseService):
+async def test_create_project_position(service: Service):
     session = MagicMock()
     project = MagicMock()
     specialization_id = uuid.uuid4()
 
-    result_position = await database_service.create_position(
+    result_position = await service.create_position(
         session=session,
         specialization_id=specialization_id,
         project=project,
@@ -176,11 +158,11 @@ async def test_create_project_position(database_service: ProjectsDatabaseService
 
 
 @pytest.mark.asyncio
-async def test_remove_project_position(database_service: ProjectsDatabaseService):
+async def test_remove_project_position(service: Service):
     session = MagicMock()
     position = Position(id=uuid.uuid4(), specialization_id=uuid.uuid4(), project_id=uuid.uuid4())
 
-    result_position = await database_service.remove_position(
+    result_position = await service.remove_position(
         session=session,
         position=position,
     )
@@ -191,7 +173,7 @@ async def test_remove_project_position(database_service: ProjectsDatabaseService
 
 
 @pytest.mark.asyncio
-async def test_get_project_position(database_service: ProjectsDatabaseService):
+async def test_get_project_position(service: Service):
     session = MagicMock()
     result = MagicMock()
     position_id = uuid.uuid4()
@@ -201,7 +183,7 @@ async def test_get_project_position(database_service: ProjectsDatabaseService):
     session.execute = AsyncMock()
     session.execute.return_value = result
 
-    result_position = await database_service.get_position(
+    result_position = await service.get_position(
         session=session,
         position_id=position_id,
     )
@@ -210,7 +192,7 @@ async def test_get_project_position(database_service: ProjectsDatabaseService):
 
 
 @pytest.mark.asyncio
-async def test_get_project_positions(database_service: ProjectsDatabaseService):
+async def test_get_project_positions(service: Service):
     session = MagicMock()
     result = MagicMock()
     project_id = uuid.uuid4()
@@ -229,7 +211,7 @@ async def test_get_project_positions(database_service: ProjectsDatabaseService):
     session.execute = AsyncMock()
     session.execute.return_value = result
 
-    positions = await database_service.get_positions(
+    positions = await service.get_positions(
         session=session,
         project_id=project_id,
     )
@@ -241,9 +223,7 @@ async def test_get_project_positions(database_service: ProjectsDatabaseService):
 # Project participant
 
 @pytest.mark.asyncio
-async def test_get_participant_with_participant_id(
-    database_service: ProjectsDatabaseService,
-):
+async def test_get_participant_with_participant_id(service: Service):
     session = MagicMock()
     participant_id = uuid.uuid4()
     position_id = uuid.uuid4()
@@ -256,7 +236,7 @@ async def test_get_participant_with_participant_id(
 
     session.execute = AsyncMock(return_value=mock_participant)
 
-    participant = await database_service.get_participant(
+    participant = await service.get_participant(
         session=session,
         participant_id=participant_id,
     )
@@ -265,9 +245,7 @@ async def test_get_participant_with_participant_id(
 
 
 @pytest.mark.asyncio
-async def test_get_participant_with_position_and_user_ids(
-    database_service: ProjectsDatabaseService,
-):
+async def test_get_participant_with_position_and_user_ids(service: Service):
     session = MagicMock()
     participant_id = uuid.uuid4()
     position_id = uuid.uuid4()
@@ -280,7 +258,7 @@ async def test_get_participant_with_position_and_user_ids(
 
     session.execute = AsyncMock(return_value=mock_participant)
 
-    participant = await database_service.get_participant(
+    participant = await service.get_participant(
         session=session,
         position_id=position_id,
         user_id=user_id,
@@ -290,12 +268,12 @@ async def test_get_participant_with_position_and_user_ids(
 
 
 @pytest.mark.asyncio
-async def test_create_participant(database_service: ProjectsDatabaseService):
+async def test_create_participant(service: Service):
     session = MagicMock()
     position_id = uuid.uuid4()
     user_id = uuid.uuid4()
 
-    participant = await database_service.create_participant(
+    participant = await service.create_participant(
         session=session,
         position_id=position_id,
         user_id=user_id,
@@ -309,7 +287,7 @@ async def test_create_participant(database_service: ProjectsDatabaseService):
 
 
 @pytest.mark.asyncio
-async def test_update_participant_status(database_service: ProjectsDatabaseService):
+async def test_update_participant_status(service: Service):
     session = MagicMock()
     position_id = uuid.uuid4()
     user_id = uuid.uuid4()
@@ -317,7 +295,7 @@ async def test_update_participant_status(database_service: ProjectsDatabaseServi
         position_id=position_id, user_id=user_id, status=ParticipantStatusEnum.REQUEST
     )
 
-    update_participant = await database_service.update_participant_status(
+    update_participant = await service.update_participant_status(
         session=session,
         participant=participant,
         status=ParticipantStatusEnum.DECLINED,
@@ -333,7 +311,7 @@ async def test_update_participant_status(database_service: ProjectsDatabaseServi
 # Reviews
 
 @pytest.mark.asyncio
-async def test_create_review(database_service: ProjectsDatabaseService):
+async def test_create_review(service: Service):
     session = MagicMock()
     project = MagicMock()
     from_user_id = uuid.uuid4()
@@ -341,7 +319,7 @@ async def test_create_review(database_service: ProjectsDatabaseService):
     rate = 5
     text = "text"
 
-    review = await database_service.create_review(
+    review = await service.create_review(
         session=session,
         project=project,
         from_user_id=from_user_id,
@@ -359,9 +337,7 @@ async def test_create_review(database_service: ProjectsDatabaseService):
 
 
 @pytest.mark.asyncio
-async def test_get_review(
-    database_service: ProjectsDatabaseService,
-):
+async def test_get_review(service: Service):
     session = MagicMock()
     project = MagicMock()
     from_user_id = uuid.uuid4()
@@ -382,7 +358,7 @@ async def test_get_review(
 
     session.execute = AsyncMock(return_value=mock_review)
 
-    participant = await database_service.get_review(
+    participant = await service.get_review(
         session=session,
         project=project,
         from_user_id=from_user_id,

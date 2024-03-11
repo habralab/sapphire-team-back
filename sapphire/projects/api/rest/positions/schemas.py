@@ -2,12 +2,12 @@ import uuid
 from typing import Type
 
 import fastapi
-from pydantic import BaseModel, ConfigDict, Field, NaiveDatetime
+from pydantic import AwareDatetime, BaseModel, ConfigDict, Field
 
 from sapphire.common.api.schemas.paginated import PaginatedResponse
 from sapphire.common.utils.empty import Empty
+from sapphire.database.models import Position, ProjectStatusEnum
 from sapphire.projects.api.rest.schemas import ProjectResponse
-from sapphire.projects.database.models import Position, ProjectStatusEnum
 
 
 class PositionListFiltersRequest(BaseModel):
@@ -17,10 +17,10 @@ class PositionListFiltersRequest(BaseModel):
     skill_ids: list[uuid.UUID] | Type[Empty] = Field(fastapi.Query(Empty))
     joined_user_id: uuid.UUID | Type[Empty] = Empty
     project_query_text: str | Type[Empty] = Empty
-    project_startline_ge: NaiveDatetime | Type[Empty] = Empty
-    project_startline_le: NaiveDatetime | Type[Empty] = Empty
-    project_deadline_ge: NaiveDatetime | Type[Empty] = Empty
-    project_deadline_le: NaiveDatetime | Type[Empty] = Empty
+    project_startline_ge: AwareDatetime | Type[Empty] = Empty
+    project_startline_le: AwareDatetime | Type[Empty] = Empty
+    project_deadline_ge: AwareDatetime | Type[Empty] = Empty
+    project_deadline_le: AwareDatetime | Type[Empty] = Empty
     project_status: list[ProjectStatusEnum] | Type[Empty] = Field(fastapi.Query(Empty))
 
 
@@ -31,9 +31,9 @@ class PositionResponse(BaseModel):
     project: ProjectResponse
     specialization_id: uuid.UUID
     skills: list[uuid.UUID]
-    closed_at: NaiveDatetime | None
-    created_at: NaiveDatetime
-    updated_at: NaiveDatetime
+    closed_at: AwareDatetime | None
+    created_at: AwareDatetime
+    updated_at: AwareDatetime
 
     @classmethod
     def from_db_model(cls, instance: Position):

@@ -1,8 +1,8 @@
 import fastapi
 
 from sapphire.common.api.exceptions import HTTPNotFound
-from sapphire.projects.database.models import ParticipantStatusEnum, ProjectStatusEnum
-from sapphire.projects.database.service import ProjectsDatabaseService
+from sapphire.database.models import ParticipantStatusEnum, ProjectStatusEnum
+from sapphire.projects import database
 
 from .schemas import CreateReviewRequest, ReviewResponse
 
@@ -11,7 +11,7 @@ async def create_review(
     request: fastapi.Request,
     data: CreateReviewRequest = fastapi.Body(embed=False),
 ) -> ReviewResponse:
-    database_service: ProjectsDatabaseService = request.app.service.database
+    database_service: database.Service = request.app.service.database
 
     async with database_service.transaction() as session:
         project = await database_service.get_project(session=session, project_id=data.project_id)

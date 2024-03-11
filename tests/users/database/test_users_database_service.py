@@ -4,25 +4,13 @@ import uuid
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
-from sqlalchemy import delete
 
-from sapphire.users.database.models import Profile, User, UserSkill
-from sapphire.users.database.service import UsersDatabaseService
-
-
-def test_get_alembic_config_path(database_service: UsersDatabaseService):
-    expected_path = (
-        pathlib.Path(os.curdir).absolute() / "sapphire" / "users" / "database" / "migrations"
-    )
-
-    path = database_service.get_alembic_config_path()
-
-    assert isinstance(path, pathlib.Path)
-    assert path == expected_path
+from sapphire.database.models import Profile, User, UserSkill
+from sapphire.users.database import Service
 
 
 @pytest.mark.asyncio
-async def test_get_user(database_service: UsersDatabaseService):
+async def test_get_user(service: Service):
     session = MagicMock()
     result = MagicMock()
     user_id = uuid.uuid4()
@@ -32,7 +20,7 @@ async def test_get_user(database_service: UsersDatabaseService):
     session.execute = AsyncMock()
     session.execute.return_value = result
 
-    user = await database_service.get_user(
+    user = await service.get_user(
         session=session,
         email=email,
     )
@@ -42,13 +30,13 @@ async def test_get_user(database_service: UsersDatabaseService):
 
 
 @pytest.mark.asyncio
-async def test_create_user(database_service: UsersDatabaseService):
+async def test_create_user(service: Service):
     session = MagicMock()
     email = "test@gmail.com"
 
-    database_service.create_profile = AsyncMock()
+    service.create_profile = AsyncMock()
 
-    user = await database_service.create_user(
+    user = await service.create_user(
         session=session,
         email=email,
     )
@@ -62,7 +50,7 @@ async def test_create_user(database_service: UsersDatabaseService):
 
 
 @pytest.mark.asyncio
-async def test_update_user(database_service: UsersDatabaseService):
+async def test_update_user(service: Service):
     session = MagicMock()
     user = User(id=uuid.uuid4(), email="test@gmail.com", first_name="Test", last_name="Testovich",
                 avatar="/avatar.png")
@@ -76,7 +64,7 @@ async def test_update_user(database_service: UsersDatabaseService):
     new_main_specialization_id = uuid.uuid4()
     new_secondary_specialization_id = uuid.uuid4()
 
-    result_user = await database_service.update_user(
+    result_user = await service.update_user(
         session=session,
         user=user,
         first_name=new_first_name,
@@ -98,7 +86,7 @@ async def test_update_user(database_service: UsersDatabaseService):
 
 
 @pytest.mark.asyncio
-async def test_update_skills(database_service: UsersDatabaseService):
+async def test_update_skills(service: Service):
     user = User(id=uuid.uuid4(), email="test@gmail.com")
     user.profile = Profile(user=user)
     user.skills = [UserSkill(user=user, skill_id=uuid.uuid4()) for _ in range(10)]
@@ -106,7 +94,7 @@ async def test_update_skills(database_service: UsersDatabaseService):
 
     session = MagicMock()
 
-    skills = await database_service.update_user_skills(
+    skills = await service.update_user_skills(
         session=session,
         user=user,
         skills=new_skills,

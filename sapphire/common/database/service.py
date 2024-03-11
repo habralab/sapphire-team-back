@@ -3,7 +3,7 @@ import json
 import pathlib
 import uuid
 from contextlib import asynccontextmanager
-from typing import Any, Type
+from typing import Any, Iterable, Type
 
 import yaml
 from alembic import command as alembic_command
@@ -41,11 +41,13 @@ class BaseDatabaseService(ServiceMixin):
         self._engine = create_async_engine(self._dsn, pool_recycle=60)
         self._sessionmaker = async_sessionmaker(self._engine, expire_on_commit=False)
 
-    def get_alembic_config_path(self) -> pathlib.Path:
-        raise NotImplementedError
+    def get_migrations_directory_path(self) -> pathlib.Path:
+        raise NotImplementedError(
+            "For working with migrations you need override `get_migrations_directory_path` method",
+        )
 
     def get_alembic_config(self) -> AlembicConfig:
-        migrations_path = self.get_alembic_config_path()
+        migrations_path = self.get_migrations_directory_path()
 
         config = AlembicConfig()
         config.set_main_option("script_location", str(migrations_path))
@@ -58,7 +60,7 @@ class BaseDatabaseService(ServiceMixin):
             "For working with fixtures you need override `get_fixtures_directory_path` method",
         )
 
-    def get_models(self) -> list[Type[DeclarativeBase]]:
+    def get_models(self) -> Iterable[Type[DeclarativeBase]]:
         raise NotImplementedError(
             "For working with fixtures you need override `get_models_mapping` method",
         )

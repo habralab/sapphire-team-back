@@ -3,10 +3,10 @@ import fastapi
 from sapphire.common.api.dependencies.pagination import Pagination, pagination
 from sapphire.common.jwt.dependencies.rest import is_auth
 from sapphire.common.jwt.models import JWTData
-from sapphire.messenger.database.models import Chat
-from sapphire.messenger.database.service import MessengerDatabaseService
+from sapphire.database.models import Chat, ChatMember
+from sapphire.messenger import database
 
-from .dependencies import path_chat_is_member
+from .dependencies import get_path_chat, path_chat_is_member
 from .schemas import ChatListFiltersRequest, ChatListResponse, ChatResponse
 
 
@@ -16,7 +16,7 @@ async def get_chats(
         filters: ChatListFiltersRequest = fastapi.Depends(ChatListFiltersRequest),
         pagination: Pagination = fastapi.Depends(pagination),
 ) -> ChatListResponse:
-    database_service: MessengerDatabaseService = request.app.service.database
+    database_service: database.Service = request.app.service.database
 
     async with database_service.transaction() as session:
         db_chats = await database_service.get_chats(
@@ -44,5 +44,8 @@ async def get_chats(
     )
 
 
-async def get_chat(chat: Chat = fastapi.Depends(path_chat_is_member)):
+async def get_chat(
+        chat: Chat = fastapi.Depends(get_path_chat),
+        member: ChatMember = fastapi.Depends(path_chat_is_member),
+):
     return ChatResponse.from_db_model(chat)

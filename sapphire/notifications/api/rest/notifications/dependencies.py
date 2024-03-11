@@ -5,8 +5,8 @@ import fastapi
 from sapphire.common.api.exceptions import HTTPForbidden, HTTPNotFound
 from sapphire.common.jwt.dependencies.rest import is_auth
 from sapphire.common.jwt.models import JWTData
-from sapphire.notifications.database.models import Notification
-from sapphire.notifications.database.service import NotificationsDatabaseService
+from sapphire.database.models import Notification
+from sapphire.notifications import database
 
 
 async def get_path_notification(
@@ -14,7 +14,7 @@ async def get_path_notification(
         jwt_data: JWTData = fastapi.Depends(is_auth),
         notification_id: uuid.UUID = fastapi.Path(),
 ) -> Notification:
-    database_service: NotificationsDatabaseService = request.app.service.database
+    database_service: database.Service = request.app.service.database
 
     async with database_service.transaction() as session:
         notification = await database_service.get_notification(

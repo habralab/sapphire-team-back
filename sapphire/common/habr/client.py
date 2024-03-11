@@ -40,4 +40,4 @@ class HabrClient(HTTPClient):
 
 
 def get_habr_client(settings: HabrSettings) -> HabrClient:
-    return HabrClient(api_key=settings.habr_api_key)
+    return HabrClient(api_key=settings.api_key)

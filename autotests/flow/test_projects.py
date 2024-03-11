@@ -1,7 +1,7 @@
 import asyncio
 import io
 import uuid
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from http import HTTPStatus
 
 import backoff
@@ -13,7 +13,6 @@ from autotests.clients.rest.exceptions import ResponseException
 from autotests.clients.rest.messenger.client import MessengerRestClient
 from autotests.clients.rest.projects.client import ProjectsRestClient
 from autotests.clients.rest.projects.enums import ParticipantStatusEnum, ProjectStatusEnum
-from autotests.clients.websocket import WebsocketClient
 
 
 class TestProjectFlow:
@@ -46,8 +45,8 @@ class TestProjectFlow:
     ):
         name = faker.job() + " Сервис"
         description = faker.text()
-        startline = datetime.utcnow() + timedelta(days=30)
-        deadline = datetime.utcnow() + timedelta(days=90)
+        startline = datetime.now(tz=timezone.utc) + timedelta(days=30)
+        deadline = datetime.now(tz=timezone.utc) + timedelta(days=90)
 
         project = await oleg_activated_projects_rest_client.create_project(
             owner_id=oleg_id,
@@ -120,20 +119,23 @@ class TestProjectFlow:
 
     @pytest.mark.dependency(depends=["TestProjectFlow::test_return_finished_project_to_preparation"])
     @pytest.mark.asyncio
-    async def test_create_position(self, oleg_projects_rest_client: ProjectsRestClient):
+    async def test_create_position(
+            self,
+            oleg_projects_rest_client: ProjectsRestClient,
+            backend_specialization_id: uuid.UUID,
+    ):
         project_id: uuid.UUID = self.CONTEXT["project_id"]
 
-        specialization_id = uuid.uuid4()
         position = await oleg_projects_rest_client.create_position(
             project_id=project_id,
-            specialization_id=specialization_id,
+            specialization_id=backend_specialization_id,
         )
 
         self.CONTEXT["position_id"] = position.id
-        self.CONTEXT["position_specialization_id"] = specialization_id
+        self.CONTEXT["position_specialization_id"] = backend_specialization_id
 
         assert position.project.id == project_id
-        assert position.specialization_id == specialization_id
+        assert position.specialization_id == backend_specialization_id
         assert position.closed_at is None
 
     @pytest.mark.dependency(depends=["TestProjectFlow::test_create_position"])
@@ -222,13 +224,8 @@ class TestProjectFlow:
     @pytest.mark.dependency(depends=["TestProjectFlow::test_get_first_request_to_join"])
     @pytest.mark.skip("Not implemented")
     @pytest.mark.asyncio
-    async def test_waiting_notification_about_request_to_join(
-            self,
-            oleg_notifications_websocket_client: WebsocketClient,
-    ):
-        notification = oleg_notifications_websocket_client.get(timeout=60)
-
-        assert notification is not None
+    async def test_waiting_notification_about_request_to_join(self):
+        pass
 
     @pytest.mark.dependency(depends=["TestProjectFlow::test_get_first_request_to_join"])
     @pytest.mark.skip("Not implemented")
@@ -303,13 +300,8 @@ class TestProjectFlow:
     @pytest.mark.dependency(depends=["TestProjectFlow::test_get_first_cancelled_request_to_join"])
     @pytest.mark.skip("Not implemented")
     @pytest.mark.asyncio
-    async def test_waiting_notification_about_cancel_request_to_join(
-            self,
-            oleg_notifications_websocket_client: WebsocketClient,
-    ):
-        notification = oleg_notifications_websocket_client.get(timeout=60)
-
-        assert notification is not None
+    async def test_waiting_notification_about_cancel_request_to_join(self):
+        pass
 
     @pytest.mark.dependency(depends=["TestProjectFlow::test_get_first_cancelled_request_to_join"])
     @pytest.mark.skip("Not implemented")
@@ -380,13 +372,8 @@ class TestProjectFlow:
     @pytest.mark.dependency(depends=["TestProjectFlow::test_get_second_declined_request_to_join"])
     @pytest.mark.skip("Not implemented")
     @pytest.mark.asyncio
-    async def test_waiting_notification_about_decline_second_request_to_join(
-            self,
-            matvey_notifications_websocket_client: WebsocketClient,
-    ):
-        notification = matvey_notifications_websocket_client.get(timeout=60)
-
-        assert notification is not None
+    async def test_waiting_notification_about_decline_second_request_to_join(self):
+        pass
 
     @pytest.mark.dependency(depends=["TestProjectFlow::test_get_second_declined_request_to_join"])
     @pytest.mark.skip("Not implemented")
@@ -457,13 +444,8 @@ class TestProjectFlow:
     @pytest.mark.dependency(depends=["TestProjectFlow::test_get_third_accepted_request_to_join"])
     @pytest.mark.skip("Not implemented")
     @pytest.mark.asyncio
-    async def test_waiting_notification_about_accept_third_request_to_join(
-            self,
-            matvey_notifications_websocket_client: WebsocketClient,
-    ):
-        notification = matvey_notifications_websocket_client.get(timeout=60)
-
-        assert notification is not None
+    async def test_waiting_notification_about_accept_third_request_to_join(self):
+        pass
 
     @pytest.mark.dependency(depends=["TestProjectFlow::test_get_third_accepted_request_to_join"])
     @pytest.mark.skip("Not implemented")
@@ -533,7 +515,7 @@ class TestProjectFlow:
         assert participant.user_id == oleg_id
         assert participant.status == ParticipantStatusEnum.JOINED
 
-    @pytest.mark.dependency(depeds=["TestProjectFlow::test_owner_accept_request_to_join"])
+    @pytest.mark.dependency(depends=["TestProjectFlow::test_owner_accept_request_to_join"])
     @pytest.mark.asyncio
     async def test_get_owner_accepted_request_to_join(
             self,
@@ -592,13 +574,8 @@ class TestProjectFlow:
     @pytest.mark.dependency(depends=["TestProjectFlow::test_get_third_left_participant"])
     @pytest.mark.skip("Not implemented")
     @pytest.mark.asyncio
-    async def test_waiting_notification_about_leave_position_by_participant(
-            self,
-            oleg_notifications_websocket_client: WebsocketClient,
-    ):
-        notification = oleg_notifications_websocket_client.get(timeout=60)
-
-        assert notification is not None
+    async def test_waiting_notification_about_leave_position_by_participant(self):
+        pass
 
     @pytest.mark.dependency(depends=["TestProjectFlow::test_get_third_left_participant"])
     @pytest.mark.skip("Not implemented")
@@ -689,13 +666,8 @@ class TestProjectFlow:
     @pytest.mark.dependency(depends=["TestProjectFlow::test_leave_position_by_manager"])
     @pytest.mark.skip("Not implemented")
     @pytest.mark.asyncio
-    async def test_waiting_notification_about_leave_position_by_manager(
-            self,
-            matvey_notifications_websocket_client: WebsocketClient,
-    ):
-        notification = matvey_notifications_websocket_client.get(timeout=60)
-
-        assert notification is not None
+    async def test_waiting_notification_about_leave_position_by_manager(self):
+        pass
 
     @pytest.mark.dependency(depends=["TestProjectFlow::test_leave_position_by_manager"])
     @pytest.mark.skip("Not implemented")
@@ -874,8 +846,10 @@ class TestPositionSkillsFlow:
             self,
             oleg_projects_rest_client: ProjectsRestClient,
             position_id: uuid.UUID,
+            git_skill_id: uuid.UUID,
+            javascript_skill_id: uuid.UUID,
     ):
-        new_skills = {uuid.uuid4() for _ in range(5)}
+        new_skills = {git_skill_id, javascript_skill_id}
 
         skills = await oleg_projects_rest_client.update_position_skills(
             position_id=position_id,
@@ -905,9 +879,11 @@ class TestPositionSkillsFlow:
             self,
             oleg_projects_rest_client: ProjectsRestClient,
             position_id: uuid.UUID,
+            python_skill_id: uuid.UUID,
+            uiux_design_skill_id: uuid.UUID,
     ):
         position_skills: set[uuid.UUID] = self.CONTEXT["skills"]
-        position_skills |= {uuid.uuid4() for _ in range(5)}
+        position_skills |= {python_skill_id, uiux_design_skill_id}
 
         skills = await oleg_projects_rest_client.update_position_skills(
             position_id=position_id,

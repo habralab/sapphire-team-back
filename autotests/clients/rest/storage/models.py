@@ -1,8 +1,7 @@
 import uuid
-from datetime import datetime
 from typing import Literal
 
-from pydantic import BaseModel, constr
+from pydantic import AwareDatetime, BaseModel, constr
 
 from autotests.clients.rest.models import PaginatedResponse
 
@@ -15,7 +14,7 @@ class HealthResponse(BaseModel):
 class SpecializationGroupResponse(BaseModel):
     id: uuid.UUID
     name: str
-    created_at: datetime
+    created_at: AwareDatetime
 
 
 class SpecializationGroupListResponse(PaginatedResponse):
@@ -26,7 +25,7 @@ class SpecializationResponse(BaseModel):
     id: uuid.UUID
     name: str
     group_id: uuid.UUID | None
-    created_at: datetime
+    created_at: AwareDatetime
 
 
 class SpecializationListResponse(PaginatedResponse):
@@ -36,7 +35,7 @@ class SpecializationListResponse(PaginatedResponse):
 class SkillResponse(BaseModel):
     id: uuid.UUID
     name: str
-    created_at: datetime
+    created_at: AwareDatetime
 
 
 class SkillListResponse(PaginatedResponse):

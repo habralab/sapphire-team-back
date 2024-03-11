@@ -3,12 +3,12 @@ from unittest.mock import AsyncMock, MagicMock
 import pytest
 from sqlalchemy import desc, or_, select
 
-from sapphire.storage.database.models import SpecializationGroup
-from sapphire.storage.database.service import StorageDatabaseService
+from sapphire.database.models import SpecializationGroup
+from sapphire.storage.database import Service
 
 
 @pytest.mark.asyncio
-async def test_get_specialization_groups_without_filters(database_service: StorageDatabaseService):
+async def test_get_specialization_groups_without_filters(service: Service):
     session = MagicMock()
     name = "Developer"
     page = 1
@@ -30,7 +30,7 @@ async def test_get_specialization_groups_without_filters(database_service: Stora
         .offset(offset)
     )
 
-    specialization_groups = await database_service.get_specialization_groups(session=session)
+    specialization_groups = await service.get_specialization_groups(session=session)
 
     assert specialization_groups == expected_specialization_groups
     
@@ -39,9 +39,7 @@ async def test_get_specialization_groups_without_filters(database_service: Stora
 
 
 @pytest.mark.asyncio
-async def test_get_specialization_groups_with_all_filters(
-    database_service: StorageDatabaseService
-):
+async def test_get_specialization_groups_with_all_filters(service: Service):
     session = MagicMock()
     name = "Developer"
     page = 1
@@ -67,7 +65,7 @@ async def test_get_specialization_groups_with_all_filters(
         .offset(offset)
     )
 
-    specialization_groups = await database_service.get_specialization_groups(
+    specialization_groups = await service.get_specialization_groups(
         session=session,
         query_text=name,
         page=page,

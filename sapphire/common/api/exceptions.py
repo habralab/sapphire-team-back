@@ -23,3 +23,11 @@ class HTTPNotFound(fastapi.HTTPException):
             status_code=fastapi.status.HTTP_404_NOT_FOUND,
             detail="Not found.",
         )
+
+
+class HTTPInternalServerError(fastapi.HTTPException):
+    def __init__(self):
+        super().__init__(
+            status_code=fastapi.status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Internal server error.",
+        )

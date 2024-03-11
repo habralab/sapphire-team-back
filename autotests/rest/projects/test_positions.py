@@ -1,5 +1,5 @@
 import uuid
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from http import HTTPStatus
 from typing import Type
 
@@ -31,10 +31,10 @@ from autotests.utils import Empty
             [uuid.uuid4(), uuid.uuid4()],
             uuid.uuid4(),
             "test",
-            datetime.now() - timedelta(days=30),
-            datetime.now() + timedelta(days=30),
-            datetime.now() + timedelta(days=30),
-            datetime.now() + timedelta(days=90),
+            datetime.now(tz=timezone.utc) - timedelta(days=30),
+            datetime.now(tz=timezone.utc) + timedelta(days=30),
+            datetime.now(tz=timezone.utc) + timedelta(days=30),
+            datetime.now(tz=timezone.utc) + timedelta(days=90),
             [ProjectStatusEnum.PREPARATION],
             1,
             10,

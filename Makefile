@@ -9,13 +9,13 @@ isort:
 	isort --check .
 
 lint:
-	pylint ./autotests ./sapphire ./tests
+	pylint autotests sapphire tests
 
 test:
-	pytest ./tests
+	pytest tests
 
 autotests:
-	pytest ./autotests
+	pytest autotests
 
 build:
 	docker build -t sapphire --target slim .

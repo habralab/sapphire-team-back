@@ -14,7 +14,7 @@ jobs:
     steps:
       - name: Lint
         run: >
-          docker run --rm sapphire:test-${{ github.sha }} pylint /app/sapphire /app/autotests /app/tests
+          docker run --rm sapphire:test-${{ github.sha }} pylint sapphire autotests tests
   isort:
     needs: [build]
     runs-on: self-hosted
@@ -26,4 +26,4 @@ jobs:
     runs-on: self-hosted
     steps:
       - name: Test
-        run: docker run --rm sapphire:test-${{ github.sha }} pytest /app/tests
+        run: docker run --rm sapphire:test-${{ github.sha }} pytest tests

@@ -7,21 +7,18 @@ from facet import ServiceMixin
 from sapphire.common.api.service import BaseAPIService
 from sapphire.common.jwt import JWTMethods
 from sapphire.common.utils.package import get_version
-from sapphire.projects.broker.service import ProjectsBrokerService
-from sapphire.projects.database.service import ProjectsDatabaseService
-from sapphire.projects.settings import ProjectsSettings
-from sapphire.users.internal_api.client.service import UsersInternalAPIClient
+from sapphire.projects import broker, database
 
 from . import health, router
+from .settings import Settings
 
 
-class ProjectsAPIService(BaseAPIService):
+class Service(BaseAPIService):
     def __init__(
         self,
-        database: ProjectsDatabaseService,
+        database: database.Service,
         jwt_methods: JWTMethods,
-        broker_service: ProjectsBrokerService,
-        users_internal_api_client: UsersInternalAPIClient,
+        broker: broker.Service,
         media_dir_path: pathlib.Path = pathlib.Path("/media"),
         load_file_chunk_size: int = 1024 * 1024,  # 1 Mb
         version: str = "0.0.0.0",
@@ -32,8 +29,7 @@ class ProjectsAPIService(BaseAPIService):
     ):
         self._database = database
         self._jwt_methods = jwt_methods
-        self._broker_service = broker_service
-        self._users_internal_api_client = users_internal_api_client
+        self._broker = broker
         self._media_dir_path = media_dir_path
         self._load_file_chunk_size = load_file_chunk_size
 
@@ -57,7 +53,7 @@ class ProjectsAPIService(BaseAPIService):
         ]
 
     @property
-    def database(self) -> ProjectsDatabaseService:
+    def database(self) -> database.Service:
         return self._database
 
     @property
@@ -65,12 +61,8 @@ class ProjectsAPIService(BaseAPIService):
         return self._jwt_methods
 
     @property
-    def broker(self) -> ProjectsBrokerService:
-        return self._broker_service
-
-    @property
-    def users_internal_api_client(self) -> UsersInternalAPIClient:
-        return self._users_internal_api_client
+    def broker(self) -> broker.Service:
+        return self._broker
 
     @property
     def media_dir_path(self) -> pathlib.Path:
@@ -82,17 +74,15 @@ class ProjectsAPIService(BaseAPIService):
 
 
 def get_service(
-        database: ProjectsDatabaseService,
+        database: database.Service,
         jwt_methods: JWTMethods,
-        settings: ProjectsSettings,
-        broker_service: ProjectsBrokerService,
-        users_internal_api_client: UsersInternalAPIClient,
-) -> ProjectsAPIService:
-    return ProjectsAPIService(
+        broker: broker.Service,
+        settings: Settings,
+) -> Service:
+    return Service(
         database=database,
         jwt_methods=jwt_methods,
-        broker_service=broker_service,
-        users_internal_api_client=users_internal_api_client,
+        broker=broker,
         media_dir_path=settings.media_dir_path,
         load_file_chunk_size=settings.load_file_chunk_size,
         version=get_version() or "0.0.0",

@@ -4,8 +4,8 @@ from sapphire.common.api.utils import set_cookie
 from sapphire.common.jwt.dependencies.rest import get_jwt_data
 from sapphire.common.jwt.methods import JWTMethods
 from sapphire.common.jwt.models import JWTData
-from sapphire.users.database.models import User
-from sapphire.users.database.service import UsersDatabaseService
+from sapphire.database.models import User
+from sapphire.users import database
 
 
 async def get_jwt_user(
@@ -15,9 +15,9 @@ async def get_jwt_user(
     if jwt_data is None:
         return None
 
-    database: UsersDatabaseService = request.app.service.database
-    async with database.transaction() as session:
-        return await database.get_user(session=session, user_id=jwt_data.user_id)
+    database_service: database.Service = request.app.service.database
+    async with database_service.transaction() as session:
+        return await database_service.get_user(session=session, user_id=jwt_data.user_id)
 
 
 async def update_jwt(

@@ -1,13 +1,14 @@
 import pytest
 
-from sapphire.storage.database.service import StorageDatabaseService
-from sapphire.storage.settings import StorageSettings
+from sapphire.common.utils.settings import get_settings
+from sapphire.storage.database import Service, Settings
 
 
 @pytest.fixture()
-def database_service(settings: StorageSettings) -> StorageDatabaseService:
-    return StorageDatabaseService(dsn=str(settings.db_dsn))
+def settings() -> Settings:
+    return get_settings(Settings)
+
 
 @pytest.fixture()
-def settings() -> StorageSettings:
-    return StorageSettings()
+def service(settings: Settings) -> Service:
+    return Service(dsn=str(settings.dsn))

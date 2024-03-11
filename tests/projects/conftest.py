@@ -1,8 +1,9 @@
 import pytest
 
-from sapphire.projects.settings import ProjectsSettings
+from sapphire.common.utils.settings import get_settings
+from sapphire.projects import Settings
 
 
 @pytest.fixture()
-def settings() -> ProjectsSettings:
-    return ProjectsSettings()
+def settings() -> Settings:
+    return get_settings(Settings)

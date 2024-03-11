@@ -1,0 +1,4934 @@
+---
+model: specialization_groups
+data:
+- habr_id: 1
+  id: 9725158a-9c9f-416a-9c1b-9444559b3370
+  name: Разработка
+  name_en: Software Development
+- habr_id: 2
+  id: b89484c8-8d74-4f06-860a-e096e40b2a0b
+  name: Тестирование
+  name_en: Quality Assurance
+- habr_id: 6
+  id: 2c7574f8-c848-4e78-81b1-1cc08a957e9b
+  name: Аналитика
+  name_en: Analytics
+- habr_id: 4
+  id: 0a9ed955-566f-47fe-8e06-151546289654
+  name: Дизайн
+  name_en: Design
+- habr_id: 5
+  id: 2cd07217-7418-440c-b074-84d8030aae99
+  name: Менеджмент
+  name_en: Management
+- habr_id: 13
+  id: 501c8ea5-dbf7-4768-98c3-cf982b39dc5f
+  name: Информационная безопасность
+  name_en: Information Security
+- habr_id: 14
+  id: 65e17124-e6fd-42ca-ae42-550cd215f5e9
+  name: Искусственный интеллект
+  name_en: Artificial Intelligence
+- habr_id: 7
+  id: 7e0844ba-bd0c-4c38-b2a3-371c704d319d
+  name: Поддержка
+  name_en: Support
+- habr_id: 8
+  id: 4c764e57-feb2-4a18-a207-97346141fd99
+  name: Маркетинг
+  name_en: Marketing
+- habr_id: 3
+  id: 36ead433-67a2-4cd4-8590-4209e9998a84
+  name: Администрирование
+  name_en: Administration
+- habr_id: 10
+  id: 65edc675-5662-4f76-8706-03de7a316f1d
+  name: Контент
+  name_en: Content
+- habr_id: 9
+  id: 76715a75-bafd-4cae-b0e9-40cc3354c013
+  name: Продажи
+  name_en: Sales
+- habr_id: 11
+  id: e7d72425-5e20-47fe-a00f-864394bfd9b3
+  name: HR
+  name_en: Human Resources
+- habr_id: 12
+  id: 9a1bb4a9-9f48-48a7-8263-9d7c0efab47c
+  name: Офис
+  name_en: Office
+- habr_id: 15
+  id: befb4c10-eff9-423d-8f4f-8deb4adc02d8
+  name: Зерокодинг
+  name_en: No-code
+---
+model: specializations
+data:
+- group_id: 9725158a-9c9f-416a-9c1b-9444559b3370
+  habr_id: 2
+  id: f9b5563c-d013-40ca-861c-a4b4e66391a5
+  name: Бэкенд разработчик
+  name_en: Backend Developer
+- group_id: 9725158a-9c9f-416a-9c1b-9444559b3370
+  habr_id: 3
+  id: 25fdf28e-c894-4eeb-ba18-64c77582883b
+  name: Фронтенд разработчик
+  name_en: Frontend Developer
+- group_id: 9725158a-9c9f-416a-9c1b-9444559b3370
+  habr_id: 82
+  id: adc8f81c-13d6-4afe-9e03-6dd032b3076b
+  name: Веб-разработчик
+  name_en: Web Developer
+- group_id: 9725158a-9c9f-416a-9c1b-9444559b3370
+  habr_id: 4
+  id: c786a307-eb87-4f8e-87ea-7fe6cbf2ee68
+  name: Фулстек разработчик
+  name_en: Fullstack Developer
+- group_id: 9725158a-9c9f-416a-9c1b-9444559b3370
+  habr_id: 5
+  id: 472e2436-ed2b-4251-b914-4e04ba285064
+  name: Разработчик мобильных приложений
+  name_en: Mobile Application Developer
+- group_id: 9725158a-9c9f-416a-9c1b-9444559b3370
+  habr_id: 72
+  id: 1822261a-7058-4463-8436-8fa27fa2ec7a
+  name: Разработчик приложений
+  name_en: Application Developer
+- group_id: 9725158a-9c9f-416a-9c1b-9444559b3370
+  habr_id: 1
+  id: 82c49a83-0aa1-4110-928d-2f5e8188f722
+  name: Десктоп разработчик
+  name_en: Software Developer
+- group_id: 9725158a-9c9f-416a-9c1b-9444559b3370
+  habr_id: 75
+  id: c481b3b8-599c-4509-b742-3eb454f022f0
+  name: Релиз менеджер
+  name_en: Release Manager
+- group_id: 9725158a-9c9f-416a-9c1b-9444559b3370
+  habr_id: 6
+  id: 0c042748-fa10-4dc8-b7e0-362c6752ecac
+  name: Разработчик игр
+  name_en: Game Developer
+- group_id: 9725158a-9c9f-416a-9c1b-9444559b3370
+  habr_id: 77
+  id: 9d3a778d-0d7b-44d4-947a-60b1def22149
+  name: Разработчик баз данных
+  name_en: Database Developer
+- group_id: 9725158a-9c9f-416a-9c1b-9444559b3370
+  habr_id: 7
+  id: 77aba99b-3c27-4437-8c75-fb93a2336d0e
+  name: Инженер встраиваемых систем
+  name_en: Embedded Software Engineer
+- group_id: 9725158a-9c9f-416a-9c1b-9444559b3370
+  habr_id: 83
+  id: 144e0e75-a66a-4d62-b1db-f47efce20f41
+  name: HTML-верстальщик
+  name_en: HTML Coding
+- group_id: 9725158a-9c9f-416a-9c1b-9444559b3370
+  habr_id: 84
+  id: f5c0cbf4-2729-4a62-9f95-da190cc9b504
+  name: Программист 1С
+  name_en: 1C Developer
+- group_id: 9725158a-9c9f-416a-9c1b-9444559b3370
+  habr_id: 8
+  id: 537eb334-41fe-4687-b5c9-3bdc19318624
+  name: Системный инженер
+  name_en: System Software Engineer
+- group_id: 9725158a-9c9f-416a-9c1b-9444559b3370
+  habr_id: 85
+  id: cfd2566a-82aa-474b-b665-02102c5221ae
+  name: ERP-программист
+  name_en: ERP Developer
+- group_id: 9725158a-9c9f-416a-9c1b-9444559b3370
+  habr_id: 73
+  id: bb72933e-ddfd-496a-91fb-bc14f2230ec7
+  name: Архитектор программного обеспечения
+  name_en: Software Architect
+- group_id: 9725158a-9c9f-416a-9c1b-9444559b3370
+  habr_id: 9
+  id: 33862212-3cfc-48c1-9060-b5bfbec1b9d3
+  name: Технический директор
+  name_en: Chief Technology Officer (CTO)
+- group_id: 9725158a-9c9f-416a-9c1b-9444559b3370
+  habr_id: 86
+  id: b96212ef-d77a-4712-8652-98f746439401
+  name: Архитектор баз данных
+  name_en: Database Architect
+- group_id: b89484c8-8d74-4f06-860a-e096e40b2a0b
+  habr_id: 12
+  id: be3a8be3-dc23-4733-a3cb-d3c6852441a5
+  name: Инженер по ручному тестированию
+  name_en: Manual Test Engineer
+- group_id: b89484c8-8d74-4f06-860a-e096e40b2a0b
+  habr_id: 10
+  id: ff4462c6-f720-406c-b9f1-1316c358e8d7
+  name: Инженер по автоматизации тестирования
+  name_en: Test Automation Engineer
+- group_id: b89484c8-8d74-4f06-860a-e096e40b2a0b
+  habr_id: 13
+  id: b0707d8f-f0b9-4413-8bbe-46a77cad17c7
+  name: Инженер по обеспечению качества
+  name_en: Quality Assurance Engineer
+- group_id: b89484c8-8d74-4f06-860a-e096e40b2a0b
+  habr_id: 11
+  id: 4c16f080-1098-4677-ae3c-0104f1822250
+  name: Инженер по производительности
+  name_en: Software Performance Engineer
+- group_id: b89484c8-8d74-4f06-860a-e096e40b2a0b
+  habr_id: 87
+  id: 2617fb87-9d0f-49e2-840a-12b407c0a257
+  name: UX-тестировщик
+  name_en: UX Tester
+- group_id: b89484c8-8d74-4f06-860a-e096e40b2a0b
+  habr_id: 14
+  id: 45600921-6ed7-4769-89cd-acfed5f2491c
+  name: Аналитик по обеспечению качества
+  name_en: Quality Assurance Analyst
+- group_id: b89484c8-8d74-4f06-860a-e096e40b2a0b
+  habr_id: 15
+  id: e07bb03a-1e76-4cdb-a0ae-ae6e160245c2
+  name: Менеджер по обеспечению качества
+  name_en: Quality Assurance Manager
+- group_id: b89484c8-8d74-4f06-860a-e096e40b2a0b
+  habr_id: 16
+  id: 567f0336-5f93-4976-bfef-d149b9751f07
+  name: Директор по обеспечению качества
+  name_en: Quality Assurance Director
+- group_id: 2c7574f8-c848-4e78-81b1-1cc08a957e9b
+  habr_id: 41
+  id: d76212bd-7069-4593-acbb-b1ece3b6c5ed
+  name: Системный аналитик
+  name_en: Systems Analyst
+- group_id: 2c7574f8-c848-4e78-81b1-1cc08a957e9b
+  habr_id: 98
+  id: 61dbc38d-7a08-4760-803d-6d6396bd5330
+  name: Аналитик мобильных приложений
+  name_en: Mobile Analyst
+- group_id: 2c7574f8-c848-4e78-81b1-1cc08a957e9b
+  habr_id: 42
+  id: d3a80a55-5a8d-484d-af97-cf19bfb97419
+  name: Бизнес-аналитик
+  name_en: Business Analyst
+- group_id: 2c7574f8-c848-4e78-81b1-1cc08a957e9b
+  habr_id: 99
+  id: 85976d4c-9805-4ca3-8c2e-f14cfb0a5636
+  name: Гейм-аналитик
+  name_en: Game Analyst
+- group_id: 2c7574f8-c848-4e78-81b1-1cc08a957e9b
+  habr_id: 43
+  id: 34782ea8-3cf8-4b68-b96c-ba8c4150477a
+  name: Аналитик по данным
+  name_en: Data Analyst
+- group_id: 2c7574f8-c848-4e78-81b1-1cc08a957e9b
+  habr_id: 76
+  id: fe9d6c0e-39d9-4480-9d2e-1aecf0756c07
+  name: Инженер по данным
+  name_en: Data Engineer
+- group_id: 2c7574f8-c848-4e78-81b1-1cc08a957e9b
+  habr_id: 96
+  id: 91ef9654-d3a2-4faf-8dfd-ff9ec59a12ad
+  name: Программный аналитик
+  name_en: Software Analyst
+- group_id: 2c7574f8-c848-4e78-81b1-1cc08a957e9b
+  habr_id: 97
+  id: fcedf3df-6497-4ce1-84e7-cc6b2b9321c6
+  name: Продуктовый аналитик
+  name_en: Product Analyst
+- group_id: 2c7574f8-c848-4e78-81b1-1cc08a957e9b
+  habr_id: 95
+  id: 88b25ca4-089e-48d4-bbc7-4d18dcc33393
+  name: BI-разработчик
+  name_en: BI Developer
+- group_id: 2c7574f8-c848-4e78-81b1-1cc08a957e9b
+  habr_id: 100
+  id: 2ad506a4-fa55-4a76-ab1c-a8899339752f
+  name: Веб-аналитик
+  name_en: Web Analyst
+- group_id: 0a9ed955-566f-47fe-8e06-151546289654
+  habr_id: 23
+  id: d677bf19-c0c4-47af-93a8-550b42caabf6
+  name: UI/UX дизайнер
+  name_en: UI/UX Designer
+- group_id: 0a9ed955-566f-47fe-8e06-151546289654
+  habr_id: 94
+  id: e59ab771-83f0-4a85-adb7-299c338d4213
+  name: Продуктовый дизайнер
+  name_en: Product Designer
+- group_id: 0a9ed955-566f-47fe-8e06-151546289654
+  habr_id: 24
+  id: 31c0da85-42b3-4f0d-9a3b-fe3c96ed241a
+  name: Веб дизайнер
+  name_en: Web Designer
+- group_id: 0a9ed955-566f-47fe-8e06-151546289654
+  habr_id: 30
+  id: baa5b1d9-fe34-4ff6-aa29-679e03d3e603
+  name: Графический дизайнер
+  name_en: Graphic Designer
+- group_id: 0a9ed955-566f-47fe-8e06-151546289654
+  habr_id: 25
+  id: b03293c0-74fa-42ed-96ec-28739f942379
+  name: Дизайнер приложений
+  name_en: Application Designer
+- group_id: 0a9ed955-566f-47fe-8e06-151546289654
+  habr_id: 27
+  id: c2f817ae-9483-4054-ad38-7ef7626ecdff
+  name: Дизайнер иллюстратор
+  name_en: Designer Illustrator
+- group_id: 0a9ed955-566f-47fe-8e06-151546289654
+  habr_id: 90
+  id: 1563a312-9415-41d2-b0b0-ffbd56c777da
+  name: Нарративный дизайнер
+  name_en: Narrative Designer
+- group_id: 0a9ed955-566f-47fe-8e06-151546289654
+  habr_id: 26
+  id: 136be603-ef85-4191-973b-d88ece1aa64c
+  name: Дизайнер игр
+  name_en: Game Designer
+- group_id: 0a9ed955-566f-47fe-8e06-151546289654
+  habr_id: 91
+  id: e06ac9e4-8fde-400e-809e-8c4f18f4281c
+  name: 3d-аниматор
+  name_en: 3d Animator
+- group_id: 0a9ed955-566f-47fe-8e06-151546289654
+  habr_id: 92
+  id: 098054ae-032e-43fd-95be-2a0e93b4eda9
+  name: Flash-аниматор
+  name_en: Flash Animator
+- group_id: 0a9ed955-566f-47fe-8e06-151546289654
+  habr_id: 28
+  id: 870ad2a3-c34f-47f4-897f-e3e38a6cfe45
+  name: Моушен дизайнер
+  name_en: Motion Designer
+- group_id: 0a9ed955-566f-47fe-8e06-151546289654
+  habr_id: 29
+  id: f9cbf474-97c4-4728-bcbb-032aa8d785eb
+  name: 3d моделлер
+  name_en: 3d Modeler
+- group_id: 0a9ed955-566f-47fe-8e06-151546289654
+  habr_id: 93
+  id: b88a5564-3fb0-4908-b434-6d8ca408ef56
+  name: Художник компьютерной графики
+  name_en: Computer Graphics Artist
+- group_id: 0a9ed955-566f-47fe-8e06-151546289654
+  habr_id: 122
+  id: 84b6b148-8891-42ad-a17e-91f17505f45c
+  name: VUI-дизайнер
+  name_en: VUI-designer
+- group_id: 0a9ed955-566f-47fe-8e06-151546289654
+  habr_id: 31
+  id: c0d72864-3571-46fc-974e-7300dc168156
+  name: Арт директор
+  name_en: Art Director
+- group_id: 2cd07217-7418-440c-b074-84d8030aae99
+  habr_id: 32
+  id: d59e79fb-2fc8-4ddc-b215-fbb383aaa091
+  name: Менеджер проекта
+  name_en: Project Manager
+- group_id: 2cd07217-7418-440c-b074-84d8030aae99
+  habr_id: 33
+  id: ea7933d9-8509-4df7-8a45-83ff71aa6388
+  name: Директор проекта
+  name_en: Project Director
+- group_id: 2cd07217-7418-440c-b074-84d8030aae99
+  habr_id: 34
+  id: a58b895e-8578-41fb-b1cd-a1401c408b15
+  name: Менеджер продукта
+  name_en: Product Manager
+- group_id: 2cd07217-7418-440c-b074-84d8030aae99
+  habr_id: 35
+  id: 7e48941b-ca82-4149-b045-063560de3be8
+  name: Директор по продукту
+  name_en: Chief Product Officer (CPO)
+- group_id: 2cd07217-7418-440c-b074-84d8030aae99
+  habr_id: 119
+  id: f3742dc6-fddd-4ed4-a2b4-5a861616e52e
+  name: Scrum-мастер
+  name_en: Scrum Master
+- group_id: 2cd07217-7418-440c-b074-84d8030aae99
+  habr_id: 36
+  id: 8d42370b-5ea2-4611-8962-875a91f28289
+  name: Менеджер сообщества
+  name_en: Community manager
+- group_id: 2cd07217-7418-440c-b074-84d8030aae99
+  habr_id: 37
+  id: c69ee845-53e8-40cd-8b93-cd19fd17bea1
+  name: Программный менеджер
+  name_en: Program Manager
+- group_id: 2cd07217-7418-440c-b074-84d8030aae99
+  habr_id: 38
+  id: 08c33461-6322-49b0-b312-d5fe88521afa
+  name: Исполнительный директор
+  name_en: Chief Operating Officer (COO)
+- group_id: 2cd07217-7418-440c-b074-84d8030aae99
+  habr_id: 70
+  id: bce22231-0cc0-4d44-81bc-fc7de6081fda
+  name: Директор по информационным технологиям
+  name_en: Chief information officer (CIO)
+- group_id: 2cd07217-7418-440c-b074-84d8030aae99
+  habr_id: 71
+  id: 40bc79f7-8f6e-4b18-8ef3-fae1838cc474
+  name: Финансовый директор
+  name_en: Chief Financial Officer (CFO)
+- group_id: 2cd07217-7418-440c-b074-84d8030aae99
+  habr_id: 39
+  id: a4067426-4fc0-418e-8ef5-0391a87f219a
+  name: Генеральный директор
+  name_en: Chief Executive Officer (CEO)
+- group_id: 501c8ea5-dbf7-4768-98c3-cf982b39dc5f
+  habr_id: 78
+  id: 42df84ee-8d0e-4480-8c60-669b3a9892b8
+  name: Пентестер
+  name_en: Pentester
+- group_id: 501c8ea5-dbf7-4768-98c3-cf982b39dc5f
+  habr_id: 21
+  id: f29c8bbe-d846-4379-93e6-06c6097d40b7
+  name: Администратор защиты
+  name_en: Security Administrator
+- group_id: 501c8ea5-dbf7-4768-98c3-cf982b39dc5f
+  habr_id: 79
+  id: 059fef9f-978d-4bae-af71-92aa9677863e
+  name: Специалист по реверс-инжинирингу
+  name_en: Reverse Engineer
+- group_id: 501c8ea5-dbf7-4768-98c3-cf982b39dc5f
+  habr_id: 80
+  id: ff9bf171-3719-400f-9adb-184492facfdd
+  name: Инженер по безопасности
+  name_en: Security Engineer
+- group_id: 501c8ea5-dbf7-4768-98c3-cf982b39dc5f
+  habr_id: 81
+  id: e0053179-18bb-4e7c-8459-3657e9903da4
+  name: Антифрод аналитик
+  name_en: Antifraud Analyst
+- group_id: 65e17124-e6fd-42ca-ae42-550cd215f5e9
+  habr_id: 44
+  id: 2c54388c-7b24-430b-be85-51f1f7c6d41b
+  name: Ученый по данным
+  name_en: Data Scientist
+- group_id: 65e17124-e6fd-42ca-ae42-550cd215f5e9
+  habr_id: 125
+  id: a9ff629e-6498-4305-b2ab-24b3907c6ebf
+  name: ML разработчик
+  name_en: ML Engineer
+- group_id: 7e0844ba-bd0c-4c38-b2a3-371c704d319d
+  habr_id: 49
+  id: 3e7ebaf4-fe5c-4fe1-ae87-c7e24832e9b6
+  name: Инженер технической поддержки
+  name_en: Technical Support Engineer
+- group_id: 7e0844ba-bd0c-4c38-b2a3-371c704d319d
+  habr_id: 45
+  id: bd0164a8-ab5a-4737-b109-c9c15907e27c
+  name: Менеджер технической поддержки
+  name_en: Technical Support Manager
+- group_id: 7e0844ba-bd0c-4c38-b2a3-371c704d319d
+  habr_id: 46
+  id: 8c38dad6-7e8d-488a-94c8-6e40e95a6187
+  name: Директор технической поддержки
+  name_en: Technical Support Director
+- group_id: 7e0844ba-bd0c-4c38-b2a3-371c704d319d
+  habr_id: 50
+  id: ce6c9594-a531-4a21-9395-24e26caea01d
+  name: Аналитик технической поддержки
+  name_en: Technical Support Analyst
+- group_id: 7e0844ba-bd0c-4c38-b2a3-371c704d319d
+  habr_id: 47
+  id: 48a30e67-8301-4674-beb0-15d0dd669389
+  name: Менеджер по обслуживанию клиентов
+  name_en: Customer Service Manager
+- group_id: 7e0844ba-bd0c-4c38-b2a3-371c704d319d
+  habr_id: 48
+  id: bd1a54e4-fa27-4d2a-8767-92d2ca90c467
+  name: Директор по обслуживанию клиентов
+  name_en: Customer Service Director
+- group_id: 7e0844ba-bd0c-4c38-b2a3-371c704d319d
+  habr_id: 101
+  id: af2300f0-af80-4630-8d03-fc8531fa0634
+  name: Модератор
+  name_en: Moderator
+- group_id: 4c764e57-feb2-4a18-a207-97346141fd99
+  habr_id: 51
+  id: fe30d678-1b69-478a-be9e-9a98c7f6bc4c
+  name: Менеджер по маркетингу
+  name_en: Marketing Manager
+- group_id: 4c764e57-feb2-4a18-a207-97346141fd99
+  habr_id: 52
+  id: a20a1122-d111-4105-8e78-07b9c5795c6e
+  name: Директор по маркетингу
+  name_en: Marketing Director
+- group_id: 4c764e57-feb2-4a18-a207-97346141fd99
+  habr_id: 53
+  id: 9918efe5-cbb1-456f-9d27-48d8bf1da660
+  name: Маркетинговый аналитик
+  name_en: Marketing Analyst
+- group_id: 4c764e57-feb2-4a18-a207-97346141fd99
+  habr_id: 102
+  id: 9fc25124-5cb6-47ec-bf66-2aacbae095e5
+  name: SEO-специалист
+  name_en: SEO Specialist
+- group_id: 4c764e57-feb2-4a18-a207-97346141fd99
+  habr_id: 103
+  id: 5c70eaa2-8001-46f6-8fcc-86abccd0a70e
+  name: SMM-специалист
+  name_en: SMM Specialist
+- group_id: 4c764e57-feb2-4a18-a207-97346141fd99
+  habr_id: 104
+  id: afb677f2-c2f4-4138-a477-e87a53f689bd
+  name: Таргетолог
+  name_en: Targetologist
+- group_id: 4c764e57-feb2-4a18-a207-97346141fd99
+  habr_id: 120
+  id: 34daf0aa-2f51-44e1-8f1d-157bfb2cace2
+  name: Деврел
+  name_en: DevRel
+- group_id: 4c764e57-feb2-4a18-a207-97346141fd99
+  habr_id: 121
+  id: 5c240ba6-02bf-4dbb-a449-7f524ab83a55
+  name: PR-менеджер
+  name_en: PR-manager
+- group_id: 4c764e57-feb2-4a18-a207-97346141fd99
+  habr_id: 131
+  id: 13b041dc-a964-460c-a244-45e0ab91a124
+  name: Директолог
+  name_en: Directologist
+- group_id: 4c764e57-feb2-4a18-a207-97346141fd99
+  habr_id: 132
+  id: d864ad6e-8d0b-4798-ad26-4d3152b5daae
+  name: Контекстолог
+  name_en: PPC specialist
+- group_id: 36ead433-67a2-4cd4-8590-4209e9998a84
+  habr_id: 22
+  id: 2ff2a22b-482c-41f3-8b8b-133e951fb0b7
+  name: DevOps-инженер
+  name_en: DevOps
+- group_id: 36ead433-67a2-4cd4-8590-4209e9998a84
+  habr_id: 17
+  id: 148ef389-f051-49a6-945a-41490862795d
+  name: Системный администратор
+  name_en: System Administration
+- group_id: 36ead433-67a2-4cd4-8590-4209e9998a84
+  habr_id: 18
+  id: b6267a14-6726-433f-bf45-af30559121aa
+  name: Администратор серверов
+  name_en: Server Administrator
+- group_id: 36ead433-67a2-4cd4-8590-4209e9998a84
+  habr_id: 19
+  id: eb57c151-19d9-4f10-8406-f1212389dca2
+  name: Администратор баз данных
+  name_en: Database Administrator
+- group_id: 36ead433-67a2-4cd4-8590-4209e9998a84
+  habr_id: 20
+  id: 450934d6-5007-43c8-ad19-351cd7132665
+  name: Сетевой инженер
+  name_en: Network Engineer
+- group_id: 36ead433-67a2-4cd4-8590-4209e9998a84
+  habr_id: 89
+  id: 5c287e75-7b49-4801-96ec-a3509deebebd
+  name: Администратор сайта
+  name_en: Site Administrator
+- group_id: 36ead433-67a2-4cd4-8590-4209e9998a84
+  habr_id: 130
+  id: 0b9fe427-8ad7-4da2-aa6f-57233ad51d59
+  name: Инженер по доступности сервисов
+  name_en: Site Reliability Engineer (SRE)
+- group_id: 36ead433-67a2-4cd4-8590-4209e9998a84
+  habr_id: 129
+  id: f16bcd56-3da3-4efd-835f-282473051e8b
+  name: MLOps-инженер
+  name_en: MLOps
+- group_id: 65edc675-5662-4f76-8706-03de7a316f1d
+  habr_id: 74
+  id: eb9c66b7-e63d-43e2-9de8-a12d1bdf79cc
+  name: Технический писатель
+  name_en: Technical Writer
+- group_id: 65edc675-5662-4f76-8706-03de7a316f1d
+  habr_id: 59
+  id: d53655ee-bfe5-4fdf-8100-3f248c21200b
+  name: Создатель контента
+  name_en: Content Writer
+- group_id: 65edc675-5662-4f76-8706-03de7a316f1d
+  habr_id: 60
+  id: 1eacb565-9ac3-45b2-85b2-995834b1478d
+  name: Менеджер по контенту
+  name_en: Content Manager
+- group_id: 65edc675-5662-4f76-8706-03de7a316f1d
+  habr_id: 61
+  id: 3cd6397c-bcc7-4eb3-bbaa-c9acfbaa9c78
+  name: Директор по контенту
+  name_en: Content Director
+- group_id: 65edc675-5662-4f76-8706-03de7a316f1d
+  habr_id: 105
+  id: 1c1c2041-a5d7-4399-ac8e-7b693bb04180
+  name: Копирайтер
+  name_en: Copywriter
+- group_id: 76715a75-bafd-4cae-b0e9-40cc3354c013
+  habr_id: 54
+  id: 84a924ad-dd09-46c6-bf8d-466a4ffa768b
+  name: Менеджер по работе с клиентами
+  name_en: Account Manager
+- group_id: 76715a75-bafd-4cae-b0e9-40cc3354c013
+  habr_id: 55
+  id: 1af325a2-b10d-4a2c-be9e-3e1676131a4a
+  name: Директор по работе с клиентами
+  name_en: Account Director
+- group_id: 76715a75-bafd-4cae-b0e9-40cc3354c013
+  habr_id: 56
+  id: daf5f439-9ee3-40ed-82a9-d0a7c368f3af
+  name: Менеджер по продажам
+  name_en: Sales manager
+- group_id: 76715a75-bafd-4cae-b0e9-40cc3354c013
+  habr_id: 57
+  id: e8fa2cd1-ca6a-4f09-b08c-fd9785ec4564
+  name: Директор по продажам
+  name_en: Sales Director
+- group_id: 76715a75-bafd-4cae-b0e9-40cc3354c013
+  habr_id: 58
+  id: 458cbffd-d2d4-4b2a-a56f-86fde5c4e84c
+  name: Аналитик продаж
+  name_en: Sales Analyst
+- group_id: e7d72425-5e20-47fe-a00f-864394bfd9b3
+  habr_id: 62
+  id: 8d40f678-a538-4bef-877b-e7a092e7ece0
+  name: Менеджер по персоналу
+  name_en: HR Manager
+- group_id: e7d72425-5e20-47fe-a00f-864394bfd9b3
+  habr_id: 64
+  id: f24d0aa2-45e9-4c8b-a334-6b14eef02f88
+  name: Менеджер по найму
+  name_en: Recruitment Manager
+- group_id: e7d72425-5e20-47fe-a00f-864394bfd9b3
+  habr_id: 63
+  id: e5c82b3b-73df-4566-ad1d-c23d0dc7d853
+  name: Директор по персоналу
+  name_en: HR Director
+- group_id: e7d72425-5e20-47fe-a00f-864394bfd9b3
+  habr_id: 65
+  id: 19821d3d-c7b0-4663-ac66-ecaaf5718bfb
+  name: Директор по найму
+  name_en: Recruitment Director
+- group_id: e7d72425-5e20-47fe-a00f-864394bfd9b3
+  habr_id: 66
+  id: 86298aa5-91a8-4d9d-aa53-c7ab5521569a
+  name: Аналитик по персоналу
+  name_en: HR Analyst
+- group_id: e7d72425-5e20-47fe-a00f-864394bfd9b3
+  habr_id: 123
+  id: b6f0bf83-2127-40df-810d-c7a95fbe5eb1
+  name: Менеджер по обучению и развитию персонала
+  name_en: Personnel Training and Development Manager
+- group_id: e7d72425-5e20-47fe-a00f-864394bfd9b3
+  habr_id: 124
+  id: 6497e28f-5beb-4b66-8a91-db8527721f03
+  name: Менеджер по развитию HR-бренда
+  name_en: HR Brand Development Manager
+- group_id: 9a1bb4a9-9f48-48a7-8263-9d7c0efab47c
+  habr_id: 67
+  id: e57d7291-5fab-4b27-b155-f0f9a1cf231f
+  name: Офис менеджер
+  name_en: Office Manager
+- group_id: 9a1bb4a9-9f48-48a7-8263-9d7c0efab47c
+  habr_id: 68
+  id: e84080a7-4b00-4c06-8bd2-5414dd8d7ba5
+  name: Бухгалтер
+  name_en: Accountant
+- group_id: 9a1bb4a9-9f48-48a7-8263-9d7c0efab47c
+  habr_id: 69
+  id: b2b78e54-3c43-40c7-9634-19f3edded667
+  name: Юрист
+  name_en: Lawyer
+- group_id: befb4c10-eff9-423d-8f4f-8deb4adc02d8
+  habr_id: 127
+  id: d7ec40eb-dab8-47c2-8e93-26690e6634c5
+  name: Зерокодер
+  name_en: Zerocoder
+---
+model: skills
+data:
+- habr_id: 706
+  id: df72087b-7d40-4d85-9ac3-345dbbad0754
+  name: C#
+- habr_id: 714
+  id: 8306c2a0-0143-4d0f-8f70-e6756236a879
+  name: Visual C#
+- habr_id: 559
+  id: e8230d63-bae7-4150-8fc1-ccd286ea2bc0
+  name: F#
+- habr_id: 947
+  id: 1a61ae08-1426-4a22-aa90-d299c7fdeabb
+  name: Git
+- habr_id: 264
+  id: 0a60259a-8092-47e5-9e5b-7bc53bb8ac96
+  name: JavaScript
+- habr_id: 322
+  id: 824a84d1-4f1e-4a24-aa11-e113511c4db8
+  name: SQL
+- habr_id: 1017
+  id: 0fc457a2-5aba-4171-b487-7798245b3bfc
+  name: HTML
+- habr_id: 446
+  id: 1b21c2bd-b5e2-4641-9236-2b1d0d179dc6
+  name: Python
+- habr_id: 32
+  id: 35e73e83-e9cb-4c3b-9a04-6e12f0f806d1
+  name: CSS
+- habr_id: 821
+  id: 56398387-fcee-4119-9037-bca2bb5d277f
+  name: Linux
+- habr_id: 537
+  id: 10448d40-aa1c-4109-bfef-64ff35a5877b
+  name: PostgreSQL
+- habr_id: 31
+  id: cfae329c-3e47-4cb6-8e96-95a39aedbee7
+  name: OOP
+- habr_id: 259
+  id: 582e0aa9-9432-47c3-bce6-434697931e5e
+  name: Project management
+- habr_id: 713
+  id: 9c9854c6-e42f-42e6-bdec-67db561ebc7a
+  name: MySQL
+- habr_id: 1070
+  id: f4cd250d-b772-42b0-8378-ec363869939a
+  name: React
+- habr_id: 1067
+  id: 97bfbf13-6176-4245-9f67-ea98b6cbaa96
+  name: Docker
+- habr_id: 1012
+  id: 1b0a4b05-2d48-4224-81f3-e962adafe37d
+  name: Java
+- habr_id: 1005
+  id: 438c5d01-6b39-4b0a-aa69-39eda91f689a
+  name: PHP
+- habr_id: 989
+  id: b9ac2ba8-ae84-42b4-a833-561e7cc409c1
+  name: English
+- habr_id: 705
+  id: c2c8684e-9e6d-47f3-b6fa-323f7fd4bece
+  name: People management
+- habr_id: 245
+  id: 7f6d10cd-270b-41bd-a4b4-83c90210cccf
+  name: TypeScript
+- habr_id: 895
+  id: 0a03b366-3223-4531-9ce6-9a2179832930
+  name: Adaptive layout
+- habr_id: 745
+  id: e3cd5a53-8e60-42ab-b9c0-26462c6a015e
+  name: Adobe Photoshop
+- habr_id: 12
+  id: 01dda38c-4fc6-41fb-81df-abca7e164f95
+  name: Node.js
+- habr_id: 352
+  id: 256c8951-6402-41dc-86a0-584ce92b3790
+  name: Specialists recruitment
+- habr_id: 318
+  id: fa361e62-fc5e-4ec3-90ee-ac7f214561f8
+  name: Web development
+- habr_id: 131
+  id: c1a91104-dc08-4822-a7a9-01fe8e50219e
+  name: Negotiation
+- habr_id: 444
+  id: 34a54384-6dbc-44aa-abb8-821530881ba4
+  name: Work with audio and video
+- habr_id: 1151
+  id: c5aa71a5-a9e7-45ae-9f0d-d34ecdf6a6c0
+  name: Polymer (Library)
+- habr_id: 1096
+  id: 96eec5a0-207f-4257-9cf9-02fff3dd0c22
+  name: Game Maker Language (GML)
+- habr_id: 1617
+  id: d534bc32-d289-42f3-9e50-3141bc7e5e63
+  name: Processing (programming language)
+- habr_id: 1177
+  id: c7af0e7f-8c12-4d69-a6b1-38c2267d6250
+  name: QoS / ETS (Enhanced Transmission SELECTION) RFC
+- habr_id: 659
+  id: 121215dd-650a-4306-b019-ed3c74e97439
+  name: '*NIX administration'
+- habr_id: 172
+  id: a72cd8d8-6201-4a39-b644-14f3955d36dd
+  name: C++
+- habr_id: 970
+  id: fcb003e8-5f9f-4203-9039-6c8a9567c212
+  name: C++ STL
+- habr_id: 952
+  id: 4813762d-4f6e-4bef-9943-cf502748bdab
+  name: C++ Boost
+- habr_id: 737
+  id: e645c6b9-354f-4efb-a8b1-3999f0a1dd83
+  name: C ++ Builder
+- habr_id: 962
+  id: 21888da2-da75-4620-a6c5-eaf87f747313
+  name: NotePad ++
+- habr_id: 953
+  id: a8bc2b98-a6a7-4926-a16e-8136a1b47d78
+  name: GTK+
+- habr_id: 1518
+  id: 39a877aa-fbf4-4138-a777-e0d5dd5ae037
+  name: Ultimate++
+- habr_id: 1159
+  id: 78bc27b4-6ab6-49e8-9fbb-15e152edef1d
+  name: UI/UX design
+- habr_id: 469
+  id: 83fc7aa3-e39a-4a3d-8da3-168483bca980
+  name: Web design
+- habr_id: 607
+  id: fc5443ab-d606-4b20-92d3-4f5852514cd7
+  name: Software testing
+- habr_id: 366
+  id: 67822544-4f48-4bf7-9256-e1c7d60c8835
+  name: Development of test cases
+- habr_id: 77
+  id: a4c0c8b9-2232-4371-99ca-ea3581722f67
+  name: Scrum
+- habr_id: 874
+  id: a70035f1-2550-467c-a248-f2600f957523
+  name: Development of tech specifications
+- habr_id: 81
+  id: e3aecc0e-4a60-4e2c-b386-c87460fe5fc3
+  name: Software development
+- habr_id: 427
+  id: 358cb60f-0e34-40c2-9f53-82c379626e66
+  name: Bug Tracking
+- habr_id: 618
+  id: 2fbfd59c-359a-4244-bcf1-49bb51ecaaa9
+  name: Optimization of business processes
+- habr_id: 247
+  id: 4084ba23-ab20-4eb0-990c-d640c2351f2e
+  name: Prototyping
+- habr_id: 1051
+  id: 1cffd5db-81d5-409f-b2a2-61f279c1900e
+  name: Site testing
+- habr_id: 950
+  id: a649e12e-2e93-4ec1-adf5-0f30520cb535
+  name: Mobile application design
+- habr_id: 1083
+  id: 30edbb47-77ad-45ea-b40b-61ba9e0a9c5e
+  name: Internet Marketing
+- habr_id: 155
+  id: a043c439-d728-4e23-a766-e0c129693091
+  name: Angular
+- habr_id: 109
+  id: 18ebfd42-363f-4791-996d-42a8f7bc81b2
+  name: Laravel
+- habr_id: 1044
+  id: 5ee50bcb-ec04-4cfd-bad1-07d70a707950
+  name: Landing design
+- habr_id: 723
+  id: 6294c0db-0c51-4e32-93dc-c54c706753e4
+  name: Adaptive design
+- habr_id: 1118
+  id: 2ea8ce90-5976-4844-ae62-d525ca385c46
+  name: Vue.js
+- habr_id: 434
+  id: 64d46e8c-e05e-445a-b2ca-d0fd2ae392b7
+  name: .NET
+- habr_id: 1313
+  id: 50af0187-c667-4965-9b6c-75379317d8af
+  name: NextJS
+- habr_id: 1221
+  id: 3ad29d7a-5c69-45c0-ab85-03ac20dcc478
+  name: .NET Core
+- habr_id: 669
+  id: 103c7bf3-495e-46f2-8532-d3aeadfa270a
+  name: 1C Development
+- habr_id: 496
+  id: 08200b33-6223-4bc3-a266-f07e1af9de70
+  name: ASP.Net
+- habr_id: 215
+  id: 874b411d-e399-4c24-ac7b-c900f24ab508
+  name: ASP.NET MVC
+- habr_id: 1127
+  id: 610ad2cb-19c3-4d26-9610-552217e40b9b
+  name: Yandex Metrica
+- habr_id: 1289
+  id: 2cd56c37-3a95-4590-ae16-70f388f61ed7
+  name: Nuxt.js
+- habr_id: 833
+  id: b4c336c5-0dc8-45bc-bfb5-090d550f03c2
+  name: ASP.NET Web API
+- habr_id: 677
+  id: a06e1d51-e147-44b5-9805-c4e7b5cd4266
+  name: Restful WebServices
+- habr_id: 42
+  id: 5566c945-2143-490b-99f9-1f498595fa53
+  name: Backbone.js
+- habr_id: 1058
+  id: 4884c717-b817-48ca-86cc-3553fe8393ba
+  name: Ext.js
+- habr_id: 92
+  id: 83882e65-2739-4853-8d42-54e08d96b7e8
+  name: ActionScript
+- habr_id: 564
+  id: bf2bc346-0f1a-4730-8f65-fb222dd7ff79
+  name: Socket.js
+- habr_id: 430
+  id: 4182b0f6-c29f-4bf6-b865-3486ee29b732
+  name: ADO
+- habr_id: 1247
+  id: 8e651684-3be2-4048-88f7-fa116a81fbc2
+  name: Svelte.js
+- habr_id: 1258
+  id: 8c2bac1e-0109-411e-8f9f-e492e094156c
+  name: Nightwatch.js
+- habr_id: 1433
+  id: c5256e44-165f-4663-b0a1-39cec8c10246
+  name: Angular.js
+- habr_id: 271
+  id: 2e2d5f3b-9975-49c1-8368-fd0f648b275d
+  name: Knockout.js
+- habr_id: 1445
+  id: 23190980-c4bc-44ab-a2c8-4b2f73c87c0f
+  name: Yandex.Cloud
+- habr_id: 567
+  id: 9eb62411-106d-437e-9386-b14487634f3c
+  name: Three.js
+- habr_id: 599
+  id: beb5f3e8-7620-44ff-960a-70d02c5550b2
+  name: D3.js
+- habr_id: 329
+  id: 24cc6632-6666-4fdb-81d1-f7f510dcaffa
+  name: Ember.js
+- habr_id: 1173
+  id: 4b17a122-5222-4906-b115-abec7faffbc2
+  name: CI/CD
+- habr_id: 1020
+  id: 61a542fa-0d20-45c5-88ea-4207ec0af619
+  name: Oracle PL/SQL
+- habr_id: 368
+  id: 53983b1e-e309-4170-9eaa-3271c9baea75
+  name: SAP ERP
+- habr_id: 545
+  id: 697ab453-92dd-4667-b39f-f5f145b8574d
+  name: TDD/BDD
+- habr_id: 1411
+  id: fcaf802a-a3ba-4529-a7ec-5b31348e1c96
+  name: SDL / SDLC
+- habr_id: 1131
+  id: d82aa811-f50e-494d-bada-5cc4ac7ee897
+  name: SAP SD / MM
+- habr_id: 1357
+  id: 8e2cba29-485e-44a8-a705-aab36c2eef65
+  name: SAP S / 4 HANA
+- habr_id: 374
+  id: 675d4792-4e23-48c9-ad8a-fb4f3fb2cfee
+  name: Erlang/OTP
+- habr_id: 327
+  id: 9958f7ca-abb2-4f5a-adfe-89022fbb373f
+  name: Pgsql
+- habr_id: 1416
+  id: bae44ab7-8b7c-4300-a679-4eefa6b86d5c
+  name: SAST / DAST
+- habr_id: 1683
+  id: f7c08007-650f-44a4-a41c-e7e875a668a6
+  name: A/B testing
+- habr_id: 1185
+  id: e13c1551-639b-4e95-a893-2d8c30ed1cd4
+  name: z/OS
+- habr_id: 1174
+  id: a6a496d0-ccf3-4516-8572-895be241c14e
+  name: SW/HW
+- habr_id: 1179
+  id: ef50c322-933a-4378-b382-2c60fdcccb92
+  name: LLDP / LACP / DCBX PROTOCOLS
+- habr_id: 906
+  id: 0cd06297-5dcf-407a-ad36-6f14ba5d0c56
+  name: Windows administration
+- habr_id: 443
+  id: 9685da77-ef90-46a1-befa-79696a07e0eb
+  name: SharePoint
+- habr_id: 1176
+  id: be2c4d90-016e-4d2c-b290-b77674540081
+  name: Ethernet 802.1q
+- habr_id: 679
+  id: 27d1db1f-e40e-4237-96d0-472d7dd597a2
+  name: MSP430
+- habr_id: 477
+  id: c8eebe31-ef38-4d6d-a572-c1d0b735df21
+  name: 960gs
+- habr_id: 395
+  id: 249768d4-4589-4e9f-9c6e-0171127ae4d7
+  name: CMS «1С-Bitrix»
+- habr_id: 682
+  id: e1ddcc80-2dd5-4e84-b173-6bd2d9da6f27
+  name: 1C administration
+- habr_id: 287
+  id: 95dc4bac-ca3e-4aa3-bd9d-d71c9fdc8419
+  name: 1C Project manager
+- habr_id: 1632
+  id: 446bdc48-f743-439f-ac96-dd2f9f68bf96
+  name: '1S: ERP'
+- habr_id: 1571
+  id: f54411b9-95eb-49bd-abae-f1c85a93db59
+  name: Accessibility
+- habr_id: 191
+  id: 19fa32c6-bc0a-44b4-a517-d00797b9ebd0
+  name: Symfony
+- habr_id: 263
+  id: 940ed0bd-70a6-40fb-a128-28bca2bb951d
+  name: Java EE
+- habr_id: 1233
+  id: 93ea5be5-0197-4470-9481-774d31dee8a9
+  name: Dagger 2
+- habr_id: 1232
+  id: 8610e4de-9035-4025-8316-6e261a09a458
+  name: RxJava 2
+- habr_id: 1326
+  id: 3a8c4f13-ad4c-4c7e-b4e9-1ad3c44ca657
+  name: B2B
+- habr_id: 1284
+  id: ffa7a669-9739-412a-8871-07f7787cbc91
+  name: Bitrix24
+- habr_id: 847
+  id: a3f18741-6649-44f9-bcca-f69ebdeac158
+  name: STM32
+- habr_id: 291
+  id: 4c6623d4-0c1e-48db-8f75-825955c23066
+  name: Zend framework
+- habr_id: 493
+  id: 339c8960-a2ce-4a36-ba49-fc3b286acd2d
+  name: 2D graphics
+- habr_id: 548
+  id: d9f4764d-59a8-4938-8de6-11ba95a6bd4d
+  name: 2D animation
+- habr_id: 1327
+  id: 83239e8a-f2a1-4c72-ac26-3e7dc7600810
+  name: B2C
+- habr_id: 1014
+  id: 461e7e9b-4c90-484a-badf-edd1815f6cc8
+  name: Win32 API
+- habr_id: 135
+  id: 256a79a4-ff96-4959-9cab-2b97b433a5ca
+  name: Doctrine2
+- habr_id: 586
+  id: 047de28b-f6ec-45b9-b038-d500b84c47e7
+  name: Apache2
+- habr_id: 1316
+  id: 10a26968-66c6-43a3-9f1b-197f7308a645
+  name: Graylog
+- habr_id: 704
+  id: b2da12b3-5d47-4c3d-af2c-a9c958be001a
+  name: IBM Db2
+- habr_id: 110
+  id: ca615b61-b306-45d3-a240-a168931c973b
+  name: Cocos2d
+- habr_id: 111
+  id: 0c30e0a9-08a2-4b3e-b239-45260bed4a45
+  name: Cocos2D-X
+- habr_id: 856
+  id: 596c1075-0d5e-436c-845c-8b2e12ee3a6f
+  name: J2ME
+- habr_id: 765
+  id: 8d9fa95f-efe5-4f72-9f67-050ff290bcd3
+  name: Box2d
+- habr_id: 904
+  id: 0a37958a-9fea-4112-8e79-3b4da6279e91
+  name: Unity3d
+- habr_id: 561
+  id: d36b0416-a645-4326-8efe-186823ff1a0f
+  name: 3D modeling
+- habr_id: 925
+  id: 33e5e158-436d-4fb8-ad8c-7fa80c790cbe
+  name: 3ds Max
+- habr_id: 615
+  id: e1942d4a-0b2a-4a52-821f-fc4fbd57893e
+  name: 3D animation
+- habr_id: 898
+  id: fbc25595-f792-46b5-8a98-b562123b624d
+  name: Kompas 3D
+- habr_id: 673
+  id: fbc4b30d-e69b-4258-b8ee-bb4e6501d006
+  name: Cortex-M3
+- habr_id: 744
+  id: 3acb1439-78df-42b7-922f-2dbb665676be
+  name: TYPO3
+- habr_id: 1054
+  id: 704b0c56-261c-4e6d-98f8-b37fbb911083
+  name: Parser3
+- habr_id: 980
+  id: 2bb073f5-bf86-4b01-9707-9e2755080c6a
+  name: JBOSS EJB3
+- habr_id: 1423
+  id: 78bff756-3c25-4bb3-abd4-e8271a31dd5d
+  name: w3af
+- habr_id: 314
+  id: ba158958-0415-4088-9167-fe7bbdc2d1cf
+  name: Cinema 4d
+- habr_id: 388
+  id: 72f5b554-b012-4c0b-8724-9bff7d4a691e
+  name: Neo4J
+- habr_id: 649
+  id: 4e27b3c1-b927-44b2-bc21-c0c11ba27ad8
+  name: MQL4
+- habr_id: 1142
+  id: 35a50e96-799e-4399-ab10-e85c839625e6
+  name: Way4 Platform
+- habr_id: 1400
+  id: b4eedfab-998e-4396-b41c-785d74ee61f3
+  name: Openedge ABL
+- habr_id: 1495
+  id: c2c685d5-a656-46f4-99ad-25c05b8d7178
+  name: C4 model
+- habr_id: 1338
+  id: a7ec4826-3557-4276-8e62-5598a595645a
+  name: FHIR
+- habr_id: 1460
+  id: ce02dd68-66c2-478b-9f18-1a929ff8750a
+  name: AXI4-Lite
+- habr_id: 1606
+  id: a604e299-9858-46d0-90e4-dd16238e96f1
+  name: DuckyScript
+- habr_id: 72
+  id: 4d026028-a8a2-4c82-aa51-4c0b5b9ac91f
+  name: Visual Basic
+- habr_id: 452
+  id: 047376c5-c983-4458-8f69-77af279f318f
+  name: Adobe Creative Suite 6
+- habr_id: 741
+  id: d43103af-c4ae-4e0f-bc35-d5ba5a8861b0
+  name: X86 asm
+- habr_id: 505
+  id: d22b7cde-4e8d-4898-940a-aebc671e53bb
+  name: Delphi
+- habr_id: 1047
+  id: 3fa7ded6-e496-42d0-8293-fe7ce6842403
+  name: SIMATIC STEP7
+- habr_id: 1207
+  id: 257ba884-1d35-4caf-a347-b459c5c63b2a
+  name: Kubernetes
+- habr_id: 30
+  id: 4dc13dcc-fd41-48e0-bc63-8ef253ac73f5
+  name: Database
+- habr_id: 261
+  id: 58435a52-39f1-47b7-a183-cdbb728a7ec9
+  name: Manual testing
+- habr_id: 881
+  id: 0de91ed9-6528-4fa9-a643-cd8dc1b7640a
+  name: Functional testing
+- habr_id: 1223
+  id: c4f197b7-a643-4e7c-80ec-046b49ddb6b3
+  name: Figma Design
+- habr_id: 179
+  id: 39db570b-db70-4caf-861b-f7c876f4af4d
+  name: SCSS
+- habr_id: 1045
+  id: 07df734f-3def-4b76-8c0d-831599760ff3
+  name: Jira
+- habr_id: 638
+  id: 7a8cc124-21af-4e25-a36f-c30d15d5a479
+  name: Teamwork
+- habr_id: 1075
+  id: c72986c1-01cb-424a-a522-8b52b1f65e65
+  name: Django
+- habr_id: 475
+  id: 3f592de1-0209-499e-8f5a-be0291703574
+  name: Building a team
+- habr_id: 1094
+  id: 2c91fc5a-c123-4998-9214-0fcd089ecaec
+  name: Webpack
+- habr_id: 195
+  id: dcbabee8-09a4-4506-8eef-6ec1a0006bd1
+  name: BEM
+- habr_id: 27
+  id: 63a6302c-2f4f-4bc9-ac91-2e967061b830
+  name: Adobe Illustrator
+- habr_id: 229
+  id: 70ef85e6-7a56-49eb-b340-f4736e69894b
+  name: MongoDB
+- habr_id: 802
+  id: e6679658-2e27-42d8-835d-95258ad78ffe
+  name: Crossbrowser layout
+- habr_id: 549
+  id: 7551c079-1554-4946-af4c-70b4ff3a3ce1
+  name: Bash
+- habr_id: 719
+  id: 4d3eec0e-bc22-407d-9b42-a032681dca85
+  name: Testing mobile applications
+- habr_id: 645
+  id: 2c1577b8-7946-45eb-890c-324ddf7da021
+  name: High-loaded systems
+- habr_id: 1089
+  id: 7665db40-66ac-416d-b264-ff9bea0c1168
+  name: Recruitment
+- habr_id: 722
+  id: 8a161d4c-f618-46c7-ba9b-4abe2e848b5d
+  name: SASS
+- habr_id: 1106
+  id: f1603537-31d2-44b1-ad6a-c351b5f2e210
+  name: Redux
+- habr_id: 1
+  id: 01a4bab2-d997-410c-b8c4-f3134e597a4f
+  name: Redis
+- habr_id: 641
+  id: c2632c90-6b71-4218-901c-74a386d820d9
+  name: Development management
+- habr_id: 363
+  id: 26b10052-11d8-4b85-ad8b-6c4eb7b553d7
+  name: JQuery
+- habr_id: 173
+  id: 2ff1b476-6b7d-4339-8126-2e727343ae0b
+  name: REST
+- habr_id: 632
+  id: 8002e8ba-3f9e-4d0b-845d-63c5058c2337
+  name: Java Spring Framework
+- habr_id: 134
+  id: 45eb6ca8-f047-4003-a1ac-6faf6e963036
+  name: Designing interfaces
+- habr_id: 1074
+  id: 3f599f04-932b-4180-b1a3-470ff6014529
+  name: Information Technology
+- habr_id: 240
+  id: 5fb247fb-e295-4fb5-b366-828ce3c51ba3
+  name: Organization of business processes
+- habr_id: 426
+  id: 4a137670-3a6b-4cf3-9fea-ae2eaee61e20
+  name: Automation of processes
+- habr_id: 558
+  id: 4396fad5-4f61-4b90-a9ae-e5cdf240abb4
+  name: Microsoft Excel
+- habr_id: 1030
+  id: 575f3462-b037-4e97-836b-9a1f186397cd
+  name: SWIFT
+- habr_id: 575
+  id: 1ae3a10b-729d-49c7-9eed-f541a2ec0a0a
+  name: Analytics of requirements
+- habr_id: 19
+  id: b56df419-5f2f-45b5-b87b-a806173043b5
+  name: Development of mobile applications
+- habr_id: 403
+  id: 566e1ffd-267a-40c9-988d-e03dff6bc1e0
+  name: RESTful API
+- habr_id: 56
+  id: 0f98f4da-2c33-4354-9e3e-835479b32f06
+  name: Microsoft Office
+- habr_id: 647
+  id: 6fdf5ddb-dd6d-4bcc-bb3e-288edda55fb0
+  name: Yii framework
+- habr_id: 815
+  id: e158e344-6df9-430b-b54e-938e50efc674
+  name: Agile
+- habr_id: 773
+  id: fa8d85e2-8256-4c61-9911-db271ac83156
+  name: Talent Management
+- habr_id: 294
+  id: f1717d8e-1751-4eb8-989e-1563b3a7d637
+  name: Graphic design
+- habr_id: 605
+  id: b3ead115-042b-4c36-ba28-fce921df0215
+  name: Technical support
+- habr_id: 175
+  id: 48c96988-82ce-45d5-877a-ecc994e3acf0
+  name: Hibernate
+- habr_id: 241
+  id: e5c811bd-5d1a-4e4b-bb58-c80f11d47962
+  name: Algorithms and data structures
+- habr_id: 137
+  id: 9c892401-6a26-46f1-bbfe-32cdbe528a0b
+  name: Machine learning
+- habr_id: 154
+  id: 48a8ef7e-d9de-45e1-abd3-defb75834e4a
+  name: Sales
+- habr_id: 71
+  id: 64a5c06b-f46e-4615-9836-3b5182ee4683
+  name: Interview
+- habr_id: 956
+  id: ab2a0661-cafd-4e1a-bed6-3ae42fb99a0a
+  name: Project planning
+- habr_id: 63
+  id: de68d397-74c3-4f59-9a6f-f4ec9431070e
+  name: Ajax
+- habr_id: 361
+  id: a7b49a3a-b736-4fd8-9c25-e97926b4e477
+  name: Object-oriented design
+- habr_id: 487
+  id: 5710a1fd-f2af-490d-a13f-e1ff44ecb120
+  name: Junit
+- habr_id: 684
+  id: 0356e0ed-585c-4928-95ab-ceefa980d307
+  name: Budgeting projects
+- habr_id: 591
+  id: 581dd40e-7e33-4e05-a028-8d5f26145820
+  name: Promotion of projects
+- habr_id: 335
+  id: 2347ac34-d2f7-47c8-861f-6c30003057f0
+  name: Jenkins
+- habr_id: 1264
+  id: bdfa2abd-baad-4018-9c16-43ea82710990
+  name: Jest
+- habr_id: 546
+  id: ce77cc49-029f-42fa-92d7-dd6e8e690a5c
+  name: Support projects
+- habr_id: 1248
+  id: 6a7da950-01ae-4948-aa4c-43558d21ac31
+  name: NestJS
+- habr_id: 304
+  id: f940eda2-1c39-4cf9-8375-db176bbc89cf
+  name: Objective-C
+- habr_id: 1210
+  id: 1bc2090c-1ee6-43e1-8144-433ae0746536
+  name: PUG
+- habr_id: 239
+  id: 6cb08997-248d-4bf5-8990-caa4dae6c0a0
+  name: Kotlin
+- habr_id: 717
+  id: 3a4f8f7f-bf50-446b-a5f4-9c9fda2323fc
+  name: Customer support
+- habr_id: 800
+  id: baba92c8-71a3-444d-a9b2-007df101061c
+  name: XML
+- habr_id: 884
+  id: e773a60d-a9ba-4afd-bccc-0bc04aafe059
+  name: Consulting
+- habr_id: 340
+  id: 7f34b76c-81b9-4897-ae7b-2f1b7c4b91df
+  name: Network administration
+- habr_id: 101
+  id: cd7d7b3f-5837-4f54-9c28-c40112f1816d
+  name: Golang
+- habr_id: 1347
+  id: e2fbee49-57f8-414c-b141-6537aaaf0ab2
+  name: Postman
+- habr_id: 184
+  id: b7a970d9-2049-4aaa-9aaa-1362b0dde67e
+  name: RabbitMQ
+- habr_id: 910
+  id: 93891347-a1d3-4ff8-a186-6dc36d122398
+  name: Quality control
+- habr_id: 85
+  id: b7d6e43b-9a8e-48db-a58d-b6f805007509
+  name: Qt
+- habr_id: 1198
+  id: deca81cd-e1ad-4171-bcb3-122acab1fd04
+  name: GraphQL
+- habr_id: 625
+  id: 8dc4fb38-dc2c-458b-b36e-4d125ffc35e5
+  name: Computer equipment setting and repair
+- habr_id: 26
+  id: 656c28fa-e886-48d2-9d22-0f4cf6c3c551
+  name: Microsoft SQL Server
+- habr_id: 8
+  id: b40ed8bf-5868-4d1d-8b6b-d6b59f8234a0
+  name: MSSQL
+- habr_id: 1019
+  id: 087daec2-187a-48a9-8aff-c8c7a8111f14
+  name: SQLite
+- habr_id: 1028
+  id: 95ace715-cf2e-439d-91eb-ad238d71cfb1
+  name: Requirements management
+- habr_id: 1153
+  id: e1dfd850-571a-447f-b164-8ea6ea7dfe35
+  name: T-SQL
+- habr_id: 119
+  id: ce65f93d-2dc8-4c55-90b9-0ee7ff99b6b6
+  name: Installation and maintenance of office equipment
+- habr_id: 225
+  id: 60cea428-a869-438c-bbe3-7f0a209ef35a
+  name: NoSQL
+- habr_id: 1046
+  id: ef47d0bf-e764-47a1-b61f-a82aad54d9f3
+  name: Cisco Systems Equipment Administration
+- habr_id: 55
+  id: 99ffae85-496a-4b18-aed5-d790e790ad8b
+  name: Linq
+- habr_id: 890
+  id: d48cfbf2-1d3a-4ee3-8bac-2910f953eb40
+  name: SQLalchemy
+- habr_id: 67
+  id: b1641ada-b48d-4d3b-8b83-b2edd45c979c
+  name: Lamp
+- habr_id: 371
+  id: faf08c7d-f335-4daa-b874-712981bec2c4
+  name: Oracle SQL
+- habr_id: 683
+  id: 6aa50cdf-474c-4c55-85b4-ce161050fd65
+  name: Quality assurance
+- habr_id: 1048
+  id: fcf8dd39-55da-4b35-b5ea-d440bb854672
+  name: Summary processing
+- habr_id: 972
+  id: dacccf53-dd4c-44ef-940c-43e845e5bc42
+  name: System administration
+- habr_id: 1050
+  id: 220104fc-a824-4597-af6f-51624fc8da55
+  name: Twitter Bootstrap
+- habr_id: 971
+  id: 19bea103-d4ce-49de-8c5e-9d2eb8cd04b0
+  name: WordPress
+- habr_id: 1091
+  id: c7fd247f-7c75-4d69-9a2e-bea517028a63
+  name: Gulp
+- habr_id: 974
+  id: e800d727-1226-46ae-8f99-ea0095b627ce
+  name: Selenium
+- habr_id: 918
+  id: eaa10f9e-3f71-4f08-9bde-51efcb1f8b91
+  name: Copywriting
+- habr_id: 149
+  id: f446a69d-06e2-4720-9827-ce1740748c5d
+  name: Entity Framework
+- habr_id: 718
+  id: 7aa93393-b38a-40fe-884a-42de0170672a
+  name: Drawing from hand
+- habr_id: 390
+  id: 7fa3a1ef-267e-44f4-b767-de2dcb012b18
+  name: Network technologies
+- habr_id: 1022
+  id: d7e54962-ab91-46a1-b332-85cf4855f231
+  name: Microsoft Word
+- habr_id: 656
+  id: 65c70fd4-fb92-43ae-b6cd-ea4dd52c2a1c
+  name: Designing application architecture
+- habr_id: 878
+  id: 32a46a9e-503f-4fc5-afa1-88c42e15d298
+  name: Nginx
+- habr_id: 982
+  id: c1d0cf5d-20fa-42cc-a41e-33b5f3f08a01
+  name: Linux administration
+- habr_id: 313
+  id: bc71cd89-86eb-496e-a342-6d167797d68b
+  name: Express
+- habr_id: 882
+  id: 99a6195f-6c39-469e-bfcd-fd7bf1211cdb
+  name: Executives recruitment
+- habr_id: 96
+  id: c4760bb6-a05c-4a2c-b01c-24f034814c1a
+  name: Xcode
+- habr_id: 260
+  id: 86dc8439-49e2-4950-b72c-ddbe3604c5b0
+  name: Black Box Testing
+- habr_id: 1449
+  id: d16e1559-2372-4a28-8cc9-dcb12d18cfc3
+  name: Charles
+- habr_id: 966
+  id: b4b901d9-5e29-43be-9cc6-6bb73cd28763
+  name: Zabbix
+- habr_id: 983
+  id: 73edb9eb-8aa9-4047-90c0-115077d19bc0
+  name: Contextual advertising
+- habr_id: 1032
+  id: cd802dfe-7064-40f1-b070-7aa7c8556208
+  name: UX testing
+- habr_id: 532
+  id: 887db177-e503-4855-a36e-983c0583326b
+  name: Design testing
+- habr_id: 1183
+  id: 91bd3cd7-3746-493a-b424-7cabf3261933
+  name: MobX
+- habr_id: 541
+  id: 7f2dff6e-bf40-45d9-b4dd-f677ce7ae829
+  name: Yandex Direct
+- habr_id: 1071
+  id: b89e0d76-3d37-490d-8422-741cf2b27e1d
+  name: Presentations
+- habr_id: 404
+  id: fac252de-a7ac-4a88-838a-b335c7460a28
+  name: Business analytics
+- habr_id: 372
+  id: 535c5d59-8d16-4589-b6bf-15f576b57c75
+  name: Problem solving
+- habr_id: 435
+  id: 68d499f8-5cd2-4d5a-b905-92c2bccb21a8
+  name: Test Automation
+- habr_id: 323
+  id: 66ad1038-1342-4463-b6b5-17910b475aab
+  name: Organization of events
+- habr_id: 687
+  id: 9f138883-a2d9-424b-909b-3b5f8301c462
+  name: Search engine optimization
+- habr_id: 262
+  id: 1bb85279-abd1-472c-a710-64c106e15d66
+  name: Regression testing
+- habr_id: 252
+  id: d43838c4-6f37-410f-a782-82f3dbb3c665
+  name: Product management
+- habr_id: 9
+  id: 7b1ef583-2472-4ecd-91bf-2a6571fe3db0
+  name: Android development
+- habr_id: 849
+  id: 7180126d-352c-4dbb-827d-ef075fc31d10
+  name: C
+- habr_id: 300
+  id: e8253265-644a-486f-bbd2-0c124fa221a2
+  name: Interface development
+- habr_id: 330
+  id: 6cc8522b-6804-4826-b55f-f45a95f79f32
+  name: UML
+- habr_id: 757
+  id: 91a53024-2b20-47cd-8fb6-c1c824d52c88
+  name: Vector graphics
+- habr_id: 321
+  id: 54b0f608-dd7c-43dc-87e2-4024007ceb51
+  name: Flask
+- habr_id: 242
+  id: 2e36f9f2-c91e-4c8a-872c-8f2824163a73
+  name: Information Security
+- habr_id: 249
+  id: 5088fc8b-b809-4a99-acb3-4adff16fa63c
+  name: Adobe After Effects
+- habr_id: 448
+  id: 527073a8-a206-4bf0-b14b-f355cbeb8c99
+  name: Development of corporate identity
+- habr_id: 1002
+  id: 0da54fe1-1765-4e21-996d-1c2f42a4120a
+  name: Printing design
+- habr_id: 11
+  id: 0d148b9c-ba30-4a8a-8fd5-06dced61be03
+  name: WPF
+- habr_id: 1435
+  id: f2102a4d-80ee-4c39-a0a2-48499564ec79
+  name: Data Analysis
+- habr_id: 805
+  id: 8eaa528b-cc71-4a7f-a831-ec4acd928d25
+  name: Web analyst
+- habr_id: 1026
+  id: 6633effb-0be7-48cf-b416-4647b2c74f9d
+  name: Database design
+- habr_id: 1317
+  id: f2d635a3-a1a1-415c-bf31-ff916498b277
+  name: Technical documentation
+- habr_id: 813
+  id: 5811d5a9-b2bc-4bdd-b50b-00c6ed6badcf
+  name: Design information systems
+- habr_id: 1041
+  id: f5751d73-f5b7-4606-8ec6-6ca1b2989e38
+  name: Business process management
+- habr_id: 940
+  id: 335d3892-198b-4114-b002-cd96dc5a36a5
+  name: Generation of ideas
+- habr_id: 579
+  id: 880a35f4-71c4-4eaf-8e9d-3479d9ff8294
+  name: Company management
+- habr_id: 528
+  id: f93d754e-647b-420b-b26b-475f990aea1f
+  name: Virtualization systems
+- habr_id: 707
+  id: e8b811a5-75e9-4800-b0fd-de9e919d18b3
+  name: Description of business processes
+- habr_id: 518
+  id: 20c43a3f-0de0-456e-ac0d-2fb729a7240f
+  name: Training
+- habr_id: 590
+  id: 573d2048-9bb6-4ded-8b9c-39df1f1b40c4
+  name: Strategic planning
+- habr_id: 623
+  id: 0c2d8055-3c15-4a50-8f6d-7fc31ec71bd4
+  name: Apache Maven
+- habr_id: 219
+  id: 1f3c3ecd-2cca-4b16-b452-ccb778c8e056
+  name: Semantic layout
+- habr_id: 1077
+  id: 098fdec4-4165-4e30-8dce-979e0a6b75c4
+  name: Sketch
+- habr_id: 658
+  id: 9530819b-484f-4aa9-9cd1-2899c8c9cd4c
+  name: Multiple thread
+- habr_id: 482
+  id: 468a1e0a-729f-470e-a2bc-afb65a2c3064
+  name: Elasticsearch
+- habr_id: 1343
+  id: 36ffa7ec-f1dc-4b73-b58f-568279ed43d1
+  name: Math statistics
+- habr_id: 406
+  id: af145bda-4a45-498d-b2f2-527f0644c535
+  name: Coaching
+- habr_id: 577
+  id: 6af179ba-8a5e-4219-836f-147840ca5ea9
+  name: Strategic management
+- habr_id: 588
+  id: 282907c7-afb3-40cd-9afb-b69800640dd6
+  name: Public performance
+- habr_id: 1040
+  id: 0b80d7dc-52d6-496b-9863-e92713e99ab7
+  name: Increase conversion
+- habr_id: 29
+  id: a8960aba-e148-46a7-96a8-678694ddae7f
+  name: Big data
+- habr_id: 75
+  id: 2c7ae5dd-9d70-4475-a835-d3368d1c5996
+  name: PowerShell
+- habr_id: 602
+  id: 787dc176-9606-4de7-a018-174ebd88d5dd
+  name: SVG
+- habr_id: 204
+  id: cca6d21a-bf5d-466e-8a01-284373afce2d
+  name: Creating an animation
+- habr_id: 725
+  id: 2f9a7714-0b68-487e-a9b8-790db8dcbe22
+  name: Internal and external optimization
+- habr_id: 138
+  id: 9b2988b7-a22a-48bf-b66e-204e6df5589a
+  name: ZBrush
+- habr_id: 499
+  id: f3e70fb9-c57e-41a8-9c0b-6a6a6ff26a6d
+  name: Development of integration solutions
+- habr_id: 39
+  id: 1e8880a9-6947-4d49-8ad7-9dd85d020122
+  name: DHCP
+- habr_id: 356
+  id: ae15ff37-fb80-4dbb-adc6-85d4099f9f6d
+  name: Foundation
+- habr_id: 254
+  id: 1c50e175-9430-4fcd-9ca3-e981909a52fd
+  name: Typography
+- habr_id: 743
+  id: 8fec4a46-41d8-4d0a-82f2-293ea75f2310
+  name: Retouching
+- habr_id: 274
+  id: 3aff6eb7-fe4f-404d-8093-ca70cdcf33ff
+  name: Memcached
+- habr_id: 331
+  id: 92f28c7b-33ad-411e-8dd4-b154607c39e5
+  name: Routing
+- habr_id: 188
+  id: d9d6fd2b-3de3-410a-95ed-51f46ca545b6
+  name: Video video
+- habr_id: 1128
+  id: bf3a153b-68e9-4b41-8128-c23eb2ffc2da
+  name: Google Analytics
+- habr_id: 756
+  id: 1946ba2a-7d12-4d8b-ac1a-68a6d022f229
+  name: Public relations
+- habr_id: 159
+  id: 5bbd730d-4ec7-415f-a2c9-1f776391f520
+  name: Protection of information
+- habr_id: 524
+  id: 1a3ed3b2-ac25-4f22-b9c6-f345c9b07694
+  name: DWH
+- habr_id: 1426
+  id: 036c6eae-b78f-4d38-8e2d-915ae83a9bf6
+  name: Development of information protection systems
+- habr_id: 754
+  id: 24349223-e555-4e6e-a29d-722d98715809
+  name: DDOS protection
+- habr_id: 345
+  id: d3c0b76f-bb96-4a81-b315-c7a93b9a9c9e
+  name: Message transmission interface
+- habr_id: 268
+  id: 80f4fb59-1a19-45f1-a830-78be2663989e
+  name: Photography
+- habr_id: 1053
+  id: 9f7edc20-d57b-4727-aaba-90d5ef5142a9
+  name: Shooting video
+- habr_id: 954
+  id: c79d08ae-4c1b-4526-8775-5e79d85b59d9
+  name: Subject photo
+- habr_id: 315
+  id: 1b0b2132-4f78-4efc-9285-be94d031ab29
+  name: Object-relational display
+- habr_id: 807
+  id: 0f947c28-64fc-421a-8007-2a4464f7afe6
+  name: Team recruitment
+- habr_id: 497
+  id: efde7f93-2aff-4754-927b-0f1546c51a1b
+  name: Literacy
+- habr_id: 265
+  id: ff24d833-7d45-4427-b767-6c073a911749
+  name: Logo design
+- habr_id: 790
+  id: 78914aed-3e3d-440e-b02d-cdc53d1cf68b
+  name: Consulting on recruitment
+- habr_id: 1008
+  id: aaa8a78a-1ad0-4435-ac4f-cf896c10f0f6
+  name: Punctuality
+- habr_id: 1080
+  id: 2ae06c67-f4a2-4703-917f-b917768e3e2a
+  name: Ruby on Rails
+- habr_id: 133
+  id: ca7c76be-5e1c-4e01-9e0a-c0024764e617
+  name: LESS
+- habr_id: 1049
+  id: 2bedbce8-30a6-41c6-bba3-e502b33f016e
+  name: Branding
+- habr_id: 22
+  id: 52f4581a-f6ac-42fb-9534-c853086771a3
+  name: Blender
+- habr_id: 10
+  id: d46a2cf1-c020-419e-8117-13e564f9bb44
+  name: SOAP
+- habr_id: 182
+  id: 53531466-cd6b-493b-b18a-5f40874ec16c
+  name: UIKit
+- habr_id: 1066
+  id: 1eee1da4-4db4-4e29-a04f-063f2cbf5aa5
+  name: Unix
+- habr_id: 461
+  id: 27639764-c480-464c-8266-3fef46558d22
+  name: Repair and maintenance of PC
+- habr_id: 1427
+  id: 05eb82fc-8972-4071-bbd9-c34e79bcae87
+  name: SwiftUI
+- habr_id: 324
+  id: 7e4367f0-27aa-4f2d-ac56-8f4f87fa9c6d
+  name: Drupal
+- habr_id: 1360
+  id: 83d40551-0949-4b79-b363-1c36ab592af2
+  name: REST Assured
+- habr_id: 194
+  id: abcff09a-0292-4033-85c0-b618af188398
+  name: Automated design system
+- habr_id: 795
+  id: 2b51d4c9-3077-4894-a3da-0dfef703f467
+  name: Lamp administration
+- habr_id: 1457
+  id: 89bc82e2-1b2e-4f6b-97f0-ad7d18f8e861
+  name: System-on-a-Chip
+- habr_id: 125
+  id: ed453fb9-d591-4abb-a4de-7e5637600dcb
+  name: KVM
+- habr_id: 678
+  id: d8b33a62-684d-4b01-afb6-27abea2b0349
+  name: Oracle E-Business Suite
+- habr_id: 104
+  id: 322c3c68-39f1-4328-93fd-dcd53243e904
+  name: E-commerce
+- habr_id: 301
+  id: 39628253-6631-4226-b3bf-fb2fd2b3978c
+  name: Development of online stores
+- habr_id: 1451
+  id: c53c1837-e196-4fd8-b1a8-a19c251dcda8
+  name: UX-copywriting
+- habr_id: 1105
+  id: d9d69141-65bd-4319-af3f-aa4e9e0ecdd5
+  name: Development of browser extensions
+- habr_id: 210
+  id: 8529b5d6-8768-43a4-a6d5-ceec4b5c16cd
+  name: CS-Cart
+- habr_id: 1150
+  id: 6b28b222-3015-40a7-80e1-f92c2cfd2909
+  name: DBMS InterSystems Caché
+- habr_id: 1542
+  id: b0642a28-d6c9-49a8-bec5-f61e9f00a8c8
+  name: go-chi
+- habr_id: 69
+  id: 50ea2060-1efa-4266-8847-bb9b800f2a63
+  name: Art Directing
+- habr_id: 25
+  id: 580444aa-fd62-4abc-8422-e48dbf0e8eac
+  name: TDD
+- habr_id: 1486
+  id: afe280c9-34fd-41f6-8854-d98d0e7c2b0e
+  name: DDD
+- habr_id: 960
+  id: e7ea731c-1f5c-4a0a-96bd-a20ac6ea4a88
+  name: Electronics Development
+- habr_id: 1109
+  id: 2d063bd5-a81d-4594-8b41-6df520bc3947
+  name: Git-Flow
+- habr_id: 50
+  id: f89d618b-bbe1-4a12-a133-2c03845533c0
+  name: Adobe Animate
+- habr_id: 1536
+  id: d8f010a7-c5ad-42af-9b95-1fb323db503b
+  name: Gin
+- habr_id: 1168
+  id: 9cafede7-c008-4dad-a6a3-b5ac1bdd2db7
+  name: Apache Hadoop
+- habr_id: 1282
+  id: 6dd1b8fb-735e-4ccb-8d6c-2d0101e2f67f
+  name: CSS-IN-JS
+- habr_id: 836
+  id: cc677862-e4ba-406a-a4fc-c827d730ff8d
+  name: Cocos2D-iPhone
+- habr_id: 357
+  id: a3637ad3-4a69-4be2-b054-f03dce0c2564
+  name: Content Marketing
+- habr_id: 729
+  id: 22ab5fc5-a5b1-4b93-be2a-1b958faf8dfd
+  name: Low-level programming
+- habr_id: 1239
+  id: 5f731315-5940-4a6a-984e-49098c238110
+  name: Penetration testing
+- habr_id: 128
+  id: 8f386dac-1d60-40cf-9c52-b63e5b976206
+  name: QML
+- habr_id: 1263
+  id: cb551f39-420f-4ad1-962f-e5329371823f
+  name: gRPC
+- habr_id: 736
+  id: 05b78a79-abbc-4dc3-8248-f94d45565166
+  name: Adobe Premiere
+- habr_id: 479
+  id: b9a934a7-6695-47e4-a7f6-031dccfd9748
+  name: Design games
+- habr_id: 498
+  id: a3678dd9-479d-4117-9d6c-95443ee0aff7
+  name: Pixel-Perfect
+- habr_id: 949
+  id: 21956fe0-1162-46bf-b65f-88b3999e5b1a
+  name: Low-poly modeling
+- habr_id: 442
+  id: 0735ab36-b8d9-444b-8dbf-b3d95815729c
+  name: Flash programming
+- habr_id: 990
+  id: feb63719-d8ef-4d8b-9896-133b56985db0
+  name: V-Ray
+- habr_id: 863
+  id: 4d541b9f-575d-4b26-96ac-d40e57e92194
+  name: V-Ray
+- habr_id: 1583
+  id: 3fe108a3-2a4d-4b1c-8f73-3b3c1c69ea5e
+  name: Multi-regional website promotion
+- habr_id: 226
+  id: d77d2ec1-c9d1-4861-8675-a4093d2a688a
+  name: Client-server applications
+- habr_id: 506
+  id: 25a2b75d-3363-4ca2-97c2-67acad42ec10
+  name: Business Strategy Development
+- habr_id: 1165
+  id: 78d7e4ca-54b6-40bf-8915-a18c826f09e5
+  name: Spark
+- habr_id: 1088
+  id: eb91d554-19c2-4deb-a369-3634044631c0
+  name: HR-Services Sales
+- habr_id: 1344
+  id: 7cf160e5-b082-4deb-8044-82558cc698e6
+  name: Pre-sale
+- habr_id: 1340
+  id: 5e9e1a55-1020-4936-afb8-50461e35eed0
+  name: PRE-SALE
+- habr_id: 1061
+  id: f5d8eb65-8c89-4ac6-842c-7e8424504a97
+  name: Paint Tool SAI
+- habr_id: 396
+  id: b60971da-db0f-4d3b-b055-0cd1476a89a3
+  name: Real-time operating system
+- habr_id: 1136
+  id: d32dac49-2226-43c5-bb3d-175a3144e28e
+  name: FI-TV
+- habr_id: 474
+  id: f03177c9-0343-489e-8140-dfea7d2e6b5c
+  name: MVVM
+- habr_id: 129
+  id: e26c077b-abff-468e-9c3c-a1a9cf41229a
+  name: Hyper-V
+- habr_id: 738
+  id: d6390a83-5e46-4c4c-a0a3-949ea047a56e
+  name: Hyper-V Virtualization
+- habr_id: 1461
+  id: 463c439a-4cee-425e-b8e7-3abf3dd76ee4
+  name: RISC-V
+- habr_id: 483
+  id: ad958fa6-30a4-4c1b-bf55-cf691794a3c9
+  name: Node-WebKit
+- habr_id: 489
+  id: 9a155d7f-6c61-4cae-8800-9c3a3d814f77
+  name: SEO audit
+- habr_id: 1025
+  id: 52e3d69e-7b05-4407-a67d-84998f04b24e
+  name: Database administration
+- habr_id: 791
+  id: 1b99db14-2cee-4f49-a87b-44e0d4443191
+  name: Concept art
+- habr_id: 515
+  id: 93d1caa2-9abf-41e1-9ed6-1ad2f8cddeb1
+  name: Creating Flash animation
+- habr_id: 670
+  id: 22d3f092-536e-4e0c-b6db-a60ec82fbc95
+  name: Configure office mini-PBX
+- habr_id: 593
+  id: 51537b39-f284-4ae5-a0f2-25eb6b190d16
+  name: Webasyst
+- habr_id: 201
+  id: 12edbf74-e7ad-4325-a02b-1d5ae9dd87da
+  name: Pixel graphics
+- habr_id: 1580
+  id: dcb1c212-a560-4092-a7c4-24d297f56b50
+  name: Usability audit
+- habr_id: 1585
+  id: 4dc80108-833d-41b7-9ba4-5450c57e7c3c
+  name: Creating telegram bots
+- habr_id: 1681
+  id: 28fbb9b9-3f9d-4472-ad55-ddb04a6fa1b9
+  name: Creating chatbots
+- habr_id: 1354
+  id: f8a0a97c-88cc-4597-97a2-50b9fc21d39e
+  name: ER diagram
+- habr_id: 827
+  id: 5b636a1a-a434-466d-aeda-3081c76f52a7
+  name: Sound design
+- habr_id: 870
+  id: 65abf4e9-49d2-4673-9364-bcee41bda2c0
+  name: Research work
+- habr_id: 654
+  id: c086d1b2-37c0-415f-9132-0b51fa556eb2
+  name: Reverse development
+- habr_id: 784
+  id: 9ea3477f-0194-4875-9c3d-6c329c436e89
+  name: IT consulting
+- habr_id: 759
+  id: 54893a18-52b3-4091-bc2d-b04679833e8d
+  name: Business consulting
+- habr_id: 859
+  id: da57e323-5e87-4e96-879e-79213e3546ab
+  name: Content management
+- habr_id: 180
+  id: 6445f288-6076-4deb-8118-2666e63428e6
+  name: Risks management
+- habr_id: 181
+  id: 3f0685be-679a-4801-957e-81c5a80e2fec
+  name: Business modeling
+- habr_id: 280
+  id: 29588008-f957-4395-8b5f-407be0bf3501
+  name: Building business models
+- habr_id: 1581
+  id: e740c773-f737-469c-a15b-ac7d99542fe7
+  name: SEO optimization
+- habr_id: 1100
+  id: 9efbccdc-898e-4005-9b1f-116792108159
+  name: Domain Specific Languages
+- habr_id: 603
+  id: cec27eb7-999d-4baf-a9cf-ef4ad790e9b3
+  name: Site support
+- habr_id: 875
+  id: 95baa228-88ed-409f-a459-d4520ac35877
+  name: Business planning
+- habr_id: 402
+  id: cef6767c-1446-4dee-91ef-eed2492f848c
+  name: Cross Platform Development
+- habr_id: 646
+  id: 52dcb906-1f7e-4dff-9253-471337a208ef
+  name: CNC programming
+- habr_id: 1595
+  id: 10fe3564-83e4-44c9-9f91-d74302051eb0
+  name: HTML Application
+- habr_id: 543
+  id: 6c133f66-8c49-48b3-b26d-d6a9ed1304d0
+  name: Matte Painting
+- habr_id: 1570
+  id: 7e52f612-61ec-4d5a-8705-95030818d01b
+  name: Progressive Web Apps
+- habr_id: 584
+  id: a20e1eaa-a190-4df5-8edd-e57fb4e76be9
+  name: WebSockets
+- habr_id: 1628
+  id: 9ffd4585-cf2b-4d0d-ba89-91ef05610640
+  name: Design System
+- habr_id: 439
+  id: 21ad3f53-97fa-4f2a-a9dc-201ad90f045f
+  name: AVR C
+- habr_id: 1569
+  id: bb10d361-9c4d-4ea5-8ad0-d021a79bfd55
+  name: 'SEO strategy developing '
+- habr_id: 749
+  id: dbe5a81d-9353-48d9-8274-226d96216cb4
+  name: IT service management
+- habr_id: 1648
+  id: 11e6a1fa-c9fe-4679-a04a-89b4b3bdf8ca
+  name: Unit Economics
+- habr_id: 376
+  id: 5a059933-a567-4efc-bc5e-cdd7ee60c7db
+  name: PhpUnit
+- habr_id: 1137
+  id: e4cc3a7b-7798-4aad-be9e-9ec672ac8047
+  name: IPS Community Suite
+- habr_id: 351
+  id: f6933181-8316-47ad-b0dc-8df9a6427069
+  name: UMI.CMS
+- habr_id: 373
+  id: 98f54e2c-46fc-4378-91d4-d684b4d23dad
+  name: Meteor.js
+- habr_id: 864
+  id: 9a798cf7-40c1-4c41-bb60-c66d2efb5f03
+  name: Vanilla.js
+- habr_id: 1164
+  id: ca7278df-b66e-4482-a18b-b5f21c079d85
+  name: koa.js
+- habr_id: 43
+  id: 12d3a9a3-bd81-4542-ae79-63688c558e26
+  name: Marionette.js
+- habr_id: 45
+  id: 1515cbac-b1d0-47fd-9845-b93c22a5537c
+  name: Require.js
+- habr_id: 44
+  id: 1146dfac-0490-49d4-8321-7a76a0dbd9c2
+  name: Underscore.js
+- habr_id: 1626
+  id: a105af42-17ce-4115-8b13-855516d6be4d
+  name: Reactive programming
+- habr_id: 1496
+  id: 81e56753-fadb-45ca-813a-16857e0bcee0
+  name: Pixi.js
+- habr_id: 1471
+  id: 518f5dda-7b21-4180-94c6-bf37c3e44685
+  name: Moleculer.js
+- habr_id: 1078
+  id: ac5f837c-089e-422c-bda6-ec753bfb6c0e
+  name: Sails.js
+- habr_id: 565
+  id: fa1ee824-5e12-4bc1-9257-b0d5b579ef80
+  name: Highcharts JS
+- habr_id: 696
+  id: 5a3d586f-51a9-4a87-abbf-7daf8966b80b
+  name: API Yandex.maps
+- habr_id: 213
+  id: 2a8aa628-c2f2-4835-948e-138bd6977392
+  name: ASP.NET WebForms
+- habr_id: 385
+  id: 5da938c4-abe6-44e9-a892-cea3c0554dae
+  name: ADO
+- habr_id: 1447
+  id: cd96b978-0b02-469c-9c22-4c11ed8e5d25
+  name: AvaloniaUI
+- habr_id: 1625
+  id: 14f2daf6-d7ba-4d50-a9e8-2c4ab8d37b45
+  name: Boo
+- habr_id: 1607
+  id: 41e4c195-4b11-426b-8442-384fd842fb94
+  name: Dr.Web Enterprise Suite
+- habr_id: 1275
+  id: 4227e85f-e85a-41d9-bca7-eda0e8ef5bfb
+  name: Vert.js
+- habr_id: 1497
+  id: efed350b-8894-4a87-8031-83be5a2fda8b
+  name: B2G
+- habr_id: 700
+  id: a678b09e-67ad-44cf-93e5-7f9ab975e741
+  name: SaaS
+- habr_id: 762
+  id: 80ce7e58-da20-4e86-81c9-dad987bf3ab3
+  name: Vaadin
+- habr_id: 1353
+  id: 51309b1d-26b4-4959-97d9-aa0b4b08f5ac
+  name: Tableau
+- habr_id: 1288
+  id: 5b129706-0ca5-4596-9abd-e37e4c41192c
+  name: GitLab
+- habr_id: 228
+  id: 538a88c9-2115-43ba-9279-928eda43e954
+  name: JDBC
+- habr_id: 326
+  id: 78a4a93d-7a63-43b8-bc2e-6259db9ba987
+  name: Matlab
+- habr_id: 1108
+  id: 64115053-2249-480b-839b-fc1efbee1c3a
+  name: Babel
+- habr_id: 777
+  id: ef00430c-7ffa-48b7-9647-d5c932665edf
+  name: ABAP
+- habr_id: 79
+  id: 560e7002-7b69-4990-9209-c7ab8e624ae2
+  name: High availability
+- habr_id: 1144
+  id: 51f8b50a-a505-44bc-afb5-634137349456
+  name: MPLS
+- habr_id: 386
+  id: 5968e3b0-a8fc-44aa-9b60-c22b1c17dc0f
+  name: Oracle
+- habr_id: 1187
+  id: 0b188b6f-b8e8-4164-b6a3-0e6e033bb3e6
+  name: Apache Kafka
+- habr_id: 38
+  id: 1e8c5028-edd6-4aec-a7e7-faf1e2d1f9c3
+  name: Active Directory
+- habr_id: 1104
+  id: 8826b895-7a99-4ae4-8f9d-bcbb2a961671
+  name: React Native
+- habr_id: 316
+  id: f9a437b3-40db-4a8c-bb02-141a11207586
+  name: API interfaces
+- habr_id: 1158
+  id: 521b6c57-33ef-4e1e-818c-22de68970bf9
+  name: Web Interface Design
+- habr_id: 1161
+  id: e9af40ac-2260-4157-b866-25ae5b1b4e01
+  name: iOS Human Interface Guidelines
+- habr_id: 348
+  id: 1ba09158-cf74-4d17-af46-54e28d56cea7
+  name: Apache Jmeter
+- habr_id: 702
+  id: 7073c2c8-0736-42bd-a39f-7b1f1190a136
+  name: ETL
+- habr_id: 501
+  id: 0c352555-5719-416b-8972-9203b24541e9
+  name: Attracting customers
+- habr_id: 183
+  id: dfbf0ca3-52bb-40c8-b073-17e7b3e48174
+  name: Server administration
+- habr_id: 47
+  id: 856d71db-3727-4c17-8d00-b2d52ca55374
+  name: Adobe Indesign
+- habr_id: 78
+  id: 222413e1-a63a-4fde-a1e3-97b3371e2c1d
+  name: Targeted advertising
+- habr_id: 238
+  id: c1e61c63-cba1-40aa-944e-e1c87b54283e
+  name: Editorial and proofreading
+- habr_id: 80
+  id: e11c1d67-5f42-4f70-beca-5066f37af7d6
+  name: Google AdWords
+- habr_id: 862
+  id: 92669cdb-ca11-4e8c-9e27-265b56af847f
+  name: Gradle
+- habr_id: 1236
+  id: 079a9f2c-7962-4566-adb4-9d72d1c881e6
+  name: Aerospike
+- habr_id: 1270
+  id: 868b1de8-ccd7-49dc-9bf3-edeed9b797bd
+  name: Grafana
+- habr_id: 1308
+  id: 4fba892e-e783-464a-8799-4601ed1a44d0
+  name: Terraform
+- habr_id: 288
+  id: 1847cb65-6f82-422a-a644-0dbb6cdf1ef5
+  name: JavaFX
+- habr_id: 1007
+  id: c8399ebc-e912-4ef7-a868-9705d768a292
+  name: Leaflet
+- habr_id: 774
+  id: 26cc8202-e75d-45b8-9262-21c7488be65a
+  name: Affiliate Marketing
+- habr_id: 1098
+  id: 8e2dc71e-f67c-4fa0-b0ce-04582c2c9dbb
+  name: TOGAF
+- habr_id: 1590
+  id: 3910d60e-d4ed-4a9c-8e9b-279e15b75f2b
+  name: Thymeleaf
+- habr_id: 1170
+  id: 1de17f8f-ff30-48b0-ae69-6d79038a8179
+  name: Caffe
+- habr_id: 1406
+  id: 8fd76ec2-3cd8-43b9-ab5d-2ee8f915217b
+  name: McAfee DLP
+- habr_id: 587
+  id: 46cc22a7-8a28-4bc2-9b56-8ece248f7b01
+  name: Startup management
+- habr_id: 1035
+  id: aa1b9d41-3c5a-4346-be49-8445e4b53373
+  name: Russian language
+- habr_id: 1438
+  id: 15755027-14e5-4635-bfb7-a7c4c58d645a
+  name: Ahrefs
+- habr_id: 1428
+  id: eca2eaec-c577-4cf6-8009-b74adf1efd2e
+  name: TestRail
+- habr_id: 709
+  id: 22a166af-3088-4451-aeba-7027c111bac9
+  name: Email Marketing
+- habr_id: 1268
+  id: dedfc349-b229-4c41-ba0d-e2aa5212b2c4
+  name: Apache Airflow
+- habr_id: 1205
+  id: 6deaf785-829f-474a-a10e-e76e67b24ddc
+  name: BlockChain
+- habr_id: 121
+  id: d48b6296-0001-45ff-8cd8-6c0f19edf549
+  name: Mail servers administration
+- habr_id: 1203
+  id: 57dd1fa5-c390-41e2-8ca6-7d3b2deb2b60
+  name: Solidity
+- habr_id: 624
+  id: 519ba246-0b1b-4ba3-b26f-0cdcab4f427d
+  name: Repair and maintenance of office equipment
+- habr_id: 542
+  id: b2ff4c11-0c71-4aca-a217-a0ad1675707d
+  name: DNS
+- habr_id: 1076
+  id: 1e53bd84-b3fd-47be-b987-74a89015f711
+  name: Email layout
+- habr_id: 929
+  id: 222691e7-0404-4394-9bea-b9f61ede1d20
+  name: Painting
+- habr_id: 431
+  id: fe147dfe-04a1-4a7c-8edc-b25b3c50ac52
+  name: Painting
+- habr_id: 1204
+  id: 0a57aff7-2a33-4a1f-8a33-0a9a157ade22
+  name: Ethereum
+- habr_id: 1350
+  id: efde22df-8749-42a2-82fa-cf3ff5dc7977
+  name: Aiohttp
+- habr_id: 1206
+  id: c49bfb12-cf05-4735-b19f-57afac9bb37d
+  name: Bitcoin
+- habr_id: 522
+  id: 39a9d46c-450e-401b-87fa-996b730fd2c5
+  name: Portrait photography
+- habr_id: 868
+  id: 3b4305a5-0ffb-4712-b591-e60f0909454b
+  name: Digital painting
+- habr_id: 1140
+  id: 2a5e5277-c028-40e1-9b1f-bc6a07ce85ae
+  name: AIX
+- habr_id: 423
+  id: 408f6882-645d-44d3-9540-c40d0eda78cd
+  name: Cmake
+- habr_id: 237
+  id: 4d4d7519-2978-4128-8a94-06508c37f2e3
+  name: Akka
+- habr_id: 1146
+  id: a115b5be-6237-417e-b75c-f345b86066f2
+  name: Filemaker
+- habr_id: 70
+  id: 3d05392b-8650-4939-bc6e-522a2a6c465f
+  name: CakePHP
+- habr_id: 405
+  id: 3f7afd6c-ef1e-4292-a35a-20bc77d4b0bd
+  name: GNU Make
+- habr_id: 818
+  id: 17525b6d-1960-4fac-8066-369248144207
+  name: Design of groups VKontakte
+- habr_id: 13
+  id: 741701e0-5a4c-40fb-9776-ec7ce2edaf9b
+  name: Riak
+- habr_id: 1462
+  id: afaa2610-b83d-42e6-976d-d6fb6eaf107a
+  name: GitKraken
+- habr_id: 1572
+  id: 49bc87c0-440b-4fca-839b-6e75383620a4
+  name: Making layouts
+- habr_id: 1623
+  id: 8a342f63-0c49-4afd-8b6e-147e9521ac8a
+  name: Raku
+- habr_id: 1072
+  id: 6568051a-d12f-4660-b70f-52e6a249da39
+  name: Visual Studio
+- habr_id: 112
+  id: 5c0019bf-6d1f-4f4c-a017-589da32fd8f3
+  name: SMM
+- habr_id: 798
+  id: 4d89bb8d-926d-455c-9866-f5838be7bc04
+  name: System analysis
+- habr_id: 60
+  id: 20a5f98e-5acf-4c1f-aa44-f80032eac1fb
+  name: Game Development
+- habr_id: 167
+  id: 002ff24c-c948-4958-858d-cf68e33613dd
+  name: Wireframes
+- habr_id: 533
+  id: 7b406697-a0f2-4a1a-a928-435abbd2b22a
+  name: Programming microcontrollers
+- habr_id: 397
+  id: a1c8eb31-b297-4387-bc9a-c7af3e6ee4d0
+  name: System Programming
+- habr_id: 1112
+  id: 6f0834ec-e704-4ab9-b4cd-eb0353f0a25d
+  name: R
+- habr_id: 102
+  id: 1a0abe24-c8ec-4192-842a-4df569d566df
+  name: DataMining
+- habr_id: 1259
+  id: afea55d1-4ca8-4a1b-8e4d-bb12b4c7659d
+  name: Camunda
+- habr_id: 1610
+  id: c397e1d6-a0f8-4a42-9488-5ec3e4f6907d
+  name: Swagger
+- habr_id: 147
+  id: b99bd417-ec14-4a6d-bb5b-5aeb1bf57143
+  name: TeamCity
+- habr_id: 1547
+  id: 94751d6d-97c6-402c-826d-f492e7e39008
+  name: Chaos
+- habr_id: 1430
+  id: 1c7387cd-6780-4128-bda6-c12921f99765
+  name: API Testing
+- habr_id: 1349
+  id: 559ebca6-534b-4e79-b416-51d18941336c
+  name: Fastapi
+- habr_id: 1133
+  id: ba0c5d94-2d59-4deb-b20c-1c01c20a3585
+  name: SAP HR
+- habr_id: 855
+  id: 3c6598dd-dba4-4d0c-b55f-fc76df3974b2
+  name: Applied math
+- habr_id: 902
+  id: 9a8a5b4e-1982-43fa-aa4b-4708687c54ce
+  name: Onboarding
+- habr_id: 105
+  id: c526aa06-b8fb-492d-87f4-2271cbdb92e2
+  name: User research
+- habr_id: 614
+  id: 57d9d828-0a8f-4604-adfe-27b54879bc15
+  name: VMware
+- habr_id: 622
+  id: 1f5aa7cc-248d-44c3-9650-7e6f8610351e
+  name: Monitoring and market analysis
+- habr_id: 589
+  id: 5a7e906d-ef48-45c1-810f-f02acca64390
+  name: Researching
+- habr_id: 440
+  id: 7434cc6a-31da-4a09-8838-0bf6a27bc304
+  name: Design patterns
+- habr_id: 1042
+  id: 7932787a-dde7-41e8-a52c-85254a795216
+  name: Marketing research
+- habr_id: 1401
+  id: 992555cf-6ac9-489b-86e8-4a63f7f446bd
+  name: Pandas
+- habr_id: 1216
+  id: 107e1993-c113-49a8-a724-54740d697f48
+  name: Keras
+- habr_id: 1253
+  id: d87ea4dd-f6f5-47a4-b2ca-90c6a684dfa2
+  name: Google Firebase
+- habr_id: 785
+  id: d2ab2559-75e7-4046-a09b-264eb44e2e37
+  name: Asterisk
+- habr_id: 449
+  id: 87cabc5b-d806-4276-9557-f1f7dbc7ee5a
+  name: Assembler
+- habr_id: 377
+  id: 0d7e71a2-8dd4-454f-be89-183ab175d8fc
+  name: BPMN
+- habr_id: 1102
+  id: 62d394be-a618-4325-a63e-0a8766222f4a
+  name: Autolayout
+- habr_id: 57
+  id: d10d082f-ee3e-4d02-8704-2bf8a14b669d
+  name: AutoCAD
+- habr_id: 1039
+  id: 01c50c4c-4223-4c12-a206-fc137c752079
+  name: Autodesk Maya
+- habr_id: 763
+  id: 57bb8451-fe20-4145-bed3-cd6c9961c9cc
+  name: Augmented reality
+- habr_id: 382
+  id: 0b522fa7-20af-446a-bfdf-4e5bcb8a4745
+  name: Adobe AUDITION
+- habr_id: 664
+  id: 86c6c2ca-6f32-4aa9-9751-3ee01f95fdc8
+  name: Autoit
+- habr_id: 1642
+  id: 74d306b5-986f-49b8-9524-e876aefe40e3
+  name: HashiCorp Vault
+- habr_id: 1261
+  id: dab80a09-c4f8-4825-8a40-761fab7affb5
+  name: Autosar
+- habr_id: 1674
+  id: 16a277d2-f573-4ab5-89a8-25635b8bfe00
+  name: Micronaut
+- habr_id: 1622
+  id: 68a5104c-0ba2-4b94-a53e-d5d32987cad7
+  name: AutoHotKey
+- habr_id: 1553
+  id: fe8cdb13-f278-4c6f-b715-e7023a0e104e
+  name: Aurelia
+- habr_id: 1356
+  id: fc30521d-af57-4228-b56c-c08a131ad5d2
+  name: Bft
+- habr_id: 639
+  id: ab3daaf2-867d-472f-bca9-1751dc8d4310
+  name: Java SE
+- habr_id: 1056
+  id: 30a88762-4f0c-45cc-b49d-4d1b417df083
+  name: Java Core
+- habr_id: 289
+  id: e895658a-8cd0-41c6-936a-8c63c57af932
+  name: Java Persistence API
+- habr_id: 1469
+  id: 2e289bc8-a37a-4e6f-9585-1efd03cbf3b7
+  name: TestNG
+- habr_id: 939
+  id: 71077977-ff14-4573-a48e-c4ab9b359d40
+  name: Java Servlet
+- habr_id: 674
+  id: b966968d-69c8-4c3c-95fe-3a20c7c306dc
+  name: Atmel AVR
+- habr_id: 432
+  id: 40570072-4712-4347-a0c2-4ddac9e0448d
+  name: JSF
+- habr_id: 197
+  id: 60428287-56f1-442b-9cfd-a78a8bdc45a1
+  name: AWS
+- habr_id: 570
+  id: 2cc4124e-19e3-4456-9290-4f89c7e5a283
+  name: Corel Draw
+- habr_id: 992
+  id: 3d827803-5ddc-46bd-9926-d708bc753332
+  name: Creating drawings
+- habr_id: 412
+  id: 2a107b46-4328-46a0-a24d-3a698849add2
+  name: Academic drawing
+- habr_id: 1621
+  id: d04dbae6-24d8-4588-b2b7-c0ea4861c93e
+  name: AWK
+- habr_id: 650
+  id: 653db0ad-6b83-408e-9b9c-6307629a2469
+  name: Pawn
+- habr_id: 1504
+  id: 5fb55d60-7998-42b4-a4d3-249dcf1ca1ab
+  name: Datawrapper
+- habr_id: 1593
+  id: aae84006-28d8-4444-a187-ee07cc3327fb
+  name: SourcePawn
+- habr_id: 481
+  id: c637207f-ac34-43bd-abde-2446eab262dd
+  name: Axure
+- habr_id: 801
+  id: 0d30297f-48a8-4c7e-9bac-7f2b5020d45a
+  name: Axure RP
+- habr_id: 676
+  id: a912f250-643e-40d4-9d0b-5265b030e941
+  name: Axapta
+- habr_id: 1064
+  id: 41828cd0-f1b5-4249-928b-7fca6a57238b
+  name: Design in Axure
+- habr_id: 581
+  id: 7d5a6d33-05f6-446a-936a-a95e34a25544
+  name: HAXE
+- habr_id: 913
+  id: da8d4064-d629-43dd-8dde-a5f1518ec095
+  name: Parallax
+- habr_id: 1627
+  id: ecac114f-99d1-470f-a6d6-741b75f3384a
+  name: Reactive Architecture
+- habr_id: 1459
+  id: b2fb58fd-bec2-4488-a5f5-d91e9d38f549
+  name: AXI
+- habr_id: 1458
+  id: 1c5eca38-9237-4694-8598-92ad32177679
+  name: AXI-Stream
+- habr_id: 908
+  id: 37482e0d-c6eb-4b9f-ae18-d1fc84b0732c
+  name: Landing layouts
+- habr_id: 276
+  id: da0d3759-940b-4c92-97dc-28f53c3e7a29
+  name: Valid layout
+- habr_id: 701
+  id: 764eba84-50e8-4a76-9858-c64f685d9c8c
+  name: Picture layout
+- habr_id: 640
+  id: 1510af50-babe-4c23-b057-4b4c025fc428
+  name: Layout of printed publications
+- habr_id: 1145
+  id: d355a92e-89c4-42d1-abfe-b3666b62b25d
+  name: BGP
+- habr_id: 1597
+  id: a7bcfa57-4b1c-4a5a-aa02-e68cc456634c
+  name: Playwright
+- habr_id: 392
+  id: fbcdab33-d87a-4823-9b84-b19fa407c601
+  name: Play
+- habr_id: 642
+  id: e18c7824-82c2-4190-a824-4a0a2cb75382
+  name: Windows Azure
+- habr_id: 1315
+  id: 29fa3be4-3d58-4d91-8600-77f4771b1ab6
+  name: Blazer
+- habr_id: 854
+  id: 6cb94b52-ec7a-4c82-9919-c85b0efe9981
+  name: Lazarus
+- habr_id: 1309
+  id: dfe9371a-2b2a-43ce-b141-8ea47a32beb1
+  name: Amazon EKS
+- habr_id: 1530
+  id: 695dd6c2-516e-4107-bb15-4a9d97967261
+  name: Ramaze
+- habr_id: 617
+  id: db3aae0f-d33f-4174-b698-12af2dc5510d
+  name: Kanban
+- habr_id: 360
+  id: e064af76-68c2-4877-86a6-15ea47347431
+  name: Creating banners
+- habr_id: 1267
+  id: a9e68161-0759-4355-ae9c-4d18cb120b2d
+  name: ELK Stack
+- habr_id: 231
+  id: 3145800e-1f12-4ee4-b36f-e869b83d305a
+  name: Visual Basic for Applications
+- habr_id: 695
+  id: e501cd06-a4e4-43c4-8e69-f9e8db017e79
+  name: Oracle DBA
+- habr_id: 234
+  id: b9b2d007-1088-401c-9ec0-b5f19d9a949d
+  name: VBScript
+- habr_id: 876
+  id: 20776205-4d9b-47ab-a0cd-1a0b1f9fa5ad
+  name: Adobe Acrobat
+- habr_id: 1331
+  id: 4062d360-0d45-40f9-8bd8-96d87b3284ce
+  name: Global
+- habr_id: 840
+  id: e9cbcb93-73ae-4de0-b388-9084a8a49908
+  name: Balsamiq Mockups
+- habr_id: 604
+  id: 4cc05846-3317-4e59-97e6-3e40130d2afd
+  name: Sybase
+- habr_id: 1279
+  id: 82d8b316-6332-4268-8392-c42cdceb54ad
+  name: MyBatis
+- habr_id: 1209
+  id: 99472fcd-8b52-4745-aa4a-d097d1945608
+  name: DBA
+- habr_id: 663
+  id: 1560884a-1d0f-43fa-8c2a-a7ce55051628
+  name: InterBase
+- habr_id: 1472
+  id: 595ae114-8046-4702-bbc3-bc2a6aec1742
+  name: Bubble
+- habr_id: 1613
+  id: ded525a7-c9c6-4a52-ae8b-5b5538727c00
+  name: JTBD
+- habr_id: 1560
+  id: 1917f655-8d31-4f3e-8b3f-eca396b1bfe1
+  name: BDE
+- habr_id: 472
+  id: 323abe43-6be8-4684-97e5-6e29d5dec265
+  name: Embedded system
+- habr_id: 143
+  id: c8702108-3537-423e-b78b-8b3db5cca3b1
+  name: Cucumber
+- habr_id: 1031
+  id: 42169a7f-9996-4377-83f4-13c2c8c23de1
+  name: Embedded Linux
+- habr_id: 1488
+  id: 960d38a0-a668-4755-9461-a7ca453f3227
+  name: Adobe XD
+- habr_id: 156
+  id: 385cfc9e-885c-4a60-b48f-2aa5ec92752a
+  name: Nhibernate
+- habr_id: 1257
+  id: 6ac46eb1-21c2-4d3e-ac90-023cb9a7ca20
+  name: Oracle Siebel CRM
+- habr_id: 758
+  id: fb9bc9fd-0060-4862-9c01-43947b24ee1a
+  name: NetBeans
+- habr_id: 1473
+  id: 3e7a6d05-35f6-4571-b63f-850ae23e8ff7
+  name: Webflow
+- habr_id: 258
+  id: 3685bfe8-20dd-4ed9-b49d-83e998040cd2
+  name: WebGL
+- habr_id: 516
+  id: b627009f-c219-483d-b8b2-6cf46aca9737
+  name: LibGDX
+- habr_id: 563
+  id: 2cb75bee-7779-43ad-88de-d2c244ea85a3
+  name: Border Gateway Protocol
+- habr_id: 1322
+  id: 3c770605-1b26-43bc-bd22-b7052855dc52
+  name: WinDbg
+- habr_id: 1352
+  id: 76e534b8-9712-424b-86c8-94fea821013a
+  name: PowerBi
+- habr_id: 732
+  id: d2b79940-4fb1-45c6-a2a9-3c646464005b
+  name: Business Intelligence
+- habr_id: 91
+  id: 8ec4ae87-81a0-4a06-9b7c-b98857c66bb9
+  name: Debian
+- habr_id: 1334
+  id: 09b4c456-d60c-4bb1-b5d1-5fd88f33846c
+  name: BI
+- habr_id: 248
+  id: cffe9acf-cffe-4dd9-ab82-cc4aed3dab9e
+  name: Mobile
+- habr_id: 1215
+  id: 619d1f36-9a86-4ad9-9ad3-aa1bacd8ac42
+  name: RealBig
+- habr_id: 389
+  id: e0116e98-2df1-46d8-bf87-a0ef9461faf7
+  name: Firebird
+- habr_id: 824
+  id: f18ca387-7ab8-4f0c-bdd6-a1adce60ec3e
+  name: Marketing mobile applications
+- habr_id: 1351
+  id: 514cb025-97bd-4dcd-85cb-bab983a8cab8
+  name: Google Bigquery
+- habr_id: 976
+  id: b39e43bd-59f8-4d8b-b5bd-46fa010cd731
+  name: SAP BI
+- habr_id: 1443
+  id: e099fe20-97ca-4a70-9fe7-c40e86029521
+  name: SRE
+- habr_id: 1240
+  id: 093477fc-da98-4c64-b8c0-be438be46355
+  name: SAP Business Objects Bi
+- habr_id: 21
+  id: 4f054749-e663-4c89-ba1f-a6640b27ff88
+  name: Subject visualization
+- habr_id: 812
+  id: 4a172ff2-97c1-4d9f-ae26-ced5f82a599d
+  name: Document Object Model
+- habr_id: 1147
+  id: f5b125ed-37de-443d-97ed-2c06e4991c7f
+  name: Caché ObjectScript
+- habr_id: 941
+  id: 3acea652-e5d7-4108-83c1-d6b06d18b2b8
+  name: Ansible
+- habr_id: 208
+  id: f02c89b8-a5f5-45e3-874b-6c86df70c1da
+  name: Blogging
+- habr_id: 17
+  id: 505e9768-722c-41c6-a90c-8ca950259fd1
+  name: XSLT
+- habr_id: 303
+  id: bf0a4ba3-3d96-4e13-977e-251f6aff4fe2
+  name: XHTML
+- habr_id: 73
+  id: 18d6113c-5bba-4a40-93af-c5be0844a357
+  name: XAML
+- habr_id: 536
+  id: d292147b-28fa-4c1b-876a-8a145ec2c0dc
+  name: IPTABLES
+- habr_id: 1298
+  id: fa9e4cba-88a9-49a7-ae65-7c1499404434
+  name: IDA Pro
+- habr_id: 166
+  id: ec071c00-4866-40cb-9553-62c80a5ad872
+  name: Structured cable system
+- habr_id: 1640
+  id: 5c8a062e-c3ed-4146-94d7-dd797e709ec6
+  name: Flutter Bloc
+- habr_id: 157
+  id: 0b790cfc-d72c-441f-85ff-b363f4e36058
+  name: Ableton Live
+- habr_id: 934
+  id: 4bbe4838-a3ad-4ed0-afd8-9f3b46c2c461
+  name: IBM WebSphere
+- habr_id: 118
+  id: 39e88097-f1f0-4ef6-aac6-2d422d493081
+  name: Lotus Domino
+- habr_id: 764
+  id: f3e0afac-3d7f-4d4d-b29f-3abad772f8b1
+  name: DBMS InterSystems Cache
+- habr_id: 1665
+  id: 27734f2b-4160-4659-9d86-897bbe30fafe
+  name: IBM Data Refinery
+- habr_id: 1663
+  id: 4b90cf99-0b50-4fc3-a72c-b42959abbc8d
+  name: IBM Watson Studio
+- habr_id: 1664
+  id: f52dfbfd-477b-457a-9715-6ca56db39b97
+  name: IBM Cloud
+- habr_id: 1274
+  id: a8a17392-f751-47b7-b643-1feb696adc7f
+  name: Spring Boot
+- habr_id: 521
+  id: 4328c6f4-b5fa-461f-ab3b-ab2bca994cc0
+  name: PMBOK
+- habr_id: 1009
+  id: c4561f48-c1a8-4c41-a47f-9edb424a9513
+  name: Storyboard
+- habr_id: 1586
+  id: c8c7933d-ae36-4b75-aec4-e464d0854782
+  name: Jupyter Notebook
+- habr_id: 1085
+  id: bf8135d5-5d26-46bb-b8df-44cbce26f905
+  name: VirtualBox
+- habr_id: 1280
+  id: f7c8a233-b61e-441d-b657-39ca30c92224
+  name: Storybook
+- habr_id: 417
+  id: bcf36979-3113-434b-8c52-5f3808f1a394
+  name: Boost
+- habr_id: 520
+  id: 0a698571-2128-4d46-ae73-4d6b78b578c5
+  name: ITIL
+- habr_id: 309
+  id: f32f8541-2723-4a12-86d6-d7520141d6b4
+  name: WebRTC
+- habr_id: 224
+  id: dd61ea42-8721-44fc-a991-71550f588e6d
+  name: Library of standard templates
+- habr_id: 1129
+  id: 5c02411f-ad1c-4c75-bbc4-78367c7507d3
+  name: SAP Hybris
+- habr_id: 1323
+  id: f2ed5686-de6b-4474-88a4-64e31de736f6
+  name: Brand
+- habr_id: 1138
+  id: 7dc83f63-bdcf-471e-aae5-006a98288f13
+  name: Point Cloud Library
+- habr_id: 1650
+  id: 2fda4f92-aee5-4e03-a9c6-d0d44096abf8
+  name: Android Debug Bridge
+- habr_id: 1587
+  id: da4d97b6-5fa5-44b6-a47a-13ec79a4ad85
+  name: Esoteric programming language
+- habr_id: 1478
+  id: b460a3af-464b-4008-bc41-82d00ffd8fff
+  name: Bravo Studio
+- habr_id: 51
+  id: a8613ca4-2ff9-4be7-bb9f-b9c0e1aa718f
+  name: FreeBSD
+- habr_id: 470
+  id: 05528596-947d-4310-9266-b5fd5f7f31a1
+  name: FreeBSD administration
+- habr_id: 1618
+  id: bfc5eb9c-cdb1-496a-b06b-f6232aa659e0
+  name: Batch Script
+- habr_id: 1578
+  id: 7b1a5bfb-b036-4801-9dbd-e4ab9e6a187d
+  name: Static Site Generators
+- habr_id: 1413
+  id: 0198d13e-fde7-4573-969f-71bdfb39d78c
+  name: BSIMM
+- habr_id: 1242
+  id: 9ca2714c-2fa3-4c94-a49e-43b0059da8b1
+  name: WebTutor
+- habr_id: 223
+  id: 9519385b-29c8-45d5-9ab3-847a3005f2e8
+  name: Business development
+- habr_id: 232
+  id: b192f0d9-fe4a-46aa-bdbd-1dbca95b4a5a
+  name: Ubuntu
+- habr_id: 948
+  id: 04530408-fa36-4ab4-aa20-f1d3456479c4
+  name: Creating business cards
+- habr_id: 1299
+  id: 65184d60-034e-4d3e-a9f5-224939a32e48
+  name: Burp Suite
+- habr_id: 1124
+  id: c3d7163a-4f33-4598-9ace-b5ea190f0ddc
+  name: Protobuf
+- habr_id: 661
+  id: dda39739-1400-4ef7-82a7-38b9dde515f4
+  name: Distributed calculations
+- habr_id: 123
+  id: 37e9f4fe-7d01-4b0d-84b4-ab67e4bb6a79
+  name: SVN
+- habr_id: 845
+  id: ab8fa013-817a-4aa4-8339-adaf58ae94ae
+  name: LabView
+- habr_id: 781
+  id: 4a45f225-4f4b-4c04-8e1f-a7ea40b35158
+  name: Apache Subversion
+- habr_id: 1081
+  id: df9ed834-a9fc-44e9-aebe-ee15dfdd1b3b
+  name: Ruby
+- habr_id: 1055
+  id: a141feca-449d-4267-8340-5a312c215fcf
+  name: Testing by the method of free search
+- habr_id: 1228
+  id: 62d579bc-c47a-4954-8d61-b5e6badfee8e
+  name: Babylon.js
+- habr_id: 1615
+  id: 61de0c9d-366a-4d73-bf90-6f5b9a7e534c
+  name: Magik
+- habr_id: 1301
+  id: f5c5d193-af87-4beb-ad75-49e0f7909c81
+  name: Bytecode Viewer
+- habr_id: 1527
+  id: 35325665-6c7b-47d1-9303-988e352946d2
+  name: Jooby
+- habr_id: 1320
+  id: a481bc74-3bfc-4ad7-b558-3974fa26e0fc
+  name: Corporate communications
+- habr_id: 927
+  id: ea1e6214-2eb9-486c-a98c-3266e8c95d06
+  name: Telecommunications
+- habr_id: 132
+  id: 3aade25b-d205-4afe-a75d-80b3185c3d38
+  name: Scala
+- habr_id: 36
+  id: c8e958f6-73e9-4398-bf78-909f26d0420f
+  name: WCF
+- habr_id: 851
+  id: 78ea0d61-e151-4a70-99df-ff0b61af5e93
+  name: Technical translation
+- habr_id: 883
+  id: 307e8be0-176e-4fff-b4ad-e4798c2dbf64
+  name: Development of creative communications strategies
+- habr_id: 1060
+  id: 9687810b-e22b-4e2d-9b68-9cd59f619db8
+  name: Apache Tomcat
+- habr_id: 177
+  id: 57ae4101-911d-4b61-be82-99c746e57a8e
+  name: OpenCart
+- habr_id: 969
+  id: cf46ca6f-bf4e-45b6-b123-079c65b03a0e
+  name: Localization of PO
+- habr_id: 792
+  id: 1e885989-343f-4a83-a59c-fff90308fd0e
+  name: PCB design
+- habr_id: 1291
+  id: b0107f1c-c9e0-418b-9606-8fa14c0b38e5
+  name: DocBook
+- habr_id: 766
+  id: aac51861-aa89-4ddd-bf34-d535798b1aef
+  name: Cisco CCNA
+- habr_id: 731
+  id: 1155d2d7-2e54-4e68-9823-348c3feff59c
+  name: Microsoft Access
+- habr_id: 671
+  id: d53316ee-3a9d-4612-a023-b554f8000eb3
+  name: Cisco CCNP
+- habr_id: 544
+  id: 6a9719e0-197c-4d13-bb3b-6d973d3c5345
+  name: CCNA
+- habr_id: 865
+  id: 67fc0587-95ad-4179-a730-418fa1d947c0
+  name: Microsoft Access
+- habr_id: 846
+  id: d723793a-eedf-4aa5-8bf0-1055c7019659
+  name: CCS
+- habr_id: 562
+  id: cd2d960c-78a7-48e8-9276-942ebf325023
+  name: GNU Compiler Collection
+- habr_id: 1596
+  id: 78029d58-bac6-4f42-ab79-098de566a770
+  name: CHILL
+- habr_id: 214
+  id: a5207228-2c67-4acf-b7b5-280f50bdc848
+  name: GCD
+- habr_id: 1415
+  id: 82e1ee12-6842-4da3-bfc0-ee3e6c4ffe0b
+  name: DevSecOps
+- habr_id: 1307
+  id: 31ee06f5-5339-46e0-a463-18f68cc94f57
+  name: FluxCD
+- habr_id: 606
+  id: 613b51a3-4812-4af0-9724-8cdfaeefa127
+  name: Customer service
+- habr_id: 488
+  id: 747c8784-2325-436f-9274-ff6f694444e7
+  name: Celery
+- habr_id: 814
+  id: b5e99da2-1012-4650-9205-88c00dd36a93
+  name: Photo processing
+- habr_id: 909
+  id: 3eb737e9-ea4a-475a-83b7-37bda94ecd59
+  name: MVVM WS WCF
+- habr_id: 594
+  id: 8a3d80c4-a840-4f7e-a2f9-794ab7e9ab97
+  name: ArcGIS
+- habr_id: 1241
+  id: f7c9852c-0a7c-4157-98ad-74bc779a4b54
+  name: Pytorch
+- habr_id: 415
+  id: 64df20b5-cdbc-4bbf-adca-c93251789315
+  name: Financial analytics
+- habr_id: 1116
+  id: f2c02622-e994-4542-8393-3bb4f5fe3799
+  name: asyncio
+- habr_id: 727
+  id: 5fb5da91-2a0a-4321-8b77-ebab57b91466
+  name: Circuitry
+- habr_id: 1230
+  id: 0420e130-3abe-4528-90c8-ec4643a6d4da
+  name: OpenAPi specification
+- habr_id: 286
+  id: 1d7725cb-dd1e-4ca8-b6fe-090b4048dd42
+  name: Optimization for social networks
+- habr_id: 1181
+  id: 7d37cad4-7cc0-4148-8ab3-73269c5dc300
+  name: Computer Science
+- habr_id: 930
+  id: be414c1d-9358-4f44-9709-8ec8ced8e4d7
+  name: Cisco systems equipment setup
+- habr_id: 965
+  id: 39ba4287-daec-421c-b5b5-6ea135486be6
+  name: Development of printed circuit board
+- habr_id: 1302
+  id: 363f78f5-7343-4d1f-ac3d-0b519f3bdf68
+  name: Interaction with government agencies
+- habr_id: 163
+  id: c48dae37-c31a-4b46-ba02-c680357c6c6b
+  name: Citrix
+- habr_id: 885
+  id: dcc0cc07-b707-4a90-a2d0-d717b6ef5667
+  name: CIO
+- habr_id: 455
+  id: 84912551-aa6b-47f4-beb6-637013907c65
+  name: Mojolicious
+- habr_id: 753
+  id: 232a8ccf-dbed-4ee6-95a9-1ab1a95f9791
+  name: PCI DSS
+- habr_id: 1395
+  id: aa9efa4c-d223-4bb3-957f-97dcf8292096
+  name: Bamboo Ci
+- habr_id: 1235
+  id: b9b18ed6-48cb-4bc3-bb40-aa35575dbf3e
+  name: ClickHouse
+- habr_id: 1339
+  id: 079ba363-aa63-4914-96bf-d4cbb4c84097
+  name: YouTrack
+- habr_id: 1011
+  id: d82debed-f729-4a9a-b491-94521fcf748c
+  name: Package design
+- habr_id: 462
+  id: c293b96c-823a-4c33-a5f7-2271860020f8
+  name: OpenStack
+- habr_id: 169
+  id: bad6e102-5275-4d5e-aad3-72daf1015ab9
+  name: Growth Hacking
+- habr_id: 217
+  id: 694b1ccb-7583-4b59-9822-dbfcd3d56a7f
+  name: Sockets
+- habr_id: 1470
+  id: f960c0ff-4366-4879-adbb-19db9da3a1a7
+  name: Jackson
+- habr_id: 1319
+  id: 8a1b9a86-040a-41d9-9039-61dd21c1153a
+  name: FullStack
+- habr_id: 76
+  id: d82f2349-2307-4b64-b1ad-310a670bc379
+  name: PPC
+- habr_id: 553
+  id: 6d2360c8-7032-479b-9543-ee529d171fb6
+  name: Compilation of semantic nucleus
+- habr_id: 1139
+  id: 4ce11ac9-da62-4419-ba93-9a21aa09bf68
+  name: Computer vision
+- habr_id: 1502
+  id: 63c92ca9-1d49-40e6-af58-54da94b7c312
+  name: Clean Architecture
+- habr_id: 383
+  id: 357c4c20-1f87-45db-ba55-c3e002645819
+  name: Eclipse
+- habr_id: 189
+  id: 97971b13-d7f1-4e78-b6ca-a175bfee6518
+  name: Cloud computing
+- habr_id: 1286
+  id: b71c6fb5-35a0-4ad9-b61f-6484623d3329
+  name: Google Cloud Platform
+- habr_id: 334
+  id: 3565b844-8d82-4a4f-aeda-566c0fe5efb5
+  name: Clojure
+- habr_id: 460
+  id: 1e62ab40-06fb-455b-b332-98519820bce7
+  name: MFC
+- habr_id: 873
+  id: 39ecea7c-63e6-4edf-9ee3-d0c00397f158
+  name: Oracle administration
+- habr_id: 919
+  id: 11845402-bfc4-48d4-a1ad-dda5efd7e10a
+  name: Oracle PL
+- habr_id: 721
+  id: adc8efef-9e28-4695-830e-db099c754318
+  name: Oracle Application Express
+- habr_id: 441
+  id: c30fc702-b3a6-4749-97a0-d2066321ee31
+  name: OpenCL
+- habr_id: 636
+  id: 001c25a8-baa1-4d36-b10f-0376950e6e3b
+  name: Oracle WebLogic Server
+- habr_id: 616
+  id: 178a3865-388d-4706-873a-48a1ded8925a
+  name: Oracle Solaris
+- habr_id: 62
+  id: 7339a843-e707-46ac-bf64-4bc1604ed90a
+  name: MODX CMS
+- habr_id: 1132
+  id: 677782a2-5b37-4599-9f1d-52dc6760ebae
+  name: SAP HCM
+- habr_id: 211
+  id: 435f4745-a131-44b3-841e-e75af9e81f95
+  name: DataLife Engine
+- habr_id: 585
+  id: 41a94648-f115-4f00-82cc-2d23bdd3d710
+  name: Host CMS
+- habr_id: 209
+  id: af323a2d-9c15-403e-9d73-b0b23b30651a
+  name: Simpla CMS
+- habr_id: 153
+  id: 893ff8ca-bb5c-4918-927b-13150a5d3f60
+  name: Netcat CMS
+- habr_id: 1434
+  id: 7b68a40a-a760-43a4-a444-5841da9d16db
+  name: October Cms
+- habr_id: 1444
+  id: 481e8eab-2675-45c1-b2da-b857b95fb0d9
+  name: Contentful
+- habr_id: 1178
+  id: 0dc67dae-848a-4ee8-9d01-259c451d34b4
+  name: ECN RFC
+- habr_id: 269
+  id: b50d1b87-847c-4cae-9216-011ce776a289
+  name: Design icons
+- habr_id: 730
+  id: a0471dc1-8609-4abe-8fb8-ad139b34c857
+  name: Coredata
+- habr_id: 409
+  id: daf9e881-466c-4931-880c-5bfbcb00178f
+  name: Code Optimization
+- habr_id: 490
+  id: fbcc7de0-dc08-4409-8d06-6c5a1e1be50a
+  name: Creation of corporate identity
+- habr_id: 951
+  id: 85051b08-94b3-4cdc-8778-410eb5568ba8
+  name: TCP
+- habr_id: 349
+  id: 1afb1872-1004-4d19-b4bd-9d9455a42ec9
+  name: Organization of work with CRM
+- habr_id: 1052
+  id: 3736519b-d452-41f1-bb6c-e92e43a2d95c
+  name: System analytics
+- habr_id: 996
+  id: 8ca743d7-4bfe-4e6d-b223-1797f47c6853
+  name: Raster graphics
+- habr_id: 1126
+  id: 250358b6-aa4d-425c-95dd-850da1ab9ad2
+  name: Microsoft Dynamics CRM
+- habr_id: 185
+  id: 52301b61-87c5-4787-b792-310810ec6418
+  name: Graphics for games
+- habr_id: 578
+  id: c37a06c1-1e67-45f5-823d-be068dd885a8
+  name: Computer graphics
+- habr_id: 675
+  id: ba391e1b-1f0f-4c81-b1e4-139a5a410d15
+  name: APCS
+- habr_id: 975
+  id: 1b1e379b-af59-4f3b-ae5d-bf64dd8b7c1c
+  name: Core Graphics
+- habr_id: 151
+  id: 1838cb77-bc45-4274-8249-f8dd41edcd8c
+  name: Version control systems
+- habr_id: 1281
+  id: 6a183116-85fc-4c2c-9123-60871fea9682
+  name: PostCSS
+- habr_id: 454
+  id: b9ddf530-eab9-4b51-94b1-c093422281e1
+  name: Product Design
+- habr_id: 1010
+  id: 0367fa86-8ebe-491d-85b2-df2b8e1662d5
+  name: Product development
+- habr_id: 997
+  id: 715936e5-9e36-4913-9c44-f4fb1aa0b28b
+  name: Product marketing
+- habr_id: 120
+  id: 88e90837-4320-4f90-a5b7-d4429b249531
+  name: Network security
+- habr_id: 961
+  id: 5ba433f9-172c-4da1-8e29-b98c9932c6b2
+  name: Mercurial
+- habr_id: 626
+  id: 4bcb469b-e385-4ec5-9c08-38d15a1295da
+  name: Cuda
+- habr_id: 944
+  id: f493beef-3efc-4ea7-857e-0acbb2f803df
+  name: Network security
+- habr_id: 88
+  id: d13d966c-2d0c-4d6b-8db2-50644a75b804
+  name: SSH
+- habr_id: 963
+  id: 42d1c785-c277-4cb3-9003-cb832d232a8c
+  name: Kaspersky Endpoint Security
+- habr_id: 517
+  id: e1d3353b-5431-466a-99e1-dcb4450ea070
+  name: Documentum
+- habr_id: 946
+  id: 46169d39-82f2-4788-8d13-f526e23551e0
+  name: Final Cut Pro X
+- habr_id: 158
+  id: f9eb4db4-cfe3-452a-85e2-faf9837482d5
+  name: cURL
+- habr_id: 1499
+  id: fef2f57c-a435-4969-863a-eba10b2ed4ad
+  name: Custom View
+- habr_id: 1422
+  id: 666569f8-6353-4f13-9d5c-d15a63fb858a
+  name: Acunetix
+- habr_id: 555
+  id: bf9be2d0-792d-4b25-8aa2-c6a76d3d5762
+  name: OpenCV
+- habr_id: 1255
+  id: 2812c332-73e6-4cc7-b280-d201ebae276c
+  name: Cypress
+- habr_id: 1450
+  id: 5ca2ea7a-c728-416b-9254-6439f54b50ff
+  name: Cygwin
+- habr_id: 1505
+  id: aeb6998d-3cff-42ed-8b75-b120b33c6a05
+  name: NancyFX
+- habr_id: 1418
+  id: 2ae27615-f81b-443e-97d2-c602dc04ab79
+  name: Dependency Check
+- habr_id: 1249
+  id: 68697506-1312-46e0-9aeb-a36b8dd0b509
+  name: Tilda
+- habr_id: 84
+  id: 265dd18f-b643-4065-93c8-a41136f6d3bb
+  name: Dart
+- habr_id: 1678
+  id: a3519776-1e30-473e-80fd-3cda8f2b614e
+  name: QuestDB
+- habr_id: 83
+  id: e30b1d09-4c0a-485e-a3b6-cf250407beaf
+  name: Apache CouchDB
+- habr_id: 1358
+  id: 6851cd50-0eaf-44df-b10f-5bc1f8ddb3bd
+  name: Yandex Database
+- habr_id: 1004
+  id: d52434d2-7e46-43f1-8c8a-dcfff8eb5c72
+  name: Mudbox
+- habr_id: 1231
+  id: 7b4f1ac8-d902-4325-8e82-2253124efc6f
+  name: DBIx::Class
+- habr_id: 1673
+  id: d3502db8-ed54-449a-b8d8-b4b649fb5a9b
+  name: MariaDB
+- habr_id: 1561
+  id: 32e88050-6d1c-454e-b16c-47804a82d90a
+  name: dbExpress
+- habr_id: 1394
+  id: 57a80085-fce4-465e-a0f9-0d2ea8a3f90e
+  name: Buddy
+- habr_id: 97
+  id: 68015df0-4933-4bb0-ab58-39c660bfe9b2
+  name: iOS development
+- habr_id: 1214
+  id: e2685f1b-debf-49c3-93ae-02712b4bf07b
+  name: ADFOX
+- habr_id: 837
+  id: 567883bc-b044-4b59-9186-e765cf55acb1
+  name: ColdFusion
+- habr_id: 1024
+  id: 175a3949-ca6e-4240-ae79-91f7e411572f
+  name: Adobe Edge Animate
+- habr_id: 539
+  id: d66fd109-63ba-40cc-80b3-025b3b630f66
+  name: WxWidgets
+- habr_id: 1639
+  id: adff689c-4a66-4fe9-8be7-73ab71a8a14e
+  name: Flutter Widgets
+- habr_id: 1355
+  id: acb62548-c8bb-486a-9643-26d40cfcf176
+  name: DLT
+- habr_id: 699
+  id: 6d9fa71a-ba90-4725-b73a-5d13f1d8a0e9
+  name: Synchronous digital hierarchy
+- habr_id: 900
+  id: 45f94b20-d357-48fa-81e1-6958e8f147b6
+  name: Android Studio
+- habr_id: 5
+  id: d66831b5-4659-4f43-9107-f22b6e461225
+  name: Media Planning
+- habr_id: 438
+  id: 80c78fa3-53ef-4ce4-8dad-b164ba863437
+  name: Setup and adjusting equipment
+- habr_id: 1393
+  id: 796a484b-2433-48c7-8a4e-c2df95f7c4d8
+  name: Android SDK
+- habr_id: 844
+  id: 73fc0b7d-f0e9-479f-b768-dde3e925577c
+  name: Android NDK
+- habr_id: 981
+  id: 2215bce6-f1d4-4857-bd21-a997b06c1702
+  name: Corona SDK
+- habr_id: 691
+  id: 0534a431-535c-4ed5-b1d0-eb5260607d42
+  name: Verilog HDL
+- habr_id: 698
+  id: d7372c69-dc26-434d-9f39-c232adc6225b
+  name: VHDL
+- habr_id: 716
+  id: 7f0e1c60-8485-4a56-baa7-b7dbf82b05be
+  name: Wireless technology
+- habr_id: 1602
+  id: 30b00b48-9f1b-4a99-b4f9-8740a771816b
+  name: Handlebars
+- habr_id: 1604
+  id: 82c36e03-389b-40f5-bd27-9a9c7ea24eeb
+  name: Nunjucks
+- habr_id: 1410
+  id: 00c42cd6-f118-4999-aa74-256ed048298e
+  name: SSDL
+- habr_id: 1603
+  id: b0068599-3488-4bbe-a8c9-628bcbf25a43
+  name: Mustache
+- habr_id: 519
+  id: 37ab4142-5394-4111-afaf-0d3ea3092ab0
+  name: Redmine
+- habr_id: 511
+  id: 475df548-32f5-495a-8fe0-57406e16034b
+  name: Site administration
+- habr_id: 200
+  id: 980abc0b-cf09-4ead-8d6b-c1fe302f7282
+  name: MS SQL administration
+- habr_id: 428
+  id: 94de3e6c-99f3-46c0-8109-87d9dcf064b4
+  name: PHPMyAdmin
+- habr_id: 923
+  id: cb870aee-ebcf-4f2c-94d0-be76ccfb1440
+  name: Debian administration
+- habr_id: 1023
+  id: ed3e073b-e660-4891-b459-8f7b370af76a
+  name: Juniper Networks Equipment Administration
+- habr_id: 1171
+  id: 83e35ac3-37f4-4701-81b9-b295f9b0b5a6
+  name: RDMA
+- habr_id: 310
+  id: b6f5b752-7ede-4f1e-8d6b-34d45c992185
+  name: Windows Forms
+- habr_id: 569
+  id: f610ecfc-9b36-45a9-bae1-c965ce3d7756
+  name: Design of outdoor advertising
+- habr_id: 631
+  id: ad72b74b-cce2-4ee6-95d5-c1f8f621f73b
+  name: Windows API
+- habr_id: 1063
+  id: deff2789-f5df-4106-baf9-fb8026e9df10
+  name: Apache Cordova
+- habr_id: 1304
+  id: a2311d02-da9b-4be9-8b3d-29c8a5e4adf8
+  name: Service Discovery
+- habr_id: 1123
+  id: 6bcd0950-a8c3-471a-9ad5-a11238f78d54
+  name: Hp Loadrunner
+- habr_id: 243
+  id: 1f905c4d-a9dd-430a-a07c-3839da0619c3
+  name: Apache Cassandra
+- habr_id: 1160
+  id: 3b94d930-dcfc-4bcc-a500-cbeed66b200f
+  name: Android User Interface Guidelines
+- habr_id: 1006
+  id: 4b2b999d-3520-42f7-966e-1f27c152a724
+  name: Development of drivers
+- habr_id: 534
+  id: d2c520e7-2130-4a1f-900a-4d40d2d6023b
+  name: Adobe Dreamweaver
+- habr_id: 1297
+  id: ce8a7b3d-8d67-48e5-b78c-735c0b919cfe
+  name: Ghidra
+- habr_id: 1296
+  id: 72dc3088-4b1c-45c3-bd05-7c0f9ecc6d1e
+  name: Frida
+- habr_id: 1533
+  id: c970fba8-dffe-4f8b-8699-1e32ebba74a0
+  name: Padrino
+- habr_id: 453
+  id: 723c36ba-5a6a-42f6-97e9-de5042dc056d
+  name: Digital signal processor
+- habr_id: 1407
+  id: ba41493a-d8ba-4e8e-a984-897caf50431f
+  name: IDS
+- habr_id: 1655
+  id: 6c8a31b1-1e5d-4eb4-8abd-271f22ea81a2
+  name: HR records management
+- habr_id: 1645
+  id: b75a4b1f-a9a9-4650-8f4b-b2fa1088e79b
+  name: Godot Engine
+- habr_id: 1103
+  id: 15f2d78a-1ad5-4efc-9c85-9629a7052133
+  name: Smartcards
+- habr_id: 1646
+  id: 55f0f392-97a9-4891-8da3-179b6b5a3390
+  name: GDScript
+- habr_id: 1656
+  id: af73a2c4-8b62-459b-908e-ec0d93d0a61d
+  name: Maintaining military records
+- habr_id: 1295
+  id: 2d976c20-9d8c-4052-8926-1c8edd989d26
+  name: reStructuredText
+- habr_id: 15
+  id: e627cafe-19b7-462a-a114-c5ee1b0c26ab
+  name: Testing productivity
+- habr_id: 830
+  id: 60787d7c-7635-46c5-8706-24e6873d7b54
+  name: Modular testing
+- habr_id: 747
+  id: 4f3287a7-fb41-4b80-b0dc-381aa91db03b
+  name: Development of a product strategy
+- habr_id: 480
+  id: 17b3012f-a8b0-4e89-99e1-15fceb18cc80
+  name: Production
+- habr_id: 473
+  id: 63d45fe8-7c7e-4119-8c0b-77924ec11f38
+  name: Arduino
+- habr_id: 87
+  id: 81d9487d-ec8e-44e7-af6e-d5caefc503ec
+  name: Industrial design
+- habr_id: 582
+  id: 71c5a4e5-8882-4af2-9545-7182eaeff637
+  name: MapReduce
+- habr_id: 1660
+  id: d3e9cc09-5a7e-4655-a074-0f51e0c4680b
+  name: Product analytics
+- habr_id: 1333
+  id: a36e10a5-7b7a-4219-9669-34f6da12b001
+  name: Product Training
+- habr_id: 74
+  id: 020edf82-09ea-46b8-8c04-a5637714f3a7
+  name: Media advertising
+- habr_id: 1121
+  id: 21780323-e0c4-4484-bc2f-a5937eabbc5f
+  name: Algorithmic purchase of advertising
+- habr_id: 337
+  id: 11370b07-3b60-4812-8fd4-c710542c51b9
+  name: SolidWorks
+- habr_id: 772
+  id: 3f8f9d07-3129-449d-8ef9-9cadf86a917f
+  name: MODX REVOLUTION
+- habr_id: 752
+  id: 776efc86-c06d-49a1-837e-6d0f5ca01532
+  name: MODX EVO
+- habr_id: 621
+  id: 81b83272-f31c-4807-965f-7d74ba40dfc2
+  name: Microsoft Dynamic CRM
+- habr_id: 1125
+  id: c6b3d08a-fc2e-49c9-bba9-9c2e5a759af1
+  name: Microsoft Dynamics NAV
+- habr_id: 251
+  id: f167eb9d-8d29-4c29-bbb5-d582ffcbbd50
+  name: Intellij IDEA
+- habr_id: 629
+  id: a8bebe08-6654-4521-821d-ebf53c380ae0
+  name: Market research
+- habr_id: 1271
+  id: c5ea9f52-f5cd-46a1-afae-3aba0a81321e
+  name: Deep Learning
+- habr_id: 903
+  id: 256af805-cc2f-4ea2-bf60-2170985cbbaf
+  name: Lead generation
+- habr_id: 1324
+  id: b57935ce-f6a5-470f-be79-4f540ccbdd57
+  name: Web
+- habr_id: 507
+  id: 9ea877cb-4a58-46f2-b16f-c4c337b845b1
+  name: Facebook API
+- habr_id: 130
+  id: b10879dc-aff5-496a-a8f4-ba0b93b484af
+  name: Tornado Web Server
+- habr_id: 40
+  id: 39e0f62f-39d5-4516-8ae0-3509475b6bd6
+  name: GWT
+- habr_id: 820
+  id: d44c8533-ccdf-4e13-9691-41641399a95d
+  name: Literary editing
+- habr_id: 68
+  id: d33019bf-55df-4abc-b4b3-ed16a9f6979e
+  name: Installation of video
+- habr_id: 3
+  id: 8092a69e-d123-4796-9b50-7e8763b56629
+  name: Coffeescript
+- habr_id: 973
+  id: b2784e8a-2f5b-49e9-abec-898531a78f6d
+  name: Sound engineering
+- habr_id: 401
+  id: 66803cee-fdcd-426c-9add-aedce679c031
+  name: Software engineering
+- habr_id: 583
+  id: ed144b53-a0a6-4433-8b93-a59220dddce8
+  name: Freeswitch
+- habr_id: 1594
+  id: a9f56da0-4d37-4cf2-8324-a615684f8b27
+  name: Malware Analysis
+- habr_id: 823
+  id: 4c1f3272-79c8-400d-87a5-1180ee0eec67
+  name: Jee
+- habr_id: 825
+  id: 9c4557cd-1e22-4850-a1e9-8cfa0ea12427
+  name: FreeMarker Template Engine
+- habr_id: 596
+  id: e3b7769a-3ece-475b-9362-6e26db958702
+  name: LiveStreet
+- habr_id: 1245
+  id: c46ca3ea-851c-41df-871d-15b05af44698
+  name: ZigBee
+- habr_id: 1192
+  id: b5cf7c53-fd15-4839-92cd-e8344815dcbb
+  name: Oracle Engineered Systems
+- habr_id: 1182
+  id: b58618fa-21fd-4da3-8bb6-13e76fcb8213
+  name: Computer Engineering
+- habr_id: 1539
+  id: c2a5f17e-215b-4625-9261-77e3e9beb1cb
+  name: BeeGo
+- habr_id: 1549
+  id: 583e7271-3304-4d70-a3e8-6e192cca48b7
+  name: BlueEyes
+- habr_id: 192
+  id: 143d5132-0619-4e14-8eb9-c4bd620515a6
+  name: Technical director
+- habr_id: 64
+  id: af1801db-78d6-420e-afc7-54305e9db4c0
+  name: Chef
+- habr_id: 1614
+  id: c043ffac-30b2-4d80-bdad-db0ee5ed7226
+  name: Effector
+- habr_id: 221
+  id: 8f8c295c-9deb-48e8-aaf1-d8d62918afa9
+  name: Creating visual effects
+- habr_id: 637
+  id: 6ceb8a32-5e20-4b60-9110-1f528dd2bcad
+  name: Creating sound effects
+- habr_id: 468
+  id: 6cd814a1-f326-4a32-9d6d-3601a9c63a41
+  name: Implementing gamefice
+- habr_id: 811
+  id: 2ac849c3-bce0-4c7e-9c55-27b95eaeaf92
+  name: PrimeFaces
+- habr_id: 1582
+  id: f4630f4f-768d-4006-a848-367be69bb56e
+  name: Formation of a reference strategy
+- habr_id: 1482
+  id: 13ad48a7-ed5a-444c-ae17-88ddeccb97c8
+  name: Voiceflow
+- habr_id: 513
+  id: f0cefd0c-2554-4aad-8a86-ae155c7dd2ed
+  name: Strategic marketing
+- habr_id: 808
+  id: a2624289-fa4e-4d84-b622-ddee5ce53c5f
+  name: System integration
+- habr_id: 391
+  id: 917377f7-c2b8-4cf9-9cc0-87a0c4216805
+  name: Strategic communications
+- habr_id: 106
+  id: 86080483-ab68-447a-bdfc-184c688903f9
+  name: SSIS
+- habr_id: 146
+  id: dfe75911-f9d1-4f89-bad2-940c5a268766
+  name: Regex
+- habr_id: 354
+  id: 84c813d7-7d68-4fba-b7f0-385973f69d6a
+  name: Sony Vegas
+- habr_id: 425
+  id: 16a410f7-5dbc-4af3-8e24-343d3a72bbdb
+  name: Regular expressions
+- habr_id: 999
+  id: 5db8c6d2-44ff-4dfe-a40e-45bbc8a85143
+  name: Sony Vegas Pro
+- habr_id: 196
+  id: ab8f2db5-6ef8-4bdd-b564-f67e80a0e3f8
+  name: PhoneGap
+- habr_id: 1238
+  id: 97000298-fc08-425f-8bfd-5a98aff4c5b4
+  name: FFmpeg
+- habr_id: 1475
+  id: fcac9526-8df5-498d-a6b2-9764df38b267
+  name: Integromat
+- habr_id: 394
+  id: 0eb15b5a-ab02-47c3-8c5f-13c5ea17de6c
+  name: Behat
+- habr_id: 103
+  id: 537d78f7-1efe-48a3-8a83-28cd4ea74639
+  name: Codeigniter
+- habr_id: 464
+  id: 7e89d4d3-2790-4e09-8943-0f76e3ec8237
+  name: Development of video surveillance systems
+- habr_id: 1491
+  id: 3fa37124-6eb8-467f-b3d0-39c1ccb261ec
+  name: Reinforcement learning
+- habr_id: 1592
+  id: bded29e3-df81-4740-9110-8d97d1fc58b5
+  name: Eiffel
+- habr_id: 94
+  id: 42a13168-6ac3-486d-8723-506095a832e8
+  name: Internal optimization
+- habr_id: 95
+  id: b0a01046-e626-4b67-8b87-21b7b68eab45
+  name: External optimization
+- habr_id: 1290
+  id: 7cbb0bcf-6c8d-4ab3-85c9-71f84175e2d8
+  name: TypeORM
+- habr_id: 991
+  id: f0ac7bcb-c710-4a55-b115-03f4f299cad6
+  name: Voiceover
+- habr_id: 416
+  id: 1ccc05c3-36ac-45d1-868d-6e570c5017d6
+  name: Geoinformation systems
+- habr_id: 494
+  id: 2ec154a1-2a39-4df5-b252-85db6ef0d893
+  name: Video Construction
+- habr_id: 838
+  id: cdae8789-979b-483c-8331-43d0baa2b6f0
+  name: Creating creative concepts
+- habr_id: 628
+  id: fbbb640c-aebe-46bb-bf2d-57c870336c6d
+  name: Creating concepts
+- habr_id: 1156
+  id: 3fd5ba3b-cf75-414a-8171-bbb4c28f4a2a
+  name: Zeplin
+- habr_id: 891
+  id: 88ac5fbe-b9ee-4802-8a2c-f2ce6b658cc8
+  name: SQL Server Reporting Services
+- habr_id: 751
+  id: 99625786-b834-4f1b-a655-1bc7d4d0fef2
+  name: Reportage photography
+- habr_id: 272
+  id: 389973ca-7bb3-4a97-b223-e084ffe24b37
+  name: CodeCeption
+- habr_id: 652
+  id: 46849dba-a38c-43f2-aeea-db97420e58bd
+  name: SQL Server Reporting Services
+- habr_id: 768
+  id: b8505f20-807c-4ebb-b8d2-4419bc48c218
+  name: Prepress preparation
+- habr_id: 1027
+  id: 4b2763e2-3b1f-49da-8b1c-c5eafbf8fd43
+  name: Design concept
+- habr_id: 1575
+  id: 9231fc82-f2b3-4ec8-b3b2-c87bde58e399
+  name: CSS processors
+- habr_id: 1311
+  id: 294e7564-d271-460b-883c-72016567b610
+  name: GitHub Deployments
+- habr_id: 1672
+  id: 5be4b46d-2469-49a1-8036-a4811309a325
+  name: JasperReports
+- habr_id: 667
+  id: 16221532-b1a3-414b-8ff6-3fde6ecc99c7
+  name: Neural networks
+- habr_id: 458
+  id: ca28a3f0-d5d0-4b95-955d-92b91df5db3e
+  name: German
+- habr_id: 1306
+  id: 31db9360-ba8c-4e92-b503-c85d1f06658c
+  name: Prometheus
+- habr_id: 1246
+  id: 6463f068-e8b4-4b7f-9e61-e44b3b629dd8
+  name: MQTT
+- habr_id: 378
+  id: 613a6bb9-d3d5-430b-84cd-5305968bcdf5
+  name: DevOps
+- habr_id: 1186
+  id: 6d227c44-5942-474a-b934-f98b183d48cf
+  name: AR and VR development
+- habr_id: 993
+  id: 41c6455e-4a34-4190-90d9-c243b21f89a3
+  name: Rewitting
+- habr_id: 1217
+  id: 152e461a-e9be-49c9-bb4e-bfd4e9155908
+  name: Falcon
+- habr_id: 769
+  id: 023c8729-4fa3-449f-8eaa-62e5976c6a3f
+  name: QlikView
+- habr_id: 341
+  id: 7cdcdd37-7b72-4817-8370-6a124c1874ee
+  name: Firewall
+- habr_id: 1229
+  id: 710b6436-291e-4c26-812b-fca15afaf9ae
+  name: Phoenix
+- habr_id: 877
+  id: fcd29370-f56a-4801-9369-b9d913edec83
+  name: View code
+- habr_id: 887
+  id: 958e40bc-ce1e-46c3-887a-603b2826bdbb
+  name: Kohana Framework
+- habr_id: 1219
+  id: e6c71c44-f213-4a51-b9ff-3d358c39b722
+  name: Robot Framework
+- habr_id: 4
+  id: 0e9c824b-8573-4a1a-a3d5-f5cc3d7e6553
+  name: New Media
+- habr_id: 370
+  id: 97a23d6c-dbfb-4379-b093-d34e9c8c6566
+  name: Payment Gateway
+- habr_id: 551
+  id: 01f9eab6-aee3-489f-abff-696d390984db
+  name: Grails Framework
+- habr_id: 456
+  id: 1719062d-0a3f-41ab-826e-83329f247cf8
+  name: OSGI
+- habr_id: 235
+  id: fe282aca-a2d2-434c-ab77-f79ffc6fefe8
+  name: Text translation
+- habr_id: 140
+  id: febd46c5-e902-4b31-9714-4ef9d4d8ffae
+  name: Texture
+- habr_id: 613
+  id: c625af88-fea8-4e5b-befd-297c107a060d
+  name: Microsoft Exchange Server
+- habr_id: 299
+  id: 5ef23540-68df-4e8a-8273-932f2e4882a8
+  name: Flex
+- habr_id: 1468
+  id: d72b4100-5061-407a-b484-76352b948174
+  name: RxSwift
+- habr_id: 114
+  id: c147cda9-feda-4f08-82de-6cdbc284b0d8
+  name: DevExpress
+- habr_id: 436
+  id: d7d2bacd-ad7a-45b9-9ec2-c18da3c0f239
+  name: LATEX
+- habr_id: 1485
+  id: fd4903a3-52eb-4150-b444-3baaa0e53f44
+  name: Yandex DataLens
+- habr_id: 486
+  id: d1fd1ac4-6a84-49e9-ad47-691eae13b7b4
+  name: Keynote
+- habr_id: 1616
+  id: 797e5c70-e4e2-4916-b46e-97ac4a035635
+  name: Ceylon
+- habr_id: 1511
+  id: c652bce0-c580-49dc-bd79-68f12aa3f414
+  name: SwiftMonkey
+- habr_id: 901
+  id: c90e9c7a-09e3-4b10-a778-0ab2f2cb003c
+  name: Waterfall
+- habr_id: 1312
+  id: 9e292d2f-529c-4155-a541-4d4c991f22c0
+  name: Fastlane
+- habr_id: 1541
+  id: 9833d03a-8290-4bcb-88f5-ab299840ad2c
+  name: Buffalo
+- habr_id: 1600
+  id: 9fcb9a76-477d-4395-bbde-958ce5857d79
+  name: XUL
+- habr_id: 810
+  id: fcc44647-5a7b-47cf-ae99-4f820737bf3b
+  name: Liferay
+- habr_id: 1498
+  id: 4fb7e5f7-a396-4dd3-b2d3-8121bdf930f3
+  name: Retrofit
+- habr_id: 205
+  id: 1aac73be-0f20-4197-b208-5771b8d131d6
+  name: OSPF
+- habr_id: 116
+  id: 2b216499-f8c7-4c1d-b1e0-5753f30aeac5
+  name: Postfix
+- habr_id: 595
+  id: 4720bf82-cf12-4a0b-a80e-820374b04d28
+  name: Configuration management
+- habr_id: 1609
+  id: bd2a0c85-7b98-48c0-bab0-a57c5d61ee1d
+  name: FigJam
+- habr_id: 1218
+  id: a235a86c-a07a-4214-b4a5-4bcc289a1214
+  name: Flutter
+- habr_id: 1169
+  id: d5906971-86f9-4a49-9e42-371dd0f6819e
+  name: TENSORFLOW
+- habr_id: 1243
+  id: 6aa89469-fcfe-47ff-be28-7c364928a450
+  name: Flow
+- habr_id: 1021
+  id: 52ddb71b-bb59-4823-8d53-bb43ca2af885
+  name: Flat design
+- habr_id: 1398
+  id: 658bbf56-342c-4c3d-a84c-49047b9a5fd0
+  name: AppSflyer
+- habr_id: 896
+  id: 77fa5a84-e990-4148-ab5e-f735aca6cd1f
+  name: FL Studio
+- habr_id: 1269
+  id: 1aef95aa-02b4-4f8b-9d95-ad7a09d97739
+  name: Apache Flink
+- habr_id: 1638
+  id: 201273e2-72dc-450e-8b62-d1d96a6ad61e
+  name: Flutter Provider
+- habr_id: 1637
+  id: bc1a2054-f96b-4a47-91c3-e4def2fa18a1
+  name: Flutter Riverpod
+- habr_id: 1211
+  id: d7c0a5c4-78c4-48ab-83f6-6fccaa8ceb69
+  name: Oracle Workflow
+- habr_id: 1092
+  id: d364eb79-a547-48fc-83e3-1e761ce4eee5
+  name: Apache Flex
+- habr_id: 1522
+  id: 823dfa68-ba8b-44f7-a5f0-26a6e1125698
+  name: SFML
+- habr_id: 576
+  id: 2f8d337e-3d8b-4dc1-ba8e-0218a2864ada
+  name: Information architecture
+- habr_id: 770
+  id: ed7f5af5-257a-4d16-9863-4633fe111d2d
+  name: Creating infographic
+- habr_id: 1152
+  id: 85b8054d-a2e9-49e6-bdfa-99ad8e6d5318
+  name: Salesforce
+- habr_id: 527
+  id: 72c94d4f-3158-4a5a-99e2-7d42695c20eb
+  name: Team Foundation Server
+- habr_id: 1325
+  id: 60a72da1-22b6-474f-b735-3ccc158a687e
+  name: Performance
+- habr_id: 422
+  id: 617ada8b-6757-4e87-9553-b8b0144a9c97
+  name: Information design
+- habr_id: 307
+  id: 87d1db58-154e-4d65-a70f-35ae384f7c77
+  name: FPGA
+- habr_id: 1097
+  id: dc53e5ff-4a1a-46a7-a777-0104003198a6
+  name: French
+- habr_id: 926
+  id: 6fc5edcd-6415-4375-9590-ec0e71b8d533
+  name: Wolfram Mathematica
+- habr_id: 1437
+  id: f2f437ee-5000-4a9a-9017-246a893f8d03
+  name: Screaming Frog
+- habr_id: 680
+  id: a7f84583-5a8e-45d2-bb9c-d4cab56c30df
+  name: pfSense
+- habr_id: 485
+  id: 38f5007f-e60c-42d2-90df-c153f4312ca5
+  name: Microsoft PowerPoint
+- habr_id: 694
+  id: 66f60e25-f82d-4901-a3bf-963d4369c365
+  name: Microsoft Visio
+- habr_id: 835
+  id: 4634afd3-2c29-4b08-9505-50c14a214787
+  name: Software Software
+- habr_id: 665
+  id: 07b1e0a3-4fbf-48ee-badb-060c9cd3a3c2
+  name: Microsoft Project
+- habr_id: 797
+  id: 3e5b4fd0-88a0-4ef4-a6aa-f43ba4f1ffee
+  name: Functional programming
+- habr_id: 277
+  id: ff6b59cc-0404-439c-91c8-96d7f37a58d5
+  name: FuelPHP
+- habr_id: 1237
+  id: 3b972537-448a-4229-ac43-fa050cb32b15
+  name: FUSE
+- habr_id: 1633
+  id: 47f2d0c9-e447-4247-85cf-7fbc16006162
+  name: ChatFuel
+- habr_id: 466
+  id: 281b64b5-97da-4f1a-8537-3c49b7381d36
+  name: Design and gasket LAN
+- habr_id: 789
+  id: 890265b4-8fe3-4e42-b3b0-f35a7bd4c985
+  name: Organizational development
+- habr_id: 958
+  id: fe285992-4478-4a01-ad4b-2dc4a913591c
+  name: SugarCRM
+- habr_id: 1564
+  id: c7d6bda1-c523-42a5-8a72-afbbea9bfff0
+  name: Sugar
+- habr_id: 1195
+  id: 2a62200c-0765-4c74-b582-ffeeb6def991
+  name: RGB
+- habr_id: 1630
+  id: 90e3089f-e946-454a-8aa2-2bf2a631ac5e
+  name: apiDoc
+- habr_id: 384
+  id: 21bc6579-d15b-44cb-8f26-a1c6d8bb077b
+  name: Microsoft Silverlight
+- habr_id: 1463
+  id: e3417522-3384-4470-bea5-d72672286548
+  name: GitHub
+- habr_id: 1090
+  id: 5298189b-e03e-41eb-a4c0-24fce177db78
+  name: Unreal Engine
+- habr_id: 1283
+  id: 3cf7594a-63e5-40ea-9ba7-38a13e9121ba
+  name: GitHub Actions
+- habr_id: 936
+  id: 525eabcd-1595-4bea-ad85-a30dcbd141a4
+  name: GIS
+- habr_id: 34
+  id: a8a64111-7897-49ab-ab9d-cc0305e3022f
+  name: PostGIS
+- habr_id: 612
+  id: 8c48fa66-e291-4b20-9157-b2a848b14e07
+  name: Nagios
+- habr_id: 1303
+  id: 215e55fe-28cf-452d-82f4-0a6af619cbf4
+  name: Google Kubernetes Engine
+- habr_id: 58
+  id: 47e5760a-6792-4e98-9398-d2553b3b6015
+  name: Google Maps API
+- habr_id: 206
+  id: f5b0e19f-822b-4c2d-bc27-06bc9e465fdd
+  name: OpenGL
+- habr_id: 1399
+  id: e1fabd84-5f0d-49e4-bb92-b31d2a1a085f
+  name: Google Tag Manager
+- habr_id: 353
+  id: 22819334-d86c-497c-b9de-e1abf1cc2206
+  name: GLSL
+- habr_id: 1476
+  id: bf960d3c-f8f8-410b-8c13-a166834393fa
+  name: Glide
+- habr_id: 312
+  id: 0188604f-cc37-4c94-beca-f9dc2b55c5a0
+  name: OpenGL ES
+- habr_id: 1442
+  id: 956dbce5-6b41-468d-83d7-bb9ac074d423
+  name: Google Search Console
+- habr_id: 1335
+  id: d7e16f2e-6a4c-4fdb-88f6-542a3c10cc8b
+  name: Google Partners
+- habr_id: 20
+  id: 52135161-abdb-43bf-a309-8e28ab2a5c0e
+  name: Google App Engine
+- habr_id: 1599
+  id: 19589357-e06f-46d0-be72-7d7e2bb3f288
+  name: GoogleScript
+- habr_id: 1251
+  id: 3da994b5-2529-48e9-a00a-d7418c42f2fe
+  name: Google Polymer
+- habr_id: 1620
+  id: 09bead97-0453-4aa6-8bbf-f91d73108771
+  name: Vala
+- habr_id: 1208
+  id: 46ff4bab-1ede-4fdc-ad46-38be62de4e5d
+  name: Material Design
+- habr_id: 478
+  id: c9f09f2e-b701-489d-b269-b4be1925d7d5
+  name: Design
+- habr_id: 107
+  id: 97944e06-2dfb-4000-a16d-8de5a11490d9
+  name: Interactive design
+- habr_id: 52
+  id: 17ddcdc8-fc61-493f-a0be-47cfe857ce89
+  name: Algorithms
+- habr_id: 512
+  id: e8551006-93ff-4396-86c0-4fd4359cb140
+  name: Natural language processing
+- habr_id: 145
+  id: 3430b578-6db4-4a7d-827d-7c54316f56fa
+  name: XPath
+- habr_id: 1029
+  id: 7d56ed00-3331-4414-9d8c-d14c6dacc07c
+  name: GUI Design
+- habr_id: 333
+  id: 74eafbc4-ae2d-4f60-8671-441dc04e4e61
+  name: Lisp
+- habr_id: 1276
+  id: d59ce577-9129-45be-8ff6-e6208c12618d
+  name: UVM
+- habr_id: 742
+  id: eb5563e5-cf07-4d67-be12-7f70683ee3db
+  name: Change management
+- habr_id: 305
+  id: 948ac596-88f0-4715-af50-07edc7a99620
+  name: Haskell
+- habr_id: 336
+  id: 8266faf9-6099-41cf-8b95-389fcc7c2401
+  name: Character development
+- habr_id: 1300
+  id: 9abcf267-750b-46bf-b446-90d2b9887bb3
+  name: Wireshark
+- habr_id: 136
+  id: dd5d9028-eea6-4e29-8500-c7ece30532e4
+  name: Phalcon
+- habr_id: 783
+  id: b39067aa-38ac-4028-9dee-2a8eee82f837
+  name: Shaders
+- habr_id: 2
+  id: e604c3eb-e1af-4c9f-93ee-9991f875c0e8
+  name: HAML
+- habr_id: 257
+  id: 748b4814-f8c1-4b39-a496-1b577b9d9f59
+  name: Red Hat Enterprise Linux
+- habr_id: 892
+  id: efd42deb-ce63-40da-8053-78decf85c38e
+  name: MathCAD
+- habr_id: 1424
+  id: 4434744b-4e2d-49f0-ab19-11b676975c34
+  name: HCl Appscan
+- habr_id: 1062
+  id: 9165126d-f5eb-403e-8202-9b606d76a479
+  name: Maths
+- habr_id: 61
+  id: 9b96aef5-9b6c-4bc7-948b-6e35ee2f37f9
+  name: Apache
+- habr_id: 869
+  id: 8f97a69f-d2f7-40ad-90c5-70d69c1ac605
+  name: Sphinx
+- habr_id: 198
+  id: 567771a8-f967-4635-bbf4-8e506e8f2341
+  name: Creating project architecture
+- habr_id: 1409
+  id: d514d8c9-5b8b-4f66-9abc-536049483502
+  name: Logrhythm
+- habr_id: 571
+  id: 45cadc54-a295-4631-b680-aba1a07ae39a
+  name: Technical design
+- habr_id: 491
+  id: 82db89ae-72fa-47a6-9b87-0ef6fa8af39b
+  name: Photo retouch
+- habr_id: 922
+  id: 1a2f38f3-33f4-4349-9433-4e660380bfc5
+  name: Windows phone development
+- habr_id: 343
+  id: 6619ea79-61a0-4ed1-b2cc-ccca12b1f35a
+  name: PrestaShop
+- habr_id: 1341
+  id: bc771007-7311-412e-9b1f-f22c253b9c70
+  name: Houdini
+- habr_id: 1649
+  id: 702621a2-d3de-4e75-b0e6-5bdb16f8b3ad
+  name: kPHP
+- habr_id: 1546
+  id: ff3468fb-2caf-4a94-8fd5-c2b06820e3a7
+  name: PHPixie
+- habr_id: 1117
+  id: d0503ee1-a860-4928-8192-81fe21293921
+  name: Asynchronous programming
+- habr_id: 1636
+  id: f6a76637-6029-457f-9b5c-701af556dd92
+  name: Threat analysis
+- habr_id: 1095
+  id: 28444374-ee63-4160-be4b-a47d63baebfd
+  name: Http
+- habr_id: 1252
+  id: 57a49f8b-e852-44d0-97de-bfd13cc8f4b7
+  name: Lit Elements
+- habr_id: 1682
+  id: 5d270996-2749-41ae-a656-b3d5d8f9fbfe
+  name: HTMX
+- habr_id: 1480
+  id: 48fed2d9-46d2-4e7e-8a92-04a7ccdd3527
+  name: Thunkable
+- habr_id: 937
+  id: ff64480d-b029-4dc1-bfaf-b7ee175bb41b
+  name: Cryptography
+- habr_id: 471
+  id: 5b292bc9-2b20-41bf-b679-8ad002f1f419
+  name: Applied cryptography
+- habr_id: 476
+  id: c0284cb0-a2a8-4dbe-878f-abb53237815e
+  name: Calligraphy
+- habr_id: 893
+  id: dedbf456-bbba-48ba-a266-5d945cdfa185
+  name: Ties diagrams
+- habr_id: 450
+  id: 90135543-f72c-4d14-b070-de2a7796d352
+  name: SIP
+- habr_id: 285
+  id: add0ccf6-9a7f-42a7-a703-bd0c34d4cc53
+  name: Media management
+- habr_id: 734
+  id: 335e02eb-e9da-43c4-a315-29090b08ad96
+  name: Digital media
+- habr_id: 1584
+  id: e9731af9-53af-4016-9e72-783d3a5918ee
+  name: MatPlotLib
+- habr_id: 1540
+  id: a184f75b-4719-40c7-8ce1-35e6c6cc4e14
+  name: Fiber
+- habr_id: 1487
+  id: 3481af55-64d5-42a2-861d-b45260243141
+  name: GRASP
+- habr_id: 433
+  id: 8963025e-c2b2-4f3f-8bfb-fff04c3d11cb
+  name: SOLID
+- habr_id: 1359
+  id: 469be123-96b1-420b-b840-0e2cd9bdb3f4
+  name: SELENIDE
+- habr_id: 852
+  id: b6e3775c-f909-442d-8048-5ff89cc4426b
+  name: Squid
+- habr_id: 1647
+  id: 2fe91a1d-f78f-486f-bb5d-dd0863a9cf43
+  name: Apache NiFi
+- habr_id: 1548
+  id: e895d792-b7fd-4c9d-a715-a7223c724389
+  name: Lift
+- habr_id: 1517
+  id: 47f71f6d-fef3-45ce-95b5-5fbbc34248e7
+  name: SwiftCLI
+- habr_id: 1516
+  id: cbaecfa0-07c3-4375-8ed7-affea328bc52
+  name: SwiftyOnboard
+- habr_id: 1514
+  id: d5ce7b9e-ace4-4fba-9dea-1678cbb3a1ab
+  name: SwiftShell
+- habr_id: 1513
+  id: bfa25de7-ae9c-404d-8915-1e2809ec3712
+  name: SwiftyFORM
+- habr_id: 492
+  id: e2056922-4e76-4a77-9505-259faa9c08ef
+  name: IIS
+- habr_id: 1293
+  id: 23509031-d005-4e8c-962a-df7953565bf7
+  name: AsciiDoc
+- habr_id: 651
+  id: 7355e7b5-0cc6-4357-94ec-1ac860f671c8
+  name: Mikrotik
+- habr_id: 1285
+  id: 9dab78b7-a882-422e-802b-575adf6a5085
+  name: Qlik Sense
+- habr_id: 1651
+  id: 4ce423d0-d08f-4bc7-9e00-51f6afa6797b
+  name: Wrike
+- habr_id: 1509
+  id: f9f1548d-6765-445c-baf6-e3777e2a98b0
+  name: Qwik
+- habr_id: 924
+  id: fdaf6670-43f5-4d1a-9cff-098f4a28d816
+  name: Image processing
+- habr_id: 708
+  id: 14c2063c-8046-4121-81ef-411d345b026b
+  name: Implementation CRM
+- habr_id: 59
+  id: 5164bd71-4874-442a-9848-f62762715dae
+  name: Slim
+- habr_id: 660
+  id: 9e894c90-7ba8-4c58-a3f3-a3c2b93ad1cd
+  name: Vim
+- habr_id: 1069
+  id: 767da593-d75f-45e2-b585-785281d9da38
+  name: Characters animation
+- habr_id: 23
+  id: a80b2aee-4c80-41dc-9af2-873a654b8b05
+  name: GIMP
+- habr_id: 739
+  id: 89575c4c-5820-4d80-b82d-ed077d5fd17b
+  name: Implementation of monetization
+- habr_id: 1494
+  id: 7e96f86c-cf98-4488-8132-bf672cc1278f
+  name: ArchiMate
+- habr_id: 1059
+  id: 5dbfa3dd-eaef-48d5-82d4-5481f127809a
+  name: Sublime Text
+- habr_id: 580
+  id: 63ecb410-d500-4b07-b491-c5ee9e0133d6
+  name: Writing scenarios
+- habr_id: 911
+  id: ec3984b1-85d9-4c06-a2eb-884166b713da
+  name: Shell scripting
+- habr_id: 1038
+  id: 12f6d322-a4f7-4fc0-9b65-3bca54375273
+  name: Unix Shell Scripting
+- habr_id: 1143
+  id: 25ce350f-4fc1-44c5-ba6a-3165f317e766
+  name: Juniper
+- habr_id: 99
+  id: 55735be3-d1fd-4e7e-8f3b-6fb49cdb3257
+  name: Script programming
+- habr_id: 338
+  id: 15e6a55e-5008-4871-a5ca-40aa2d8f0fdf
+  name: Virtualization
+- habr_id: 35
+  id: 1c610f19-07f3-4640-ad21-3fe54c91a9d9
+  name: Visualization
+- habr_id: 686
+  id: c742d14d-886b-4049-a1a8-f5cd5d1baa6f
+  name: Altium Designer
+- habr_id: 1348
+  id: 14d236a7-acfe-455a-b911-7d76a0295adb
+  name: Appium
+- habr_id: 984
+  id: d8893dd4-6f3c-440c-8772-60c6b6c801b9
+  name: Edius
+- habr_id: 514
+  id: 2179c514-12b5-424b-86cd-79e8b8d41428
+  name: Titanium
+- habr_id: 668
+  id: cf86f26a-ccf4-48b0-9875-437708aed6db
+  name: VPN
+- habr_id: 1250
+  id: 25c81e9b-1ccb-466c-b8d1-a840a07e61f5
+  name: PWA
+- habr_id: 573
+  id: b05e378b-8495-4893-9d59-fa774401769c
+  name: VPS
+- habr_id: 1114
+  id: bc161c1d-b03a-4096-9e4d-d9036ad60557
+  name: Elixir
+- habr_id: 912
+  id: 635a2ab2-1ab1-43d2-82d6-92b233ec642b
+  name: Posix
+- habr_id: 1534
+  id: beb3ef50-6781-43d2-a17e-90420aa60847
+  name: Jmix
+- habr_id: 381
+  id: 5829b631-c219-4d26-aea9-7a2cc61273a9
+  name: Pixelmator
+- habr_id: 46
+  id: a61221ce-7ed0-485a-b03b-2cfc63f0ae7d
+  name: Jade
+- habr_id: 1489
+  id: 17884ec2-fe8d-4fb7-878d-e25eefb2b91b
+  name: Quarkus
+- habr_id: 666
+  id: b55fd53a-d31b-46e5-b0d6-73732159bf0e
+  name: Jasmine
+- habr_id: 419
+  id: 4f516236-5d9d-4567-94e0-ca50b9a62c2f
+  name: Java Message Service
+- habr_id: 568
+  id: 96f00513-cfc0-411f-80ba-f8edd952638a
+  name: Enterprise JavaBeans
+- habr_id: 703
+  id: ffdcf876-3418-49cb-af8d-a41627e9c0bf
+  name: JBoss Application Server
+- habr_id: 1652
+  id: eeef1f4c-3719-4273-ae7e-1a4e3504cb01
+  name: Yocto Project
+- habr_id: 1420
+  id: 4f1a0231-c697-4063-836c-bdd9f94841d0
+  name: JFROG
+- habr_id: 1508
+  id: 84b38a7b-6454-438b-b0e8-b754c0e1b0d2
+  name: JHipster
+- habr_id: 1545
+  id: cf202c9c-c4e1-4575-b2e6-4ae9deb96f8e
+  name: Goji
+- habr_id: 535
+  id: b2a1cf5e-3dc1-4656-aff4-4be830b49a61
+  name: Joomla
+- habr_id: 767
+  id: 6ad22de9-748a-4c2f-94d4-1d5b85e67686
+  name: Journalism
+- habr_id: 1403
+  id: 45a445a5-df8b-49da-b15c-471c090176df
+  name: JOOQ
+- habr_id: 369
+  id: 5dd10666-51fd-4679-a69a-c1bdf057ad8b
+  name: Dojo
+- habr_id: 968
+  id: 151db064-3d43-41a5-9c75-a9caa0afdf9c
+  name: JQuery UI
+- habr_id: 463
+  id: defe0955-25fc-484f-b224-23a2a031052a
+  name: JQuery Mobile
+- habr_id: 1611
+  id: 2cd5c8dc-61d2-42c8-b8ae-1ac89f2bae3d
+  name: JSON
+- habr_id: 552
+  id: b96341c4-8ce4-45c9-9cf0-e699b7c7a501
+  name: Jurisprudence
+- habr_id: 1492
+  id: 9e57308f-786d-474e-8146-b07075f7ec33
+  name: Julia
+- habr_id: 1166
+  id: 395513a9-57ef-4c94-92e2-58d9d485ded3
+  name: Vulkan API
+- habr_id: 1107
+  id: 8086b7c1-222d-447b-b780-218e11a2cb58
+  name: Karma
+- habr_id: 1432
+  id: 241c30b0-c377-47f0-bbdf-ff6d5b001b31
+  name: Link Building
+- habr_id: 1292
+  id: bcb275e3-79a1-47e2-bf3f-bcf7d67196ec
+  name: Markdown
+- habr_id: 339
+  id: e10e3581-e253-42b3-9a99-e96b6abf2989
+  name: Linux Kernel
+- habr_id: 279
+  id: 96b215a4-fa21-4d14-befa-e025dc5e3339
+  name: Sketching
+- habr_id: 1441
+  id: 4ff98405-514d-49c0-b28e-5c9755a9f5f3
+  name: SE Ranking
+- habr_id: 1567
+  id: 8e0b8e29-5c94-455d-be74-bf8c84f8e4bf
+  name: Kitto
+- habr_id: 1512
+  id: 2f1c673b-d409-4bbf-b90b-28c07ea795db
+  name: Kitura
+- habr_id: 1675
+  id: a03a25d3-7959-49da-9aab-bc9e6f420cd4
+  name: Kotlin Multiplatform
+- habr_id: 24
+  id: 6e4946ca-66b3-45ba-8195-0fdef0a0a13b
+  name: Inkscape
+- habr_id: 819
+  id: e49fbcae-bc3d-4bb6-b4b7-2b9dddeb24ee
+  name: Layout of books
+- habr_id: 270
+  id: 205205f2-037a-4124-a904-f11ce52e0600
+  name: Adobe Fireworks
+- habr_id: 1346
+  id: 498f8df0-f421-4982-8748-3b9b1c7792f6
+  name: VKS
+- habr_id: 1524
+  id: c5f438aa-fcf1-4724-a8ab-a54760e37e18
+  name: Ktor
+- habr_id: 1466
+  id: 393de2ed-e6cc-42d8-9c1d-ee00083720ac
+  name: TalosOS
+- habr_id: 1141
+  id: 2a4c1c60-2bf7-4b58-b95f-5d5fb5ffbd50
+  name: NetBackup
+- habr_id: 1467
+  id: 4193ccf5-55be-4b8d-98ae-c4d6c1047064
+  name: Sidero
+- habr_id: 1525
+  id: 5e8d5e95-7dc8-410b-9e82-83fef83a98cc
+  name: Kweb
+- habr_id: 786
+  id: f57f620a-5d59-408e-bcf6-1b856be84545
+  name: QuarkXPress
+- habr_id: 98
+  id: 4c7bc812-9936-4fc8-aff9-567b12fdff8a
+  name: Planning
+- habr_id: 1163
+  id: 03e61158-8829-41f9-847f-39653329320f
+  name: Programming PLC
+- habr_id: 365
+  id: a09e651a-aceb-4d3a-829a-866fc5d81461
+  name: PLC
+- habr_id: 1013
+  id: a6a9da65-2d2e-416b-bf32-9af9ccd644c9
+  name: Mailchimp
+- habr_id: 916
+  id: 8f3df97c-e285-4a6b-bd02-7e6f4b3d42a1
+  name: Soldering of radio components
+- habr_id: 655
+  id: 52548f77-8773-4e4c-a50b-582ec1231558
+  name: LDAP
+- habr_id: 1273
+  id: 85ab5f06-13e5-4e99-8a45-4e4957fc9454
+  name: PowerBuilder
+- habr_id: 1272
+  id: 266c62a0-631c-4006-936c-cc444d8d817f
+  name: PowerScript
+- habr_id: 1465
+  id: 14ab8501-0ae9-48dd-bad3-9d1b16441d08
+  name: Sailfish OS
+- habr_id: 1244
+  id: 356e32bf-c2c0-420d-90ea-13383ec6d4f0
+  name: Smalltalk
+- habr_id: 1579
+  id: e99982b5-8e95-4403-b767-8c4640e2d87f
+  name: Trello
+- habr_id: 1199
+  id: a0ae894a-add2-487c-829d-ec36a7bb345a
+  name: Apollo
+- habr_id: 176
+  id: 050220bb-d2ba-4877-b7a2-9bbc25daed10
+  name: Shell
+- habr_id: 689
+  id: e4efc603-0a3b-421a-925f-5602de28949f
+  name: Parallel programming
+- habr_id: 620
+  id: 4d655111-1268-4837-9a7b-ba5872466a57
+  name: Collance
+- habr_id: 1082
+  id: 1fd6a21e-de1e-483b-801f-dee14775099c
+  name: Installation of communication systems
+- habr_id: 1234
+  id: a933e2ce-2c4f-4890-9acc-4ca70590e41c
+  name: Realm
+- habr_id: 1120
+  id: 26891b6a-c61b-442e-af55-633e31fc53e6
+  name: Elm
+- habr_id: 16
+  id: c0cd6b82-b750-4acd-80e4-ca1534b8f811
+  name: Stress Testing
+- habr_id: 788
+  id: 8eeecc5e-8c8e-4bfe-a86b-0275d23325e8
+  name: Signalr
+- habr_id: 320
+  id: 71ba64c4-9493-4d88-bbd7-1d2c9314bb01
+  name: Solr
+- habr_id: 822
+  id: 216a8199-aa58-41af-81be-3817c5626da1
+  name: Design levels
+- habr_id: 1402
+  id: 8e89a1f7-066c-47aa-993d-ac7568d501c0
+  name: StatsModels
+- habr_id: 319
+  id: 359d04d6-36a1-4979-81ae-cd3d9167fa51
+  name: Mootools
+- habr_id: 165
+  id: 58bb548b-7391-44cd-85f8-4a6da24aaf35
+  name: Multiprotocol label switching
+- habr_id: 1589
+  id: c46d4d9a-da7e-4df4-a132-058cf3438f5a
+  name: PerlScript
+- habr_id: 308
+  id: b49b8ade-f142-4ce2-9bb3-dedb28e61e0c
+  name: Realtime
+- habr_id: 429
+  id: 77b190ab-963e-461c-8123-faa1bc357c03
+  name: Animation
+- habr_id: 1521
+  id: 15edb6bd-c43c-483c-b393-eb8e9acdb9f7
+  name: FLTK
+- habr_id: 1624
+  id: 8f6c9aa1-0ecf-4441-9d3f-65ee9310989d
+  name: Racket
+- habr_id: 161
+  id: 93236903-c20b-41a4-a790-a27a7bf77103
+  name: Stylus
+- habr_id: 170
+  id: 2ae973a0-43ce-4a77-b777-c2c602d75d62
+  name: Lua
+- habr_id: 1093
+  id: d4fa2857-3cc4-4311-a74f-7e31149866e5
+  name: SPLUNK
+- habr_id: 1653
+  id: 99ce2487-6058-4b0e-b3dc-2196343358b6
+  name: Allure
+- habr_id: 1631
+  id: 782d7476-5bc8-428b-8e89-0c07ac88911d
+  name: NLU
+- habr_id: 1605
+  id: 3c8e7b05-4dee-4236-b9c6-c5f54f62ca67
+  name: Squirrel
+- habr_id: 1565
+  id: c4569b81-3c0e-48aa-82f4-562b3f0dd3fb
+  name: Plug
+- habr_id: 418
+  id: bf02ee84-193b-4c93-a936-0a1ab2e6cc9f
+  name: Lync
+- habr_id: 1598
+  id: afddaa47-5452-4821-a6a3-194efbae0ca2
+  name: RSS
+- habr_id: 1658
+  id: d816a722-ee88-45a6-81ae-262f8d4f6d0a
+  name: Polymatica
+- habr_id: 202
+  id: 95535c78-d2c1-4cea-95fe-48d816082497
+  name: Phantom.js
+- habr_id: 375
+  id: 15e94268-df03-43e9-a4e3-589483fff996
+  name: Samba
+- habr_id: 1329
+  id: d6735468-5701-4534-ad20-66597d087e2f
+  name: SMB
+- habr_id: 1148
+  id: aaf28076-afaa-4d7b-bcc8-49d8239a8121
+  name: InterSystems Ensemble
+- habr_id: 1278
+  id: 72b16ab5-9f6b-441d-90a5-45c49f59538a
+  name: SystemC
+- habr_id: 1519
+  id: 286b1c27-b00d-4e2f-827d-2810fbb9d478
+  name: Dear ImGui
+- habr_id: 979
+  id: 38f65c83-1422-4f24-b198-8471e28fdb66
+  name: QT QML
+- habr_id: 1225
+  id: 0f589675-a05f-4475-abab-d8a87cb07549
+  name: REASONML
+- habr_id: 1670
+  id: 993a8560-21ff-4d07-8259-f78b7cce1966
+  name: SAML
+- habr_id: 782
+  id: 5c34f628-cf6b-4938-82df-1e9068b70208
+  name: Math modeling
+- habr_id: 886
+  id: 909d1f36-fe55-4374-b121-b9bfdd1cd867
+  name: Site promotion
+- habr_id: 82
+  id: 9087ec39-8fa7-4ba5-8415-a88b378fa396
+  name: Monitoring
+- habr_id: 141
+  id: a644b034-1ae7-41aa-a16e-633453ab8418
+  name: Network monitoring
+- habr_id: 413
+  id: 3c30c5c0-9cf2-4947-adbf-c05e1b4f9f1a
+  name: Modeling
+- habr_id: 572
+  id: bef8d3c7-f9eb-4afd-8645-7643a56f1036
+  name: Moderation
+- habr_id: 1287
+  id: 88efdf59-b547-49ce-9e82-8d918b2c4d2e
+  name: AmoCRM
+- habr_id: 688
+  id: 8cf109c6-dcf9-42c2-85a4-f2e8ffe34723
+  name: NumPy
+- habr_id: 600
+  id: 52b83f68-77bb-43cc-a9b3-fd22ae80c547
+  name: Composer
+- habr_id: 1397
+  id: 36b2e83c-fd21-447f-9885-e52839588f22
+  name: Amplitude
+- habr_id: 1033
+  id: 22491c11-8830-4c78-ba57-115ccbf5ffb9
+  name: Design template
+- habr_id: 914
+  id: 5e96654c-7d01-4fbf-a76d-90f3ed6f3fbc
+  name: Architecture of the company
+- habr_id: 644
+  id: 9130657b-3040-4238-a931-775947d450c3
+  name: Layout
+- habr_id: 672
+  id: 06ac2cc1-1508-4de5-99d3-31899d79ebe4
+  name: Compass
+- habr_id: 724
+  id: 61b981b1-72bb-4da5-bc7f-9ebe008500eb
+  name: Forensics
+- habr_id: 648
+  id: 35f8897e-ec16-474f-86d5-67c583fc5d7f
+  name: Compilers
+- habr_id: 1439
+  id: eb856ecf-8320-4dae-989e-406f51cb3543
+  name: Semrush
+- habr_id: 804
+  id: bf2ef36f-8de6-494c-9d42-ff88ed6d391a
+  name: Development of billing systems
+- habr_id: 740
+  id: 983987b9-4a98-4649-80cc-4d9ef58d619a
+  name: Writing music
+- habr_id: 1036
+  id: e3471b57-5ee4-40f4-a03a-136f422dfc0a
+  name: Adobe Muse
+- habr_id: 921
+  id: ecdedfcc-3514-49af-8b0a-99356311ac79
+  name: QEMU
+- habr_id: 1277
+  id: 28bc7d24-598a-40d6-9c25-80b937d37efe
+  name: SystemVerilog
+- habr_id: 1454
+  id: 1f2ddae5-989d-4688-af08-1b058d19ec99
+  name: SystemVerilog
+- habr_id: 115
+  id: 41097933-c790-4e2c-b79f-f3be3510dd05
+  name: VMWare ESXi
+- habr_id: 164
+  id: dca24cff-ee51-4556-a79c-2e7046e5c3d5
+  name: Vmware vSphere
+- habr_id: 33
+  id: 26e1889b-b6d8-41cb-bc2f-c73648123862
+  name: MySQLi
+- habr_id: 408
+  id: 09ab6f3a-f918-4483-8b4d-878f6edbdb8a
+  name: Chaplin.js
+- habr_id: 1294
+  id: ec9dd1b1-50cd-45e5-ab66-1d7d3cd95408
+  name: Dita
+- habr_id: 1662
+  id: b78e5b5f-e985-430b-a7c6-364655d8ed18
+  name: Informatica
+- habr_id: 1175
+  id: 3ab21f36-1022-44f0-a997-66eef84e696c
+  name: InfiniBand Protocol
+- habr_id: 1448
+  id: f219df99-acc2-491c-9a7e-645defcab63a
+  name: Infolog
+- habr_id: 295
+  id: a9adc50f-8657-4835-9f29-4885f9d514f6
+  name: TestLink
+- habr_id: 627
+  id: c0ad678b-63bd-4c0f-9d7d-c07e3b111616
+  name: OpenMP
+- habr_id: 1213
+  id: 56b867a0-be75-48ce-b594-772a1e3aff54
+  name: Zennoposter
+- habr_id: 1667
+  id: f85c3f2a-6a78-4712-8ebd-0776dad41f1e
+  name: Personnel adaptation
+- habr_id: 1668
+  id: b35149c9-6ee1-4088-a617-da3d41b6b241
+  name: Personnel development
+- habr_id: 1330
+  id: 26276f8b-fded-4f68-8fca-08ba0be6bd12
+  name: Channel
+- habr_id: 66
+  id: babaa7eb-ff7d-4d8b-af6a-0564c2e6a5de
+  name: Capistrano
+- habr_id: 387
+  id: eb3b9bd4-a13e-4a78-a9b3-d63ccbdc2b5d
+  name: WinRT
+- habr_id: 1226
+  id: 5a6275fe-4909-4aa2-be78-7b2e12470097
+  name: ReasonReact
+- habr_id: 465
+  id: 9cdf49f2-425c-4ea3-bd69-46ef9908af55
+  name: Writing instructions
+- habr_id: 216
+  id: 78492b03-aaf8-4c5c-951b-999bb2a71b05
+  name: Nunit
+- habr_id: 905
+  id: 4688b097-77ed-4ace-ab9a-90f0e97e66f8
+  name: GNU
+- habr_id: 311
+  id: 2a2d239c-1e4c-4ebb-8425-4730b2d5e2d9
+  name: Red Hat Linux
+- habr_id: 839
+  id: eb532bab-f285-4f7e-863a-bf9679270156
+  name: Nuke
+- habr_id: 298
+  id: cadd8c14-0af6-43b1-be99-d361564e5305
+  name: Canvas
+- habr_id: 504
+  id: 52e0b2f4-649e-4728-88f1-df9add1f077d
+  name: Venture investment
+- habr_id: 988
+  id: 16a71438-5fb2-41cf-acff-de2de809d569
+  name: OpenVPN
+- habr_id: 858
+  id: a767f64d-22bf-4705-8cbd-44ff9db6ae06
+  name: OpenVZ
+- habr_id: 1190
+  id: 56f94c8c-f3c0-4374-bda5-a21bcb15a4ac
+  name: App Inventor
+- habr_id: 1180
+  id: 18fa3df0-4c02-4533-a6fc-dbc0d54e3cd4
+  name: NVM Express Protocol
+- habr_id: 1342
+  id: 0b928cf9-6670-4d24-a2a8-1b484a35b966
+  name: Manticore
+- habr_id: 500
+  id: b650deae-e581-46ff-a030-543960365acf
+  name: QNX
+- habr_id: 1337
+  id: 7d564814-fb72-43de-9a61-5799ddade9a0
+  name: Siemens NX
+- habr_id: 1608
+  id: 96c55ed8-7434-4ebe-8903-ea12ffc307b5
+  name: AnyLogic
+- habr_id: 1669
+  id: e62fdccf-598e-41ec-8766-1665b7c6be0b
+  name: WSO2
+- habr_id: 212
+  id: 8aaaeb12-8510-431a-9a3c-d4488a66b686
+  name: Cocoa Touch
+- habr_id: 89
+  id: ee70aa0e-8296-4eb0-9030-8136e2fb4c34
+  name: Cocoa
+- habr_id: 998
+  id: 4c5e2c7a-bb5c-4107-8450-699a18b5fc6f
+  name: Storyboarding
+- habr_id: 244
+  id: 9c7298ee-5f01-4b78-b1cc-5359d8d1f7e8
+  name: SOA
+- habr_id: 1345
+  id: e8e8cd3d-6908-490e-b74e-cb192c130eb6
+  name: ProAV
+- habr_id: 1314
+  id: 1afe4f08-9428-4aae-b393-fc556611fb30
+  name: Recoil
+- habr_id: 1644
+  id: 708f3301-8eb6-48f6-9940-b87c897bc24b
+  name: VoIP
+- habr_id: 1676
+  id: f025ee6b-8288-4529-9a83-9dffff4a548c
+  name: Apache POI
+- habr_id: 525
+  id: 99d8e7d7-0774-463f-b7d6-cb19b620d703
+  name: OLAP
+- habr_id: 523
+  id: dc9aa701-45d2-4db9-b5b1-e271a945afe3
+  name: Color Correction
+- habr_id: 1501
+  id: 7cdbadee-1431-47a9-82a8-71edf4728ba3
+  name: Room
+- habr_id: 41
+  id: c7a3b937-6706-443a-9d50-8875e2f1d88d
+  name: Groovy
+- habr_id: 1113
+  id: 3c8000f1-8f1f-4039-b66b-42f07769a1f8
+  name: Tarantool
+- habr_id: 1155
+  id: ea3ae53f-f8dc-420e-b5c5-9375fd2b8a8e
+  name: Eloqua
+- habr_id: 126
+  id: e399bd1b-60dd-4b54-9227-9f6bb9943d5a
+  name: CentOS
+- habr_id: 1503
+  id: 23572bf6-0562-4861-9f9b-1e3ec906f142
+  name: Coroutines
+- habr_id: 421
+  id: cadab571-1091-4188-af46-254a0d4c73e5
+  name: Touch print
+- habr_id: 1414
+  id: 3a86ef23-47bf-448b-80c1-d4f8cbcf802a
+  name: OWASP
+- habr_id: 447
+  id: 30547a76-9d61-41a9-8ec8-b65d3d3ef585
+  name: Bower
+- habr_id: 1591
+  id: cc61a92a-31ef-431b-a101-99a9d5e31d0b
+  name: Proxy
+- habr_id: 828
+  id: 1157485c-451c-4a9e-8fc6-6253327240d6
+  name: Parsing
+- habr_id: 787
+  id: 01d4ddc3-11d2-4389-a8f9-99704b58f8e4
+  name: Pascal
+- habr_id: 54
+  id: 1036a09b-19f1-410f-a5dc-41c3e91071ea
+  name: Perl
+- habr_id: 144
+  id: 7f2930a1-1fa2-440b-b8c2-99fd66ac6793
+  name: RSpec
+- habr_id: 508
+  id: 89b8da2f-dca7-427f-ada1-138716ecad49
+  name: VK API
+- habr_id: 28
+  id: 1f11890c-8130-47d4-89bd-7096ee8bfe1b
+  name: Puppet
+- habr_id: 451
+  id: c5ceaca5-1ad5-439a-b2fd-70ce2350fcf3
+  name: Applied software
+- habr_id: 1576
+  id: 9ede1e2d-248e-42ca-ba0e-1a44a8973ca7
+  name: Testing apps
+- habr_id: 1440
+  id: d0be8a30-9ced-4274-8ba2-53ede672f495
+  name: SerpStat
+- habr_id: 857
+  id: 08215713-ddf6-42fc-b92c-256ed6054279
+  name: Pure C
+- habr_id: 1507
+  id: 78b945a3-fdc7-4456-ae93-c80efcd729d4
+  name: Dropwizard
+- habr_id: 574
+  id: cd578ea5-0937-4fb0-b782-cdbac52c087c
+  name: Pyqt
+- habr_id: 328
+  id: 77835eb3-1796-48d0-8deb-bcb8abce3381
+  name: Scrapy
+- habr_id: 986
+  id: 911cb2c6-ad17-4ca5-bb13-504241d4d05e
+  name: Capybara
+- habr_id: 894
+  id: e91c006c-eae8-4c0b-8376-a8df2b5ab1ff
+  name: Pyramid
+- habr_id: 1555
+  id: f2ae5a4d-24a1-4f0a-9ec3-814f01c9af95
+  name: CherryPy
+- habr_id: 1417
+  id: a3b52955-67ec-4d85-96ab-5ce84b5fcb7d
+  name: SonarQube
+- habr_id: 1577
+  id: 2f58c8c2-9575-496c-ba8b-3a76d568a680
+  name: Server-side rendering
+- habr_id: 510
+  id: d22456c8-1665-4896-91a4-e18b7b84b8fc
+  name: Zurb Foundation
+- habr_id: 306
+  id: 7e9a0173-c89e-4bc3-bc41-b06d9062c1c1
+  name: Arm Architecture
+- habr_id: 609
+  id: 227173df-583e-4536-bb3e-68e07d0f782b
+  name: ArchiCAD
+- habr_id: 1479
+  id: 180fc797-1a68-49e7-af44-31d7a2a61c8f
+  name: Carrd
+- habr_id: 255
+  id: 703ea1a7-fe5b-438b-9049-370a653492b7
+  name: Performance Tuning
+- habr_id: 108
+  id: bdb02762-61c2-424b-aa30-d7855d9b456d
+  name: Erlang
+- habr_id: 630
+  id: 3151c181-7199-47ee-9963-93c9ef54fc05
+  name: Starling
+- habr_id: 7
+  id: cc1ccdcb-c17a-4fed-8d97-d63ee8d6d742
+  name: ERP
+- habr_id: 367
+  id: ba6b0a6c-2122-4e37-98c6-04a168ff1330
+  name: CRM development
+- habr_id: 1172
+  id: cddd8c91-773c-4b89-83d9-d72f6ac5a7c8
+  name: RnD
+- habr_id: 275
+  id: 4764aef3-46f4-486f-9b6a-e15dec7df484
+  name: Exim
+- habr_id: 1328
+  id: d1dd815a-320a-43ed-91be-21ebaaa470b4
+  name: Enterprise
+- habr_id: 1262
+  id: 250abf5d-93dc-4bc2-bd19-fe3b58f292cb
+  name: RPA developer
+- habr_id: 1421
+  id: da112671-ac91-439d-a22c-d75cc46ccb74
+  name: Burp Suite
+- habr_id: 1149
+  id: 404d8ad0-6d19-4ca1-b69f-ae473950c1ac
+  name: ENTERPRISE SERVICE BUS
+- habr_id: 1446
+  id: ec16d596-4780-44f3-9d7f-dc8f599ce03f
+  name: Creatio CRM
+- habr_id: 848
+  id: 2d01e461-084e-4fb0-b9b8-f792f34efb31
+  name: Rust
+- habr_id: 1079
+  id: c06f4b89-a60b-40d0-a623-4020a02f430b
+  name: Grunt
+- habr_id: 872
+  id: db705de9-b21d-4dd4-9878-fb6b81f2d268
+  name: Design and construction SCS
+- habr_id: 1612
+  id: 11943e73-37cc-4dc7-9016-985e6e4ed1e0
+  name: Microservices
+- habr_id: 829
+  id: aa3d9151-7adc-49c6-a7e8-8e94c39572bf
+  name: Literary translation
+- habr_id: 1429
+  id: c4fdac2e-1d8d-491b-99d0-b32f3eab7cd5
+  name: Sentry
+- habr_id: 1305
+  id: 98709a87-71d8-4864-bc1b-895c81787430
+  name: Consul
+- habr_id: 400
+  id: 2334124e-c775-4205-bc14-f2aab4660e1e
+  name: Applicability Statement 2
+- habr_id: 150
+  id: 5d3fe7c8-7a23-469b-8b56-88d9a9678312
+  name: SAP
+- habr_id: 1111
+  id: 0cfafc07-cb83-4a6c-bebc-d1ca2fbe0608
+  name: SAS
+- habr_id: 420
+  id: 8c97bfe0-7f17-454a-8667-658f948cc32a
+  name: Data storage network
+- habr_id: 1483
+  id: f088d0c2-3b07-4fd3-a5b8-1d8e93f5903b
+  name: Asana
+- habr_id: 817
+  id: 1a982494-c962-4f6b-9aaf-e4c25f206010
+  name: SSAS
+- habr_id: 364
+  id: d131ec3e-8855-46b0-9efc-394d1be16c8f
+  name: SCADA
+- habr_id: 411
+  id: e94e9bd1-9f2b-4b55-8e7b-f84a7ce9d5b8
+  name: UWSGI
+- habr_id: 459
+  id: 77d86119-0f0a-4ff3-b0e6-f1a0cf5fd223
+  name: Spanish
+- habr_id: 1550
+  id: 5084486e-8e02-414f-86e9-fec9101128c5
+  name: Slick
+- habr_id: 1212
+  id: d919edd5-d381-4046-9e5d-1217b60e64e3
+  name: TSLab
+- habr_id: 233
+  id: 0102b550-aaca-4079-9430-9c580dec1c74
+  name: Smarty
+- habr_id: 592
+  id: cb5c0d42-c681-4a6d-82fc-79dca3f95526
+  name: ASM
+- habr_id: 495
+  id: 63057de9-bf39-4daa-ad56-574b7a7852af
+  name: Smart TV
+- habr_id: 601
+  id: bf9bdc26-c8d7-4806-9caa-6331655ef694
+  name: Atmel AVR ASM
+- habr_id: 907
+  id: 3ecceced-5d25-40a6-88d8-d09b0d41a50c
+  name: Prism
+- habr_id: 633
+  id: 5300b682-8a76-4420-817e-9812f0d76750
+  name: Swing
+- habr_id: 332
+  id: 69ae6564-00cb-4cc1-b5c5-138febe85736
+  name: Switching
+- habr_id: 1189
+  id: a1cf2d19-664e-4de5-add0-28630d06f895
+  name: Scratch
+- habr_id: 1188
+  id: 097257df-2fd4-46de-a081-824c98be80ea
+  name: Tool Command Language
+- habr_id: 1601
+  id: 697139a4-7504-48d8-add7-b955eb6d0fed
+  name: SugarSS
+- habr_id: 619
+  id: ede18797-c453-45ae-827c-188a6957e4ff
+  name: Xen Cloud Platform
+- habr_id: 861
+  id: 0ffb9af0-65d7-4926-bf9d-4656947f9f74
+  name: ATL
+- habr_id: 1452
+  id: fed6c206-81c1-4c94-b27c-e76d1259ccff
+  name: RTL
+- habr_id: 610
+  id: d757a6d5-622d-4847-a872-51a37dec6c58
+  name: Artlantis
+- habr_id: 1455
+  id: 284f41dd-9a10-4539-89ef-a3aca83e5802
+  name: Netlist
+- habr_id: 1554
+  id: 16335b5a-ef9e-4919-bcde-768eaa940498
+  name: Bottle
+- habr_id: 1130
+  id: ffbd0f27-c06d-4891-be62-6db2429c237a
+  name: SAP TM
+- habr_id: 779
+  id: 9a31cf96-829c-41f2-a428-719c63b40117
+  name: Lettering
+- habr_id: 230
+  id: 159eedde-8c25-4cb7-9228-fd7f6b4e5fbc
+  name: Netty
+- habr_id: 1557
+  id: b9407d56-9e53-4ea6-ad99-6203303a5efc
+  name: Giotto
+- habr_id: 1515
+  id: 7bcd6f82-ba7a-434e-9bb2-9315c0016097
+  name: Chatto
+- habr_id: 598
+  id: ca98f02a-3a40-4317-88f0-0eb679fc86ab
+  name: Network design
+- habr_id: 152
+  id: 048299fc-d9d1-408e-8ff6-cc1da9169ea4
+  name: Twig
+- habr_id: 484
+  id: ef92ad49-b7c4-4580-a918-c5ce9ca4b508
+  name: Twisted
+- habr_id: 346
+  id: 66f1d6ad-af09-4344-bf07-009e47750b3e
+  name: DirectX
+- habr_id: 410
+  id: 0e7a44d4-47f1-43fb-9d4b-9e2a286bd5c6
+  name: Sencha Touch
+- habr_id: 355
+  id: 1e19e2e9-4881-4d16-a707-a5144276d9d8
+  name: VirtueMart
+- habr_id: 748
+  id: a44b9f76-e42c-464b-beab-6e07648c7cd2
+  name: Lean startup
+- habr_id: 1490
+  id: cd0b8e74-512d-4447-a177-af21f7453218
+  name: Lean startup
+- habr_id: 273
+  id: 48324b22-142c-4239-9c0e-6f7b9c649a2b
+  name: Yupe
+- habr_id: 1559
+  id: 1894f9f0-447d-4693-a8f8-8c7d669c636b
+  name: Uvloop
+- habr_id: 1431
+  id: 2fae3132-5fcc-4b0e-a498-a39bc37b4caa
+  name: DevRel
+- habr_id: 1115
+  id: eb3dd451-b983-48f0-8be0-dcd8e88d2951
+  name: vTiger
+- habr_id: 1558
+  id: 6976b249-e8eb-4135-9df3-5a89e48bcda0
+  name: Growler
+- habr_id: 236
+  id: 29be94db-be07-423d-a243-aa55e9e71316
+  name: Wowza
+- habr_id: 90
+  id: dbcddb58-de68-40fb-a859-740a287be94f
+  name: Xamarin
+- habr_id: 1528
+  id: 38348115-beac-44ef-937b-355a9032371a
+  name: Hexagon
+- habr_id: 124
+  id: c55d7db9-25e2-4fa2-a413-16a8e87a52ca
+  name: Xen
+- habr_id: 809
+  id: d2a18ef0-bb6b-4a07-8648-bee829767cdd
+  name: XMPP
+- habr_id: 538
+  id: 7985577d-4634-4b1e-98d5-6d089ca7da59
+  name: Microsoft Xna
+- habr_id: 1500
+  id: 13dab997-4926-4ed5-bca4-362873b2448a
+  name: ExoPlayer
+- habr_id: 1419
+  id: 102fb700-5d2a-41f1-ab70-8c7f005709e6
+  name: Sonatype Nexus
+- habr_id: 755
+  id: e3f3657c-5115-48d3-ba64-295413d7517a
+  name: Avaya
+- habr_id: 1684
+  id: 3be8f7fe-2caf-4d19-89d1-ff8199f1cc9a
+  name: Yandex Tracker
+- habr_id: 1191
+  id: 006c6b7d-a486-441e-b6a1-f33e92d19db4
+  name: MaterialIzeCSS
+- habr_id: 1680
+  id: b73bc47a-5a3a-4590-b9ab-6d4136a97dba
+  name: Zerocoding
+- habr_id: 1619
+  id: 3f3c7d18-01d1-40c2-9eef-5b5c1ac6a191
+  name: Zig
+- habr_id: 48
+  id: f4c3dacc-d0df-496e-a634-959b2ad4a8f8
+  name: Magento
+- habr_id: 65
+  id: 1a39aab7-81fd-4256-b8e4-6424015f7635
+  name: Vagrant
+- habr_id: 826
+  id: 14f65258-67b2-4cdd-abbf-b56a3f295143
+  name: Designing interaction
+- habr_id: 860
+  id: a7e24653-187a-4b0d-ba86-bb2504307774
+  name: CAD
+- habr_id: 557
+  id: 58d7349e-1c19-47ea-806d-f4ee206b73a4
+  name: ARIS
+- habr_id: 662
+  id: 28505b8f-4a48-45e2-b299-eef5c7e27ce8
+  name: Apache Camel
+- habr_id: 117
+  id: 5d0fb653-70a0-4430-b88b-202563fcbba9
+  name: Teaching in IT
+- habr_id: 253
+  id: ea9b7484-5759-4217-aeeb-b6e50a881da4
+  name: Lean
+- habr_id: 1474
+  id: 7b0d85f8-0d8e-48be-911a-97fd29e63214
+  name: Airtable
+- habr_id: 1506
+  id: 3ecb7fd2-4971-4427-b790-fad2c40bd5de
+  name: Blade
+- habr_id: 635
+  id: 1863c5c3-abd6-4ce5-87ed-0608bdcddb7f
+  name: Naming
+- habr_id: 967
+  id: dceaf44e-1701-4f0b-89f0-6f8d000a6e70
+  name: Sound processing
+- habr_id: 681
+  id: 0187198b-5e6b-4474-b68a-d224df116622
+  name: Event management
+- habr_id: 1037
+  id: 0106fc6c-7469-4af7-9300-6818eeb125c6
+  name: Program management
+- habr_id: 1666
+  id: 9cbc716d-e7af-41ec-8cb9-8a3694816663
+  name: Mentoring
+- habr_id: 1493
+  id: 6740d17a-ddc7-4c70-8921-07eb35a58adc
+  name: NativeScript
+- habr_id: 697
+  id: 8829853a-7813-49f9-bfbe-e32cfb7b3dba
+  name: WooCommerce
+- habr_id: 407
+  id: f96fa041-4224-451d-a511-bc3dda562e5f
+  name: Gentoo
+- habr_id: 834
+  id: cf141e81-182f-4b2c-8e27-590c437588fe
+  name: Gevent
+- habr_id: 1453
+  id: e5fa64e5-728d-4994-b342-faa762ecac09
+  name: ASIC
+- habr_id: 728
+  id: 547f9f99-1d49-46b3-a7e9-8de221cebc62
+  name: Red Hat
+- habr_id: 540
+  id: 353c2ebd-e329-44cb-a36d-981b1597bc2b
+  name: Semantic web
+- habr_id: 1425
+  id: 8380457e-f11b-42b3-918e-9e64fd5716db
+  name: Webinspect
+- habr_id: 643
+  id: 880396e9-cc22-42a1-b647-3ed555c1b2b4
+  name: Rendering
+- habr_id: 842
+  id: 4b3d10b0-cc04-4379-91ad-7bf59cdda067
+  name: Composing
+- habr_id: 1227
+  id: 6a311e43-c747-498c-8327-b5d0e1904f98
+  name: Chinese
+- habr_id: 1629
+  id: d3ae009b-421e-460f-ba88-3730070c4fb4
+  name: Scheme
+- habr_id: 1531
+  id: 0a886001-cd88-4bb5-832b-f34ad145918f
+  name: Goliath
+- habr_id: 920
+  id: 3b5daf15-5194-4875-b161-9b165ce445b1
+  name: Development of fonts
+- habr_id: 222
+  id: 80dcbac0-49ad-4392-b8ab-7b0ac17d1833
+  name: Silex
+- habr_id: 399
+  id: 48f9ca05-99d3-412d-835f-6c15264aad78
+  name: Adobe Air
+- habr_id: 935
+  id: 2d50ab81-b6c4-466c-988d-a2b3e01cda79
+  name: Site design
+- habr_id: 1529
+  id: f1e4e7be-d083-47aa-838b-23ad72bfc0a0
+  name: Camping
+- habr_id: 174
+  id: 191194de-0854-4180-8df8-d725bd7f6502
+  name: Emmet
+- habr_id: 1001
+  id: 134869aa-9bad-4e7b-aebd-aa44f7031982
+  name: Creating icons
+- habr_id: 502
+  id: e793ae25-a656-4089-b924-10092db9a991
+  name: ANSI C
+- habr_id: 1135
+  id: 241c9731-0c2a-437b-a971-4d7dc3af42bb
+  name: SAP NSI
+- habr_id: 1405
+  id: a0662f13-4050-41b1-9ed4-9457c3870b6e
+  name: Sophos
+- habr_id: 1657
+  id: 4ea8e14a-7fbb-49cc-b7eb-c945c68a72b1
+  name: Labor protection
+- habr_id: 964
+  id: b554738f-ed9d-4a5d-87e8-fd1e549ef69d
+  name: Viral Marketing
+- habr_id: 344
+  id: 6cfd8ee3-32ec-4b59-8427-dbcba36f74c2
+  name: Fortran
+- habr_id: 1574
+  id: e508d136-27bc-4964-a38c-a279a7f521ca
+  name: CSS Architecture
+- habr_id: 86
+  id: 939b85d8-443f-411a-a880-c6c7f130ac45
+  name: Interior Design
+- habr_id: 1003
+  id: 6dc176f4-ab3a-43e4-a452-9a0ef819c0d2
+  name: Comic creation
+- habr_id: 1641
+  id: afa04453-e81c-4a3e-bd58-d442fe3c464a
+  name: NATS
+- habr_id: 1643
+  id: 6c0c34bc-744b-4af4-a3b5-1074a304c260
+  name: Emacs
+- habr_id: 283
+  id: 93f5c5c3-0694-4f80-ab90-3aef1c3bdd24
+  name: Ant
+- habr_id: 526
+  id: 6dde91d9-c78d-4945-a482-4a26010cdc03
+  name: Kendo UI

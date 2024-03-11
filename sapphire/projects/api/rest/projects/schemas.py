@@ -2,12 +2,12 @@ import uuid
 from typing import Type
 
 import fastapi
-from pydantic import BaseModel, ConfigDict, Field, NaiveDatetime
+from pydantic import AwareDatetime, BaseModel, ConfigDict, Field
 
 from sapphire.common.api.schemas.paginated import PaginatedResponse
 from sapphire.common.utils.empty import Empty
+from sapphire.database.models import ParticipantStatusEnum, ProjectStatusEnum
 from sapphire.projects.api.rest.schemas import ProjectResponse
-from sapphire.projects.database.models import ParticipantStatusEnum, ProjectStatusEnum
 
 
 class ParticipantResponse(BaseModel):
@@ -17,17 +17,17 @@ class ParticipantResponse(BaseModel):
     position_id: uuid.UUID
     user_id: uuid.UUID
     status: ParticipantStatusEnum
-    joined_at: NaiveDatetime | None
-    created_at: NaiveDatetime
-    updated_at: NaiveDatetime
+    joined_at: AwareDatetime | None
+    created_at: AwareDatetime
+    updated_at: AwareDatetime
 
 
 class CreateProjectRequest(BaseModel):
     name: str
     description: str | None = None
     owner_id: uuid.UUID
-    startline: NaiveDatetime
-    deadline: NaiveDatetime | None = None
+    startline: AwareDatetime
+    deadline: AwareDatetime | None = None
 
 
 class ProjectHistoryResponse(BaseModel):
@@ -36,7 +36,7 @@ class ProjectHistoryResponse(BaseModel):
     id: uuid.UUID
     project_id: uuid.UUID
     status: ProjectStatusEnum
-    created_at: NaiveDatetime
+    created_at: AwareDatetime
 
 
 class ProjectHistoryListResponse(PaginatedResponse):
@@ -51,10 +51,10 @@ class ProjectListFiltersRequest(BaseModel):
     query_text: str | Type[Empty] = Empty
     owner_id: uuid.UUID | Type[Empty] = Empty
     user_id: uuid.UUID | Type[Empty] = Empty
-    startline_ge: NaiveDatetime | Type[Empty] = Empty
-    startline_le: NaiveDatetime | Type[Empty] = Empty
-    deadline_ge: NaiveDatetime | Type[Empty] = Empty
-    deadline_le: NaiveDatetime | Type[Empty] = Empty
+    startline_ge: AwareDatetime | Type[Empty] = Empty
+    startline_le: AwareDatetime | Type[Empty] = Empty
+    deadline_ge: AwareDatetime | Type[Empty] = Empty
+    deadline_le: AwareDatetime | Type[Empty] = Empty
     status: list[ProjectStatusEnum] | Type[Empty] = Field(fastapi.Query(Empty))
     position_skill_ids: list[uuid.UUID] | Type[Empty] = Field(fastapi.Query(Empty))
     position_specialization_ids: list[uuid.UUID] | Type[Empty] = Field(fastapi.Query(Empty))

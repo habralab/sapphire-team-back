@@ -2,11 +2,11 @@ version: "3"
 services:
   database:
     image: postgres:16.0-bookworm
-    secrets:
-      - postgresql_password
     user: 0:0
     environment:
-      POSTGRES_PASSWORD_FILE: /run/secrets/postgresql_password
+      POSTGRES_USER: sapphire
+      POSTGRES_DB: sapphire
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:-P@ssw0rd}
     volumes:
       - ${DATABASE_DIR:-./database_data}:/var/lib/postgresql/data
     healthcheck:
@@ -69,157 +69,141 @@ services:
         - "traefik.enable=true"
         - "traefik.http.routers.kafka.rule=PathPrefix(`${KAFKA_UI_ROOT_PATH:-/kafka}`)"
         - "traefik.http.routers.kafka.entrypoints=web" 
+        - "traefik.http.routers.kafka.service=kafka"
         - "traefik.http.services.kafka.loadbalancer.server.port=8080"
       replicas: 1
 
-  users:
+  sapphire:
     image: ${SAPPHIRE_IMAGE:-sapphire}
     environment:
-      DB_DSN: ${USERS_DB_DSN:-postgresql+asyncpg://users:P%40ssw0rd@database:5432/users}
-      ROOT_URL: ${USERS_ROOT_URL:-http://localhost:3000/users}
-      ROOT_PATH: ${USERS_ROOT_PATH:-/users}
-      ALLOWED_ORIGINS: ${USERS_ALLOWED_ORIGINS:-["http://localhost:3000"]}
-      HABR_OAUTH2_CALLBACK_URL: ${USERS_HABR_OAUTH2_CALLBACK_URL:-http://localhost:3000/users/api/rest/auth/oauth2/habr/callback}
-      CACHE_URL: "redis://redis:6379/0"
+      DATABASE__DSN: ${DATABASE__DSN:-postgresql+asyncpg://sapphire:P%40ssw0rd@database:5432/sapphire}
+      MESSENGER__API__PORT: "8000"
+      MESSENGER__API__ROOT_URL: ${MESSENGER__API__ROOT_URL:-http://localhost:3000/messenger}
+      MESSENGER__API__ROOT_PATH: ${MESSENGER__API__ROOT_PATH:-/messenger}
+      MESSENGER__API__ALLOWED_ORIGINS: ${MESSENGER__API__ALLOWED_ORIGINS:-["http://localhost:3000"]}
+      MESSENGER__BROKER__SERVERS: '["kafka:9091"]'
+      MESSENGER__BROKER__TOPICS: '["chats"]'
+      MESSENGER__DATABASE__DSN: ${MESSENGER__DATABASE__DSN:-postgresql+asyncpg://sapphire:P%40ssw0rd@database:5432/sapphire}
+      NOTIFICATIONS__API__PORT: "8010"
+      NOTIFICATIONS__API__ROOT_URL: ${NOTIFICATIONS__API__ROOT_URL:-http://localhost:3000/notifications}
+      NOTIFICATIONS__API__ROOT_PATH: ${NOTIFICATIONS__API__ROOT_PATH:-/notifications}
+      NOTIFICATIONS__API__ALLOWED_ORIGINS: ${NOTIFICATIONS__API__ALLOWED_ORIGINS:-["http://localhost:3000"]}
+      NOTIFICATIONS__BROKER__SERVERS: '["kafka:9091"]'
+      NOTIFICATIONS__BROKER__TOPICS: '["notifications"]'
+      NOTIFICATIONS__DATABASE__DSN: ${NOTIFICATIONS__DATABASE__DSN:-postgresql+asyncpg://sapphire:P%40ssw0rd@database:5432/sapphire}
+      PROJECTS__API__PORT: "8020"
+      PROJECTS__API__ROOT_URL: ${PROJECTS__API__ROOT_URL:-http://localhost:3000/projects}
+      PROJECTS__API__ROOT_PATH: ${PROJECTS__API__ROOT_PATH:-/projects}
+      PROJECTS__API__ALLOWED_ORIGINS: ${PROJECTS__API__ALLOWED_ORIGINS:-["http://localhost:3000"]}
+      PROJECTS__API__MEDIA_DIR_PATH: "/projects/media"
+      PROJECTS__BROKER__SERVERS: '["kafka:9091"]'
+      PROJECTS__DATABASE__DSN: ${PROJECTS__DATABASE__DSN:-postgresql+asyncpg://sapphire:P%40ssw0rd@database:5432/sapphire}
+      STORAGE__API__PORT: "8030"
+      STORAGE__API__ROOT_URL: ${STORAGE__API__ROOT_URL:-http://localhost:3000/storage}
+      STORAGE__API__ROOT_PATH: ${STORAGE__API__ROOT_PATH:-/storage}
+      STORAGE__API__ALLOWED_ORIGINS: ${STORAGE__API__ALLOWED_ORIGINS:-["http://localhost:3000"]}
+      STORAGE__DATABASE__DSN: ${STORAGE__DATABASE__DSN:-postgresql+asyncpg://sapphire:P%40ssw0rd@database:5432/sapphire}
+      USERS__API__PORT: "8040"
+      USERS__API__ROOT_URL: ${USERS__API__ROOT_URL:-http://localhost:3000/users}
+      USERS__API__ROOT_PATH: ${USERS__API__ROOT_PATH:-/users}
+      USERS__API__ALLOWED_ORIGINS: ${USERS__API__ALLOWED_ORIGINS:-["http://localhost:3000"]}
+      USERS__API__OAUTH2_HABR_CALLBACK_URL: ${USERS__API__OAUTH2_HABR_CALLBACK_URL:-http://localhost:3000/users/api/rest/auth/oauth2/habr/callback}
+      USERS__API__MEDIA_DIR_PATH: "/users/media"
+      USERS__CACHE__URL: "redis://redis:6379/0"
+      USERS__DATABASE__DSN: ${USERS__DATABASE__DSN:-postgresql+asyncpg://sapphire:P%40ssw0rd@database:5432/sapphire}
     secrets:
-      - habr_oauth2_client_id
-      - habr_oauth2_client_secret
-      - habr_api_key
-      - habr_career_api_key
-      - jwt_access_token_public_key
-      - jwt_access_token_private_key
-      - jwt_refresh_token_public_key
-      - jwt_refresh_token_private_key
+      - target: users__habr__api_key
+        source: habr_api_key
+      - target: users__habr_career__api_key
+        source: habr_career_api_key
+      - target: users__jwt__access_token_public_key
+        source: jwt_access_token_public_key
+      - target: users__jwt__access_token_private_key
+        source: jwt_access_token_private_key
+      - target: users__jwt__refresh_token_public_key
+        source: jwt_refresh_token_public_key
+      - target: users__jwt__refresh_token_private_key
+        source: jwt_refresh_token_private_key
+      - target: users__oauth2_habr__client_id
+        source: oauth2_habr_client_id
+      - target: users__oauth2_habr__client_secret
+        source: oauth2_habr_client_secret
+      - target: storage__jwt__access_token_public_key
+        source: jwt_access_token_public_key
+      - target: storage__jwt__access_token_private_key
+        source: jwt_access_token_private_key
+      - target: storage__jwt__refresh_token_public_key
+        source: jwt_refresh_token_public_key
+      - target: storage__jwt__refresh_token_private_key
+        source: jwt_refresh_token_private_key
+      - target: projects__jwt__access_token_public_key
+        source: jwt_access_token_public_key
+      - target: projects__jwt__access_token_private_key
+        source: jwt_access_token_private_key
+      - target: projects__jwt__refresh_token_public_key
+        source: jwt_refresh_token_public_key
+      - target: projects__jwt__refresh_token_private_key
+        source: jwt_refresh_token_private_key
+      - target: notifications__jwt__access_token_public_key
+        source: jwt_access_token_public_key
+      - target: notifications__jwt__access_token_private_key
+        source: jwt_access_token_private_key
+      - target: notifications__jwt__refresh_token_public_key
+        source: jwt_refresh_token_public_key
+      - target: notifications__jwt__refresh_token_private_key
+        source: jwt_refresh_token_private_key
+      - target: messenger__jwt__access_token_public_key
+        source: jwt_access_token_public_key
+      - target: messenger__jwt__access_token_private_key
+        source: jwt_access_token_private_key
+      - target: messenger__jwt__refresh_token_public_key
+        source: jwt_refresh_token_public_key
+      - target: messenger__jwt__refresh_token_private_key
+        source: jwt_refresh_token_private_key
     volumes:
-      - ${USERS_MEDIA_DIR_PATH:-./users_data/media}:/media
-    command: ["users", "run"]
+      - ${PROJECTS_MEDIA_DIR_PATH:-./projects_data/media}:/projects/media
+      - ${USERS_MEDIA_DIR_PATH:-./users_data/media}:/users/media
+    command: ["run"]
     healthcheck:
-      test: curl --fail http://localhost:8000/health
+      test: >
+        curl --fail http://localhost:8000/health &&
+        curl --fail http://localhost:8010/health &&
+        curl --fail http://localhost:8020/health &&
+        curl --fail http://localhost:8030/health &&
+        curl --fail http://localhost:8040/health
     deploy:
       labels:
         - "traefik.enable=true"
-        - "traefik.http.middlewares.users-stripprefix.stripprefix.prefixes=${USERS_ROOT_PATH:-/users}"
-        - "traefik.http.routers.users.rule=PathPrefix(`${USERS_ROOT_PATH:-/users}`)"
-        - "traefik.http.routers.users.middlewares=users-stripprefix"
-        - "traefik.http.routers.users.entrypoints=web" 
-        - "traefik.http.services.users.loadbalancer.server.port=8000"
-      update_config:
-        order: start-first
-      replicas: 1
-
-  storage:
-    image: ${SAPPHIRE_IMAGE:-sapphire}
-    environment:
-      DB_DSN: ${STORAGE_DB_DSN:-postgresql+asyncpg://storage:P%40ssw0rd@database:5432/storage}
-      ROOT_URL: ${STORAGE_ROOT_URL:-http://localhost:3000/storage}
-      ROOT_PATH: ${STORAGE_ROOT_PATH:-/storage}
-      ALLOWED_ORIGINS: ${STORAGE_ALLOWED_ORIGINS:-["http://localhost:3000"]}
-    secrets:
-      - jwt_access_token_public_key
-      - jwt_access_token_private_key
-      - jwt_refresh_token_public_key
-      - source: jwt_refresh_token_private_key
-    command: ["storage", "run"]
-    healthcheck:
-      test: curl --fail http://localhost:8000/health
-    deploy:
-      labels:
-        - "traefik.enable=true"
-        - "traefik.http.middlewares.storage-stripprefix.stripprefix.prefixes=${STORAGE_ROOT_PATH:-/storage}"
-        - "traefik.http.routers.storage.rule=PathPrefix(`${STORAGE_ROOT_PATH:-/storage}`)"
-        - "traefik.http.routers.storage.middlewares=storage-stripprefix"
-        - "traefik.http.routers.storage.entrypoints=web" 
-        - "traefik.http.services.storage.loadbalancer.server.port=8000"
-      update_config:
-        order: start-first
-      replicas: 1
-
-  projects:
-    image: ${SAPPHIRE_IMAGE:-sapphire}
-    environment:
-      DB_DSN: ${PROJECTS_DB_DSN:-postgresql+asyncpg://projects:P%40ssw0rd@database:5432/projects}
-      ROOT_URL: ${PROJECTS_ROOT_URL:-http://localhost:3000/projects}
-      ROOT_PATH: ${PROJECTS_ROOT_PATH:-/projects}
-      ALLOWED_ORIGINS: ${PROJECTS_ALLOWED_ORIGINS:-["http://localhost:3000"]}
-      PRODUCER_SERVERS: '["kafka:9091"]'
-      USERS_GRPC_HOST: users
-      USERS_GRPC_PORT: 50051
-    secrets:
-      - jwt_access_token_public_key
-      - jwt_access_token_private_key
-      - jwt_refresh_token_public_key
-      - jwt_refresh_token_private_key
-    volumes:
-      - ${PROJECTS_MEDIA_DIR_PATH:-./projects_data/media}:/media
-    command: ["projects", "run"]
-    healthcheck:
-      test: curl --fail http://localhost:8000/health
-    deploy:
-      labels:
-        - "traefik.enable=true"
-        - "traefik.http.middlewares.projects-stripprefix.stripprefix.prefixes=${PROJECTS_ROOT_PATH:-/projects}"
-        - "traefik.http.routers.projects.rule=PathPrefix(`${PROJECTS_ROOT_PATH:-/projects}`)"
-        - "traefik.http.routers.projects.middlewares=projects-stripprefix"
-        - "traefik.http.routers.projects.entrypoints=web" 
-        - "traefik.http.services.projects.loadbalancer.server.port=8000"
-      update_config:
-        order: start-first
-      replicas: 1
-
-  notifications:
-    image: ${SAPPHIRE_IMAGE:-sapphire}
-    environment:
-      DB_DSN: ${NOTIFICATIONS_DB_DSN:-postgresql+asyncpg://notifications:P%40ssw0rd@database:5432/notifications}
-      ROOT_URL: ${NOTIFICATIONS_ROOT_URL:-http://localhost:3000/notifications}
-      ROOT_PATH: ${NOTIFICATIONS_ROOT_PATH:-/notifications}
-      ALLOWED_ORIGINS: ${NOTIFICATIONS_ALLOWED_ORIGINS:-["http://localhost:3000"]}
-      CONSUMER_SERVERS: '["kafka:9091"]'
-      TOPICS: '["notifications"]'
-    secrets:
-      - jwt_access_token_public_key
-      - jwt_access_token_private_key
-      - jwt_refresh_token_public_key
-      - jwt_refresh_token_private_key
-    command: ["notifications", "run"]
-    healthcheck:
-      test: curl --fail http://localhost:8000/health
-    deploy:
-      labels:
-        - "traefik.enable=true"
-        - "traefik.http.middlewares.notifications-stripprefix.stripprefix.prefixes=${NOTIFICATIONS_ROOT_PATH:-/notifications}"
-        - "traefik.http.routers.notifications.rule=PathPrefix(`${NOTIFICATIONS_ROOT_PATH:-/notifications}`)"
-        - "traefik.http.routers.notifications.middlewares=notifications-stripprefix"
-        - "traefik.http.routers.notifications.entrypoints=web" 
-        - "traefik.http.services.notifications.loadbalancer.server.port=8000"
-      update_config:
-        order: start-first
-      replicas: 1
-
-  messenger:
-    image: ${SAPPHIRE_IMAGE:-sapphire}
-    environment:
-      DB_DSN: ${MESSENGER_DB_DSN:-postgresql+asyncpg://messenger:P%40ssw0rd@database:5432/messenger}
-      ROOT_URL: ${MESSENGER_ROOT_URL:-http://localhost:3000/messenger}
-      ROOT_PATH: ${MESSENGER_ROOT_PATH:-/messenger}
-      ALLOWED_ORIGINS: ${MESSENGER_ALLOWED_ORIGINS:-["http://localhost:3000"]}
-      CONSUMER_SERVERS: '["kafka:9091"]'
-      TOPICS: '["chats"]'
-    secrets:
-      - jwt_access_token_public_key
-      - jwt_access_token_private_key
-      - jwt_refresh_token_public_key
-      - jwt_refresh_token_private_key
-    command: ["messenger", "run"]
-    healthcheck:
-      test: curl --fail http://localhost:8000/health
-    deploy:
-      labels:
-        - "traefik.enable=true"
-        - "traefik.http.middlewares.messenger-stripprefix.stripprefix.prefixes=${MESSENGER_ROOT_PATH:-/messenger}"
-        - "traefik.http.routers.messenger.rule=PathPrefix(`${MESSENGER_ROOT_PATH:-/messenger}`)"
+        - "traefik.http.middlewares.messenger-stripprefix.stripprefix.prefixes=${MESSENGER__API__ROOT_PATH:-/messenger}"
         - "traefik.http.routers.messenger.middlewares=messenger-stripprefix"
+        - "traefik.http.routers.messenger.rule=PathPrefix(`${MESSENGER__API__ROOT_PATH:-/messenger}`)"
+        - "traefik.http.routers.messenger.service=messenger"
         - "traefik.http.routers.messenger.entrypoints=web" 
         - "traefik.http.services.messenger.loadbalancer.server.port=8000"
+        - "traefik.http.middlewares.notifications-stripprefix.stripprefix.prefixes=${NOTIFICATIONS__API__ROOT_PATH:-/notifications}"
+        - "traefik.http.routers.notifications.middlewares=notifications-stripprefix"
+        - "traefik.http.routers.notifications.rule=PathPrefix(`${NOTIFICATIONS__API__ROOT_PATH:-/notifications}`)"
+        - "traefik.http.routers.notifications.service=notifications"
+        - "traefik.http.routers.notifications.entrypoints=web" 
+        - "traefik.http.services.notifications.loadbalancer.server.port=8010"
+        - "traefik.http.middlewares.projects-stripprefix.stripprefix.prefixes=${PROJECTS__API__ROOT_PATH:-/projects}"
+        - "traefik.http.routers.projects.middlewares=projects-stripprefix"
+        - "traefik.http.routers.projects.rule=PathPrefix(`${PROJECTS__API__ROOT_PATH:-/projects}`)"
+        - "traefik.http.routers.projects.service=projects"
+        - "traefik.http.routers.projects.entrypoints=web" 
+        - "traefik.http.services.projects.loadbalancer.server.port=8020"
+        - "traefik.http.middlewares.storage-stripprefix.stripprefix.prefixes=${STORAGE__API__ROOT_PATH:-/storage}"
+        - "traefik.http.routers.storage.middlewares=storage-stripprefix"
+        - "traefik.http.routers.storage.rule=PathPrefix(`${STORAGE__API__ROOT_PATH:-/storage}`)"
+        - "traefik.http.routers.storage.service=storage"
+        - "traefik.http.routers.storage.entrypoints=web"
+        - "traefik.http.services.storage.loadbalancer.server.port=8030"
+        - "traefik.http.middlewares.users-stripprefix.stripprefix.prefixes=${USERS__API__ROOT_PATH:-/users}"
+        - "traefik.http.routers.users.middlewares=users-stripprefix"
+        - "traefik.http.routers.users.rule=PathPrefix(`${USERS__API__ROOT_PATH:-/users}`)"
+        - "traefik.http.routers.users.service=users"
+        - "traefik.http.routers.users.entrypoints=web"
+        - "traefik.http.services.users.loadbalancer.server.port=8040"
       update_config:
         order: start-first
       replicas: 1
@@ -230,23 +214,23 @@ services:
       URLS: >
         [
           {
-            "url": "${USERS_ROOT_URL:-http://localhost:3000/users}${USERS_ROOT_PATH}/openapi.json",
+            "url": "${USERS__API__ROOT_URL:-http://localhost:3000/users}${USERS__API__ROOT_PATH}/openapi.json",
             "name": "Users",
           },
           {
-            "url": "${STORAGE_ROOT_URL:-http://localhost:3000/storage}${STORAGE_ROOT_PATH}/openapi.json",
+            "url": "${STORAGE__API__ROOT_URL:-http://localhost:3000/storage}${STORAGE__API__ROOT_PATH}/openapi.json",
             "name": "Storage",
           },
           {
-            "url": "${PROJECTS_ROOT_URL:-http://localhost:3000/projects}${PROJECTS_ROOT_PATH}/openapi.json",
+            "url": "${PROJECTS__API__ROOT_URL:-http://localhost:3000/projects}${PROJECTS__API__ROOT_PATH}/openapi.json",
             "name": "Projects",
           },
           {
-            "url": "${NOTIFICATIONS_ROOT_URL:-http://localhost:3000/notifications}${NOTIFICATIONS_ROOT_PATH}/openapi.json",
+            "url": "${NOTIFICATIONS__API__ROOT_URL:-http://localhost:3000/notifications}${NOTIFICATIONS__API__ROOT_PATH}/openapi.json",
             "name": "Notifications",
           },
           {
-            "url": "${MESSENGER_ROOT_URL:-http://localhost:3000/messenger}${MESSENGER_ROOT_PATH}/openapi.json",
+            "url": "${MESSENGER__API__ROOT_URL:-http://localhost:3000/messenger}${MESSENGER__API__ROOT_PATH}/openapi.json",
             "name": "Messenger",
           },
         ]
@@ -283,21 +267,18 @@ services:
       replicas: 1
 
 secrets:
-  habr_oauth2_client_id:
+  oauth2_habr_client_id:
     external: true
-    name: ${HABR_OAUTH2_CLIENT_ID_NAME:-habr_oauth2_client_id}
-  habr_oauth2_client_secret:
+    name: ${OAUTH2_HABR_CLIENT_ID_NAME:-oauth2_habr_client_id}
+  oauth2_habr_client_secret:
     external: true
-    name: ${HABR_OAUTH2_CLIENT_SECRET_NAME:-habr_oauth2_client_secret}
+    name: ${OAUTH2_HABR_CLIENT_SECRET_NAME:-oauth2_habr_client_secret}
   habr_api_key:
     external: true
     name: ${HABR_API_KEY_NAME:-habr_api_key}
   habr_career_api_key:
     external: true
     name: ${HABR_CAREER_API_KEY_NAME:-habr_career_api_key}
-  postgresql_password:
-    external: true
-    name: ${POSTGRESQL_PASSWORD_NAME:-postgresql_password}
   jwt_access_token_private_key:
     external: true
     name: ${JWT_ACCESS_TOKEN_PRIVATE_KEY_NAME:-jwt_access_token_private_key}

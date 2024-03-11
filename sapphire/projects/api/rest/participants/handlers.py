@@ -6,11 +6,9 @@ from sapphire.common.api.dependencies.pagination import Pagination, pagination
 from sapphire.common.api.exceptions import HTTPForbidden, HTTPNotFound
 from sapphire.common.jwt.dependencies.rest import is_auth
 from sapphire.common.jwt.models import JWTData
+from sapphire.database.models import Participant, ParticipantStatusEnum
+from sapphire.projects import broker, database
 from sapphire.projects.api.rest.projects.schemas import ParticipantResponse
-from sapphire.projects.broker.service import ProjectsBrokerService
-from sapphire.projects.database.models import Participant, ParticipantStatusEnum
-from sapphire.projects.database.service import ProjectsDatabaseService
-from sapphire.users.internal_api.client.service import UsersInternalAPIClient
 
 from .dependencies import get_path_participant
 from .schemas import (
@@ -26,11 +24,8 @@ async def create_participant(
     jwt_data: JWTData = fastapi.Depends(is_auth),
     data: CreateParticipantRequest = fastapi.Body(embed=False),
 ) -> ParticipantResponse:
-    broker_service: ProjectsBrokerService = request.app.service.broker
-    database_service: ProjectsDatabaseService = request.app.service.database
-    users_internal_api_client: UsersInternalAPIClient = (
-        request.app.service.users_internal_api_client
-    )
+    broker_service: broker.Service = request.app.service.broker
+    database_service: database.Service = request.app.service.database
 
     async with database_service.transaction() as session:
         position = await database_service.get_position(
@@ -57,9 +52,6 @@ async def create_participant(
             detail="Participant already send request to project or joined in project",
         )
 
-    participant_data = await users_internal_api_client.get_user(user_id=jwt_data.user_id)
-    owner_data = await users_internal_api_client.get_user(user_id=position.project.owner_id)
-
     async with database_service.transaction() as session:
         participant = await database_service.create_participant(
             session=session,
@@ -69,8 +61,8 @@ async def create_participant(
         await broker_service.send_participant_requested(
             project=position.project,
             participant=participant,
-            participant_email=participant_data.email,
-            owner_email=owner_data.email,
+            participant_email="test@example.com",  # TODO: implement  # pylint: disable=fixme
+            owner_email="test@example.com",  # TODO: implement  # pylint: disable=fixme
         )
         await broker_service.send_create_chat(
             is_personal=True,
@@ -92,11 +84,8 @@ async def update_participant(
     jwt_data: JWTData = fastapi.Depends(is_auth),
     participant: Participant = fastapi.Depends(get_path_participant),
 ) -> ParticipantResponse:
-    broker_service: ProjectsBrokerService = request.app.service.broker
-    database_service: ProjectsDatabaseService = request.app.service.database
-    users_internal_api_client: UsersInternalAPIClient = (
-        request.app.service.users_internal_api_client
-    )
+    broker_service: broker.Service = request.app.service.broker
+    database_service: database.Service = request.app.service.database
 
     project_owner_nodes = {
         # New expected status : Required current statuses
@@ -119,11 +108,6 @@ async def update_participant(
 
     if participant.status not in required_statuses:
         raise HTTPForbidden()
-
-    participant_data = await users_internal_api_client.get_user(user_id=participant.user_id)
-    owner_data = await users_internal_api_client.get_user(
-        user_id=participant.position.project.owner_id,
-    )
 
     async with database_service.transaction() as session:
         participant = await database_service.update_participant_status(
@@ -157,8 +141,8 @@ async def update_participant(
             await participant_notification_send(
                 project=project,
                 participant=participant,
-                participant_email=participant_data.email,
-                owner_email=owner_data.email,
+                participant_email="test@mail.ru",  # TODO: Implement  # pylint: disable=fixme
+                owner_email="test@mail.ru",  # TODO: Implement  # pylint: disable=fixme
             )
 
     return ParticipantResponse.model_validate(participant)
@@ -169,7 +153,7 @@ async def get_participants(
     pagination: Pagination = fastapi.Depends(pagination),
     filters: ParticipantListFiltersRequest = fastapi.Depends(ParticipantListFiltersRequest),
 ) -> ParticipantListResponse:
-    database_service: ProjectsDatabaseService = request.app.service.database
+    database_service: database.Service = request.app.service.database
     async with database_service.transaction() as session:
         participants_db = await database_service.get_participants(
             session=session,

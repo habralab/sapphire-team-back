@@ -1,8 +1,7 @@
 import uuid
-from datetime import datetime
 from typing import Literal
 
-from pydantic import BaseModel, EmailStr, constr
+from pydantic import AwareDatetime, BaseModel, EmailStr, constr
 
 
 class HealthResponse(BaseModel):
@@ -25,8 +24,8 @@ class UserResponse(BaseModel):
     about: str | None
     main_specialization_id: uuid.UUID | None
     secondary_specialization_id: uuid.UUID | None
-    created_at: datetime
-    updated_at: datetime
+    created_at: AwareDatetime
+    updated_at: AwareDatetime
 
 
 class UserUpdateRequest(BaseModel):

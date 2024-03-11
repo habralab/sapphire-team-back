@@ -2,21 +2,14 @@ from typing import Iterable
 
 import aiokafka
 
-from sapphire.common.api.websocket.connection_storage.storage import WebsocketConnectionStorage
 from sapphire.common.broker.handler import BaseBrokerHandler
 from sapphire.common.broker.models.messenger import CreateChat
-from sapphire.messenger.database.service import MessengerDatabaseService
+from sapphire.messenger.database import Service as DatabaseService
 
 
 class MessengerBrokerHandler(BaseBrokerHandler):
-    def __init__(
-            self,
-            database: MessengerDatabaseService,
-            websocket_connection_storage: WebsocketConnectionStorage,
-            topics: Iterable[str] | None = None,
-    ):
+    def __init__(self, database: DatabaseService, topics: Iterable[str] | None = None):
         self._database = database
-        self._websocket_connection_storage = websocket_connection_storage
         super().__init__(topics=topics)
 
     async def handle(self, message: aiokafka.ConsumerRecord):
@@ -29,9 +22,5 @@ class MessengerBrokerHandler(BaseBrokerHandler):
             )
 
     @property
-    def database(self) -> MessengerDatabaseService:
+    def database(self) -> DatabaseService:
         return self._database
-
-    @property
-    def websocket_connection_storage(self) -> WebsocketConnectionStorage:
-        return self._websocket_connection_storage

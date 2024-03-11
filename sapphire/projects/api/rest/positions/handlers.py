@@ -4,8 +4,8 @@ from sapphire.common.api.dependencies.pagination import Pagination, pagination
 from sapphire.common.api.exceptions import HTTPForbidden, HTTPNotFound
 from sapphire.common.jwt.dependencies.rest import is_auth
 from sapphire.common.jwt.models import JWTData
-from sapphire.projects.database.models import Position
-from sapphire.projects.database.service import ProjectsDatabaseService
+from sapphire.database.models import Position
+from sapphire.projects import database
 
 from .dependencies import get_path_position, path_position_is_owner
 from .schemas import (
@@ -21,7 +21,7 @@ async def get_positions(
         filters: PositionListFiltersRequest = fastapi.Depends(PositionListFiltersRequest),
         pagination: Pagination = fastapi.Depends(pagination),
 ) -> PositionListResponse:
-    database_service: ProjectsDatabaseService = request.app.service.database
+    database_service: database.Service = request.app.service.database
 
     async with database_service.transaction() as session:
         params = {
@@ -61,7 +61,7 @@ async def create_position(
         jwt_data: JWTData = fastapi.Depends(is_auth),
         data: CreatePositionRequest = fastapi.Body(embed=False),
 ) -> PositionResponse:
-    database_service: ProjectsDatabaseService = request.app.service.database
+    database_service: database.Service = request.app.service.database
 
     async with database_service.transaction() as session:
         db_project = await database_service.get_project(session=session, project_id=data.project_id)
@@ -91,7 +91,7 @@ async def remove_position(
         request: fastapi.Request,
         position: Position = fastapi.Depends(path_position_is_owner),
 ) -> PositionResponse:
-    database_service: ProjectsDatabaseService = request.app.service.database
+    database_service: database.Service = request.app.service.database
 
     async with database_service.transaction() as session:
         position = await database_service.remove_position(

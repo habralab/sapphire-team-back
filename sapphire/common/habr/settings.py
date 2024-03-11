@@ -1,5 +1,6 @@
-from pydantic_settings import BaseSettings
+
+from pydantic import BaseModel
 
 
-class HabrSettings(BaseSettings):
-    habr_api_key: str = ""
+class HabrSettings(BaseModel):
+    api_key: str = ""
