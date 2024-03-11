@@ -3,7 +3,7 @@ from loguru import logger
 
 
 class BaseNamespace(socketio.AsyncNamespace):
-    namespace_name = '*'
+    namespace_name = "*"
 
     def on_connect(self, sid, environ):
         logger.info(f"User {sid} connected")
