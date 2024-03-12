@@ -61,8 +61,8 @@ async def create_participant(
         await broker_service.send_participant_requested(
             project=position.project,
             participant=participant,
-            participant_email="test@example.com",  # TODO: implement  # pylint: disable=fixme
-            owner_email="test@example.com",  # TODO: implement  # pylint: disable=fixme
+            participant_email=participant.user.email,
+            owner_email=position.project.owner.email,
         )
         await broker_service.send_create_chat(
             is_personal=True,
