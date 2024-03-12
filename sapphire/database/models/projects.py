@@ -52,7 +52,7 @@ class Project(Base):
     positions: Mapped[list["Position"]] = relationship(back_populates="project", join_depth=2,
                                                        lazy=False)
     reviews: Mapped[list["Review"]] = relationship(back_populates="project", lazy=False)
-    owner: Mapped[User] = relationship(foreign_keys=[owner_id])
+    owner: Mapped[User] = relationship(foreign_keys=[owner_id], lazy=False)
 
     __table_args__ = (
         Index("projects__owner_id_idx", "owner_id", postgresql_using="hash"),
