@@ -56,7 +56,7 @@ async def update_user(
 
 
 async def get_user_avatar(user: User = fastapi.Depends(get_path_user)) -> FileResponse:
-    if user.avatar is None:
+    if user.avatar is None or not pathlib.Path(user.avatar).is_file():
         return None
 
     return FileResponse(user.avatar)
