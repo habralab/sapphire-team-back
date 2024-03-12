@@ -3,7 +3,7 @@ from collections import defaultdict
 import fastapi
 
 from sapphire.common.api.dependencies.pagination import Pagination, pagination
-from sapphire.common.api.exceptions import HTTPForbidden, HTTPNotFound
+from sapphire.common.api.exceptions import HTTPForbidden, HTTPInternalServerError, HTTPNotFound
 from sapphire.common.jwt.dependencies.rest import is_auth
 from sapphire.common.jwt.models import JWTData
 from sapphire.database.models import Participant, ParticipantStatusEnum
@@ -58,10 +58,16 @@ async def create_participant(
             position_id=position.id,
             user_id=jwt_data.user_id,
         )
+        participant_user = await database_service.get_user(
+            session=session,
+            user_id=jwt_data.user_id,
+        )
+        if participant_user is None:
+            raise HTTPInternalServerError()
         await broker_service.send_participant_requested(
             project=position.project,
             participant=participant,
-            participant_email=participant.user.email,
+            participant_email=participant_user.email,
             owner_email=position.project.owner.email,
         )
         await broker_service.send_create_chat(
