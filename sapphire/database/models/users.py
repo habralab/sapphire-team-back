@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime
 
-from sqlalchemy import ForeignKey, Text
+from sqlalchemy import ForeignKey, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .base import Base
@@ -15,6 +15,7 @@ class User(Base):
     id: Mapped[uuid.UUID] = mapped_column(default=uuid.uuid4, primary_key=True)
 
     email: Mapped[str] = mapped_column(unique=True)
+    password: Mapped[str | None] = mapped_column(String(length=72))
     first_name: Mapped[str | None]
     last_name: Mapped[str | None]
     avatar: Mapped[str | None] = mapped_column(unique=True)

@@ -45,6 +45,7 @@ def upgrade() -> None:
     op.create_table("users",
         sa.Column("id", sa.Uuid(), nullable=False),
         sa.Column("email", sa.String(), nullable=False),
+        sa.Column("password", sa.String(length=72), nullable=True),
         sa.Column("first_name", sa.String(), nullable=True),
         sa.Column("last_name", sa.String(), nullable=True),
         sa.Column("avatar", sa.String(), nullable=True),

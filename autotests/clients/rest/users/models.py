@@ -34,3 +34,14 @@ class UserUpdateRequest(BaseModel):
     about: str | None
     main_specialization_id: uuid.UUID | None
     secondary_specialization_id: uuid.UUID | None
+
+
+class AuthorizeRequest(BaseModel):
+    email: EmailStr
+    password: constr(pattern=r"^[\w\(\)\[\]\{}\^\$\+\*@#%!&]{8,}$")
+
+
+class AuthorizeResponse(BaseModel):
+    user: UserResponse
+    access_token: str
+    refresh_token: str
