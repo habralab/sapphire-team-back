@@ -22,9 +22,8 @@ class BaseSocketIOService(ServiceMixin):
             async_mode="asgi",
             cors_allowed_origins=allowed_origins,
         )
-        if namespaces:
-            for name, namespace in namespaces.items():
-                self._server.register_namespace(namespace(name))
+        for name, namespace in (namespaces or {}).items():
+            self._server.register_namespace(namespace(name))
 
     def get_app(self) -> socketio.ASGIApp:
         sio_app = socketio.ASGIApp(
