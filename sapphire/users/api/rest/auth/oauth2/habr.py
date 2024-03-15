@@ -3,13 +3,12 @@ import asyncio
 import fastapi
 from fastapi.responses import RedirectResponse
 
-from sapphire.common.api.utils import set_cookie
 from sapphire.common.habr import HabrClient
 from sapphire.common.habr_career import HabrCareerClient
 from sapphire.common.jwt import JWTMethods
 from sapphire.users import cache, database, oauth2
 from sapphire.users.api.rest.auth.schemas import AuthorizeResponse
-from sapphire.users.api.rest.schemas import UserResponse
+from sapphire.users.api.rest.auth.utils import generate_authorize_response
 
 router = fastapi.APIRouter()
 
@@ -88,16 +87,4 @@ async def callback(
             )
             db_user.activate()
 
-    access_token = jwt_methods.issue_access_token(db_user.id, is_activated=db_user.is_activated)
-    refresh_token = jwt_methods.issue_refresh_token(db_user.id, is_activated=db_user.is_activated)
-
-    response = set_cookie(response=response, name="access_token", value=access_token,
-                          expires=jwt_methods.access_token_expires_utc)
-    response = set_cookie(response=response, name="refresh_token", value=refresh_token,
-                          expires=jwt_methods.refresh_token_expires_utc)
-
-    return AuthorizeResponse(
-        user=UserResponse.from_db_model(user=db_user),
-        access_token=access_token,
-        refresh_token=refresh_token,
-    )
+    return generate_authorize_response(jwt_methods=jwt_methods, response=response, user=db_user)
