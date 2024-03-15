@@ -119,6 +119,8 @@ def get_service(
         habr_career_client=habr_career_client,
         oauth2_habr_callback_url=settings.oauth2_habr_callback_url,
         jwt_methods=jwt_methods,
+        media_dir_path=settings.media_dir_path,
+        load_file_chunk_size=settings.load_file_chunk_size,
         version=get_version() or "0.0.0",
         root_url=str(settings.root_url),
         root_path=settings.root_path,

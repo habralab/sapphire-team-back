@@ -142,7 +142,7 @@ async def partial_update_project(
 async def get_project_avatar(
         project: Project = fastapi.Depends(get_path_project),
 ) -> FileResponse:
-    if project.avatar is None:
+    if project.avatar is None or not pathlib.Path(project.avatar).is_file():
         return None
 
     return FileResponse(project.avatar)
