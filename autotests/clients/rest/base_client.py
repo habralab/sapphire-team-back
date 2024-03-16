@@ -27,6 +27,11 @@ class BaseRestClient(httpx.AsyncClient, ServiceMixin):
     async def stop(self):
         await self.__aexit__()  # pylint: disable=unnecessary-dunder-call
 
+    async def request(self, *args, **kwargs):
+        response = await super().request(*args, **kwargs)
+        self.cookies.clear()
+        return response
+
     async def rest_request(
             self,
             method: str,

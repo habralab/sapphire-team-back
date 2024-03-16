@@ -1,9 +1,10 @@
 from collections import defaultdict
 
 import fastapi
+from loguru import logger
 
 from sapphire.common.api.dependencies.pagination import Pagination, pagination
-from sapphire.common.api.exceptions import HTTPForbidden, HTTPNotFound
+from sapphire.common.api.exceptions import HTTPForbidden, HTTPInternalServerError, HTTPNotFound
 from sapphire.common.jwt.dependencies.rest import is_auth
 from sapphire.common.jwt.models import JWTData
 from sapphire.database.models import Participant, ParticipantStatusEnum
@@ -58,11 +59,18 @@ async def create_participant(
             position_id=position.id,
             user_id=jwt_data.user_id,
         )
+        participant_user = await database_service.get_user(
+            session=session,
+            user_id=jwt_data.user_id,
+        )
+        if participant_user is None:
+            logger.error("Participant user not exist")
+            raise HTTPInternalServerError()
         await broker_service.send_participant_requested(
             project=position.project,
             participant=participant,
-            participant_email="test@example.com",  # TODO: implement  # pylint: disable=fixme
-            owner_email="test@example.com",  # TODO: implement  # pylint: disable=fixme
+            participant_email=participant_user.email,
+            owner_email=position.project.owner.email,
         )
         await broker_service.send_create_chat(
             is_personal=True,
@@ -115,10 +123,21 @@ async def update_participant(
             participant=participant,
             status=data.status,
         )
+        participant_user = await database_service.get_user(
+            session=session,
+            user_id=participant.user_id,
+        )
         project = await database_service.get_project(
             session=session,
             project_id=participant.position.project_id,
         )
+        if participant_user is None or project is None:
+            logger.error(
+                "Not exist: participant_user={participant_user}, project={project}",
+                participant_user=participant_user,
+                project=project,
+            )
+            raise HTTPInternalServerError()
 
         notification_send_map = {
             ParticipantStatusEnum.JOINED: {
@@ -141,8 +160,8 @@ async def update_participant(
             await participant_notification_send(
                 project=project,
                 participant=participant,
-                participant_email="test@mail.ru",  # TODO: Implement  # pylint: disable=fixme
-                owner_email="test@mail.ru",  # TODO: Implement  # pylint: disable=fixme
+                participant_email=participant_user.email,
+                owner_email=project.owner.email,
             )
 
     return ParticipantResponse.model_validate(participant)

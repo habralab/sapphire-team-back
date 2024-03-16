@@ -17,6 +17,7 @@ from sapphire.database.models import (
     ProjectHistory,
     ProjectStatusEnum,
     Review,
+    User,
 )
 
 from .settings import Settings
@@ -29,6 +30,12 @@ class UserStatistic(BaseModel):
 
 
 class Service(BaseDatabaseService):  # pylint: disable=abstract-method
+    async def get_user(self, session: AsyncSession, user_id: uuid.UUID) -> User | None:
+        statement = select(User).where(User.id == user_id)
+        result = await session.execute(statement)
+
+        return result.unique().scalar_one_or_none()
+
     async def create_project(
             self,
             session: AsyncSession,

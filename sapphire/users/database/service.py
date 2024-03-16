@@ -1,6 +1,7 @@
 import uuid
 from typing import Set, Type
 
+import bcrypt
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -12,6 +13,15 @@ from .settings import Settings
 
 
 class Service(BaseDatabaseService):  # pylint: disable=abstract-method
+    def hash_user_password(self, password: str) -> str:
+        hashed_password = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
+        return hashed_password.decode("utf-8")
+
+    def check_user_password(self, user: User, password: str) -> bool:
+        if user.password is None:
+            return False
+        return bcrypt.checkpw(password.encode("utf-8"), user.password.encode("utf-8"))
+
     async def get_user(
             self,
             session: AsyncSession,
@@ -34,6 +44,7 @@ class Service(BaseDatabaseService):  # pylint: disable=abstract-method
             self,
             session: AsyncSession,
             user: User,
+            password: str | Type[Empty] = Empty,
             first_name: str | None | Type[Empty] = Empty,
             last_name: str | None | Type[Empty] = Empty,
             avatar: str | None | Type[Empty] = Empty,
@@ -41,6 +52,8 @@ class Service(BaseDatabaseService):  # pylint: disable=abstract-method
             main_specialization_id: uuid.UUID | None | Type[Empty] = Empty,
             secondary_specialization_id: uuid.UUID | None | Type[Empty] = Empty,
     ) -> User:
+        if password is not Empty:
+            user.password = self.hash_user_password(password)
         if first_name is not Empty:
             user.first_name = first_name
         if last_name is not Empty:
@@ -61,6 +74,7 @@ class Service(BaseDatabaseService):  # pylint: disable=abstract-method
             self,
             session: AsyncSession,
             email: str,
+            password: str | None = None,
             first_name: str | None = None,
             last_name: str | None = None,
     ) -> User:
@@ -68,6 +82,7 @@ class Service(BaseDatabaseService):  # pylint: disable=abstract-method
             email=email,
             first_name=first_name,
             last_name=last_name,
+            password=None if password is None else self.hash_user_password(password),
         )
         profile = Profile(user=user)
         user.profile = profile

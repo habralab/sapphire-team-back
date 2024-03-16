@@ -2,8 +2,53 @@ import io
 import uuid
 
 import pytest
+from faker import Faker
 
 from autotests.clients.rest.users.client import UsersRestClient
+from autotests.settings import AutotestsSettings
+
+
+class TestUserAuthFlow:
+    CONTEXT = {}
+
+    @pytest.mark.dependency()
+    @pytest.mark.asyncio
+    async def test_signup_user(self, faker: Faker, users_rest_client: UsersRestClient):
+        email = f"{uuid.uuid4()}@{faker.domain_name()}"
+        password = faker.password(length=16)
+
+        response = await users_rest_client.sign_up(email=email, password=password)
+
+        self.CONTEXT["access_token"] = response.access_token
+        self.CONTEXT["user_id"] = response.user.id
+        self.CONTEXT["email"] = email
+        self.CONTEXT["password"] = password
+
+    @pytest.mark.dependency(depends=["TestUserAuthFlow::test_signup_user"])
+    @pytest.mark.asyncio
+    async def test_check(self, settings: AutotestsSettings):
+        user_id: uuid.UUID = self.CONTEXT["user_id"]
+        access_token: str = self.CONTEXT["access_token"]
+        users_rest_client = UsersRestClient(
+            base_url=str(settings.users_base_url),
+            headers={"Authorization": f"Bearer {access_token}"},
+        )
+
+        response = await users_rest_client.check_auth()
+
+        assert response.user_id == user_id
+
+    @pytest.mark.dependency(depends=["TestUserAuthFlow::test_signup_user"])
+    @pytest.mark.asyncio
+    async def test_signin_user(self, users_rest_client: UsersRestClient):
+        user_id: uuid.UUID = self.CONTEXT["user_id"]
+        email: str = self.CONTEXT["email"]
+        password: str = self.CONTEXT["password"]
+
+        response = await users_rest_client.sign_in(email=email, password=password)
+
+        assert response.user.id == user_id
+        assert response.user.email == email
 
 
 class TestUserUpdateFlow:

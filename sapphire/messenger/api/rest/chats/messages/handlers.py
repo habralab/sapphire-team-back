@@ -1,4 +1,5 @@
 import fastapi
+from loguru import logger
 
 from sapphire.common.api.dependencies.pagination import Pagination, pagination
 from sapphire.common.api.exceptions import HTTPInternalServerError
@@ -61,6 +62,7 @@ async def create_message(
             message_id=db_message.id,
         )
     if db_message is None:
+        logger.error("Chat message not exist")
         raise HTTPInternalServerError()
 
     return MessageResponse.from_db_model(db_message)
