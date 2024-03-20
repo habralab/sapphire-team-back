@@ -138,6 +138,8 @@ def upgrade() -> None:
                     postgresql_using="hash")
     op.create_index("positions__specialization_id_idx", "positions", ["specialization_id"],
                     unique=False, postgresql_using="hash")
+    op.create_index("positions__created_at_idx", "positions", ["created_at"],
+                    unique=False, postgresql_using="btree")
     op.create_table("profiles",
         sa.Column("user_id", sa.Uuid(), nullable=False),
         sa.Column("about", sa.Text(), nullable=True),
@@ -161,6 +163,8 @@ def upgrade() -> None:
     )
     op.create_index("projects_history__project_id_idx", "projects_history", ["project_id"],
                     unique=False, postgresql_using="hash")
+    op.create_index("projects_history__created_at_idx", "projects_history", ["created_at"],
+                    unique=False, postgresql_using="btree")
     op.create_table("reviews",
         sa.Column("id", sa.Uuid(), nullable=False),
         sa.Column("project_id", sa.Uuid(), nullable=False),

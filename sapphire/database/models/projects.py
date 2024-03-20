@@ -85,6 +85,7 @@ class ProjectHistory(Base):
 
     __table_args__ = (
         Index("projects_history__project_id_idx", "project_id", postgresql_using="hash"),
+        Index("projects_history__created_at_idx", "created_at", postgresql_using="btree"),
     )
 
 
@@ -119,6 +120,7 @@ class Position(Base):
         Index("positions__project_id_idx", "project_id", postgresql_using="hash"),
         Index("positions__specialization_id_idx", "specialization_id",
               postgresql_using="hash"),
+        Index("positions__created_at_idx", "created_at", postgresql_using="btree"),
     )
 
 
