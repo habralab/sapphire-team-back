@@ -6,7 +6,7 @@ from facet import ServiceMixin
 from fastapi.middleware.cors import CORSMiddleware
 from loguru import logger
 
-from .uvicorn_server import UvicornServer
+from sapphire.common.uvicorn_server import UvicornServer
 
 
 class BaseAPIService(ServiceMixin):
