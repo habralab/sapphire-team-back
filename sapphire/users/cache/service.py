@@ -1,4 +1,4 @@
-import uuid
+import secrets
 
 from sapphire.common.cache.service import BaseCacheService
 
@@ -7,7 +7,7 @@ from .settings import Settings
 
 class Service(BaseCacheService):
     async def set_state(self) -> str:
-        state = str(uuid.uuid4())
+        state = secrets.token_hex(32)
         key = f"users:auth:oauth2:habr:state:{state}"
         await self.redis.set(key, state, ex=120)
         return state

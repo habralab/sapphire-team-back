@@ -17,6 +17,8 @@ from sapphire.database.models import (
     ProjectHistory,
     ProjectStatusEnum,
     Review,
+    Skill,
+    Specialization,
     User,
 )
 
@@ -137,7 +139,7 @@ class Service(BaseDatabaseService):  # pylint: disable=abstract-method
             specialization_ids: list[uuid.UUID] | Type[Empty] = Empty,
             skill_ids: list[uuid.UUID] | Type[Empty] = Empty,
             joined_user_id: uuid.UUID | Type[Empty] = Empty,
-            project_query_text: str | Type[Empty] = Empty,
+            query: str | Type[Empty] = Empty,
             project_startline_ge: datetime | Type[Empty] = Empty,
             project_startline_le: datetime | Type[Empty] = Empty,
             project_deadline_ge: datetime | Type[Empty] = Empty,
@@ -167,10 +169,21 @@ class Service(BaseDatabaseService):  # pylint: disable=abstract-method
                 ))
             ))
 
-        if project_query_text is not Empty:
-            project_filters.append(or_(
-                Project.name.icontains(project_query_text),
-                Project.description.icontains(project_query_text),
+        if query is not Empty:
+            filters.append(or_(
+                Position.project_id.in_(select(Project.id).where(or_(
+                    Project.name.icontains(query),
+                    Project.description.icontains(query),
+                ))),
+                Position.specialization_id.in_(select(Specialization.id).where(or_(
+                    Specialization.name.icontains(query),
+                    Specialization.name_en.icontains(query),
+                ))),
+                Position.id.in_(select(PositionSkill.position_id).where(
+                    PositionSkill.skill_id.in_(select(Skill.id).where(
+                        Skill.name.icontains(query),
+                    )),
+                )),
             ))
         if project_startline_ge is not Empty:
             project_filters.append(Project.startline >= project_startline_ge)
@@ -210,7 +223,7 @@ class Service(BaseDatabaseService):  # pylint: disable=abstract-method
             specialization_ids: list[uuid.UUID] | Type[Empty] = Empty,
             skill_ids: list[uuid.UUID] | Type[Empty] = Empty,
             joined_user_id: uuid.UUID | Type[Empty] = Empty,
-            project_query_text: str | Type[Empty] = Empty,
+            query: str | Type[Empty] = Empty,
             project_startline_ge: datetime | Type[Empty] = Empty,
             project_startline_le: datetime | Type[Empty] = Empty,
             project_deadline_ge: datetime | Type[Empty] = Empty,
@@ -222,7 +235,7 @@ class Service(BaseDatabaseService):  # pylint: disable=abstract-method
             specialization_ids=specialization_ids,
             skill_ids=skill_ids,
             joined_user_id=joined_user_id,
-            project_query_text=project_query_text,
+            query=query,
             project_startline_ge=project_startline_ge,
             project_startline_le=project_startline_le,
             project_deadline_ge=project_deadline_ge,
@@ -241,7 +254,7 @@ class Service(BaseDatabaseService):  # pylint: disable=abstract-method
             specialization_ids: list[uuid.UUID] | Type[Empty] = Empty,
             skill_ids: list[uuid.UUID] | Type[Empty] = Empty,
             joined_user_id: uuid.UUID | Type[Empty] = Empty,
-            project_query_text: str | Type[Empty] = Empty,
+            query: str | Type[Empty] = Empty,
             project_startline_ge: datetime | Type[Empty] = Empty,
             project_startline_le: datetime | Type[Empty] = Empty,
             project_deadline_ge: datetime | Type[Empty] = Empty,
@@ -255,7 +268,7 @@ class Service(BaseDatabaseService):  # pylint: disable=abstract-method
             specialization_ids=specialization_ids,
             skill_ids=skill_ids,
             joined_user_id=joined_user_id,
-            project_query_text=project_query_text,
+            query=query,
             project_startline_ge=project_startline_ge,
             project_startline_le=project_startline_le,
             project_deadline_ge=project_deadline_ge,
@@ -486,7 +499,7 @@ class Service(BaseDatabaseService):  # pylint: disable=abstract-method
 
     async def _get_projects_filters(
             self,
-            query_text: str | Type[Empty] = Empty,
+            query: str | Type[Empty] = Empty,
             owner_id: uuid.UUID | Type[Empty] = Empty,
             user_id: uuid.UUID | Type[Empty] = Empty,
             startline_le: datetime | Type[Empty] = Empty,
@@ -502,11 +515,11 @@ class Service(BaseDatabaseService):  # pylint: disable=abstract-method
         position_filters = []
         participant_filters = []
 
-        if query_text is not Empty:
+        if query is not Empty:
             filters.append(
                 or_(
-                    Project.name.icontains(query_text),
-                    Project.description.icontains(query_text),
+                    Project.name.icontains(query),
+                    Project.description.icontains(query),
                 )
             )
         if owner_id is not Empty:
@@ -568,7 +581,7 @@ class Service(BaseDatabaseService):  # pylint: disable=abstract-method
     async def get_projects_count(
         self,
         session: AsyncSession,
-        query_text: str | Type[Empty] = Empty,
+        query: str | Type[Empty] = Empty,
         owner_id: uuid.UUID | Type[Empty] = Empty,
         user_id: uuid.UUID | Type[Empty] = Empty,
         startline_le: datetime | Type[Empty] = Empty,
@@ -580,9 +593,9 @@ class Service(BaseDatabaseService):  # pylint: disable=abstract-method
         position_specialization_ids: list[uuid.UUID] | Type[Empty] = Empty,
         participant_user_ids: list[uuid.UUID] | Type[Empty] = Empty,
     ) -> int:
-        query = select(func.count(Project.id))  # pylint: disable=not-callable
+        statement = select(func.count(Project.id))  # pylint: disable=not-callable
         filters = await self._get_projects_filters(
-            query_text=query_text,
+            query=query,
             owner_id=owner_id,
             user_id=user_id,
             startline_le=startline_le,
@@ -596,13 +609,13 @@ class Service(BaseDatabaseService):  # pylint: disable=abstract-method
         )
         query = query.where(*filters)
 
-        result = await session.scalar(query)
+        result = await session.scalar(statement)
         return result
 
     async def get_projects(
         self,
         session: AsyncSession,
-        query_text: str | Type[Empty] = Empty,
+        query: str | Type[Empty] = Empty,
         owner_id: uuid.UUID | Type[Empty] = Empty,
         user_id: uuid.UUID | Type[Empty] = Empty,
         startline_le: datetime | Type[Empty] = Empty,
@@ -616,9 +629,9 @@ class Service(BaseDatabaseService):  # pylint: disable=abstract-method
         page: int = 1,
         per_page: int = 10,
     ) -> list[Project]:
-        query = select(Project).order_by(Project.created_at.desc())
+        statement = select(Project).order_by(Project.created_at.desc())
         filters = await self._get_projects_filters(
-            query_text=query_text,
+            query=query,
             owner_id=owner_id,
             user_id=user_id,
             startline_le=startline_le,
@@ -635,7 +648,7 @@ class Service(BaseDatabaseService):  # pylint: disable=abstract-method
         offset = (page - 1) * per_page
         query = query.limit(per_page).offset(offset)
 
-        result = await session.execute(query)
+        result = await session.execute(statement)
 
         return list(result.unique().scalars().all())
 
