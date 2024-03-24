@@ -2,7 +2,6 @@ import uuid
 from typing import Set, Type
 
 import bcrypt
-from dill import session
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
