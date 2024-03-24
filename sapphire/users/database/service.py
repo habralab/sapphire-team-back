@@ -2,6 +2,7 @@ import uuid
 from typing import Set, Type
 
 import bcrypt
+from dill import session
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -120,6 +121,20 @@ class Service(BaseDatabaseService):  # pylint: disable=abstract-method
             session.add(user)
 
         return skills
+
+    async def get_user_email(
+            self,
+            session: AsyncSession,
+            email: str
+    ) -> User:
+        filters = []
+        if email is not Empty:
+            filters.append(User.email == email)
+
+        stmt = select(User).where(*filters)
+        result = await session.execute(stmt)
+        current_email = result.scalar_one_or_none()
+        return current_email
 
 
 def get_service(settings: Settings) -> Service:
