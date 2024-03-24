@@ -67,7 +67,7 @@ async def test_get_specialization_groups_with_all_filters(service: Service):
 
     specialization_groups = await service.get_specialization_groups(
         session=session,
-        query_text=name,
+        query=name,
         page=page,
         per_page=per_page,
     )

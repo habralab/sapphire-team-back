@@ -24,7 +24,7 @@ class Service(BaseAPIService):
         self._database = database
 
         super().__init__(
-            title="Projects",
+            title="Storage",
             version=version,
             root_url=root_url,
             root_path=root_path,
