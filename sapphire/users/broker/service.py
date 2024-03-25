@@ -1,4 +1,5 @@
 import asyncio
+
 from sapphire.common.broker.models.email import Email, EmailType
 from sapphire.common.broker.service import BaseBrokerProducerService
 
@@ -12,7 +13,7 @@ class Service(BaseBrokerProducerService):
             message=Email(
                 to=[email],
                 type=EmailType.CHANGE_PASSWORD,
-                sending_data={'code': code}
+                sending_data={"code": code}
             )
         )
 

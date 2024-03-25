@@ -1,6 +1,6 @@
 import fastapi
 
-from sapphire.common.api.exceptions import HTTPNotAuthenticated, HTTPNotFound, HTTPForbidden
+from sapphire.common.api.exceptions import HTTPForbidden, HTTPNotAuthenticated, HTTPNotFound
 from sapphire.common.jwt.dependencies.rest import get_jwt_data
 from sapphire.common.jwt.methods import JWTMethods
 from sapphire.common.jwt.models import JWTData

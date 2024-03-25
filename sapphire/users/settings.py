@@ -5,10 +5,10 @@ from sapphire.common.habr_career.settings import HabrCareerSettings
 from sapphire.common.jwt.settings import JWTSettings
 
 from .api import Settings as APISettings
+from .broker import Settings as BrokerSettings
 from .cache import Settings as CacheSettings
 from .database import Settings as DatabaseSettings
 from .oauth2.habr import Settings as OAuth2HabrSettings
-from .broker import Settings as BrokerSettings
 
 
 class Settings(BaseModel):
