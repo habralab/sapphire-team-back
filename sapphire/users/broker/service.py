@@ -5,7 +5,7 @@ from pydantic import EmailStr
 from sapphire.common.broker.models.email import Email, EmailType
 from sapphire.common.broker.service import BaseBrokerProducerService
 
-from . import Settings
+from .settings import Settings
 
 
 class Service(BaseBrokerProducerService):

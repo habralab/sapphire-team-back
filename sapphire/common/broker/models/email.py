@@ -1,9 +1,7 @@
 import enum
-import uuid
+from typing import Any
 
 from pydantic import BaseModel, EmailStr
-
-from sapphire.common.utils import empty
 
 
 class EmailType(str, enum.Enum):
@@ -19,4 +17,4 @@ class EmailType(str, enum.Enum):
 class Email(BaseModel):
     type: EmailType
     to: list[EmailStr]
-    sending_data: dict = {}
+    data: dict[str, Any] = {}
