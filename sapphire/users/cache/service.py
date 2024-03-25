@@ -28,7 +28,7 @@ class Service(BaseCacheService):
         await self.redis.set(key, secret_code, ex=43200)
         return secret_code
 
-    async def change_password_validate_code(self, secret_code: str, email: str) -> bool:
+    async def reset_password_validate_code(self, secret_code: str, email: str) -> bool:
         key = f"users:auth:change_password:secret_code:{email}"
         value = await self.redis.get(key)
         if value == secret_code:

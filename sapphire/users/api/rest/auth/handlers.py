@@ -69,7 +69,7 @@ async def sign_in(
     return generate_authorize_response(jwt_methods=jwt_methods, response=response, user=user)
 
 
-async def change_password(
+async def reset_password(
         request: fastapi.Request,
         email: str
 ):
@@ -85,14 +85,11 @@ async def change_password(
         if not user:
             raise HTTPNotFound()
 
-    secret_code = await cache_service.change_password_set_secret_code(email=email)  # in the future will be key
-    # to get code to validate sent code with input code
+    secret_code = await cache_service.change_password_set_secret_code(email=email)
     await broker_service.send_email_code(email=email, code=secret_code)
 
-    return fastapi.Response(status_code=200)
 
-
-async def reset_password(
+async def change_password(
         request: fastapi.Request,
         secret_code: str,
         email: str,
@@ -101,7 +98,7 @@ async def reset_password(
     database_service: database.Service = request.app.service.database
     cache_service: cache.Service = request.app.service.cache
 
-    if not cache_service.change_password_validate_code(secret_code=secret_code, email=email):
+    if not cache_service.reset_password_validate_code(secret_code=secret_code, email=email):
         raise HTTPForbidden()
 
     async with database_service.transaction() as session:
@@ -111,4 +108,3 @@ async def reset_password(
             user=user,
             password=new_password
         )
-    return fastapi.Response(status_code=200, content="Password reset")
