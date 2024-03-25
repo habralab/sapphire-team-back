@@ -21,16 +21,16 @@ class Service(BaseCacheService):
             return True
         return False
 
-    async def change_password_set_secret_code(self) -> str:
+    async def change_password_set_secret_code(self, email: str) -> str:
         secret_code = str(secrets.token_urlsafe(12))
-        key = f"users:auth:change_password:secret_code:{secret_code}"
+        key = f"users:auth:change_password:secret_code:{email}"
         await self.redis.set(key, secret_code, ex=43200)
         return secret_code
 
-    async def change_password_validate_code(self, secret_code: str) -> bool:
-        key = f"users:auth:change_password:secret_code:{secret_code}"
+    async def change_password_validate_code(self, secret_code: str, email: str) -> bool:
+        key = f"users:auth:change_password:secret_code:{email}"
         value = await self.redis.get(key)
-        if value is not None:
+        if value == secret_code:
             await self.redis.delete(key)
             return True
         return False

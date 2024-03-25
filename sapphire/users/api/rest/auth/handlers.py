@@ -85,7 +85,7 @@ async def change_password(
         if not user:
             raise HTTPNotFound()
 
-    secret_code = await cache_service.change_password_set_secret_code()  # in the future will be key
+    secret_code = await cache_service.change_password_set_secret_code(email=email)  # in the future will be key
     # to get code to validate sent code with input code
     await broker_service.send_email_code(email=email, code=secret_code)
 
@@ -101,7 +101,7 @@ async def reset_password(
     database_service: database.Service = request.app.service.database
     cache_service: cache.Service = request.app.service.cache
 
-    if not cache_service.change_password_validate_code(secret_code=secret_code):
+    if not cache_service.change_password_validate_code(secret_code=secret_code, email=email):
         raise HTTPForbidden()
 
     async with database_service.transaction() as session:

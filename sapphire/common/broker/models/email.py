@@ -13,7 +13,7 @@ class EmailType(str, enum.Enum):
     PARTICIPANT_DECLINED = "participant_declined"
     PARTICIPANT_LEFT = "participant_left"
     OWNER_EXCLUDED = "owner_excluded"
-    RESET_PASSWORD = "change_password"
+    RESET_PASSWORD = "reset_password"
 
 
 class Email(BaseModel):
