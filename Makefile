@@ -23,13 +23,17 @@ build:
 down:
 	docker stack rm sapphire || true
 
-clean: down
+up:
+	docker stack deploy -c docker-compose.yaml sapphire
+
+clean:
 	docker rmi sapphire --force
 
-up: clean build
+sleep:
 ifeq ($(OSFLAG),WIN)
 	timeout /t 15
 else
 	sleep 15
 endif
-	docker stack deploy -c docker-compose.yaml sapphire
+
+restart: down clean build sleep up

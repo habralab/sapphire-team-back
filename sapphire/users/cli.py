@@ -15,7 +15,7 @@ def run(ctx: typer.Context):
     loop: asyncio.AbstractEventLoop = ctx.obj["loop"]
     settings: Settings = ctx.obj["settings"]
 
-    users_service = get_service(settings=settings)
+    users_service = get_service(loop=loop, settings=settings)
 
     loop.run_until_complete(users_service.run())
 

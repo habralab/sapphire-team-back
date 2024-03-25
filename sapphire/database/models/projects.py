@@ -157,7 +157,7 @@ class Participant(Base):
     joined_at: Mapped[datetime | None]
 
     position: Mapped[Position] = relationship(back_populates="participants", lazy=False)
-    user: Mapped[User] = relationship()
+    user: Mapped[User] = relationship(lazy=False)
 
     __table_args__ = (
         Index("participants__position_id_idx", "position_id", postgresql_using="hash"),

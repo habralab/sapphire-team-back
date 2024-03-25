@@ -1,6 +1,8 @@
+from pydantic import NonNegativeInt
+
 from sapphire.common.cache.settings import BaseCacheSettings
 
 
 class Settings(BaseCacheSettings):
-    oauth_storage_time: int = 120
-    code_storage_time: int = 43200
+    oauth2_state_ttl: NonNegativeInt = 120  # in seconds: 2 minutes
+    reset_password_code_ttl: NonNegativeInt = 86400  # in seconds: 24 hours

@@ -3,6 +3,8 @@ from typing import Literal
 
 from pydantic import AwareDatetime, BaseModel, EmailStr, constr
 
+Password = constr(pattern=r"^[\w\(\)\[\]\{}\^\$\+\*@#%!&]{8,}$")
+
 
 class HealthResponse(BaseModel):
     name: Literal["Users"]
@@ -38,10 +40,20 @@ class UserUpdateRequest(BaseModel):
 
 class AuthorizeRequest(BaseModel):
     email: EmailStr
-    password: constr(pattern=r"^[\w\(\)\[\]\{}\^\$\+\*@#%!&]{8,}$")
+    password: Password
 
 
 class AuthorizeResponse(BaseModel):
     user: UserResponse
     access_token: str
     refresh_token: str
+
+
+class ResetPasswordRequest(BaseModel):
+    email: EmailStr
+
+
+class ChangePasswordRequest(BaseModel):
+    email: EmailStr
+    code: str
+    new_password: Password

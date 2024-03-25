@@ -11,6 +11,7 @@ from .models import (
     AuthorizeResponse,
     HealthResponse,
     JWTData,
+    ResetPasswordRequest,
     UserResponse,
     UserUpdateRequest,
 )
@@ -54,6 +55,14 @@ class UsersRestClient(BaseRestClient):
         request = AuthorizeRequest(email=email, password=password)
 
         return await self.rest_post(path=path, response_model=AuthorizeResponse, data=request)
+
+    async def reset_password_request(self, email: str):
+        path = f"/api/rest/auth/reset-password"
+        request = ResetPasswordRequest(email=email)
+
+        response = await self.post(url=path, data=request.model_dump_json())
+        if response.status_code // 100 != 2:
+            raise ResponseException(status_code=response.status_code, body=response.content)
 
     async def get_user(self, user_id: uuid.UUID) -> UserResponse:
         path = f"/api/rest/users/{user_id}"

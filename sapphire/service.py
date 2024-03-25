@@ -65,7 +65,7 @@ def get_service(loop: asyncio.AbstractEventLoop, settings: Settings) -> Service:
     notifications_service = notifications.get_service(loop=loop, settings=settings.notifications)
     projects_service = projects.get_service(loop=loop, settings=settings.projects)
     storage_service = storage.get_service(settings=settings.storage)
-    users_service = users.get_service(settings=settings.users)
+    users_service = users.get_service(loop=loop, settings=settings.users)
 
     return Service(
         email=email_service,

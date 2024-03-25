@@ -50,6 +50,13 @@ class TestUserAuthFlow:
         assert response.user.id == user_id
         assert response.user.email == email
 
+    @pytest.mark.dependency(depends=["TestUserAuthFlow::test_signin_user"])
+    @pytest.mark.asyncio
+    async def test_reset_password_request(self, users_rest_client: UsersRestClient):
+        email: str = self.CONTEXT["email"]
+        
+        await users_rest_client.reset_password_request(email=email)
+
 
 class TestUserUpdateFlow:
     CONTEXT = {}
