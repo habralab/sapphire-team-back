@@ -20,7 +20,7 @@ from autotests.utils import Empty
     pytest.lazy_fixture("random_projects_rest_client"),
 ))
 @pytest.mark.parametrize(
-    ("project_id", "specialization_ids", "skill_ids", "joined_user_id", "project_query_text",
+    ("project_id", "specialization_ids", "skill_ids", "joined_user_id", "query",
      "project_startline_ge", "project_startline_le", "project_deadline_ge", "project_deadline_le",
      "project_statuses", "page", "per_page"),
     (
@@ -48,7 +48,7 @@ async def test_get_positions(
         specialization_ids: list[uuid.UUID] | Type[Empty],
         skill_ids: list[uuid.UUID] | Type[Empty],
         joined_user_id: uuid.UUID | Type[Empty],
-        project_query_text: str | Type[Empty],
+        query: str | Type[Empty],
         project_startline_ge: datetime | Type[Empty],
         project_startline_le: datetime | Type[Empty],
         project_deadline_ge: datetime | Type[Empty],
@@ -62,7 +62,7 @@ async def test_get_positions(
         specialization_ids=specialization_ids,
         skill_ids=skill_ids,
         joined_user_id=joined_user_id,
-        project_query_text=project_query_text,
+        query=query,
         project_startline_ge=project_startline_ge,
         project_startline_le=project_startline_le,
         project_deadline_ge=project_deadline_ge,

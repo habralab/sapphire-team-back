@@ -30,7 +30,7 @@ async def get_positions(
             "specialization_ids": filters.specialization_ids,
             "skill_ids": filters.skill_ids,
             "joined_user_id": filters.joined_user_id,
-            "project_query_text": filters.project_query_text,
+            "query": filters.query,
             "project_startline_ge": filters.project_startline_ge,
             "project_startline_le": filters.project_startline_le,
             "project_deadline_ge": filters.project_deadline_ge,

@@ -21,7 +21,7 @@ async def get_skills(
     async with database_service.transaction() as session:
         params = {
             "session": session,
-            "query_text": filters.query_text,
+            "query": filters.query,
             "skill_ids": filters.id,
             "exclude_skill_ids": filters.exclude_id,
         }

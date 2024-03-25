@@ -20,7 +20,7 @@ async def get_specializations(
     async with database_service.transaction() as session:
         params = {
             "session": session,
-            "query_text": filters.query_text,
+            "query": filters.query,
             "group_id": filters.group_id,
             "specialization_ids": filters.id,
             "exclude_specialization_ids": filters.exclude_id,

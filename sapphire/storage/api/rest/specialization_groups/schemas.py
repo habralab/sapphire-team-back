@@ -9,7 +9,7 @@ from sapphire.storage.api.schemas.specializations import SpecializationGroupResp
 
 
 class SpecializationGroupsFilterRequest(BaseModel):
-    query_text: str | Type[Empty] = Empty
+    query: str | Type[Empty] = Empty
     id: list[uuid.UUID] | Type[Empty] = Empty
     exclude_id: list[uuid.UUID] | Type[Empty] = Empty
 
