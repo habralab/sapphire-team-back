@@ -1,6 +1,6 @@
 import fastapi
 
-from sapphire.common.api.exceptions import HTTPNotAuthenticated, HTTPNotFound
+from sapphire.common.api.exceptions import HTTPNotAuthenticated, HTTPNotFound, HTTPForbidden
 from sapphire.common.jwt.dependencies.rest import get_jwt_data
 from sapphire.common.jwt.methods import JWTMethods
 from sapphire.common.jwt.models import JWTData
@@ -90,3 +90,25 @@ async def change_password(
     await broker_service.send_email_code(email=email, code=secret_code)
 
     return fastapi.Response(status_code=200)
+
+
+async def reset_password(
+        request: fastapi.Request,
+        secret_code: str,
+        email: str,
+        new_password: str
+):
+    database_service: database.Service = request.app.service.database
+    cache_service: cache.Service = request.app.service.cache
+
+    if not cache_service.change_password_validate_code(secret_code=secret_code):
+        raise HTTPForbidden()
+
+    async with database_service.transaction() as session:
+        user = await database_service.get_user(session=session, email=email)
+        await database_service.update_user(
+            session=session,
+            user=user,
+            password=new_password
+        )
+    return fastapi.Response(status_code=200, content="Password reset")

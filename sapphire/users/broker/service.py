@@ -12,7 +12,7 @@ class Service(BaseBrokerProducerService):
             message=Email(
                 to=[email],
                 type=EmailType.CHANGE_PASSWORD,
-                sending_data=code
+                sending_data={'code': code}
             )
         )
 

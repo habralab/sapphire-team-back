@@ -19,4 +19,4 @@ class EmailType(str, enum.Enum):
 class Email(BaseModel):
     type: EmailType
     to: list[str]
-    sending_data: str = empty.Empty
+    sending_data: dict = {}
