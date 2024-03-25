@@ -6,7 +6,12 @@ from sapphire.common.jwt.methods import JWTMethods
 from sapphire.common.jwt.models import JWTData
 from sapphire.users import broker, cache, database
 
-from .schemas import AuthorizeRequest, AuthorizeResponse
+from .schemas import (
+    AuthorizeRequest,
+    AuthorizeResponse,
+    ChangePasswordRequest,
+    ResetPasswordRequest,
+)
 from .utils import generate_authorize_response
 
 
@@ -71,7 +76,7 @@ async def sign_in(
 
 async def reset_password(
         request: fastapi.Request,
-        email: str
+        reset_data: ResetPasswordRequest
 ):
     broker_service: broker.Service = request.app.service.broker
     database_service: database.Service = request.app.service.database
@@ -80,31 +85,32 @@ async def reset_password(
     async with database_service.transaction() as session:
         user = await database_service.get_user(
             session=session,
-            email=email
+            email=reset_data.email
         )
         if not user:
             raise HTTPNotFound()
 
-    secret_code = await cache_service.change_password_set_secret_code(email=email)
-    await broker_service.send_email_code(email=email, code=secret_code)
+    secret_code = await cache_service.change_password_set_secret_code(email=reset_data.email)
+    await broker_service.send_email_code(email=reset_data.email, code=secret_code)
 
 
 async def change_password(
         request: fastapi.Request,
-        secret_code: str,
-        email: str,
-        new_password: str
+        change_password_data: ChangePasswordRequest
 ):
     database_service: database.Service = request.app.service.database
     cache_service: cache.Service = request.app.service.cache
 
-    if not cache_service.reset_password_validate_code(secret_code=secret_code, email=email):
+    if not cache_service.reset_password_validate_code(
+            secret_code=change_password_data.secret_code,
+            email=change_password_data.email
+    ):
         raise HTTPForbidden()
 
     async with database_service.transaction() as session:
-        user = await database_service.get_user(session=session, email=email)
+        user = await database_service.get_user(session=session, email=change_password_data.email)
         await database_service.update_user(
             session=session,
             user=user,
-            password=new_password
+            password=change_password_data.new_password
         )

@@ -1,6 +1,8 @@
 import secrets
 import uuid
 
+from pydantic import EmailStr
+
 from sapphire.common.cache.service import BaseCacheService
 
 from .settings import Settings
@@ -22,13 +24,13 @@ class Service(BaseCacheService):
             return True
         return False
 
-    async def change_password_set_secret_code(self, email: str) -> str:
+    async def change_password_set_secret_code(self, email: EmailStr) -> str:
         secret_code = str(secrets.token_urlsafe(12))
         key = f"users:auth:change_password:secret_code:{email}"
         await self.redis.set(key, secret_code, ex=43200)
         return secret_code
 
-    async def reset_password_validate_code(self, secret_code: str, email: str) -> bool:
+    async def reset_password_validate_code(self, secret_code: str, email: EmailStr) -> bool:
         key = f"users:auth:change_password:secret_code:{email}"
         value = await self.redis.get(key)
         if value == secret_code:
