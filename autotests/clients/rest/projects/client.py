@@ -37,7 +37,7 @@ class ProjectsRestClient(BaseRestClient):
 
     async def get_projects(
             self,
-            text: str | Type[Empty] = Empty,
+            query: str | Type[Empty] = Empty,
             owner_id: uuid.UUID | Type[Empty] = Empty,
             user_id: uuid.UUID | Type[Empty] = Empty,
             startline_ge: datetime | Type[Empty] = Empty,
@@ -53,7 +53,7 @@ class ProjectsRestClient(BaseRestClient):
     ) -> ProjectListResponse:
         path = "/api/rest/projects/"
         params = {
-            "query_text": text,
+            "query": query,
             "owner_id": owner_id,
             "user_id": user_id,
             "startline_ge": startline_ge,
@@ -141,7 +141,7 @@ class ProjectsRestClient(BaseRestClient):
             specialization_ids: list[uuid.UUID] | Type[Empty] = Empty,
             skill_ids: list[uuid.UUID] | Type[Empty] = Empty,
             joined_user_id: uuid.UUID | Type[Empty] = Empty,
-            project_query_text: str | Type[Empty] = Empty,
+            query: str | Type[Empty] = Empty,
             project_startline_ge: datetime | Type[Empty] = Empty,
             project_startline_le: datetime | Type[Empty] = Empty,
             project_deadline_ge: datetime | Type[Empty] = Empty,
@@ -156,7 +156,7 @@ class ProjectsRestClient(BaseRestClient):
             "specialization_ids": specialization_ids,
             "skill_ids": skill_ids,
             "joined_user_id": joined_user_id,
-            "project_query_text": project_query_text,
+            "query": query,
             "project_startline_ge": project_startline_ge,
             "project_startline_le": project_startline_le,
             "project_deadline_ge": project_deadline_ge,

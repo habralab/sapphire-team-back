@@ -56,7 +56,7 @@ async def get_projects(
     async with database_service.transaction() as session:
         params = {
             "session": session,
-            "query_text": filters.query_text,
+            "query": filters.query,
             "owner_id": filters.owner_id,
             "user_id": filters.user_id,
             "startline_le": filters.startline_le,

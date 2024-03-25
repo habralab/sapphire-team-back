@@ -16,7 +16,7 @@ class PositionListFiltersRequest(BaseModel):
     specialization_ids: list[uuid.UUID] | Type[Empty] = Field(fastapi.Query(Empty))
     skill_ids: list[uuid.UUID] | Type[Empty] = Field(fastapi.Query(Empty))
     joined_user_id: uuid.UUID | Type[Empty] = Empty
-    project_query_text: str | Type[Empty] = Empty
+    query: str | Type[Empty] = Empty
     project_startline_ge: AwareDatetime | Type[Empty] = Empty
     project_startline_le: AwareDatetime | Type[Empty] = Empty
     project_deadline_ge: AwareDatetime | Type[Empty] = Empty
