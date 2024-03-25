@@ -109,6 +109,7 @@ services:
       USERS__API__ALLOWED_ORIGINS: ${USERS__API__ALLOWED_ORIGINS:-["http://localhost:3000"]}
       USERS__API__OAUTH2_HABR_CALLBACK_URL: ${USERS__API__OAUTH2_HABR_CALLBACK_URL:-http://localhost:3000/users/api/rest/auth/oauth2/habr/callback}
       USERS__API__MEDIA_DIR_PATH: "/users/media"
+      USERS__BROKER__SERVERS: '["kafka:9091"]'
       USERS__CACHE__URL: "redis://redis:6379/0"
       USERS__DATABASE__DSN: ${USERS__DATABASE__DSN:-postgresql+asyncpg://sapphire:P%40ssw0rd@database:5432/sapphire}
     secrets:

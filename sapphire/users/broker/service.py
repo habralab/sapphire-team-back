@@ -9,14 +9,10 @@ from .settings import Settings
 
 
 class Service(BaseBrokerProducerService):
-    async def send_email_code(self, email: EmailStr, code: str, topic: str = "email"):
+    async def send_reset_password_email(self, email: EmailStr, code: str, topic: str = "email"):
         await self.send(
             topic=topic,
-            message=Email(
-                to=[email],
-                type=EmailType.RESET_PASSWORD,
-                sending_data={"code": code}
-            )
+            message=Email(to=[email], type=EmailType.RESET_PASSWORD, data={"code": code}),
         )
 
 

@@ -9,7 +9,7 @@ from sapphire.common.habr.client import HabrClient
 from sapphire.common.habr_career.client import HabrCareerClient
 from sapphire.common.jwt import JWTMethods
 from sapphire.common.utils.package import get_version
-from sapphire.users import cache, database, oauth2
+from sapphire.users import broker, cache, database, oauth2
 
 from . import health, router
 from .settings import Settings
@@ -18,6 +18,7 @@ from .settings import Settings
 class Service(BaseAPIService):
     def __init__(
             self,
+            broker: broker.Service,
             database: database.Service,
             cache: cache.Service,
             oauth2_habr: oauth2.habr.Service,
@@ -33,6 +34,7 @@ class Service(BaseAPIService):
             allowed_origins: Iterable[str] = (),
             port: int = 8000,
     ):
+        self._broker = broker
         self._database = database
         self._oauth2_habr = oauth2_habr
         self._oauth2_habr_callback_url = oauth2_habr_callback_url
@@ -59,11 +61,16 @@ class Service(BaseAPIService):
     @property
     def dependencies(self) -> list[ServiceMixin]:
         return [
+            self._broker,
             self._database,
             self._oauth2_habr,
             self._habr_client,
             self._cache,
         ]
+
+    @property
+    def broker(self) -> broker.Service:
+        return self._broker
 
     @property
     def database(self) -> database.Service:
@@ -103,6 +110,7 @@ class Service(BaseAPIService):
 
 
 def get_service(
+        broker: broker.Service,
         database: database.Service,
         cache: cache.Service,
         oauth2_habr: oauth2.habr.Service,
@@ -112,6 +120,7 @@ def get_service(
         settings: Settings,
 ) -> Service:
     return Service(
+        broker=broker,
         database=database,
         cache=cache,
         oauth2_habr=oauth2_habr,
