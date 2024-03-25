@@ -121,20 +121,6 @@ class Service(BaseDatabaseService):  # pylint: disable=abstract-method
 
         return skills
 
-    async def get_user_email(
-            self,
-            session: AsyncSession,
-            email: str
-    ) -> User:
-        filters = []
-        if email is not Empty:
-            filters.append(User.email == email)
-
-        stmt = select(User).where(*filters)
-        result = await session.execute(stmt)
-        current_email = result.scalar_one_or_none()
-        return current_email
-
 
 def get_service(settings: Settings) -> Service:
     return Service(dsn=str(settings.dsn))

@@ -26,7 +26,7 @@ class Service(BaseBrokerProducerService):
     ) -> None:
         """RECIPIENTS: ONLY OWNER"""
         await self._send_email(
-            recipients=[project.owner_id],
+            recipients=[owner_email],
             email_type=EmailType.PARTICIPANT_REQUESTED,
         )
 
@@ -50,7 +50,7 @@ class Service(BaseBrokerProducerService):
     ) -> None:
         """RECIPIENTS: PARTICIPANTS"""
         await self._send_email(
-            recipients=[p.user_id for p in project.joined_participants],
+            recipients=[p.user.email for p in project.joined_participants],
             email_type=EmailType.PARTICIPANT_JOINED,
         )
 
@@ -74,7 +74,7 @@ class Service(BaseBrokerProducerService):
     ) -> None:
         """RECIPIENTS: ONLY OWNER"""
         await self._send_email(
-            recipients=[project.owner_id], email_type=EmailType.PARTICIPANT_DECLINED
+            recipients=[owner_email], email_type=EmailType.PARTICIPANT_DECLINED
         )
 
         await self._send_notification_to_recipients(
@@ -97,7 +97,7 @@ class Service(BaseBrokerProducerService):
     ) -> None:
         """RECIPIENTS: ONLY PARTICIPANT"""
         await self._send_email(
-            recipients=[participant.user_id], email_type=EmailType.OWNER_DECLINED
+            recipients=[participant.user.email], email_type=EmailType.OWNER_DECLINED
         )
 
         await self._send_notification_to_recipients(
@@ -120,7 +120,7 @@ class Service(BaseBrokerProducerService):
     ) -> None:
         """RECIPIENTS: PROJECT OWNER AND PARTICIPANTS"""
         await self._send_email(
-            recipients=[project.owner_id] + [p.user_id for p in project.joined_participants],
+            recipients=[owner_email] + [p.user.email for p in project.joined_participants],
             email_type=EmailType.PARTICIPANT_LEFT,
         )
 
@@ -144,7 +144,7 @@ class Service(BaseBrokerProducerService):
     ) -> None:
         """RECIPIENTS: PROJECT OWNER AND PARTICIPANTS"""
         await self._send_email(
-            recipients=[project.owner_id] + [p.user_id for p in project.joined_participants],
+            recipients=[owner_email] + [p.user.email for p in project.joined_participants],
             email_type=EmailType.OWNER_EXCLUDED,
         )
 
@@ -176,7 +176,7 @@ class Service(BaseBrokerProducerService):
         await asyncio.gather(*send_tasks)
 
     async def _send_email(
-        self, recipients: list[uuid.UUID], email_type: EmailType, topic: str = "email"
+        self, recipients: list[str], email_type: EmailType, topic: str = "email"
     ):
         await self.send(topic=topic, message=Email(to=recipients, type=email_type))
 

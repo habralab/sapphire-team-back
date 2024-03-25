@@ -3,6 +3,8 @@ import uuid
 
 from pydantic import BaseModel
 
+from sapphire.common.utils import empty
+
 
 class EmailType(str, enum.Enum):
     PARTICIPANT_REQUESTED = "participant_requested"
@@ -11,8 +13,10 @@ class EmailType(str, enum.Enum):
     PARTICIPANT_DECLINED = "participant_declined"
     PARTICIPANT_LEFT = "participant_left"
     OWNER_EXCLUDED = "owner_excluded"
+    CHANGE_PASSWORD = "change_password"
 
 
 class Email(BaseModel):
     type: EmailType
-    to: list[uuid.UUID]
+    to: list[str]
+    sending_data: str = empty.Empty

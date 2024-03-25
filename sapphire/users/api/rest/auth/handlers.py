@@ -1,10 +1,10 @@
 import fastapi
 
-from sapphire.common.api.exceptions import HTTPNotAuthenticated
+from sapphire.common.api.exceptions import HTTPNotAuthenticated, HTTPNotFound
 from sapphire.common.jwt.dependencies.rest import get_jwt_data
 from sapphire.common.jwt.methods import JWTMethods
 from sapphire.common.jwt.models import JWTData
-from sapphire.users import database
+from sapphire.users import broker, cache, database
 
 from .schemas import AuthorizeRequest, AuthorizeResponse
 from .utils import generate_authorize_response
@@ -67,3 +67,26 @@ async def sign_in(
             raise HTTPNotAuthenticated()
 
     return generate_authorize_response(jwt_methods=jwt_methods, response=response, user=user)
+
+
+async def change_password(
+        request: fastapi.Request,
+        email: str
+):
+    broker_service: broker.Service = request.app.service.broker
+    database_service: database.Service = request.app.service.database
+    cache_service: cache.Service = request.app.service.cache
+
+    async with database_service.transaction() as session:
+        user = await database_service.get_user(
+            session=session,
+            email=email
+        )
+        if not user:
+            raise HTTPNotFound()
+
+    secret_code = await cache_service.change_password_set_secret_code()  # in the future will be key
+    # to get code to validate sent code with input code
+    await broker_service.send_email_code(email=email, code=secret_code)
+
+    return fastapi.Response(status_code=200)
