@@ -20,6 +20,6 @@ class ResetPasswordRequest(BaseModel):
 
 
 class ChangePasswordRequest(BaseModel):
-    secret_code: str
+    code: str
     email: EmailStr
     new_password: Password

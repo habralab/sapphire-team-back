@@ -109,6 +109,8 @@ async def change_password(
 
     async with database_service.transaction() as session:
         user = await database_service.get_user(session=session, email=change_password_data.email)
+        if not user:
+            raise HTTPNotFound()
         await database_service.update_user(
             session=session,
             user=user,
