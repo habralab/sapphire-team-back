@@ -4,6 +4,7 @@ from typing import Any, Iterable
 import aiosmtplib
 import backoff
 from facet import ServiceMixin
+from pydantic import EmailStr
 
 from .settings import Settings
 from .templates import Template
@@ -34,7 +35,7 @@ class Service(ServiceMixin):
     def templates(self) -> dict[str, Template]:
         return self._templates
 
-    async def send(self, template: Template, data: dict[str, Any], recipients: Iterable[str]):
+    async def send(self, template: Template, data: dict[str, Any], recipients: Iterable[EmailStr]):
         coroutines = []
         for recipient in recipients:
             message = template.render(recipient=recipient, sender=self._sender, data=data)

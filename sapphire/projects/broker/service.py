@@ -1,7 +1,7 @@
 import asyncio
 import uuid
 
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 
 from sapphire.common.broker.models.email import Email, EmailType
 from sapphire.common.broker.models.messenger import CreateChat
@@ -176,7 +176,7 @@ class Service(BaseBrokerProducerService):
         await asyncio.gather(*send_tasks)
 
     async def _send_email(
-        self, recipients: list[str], email_type: EmailType, topic: str = "email"
+        self, recipients: list[EmailStr], email_type: EmailType, topic: str = "email"
     ):
         await self.send(topic=topic, message=Email(to=recipients, type=email_type))
 
