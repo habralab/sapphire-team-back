@@ -11,7 +11,6 @@ from .settings import Settings
 class Service(BaseCacheService):
     async def oauth_set_state(self) -> str:
         state = str(uuid.uuid4())
-
         key = f"users:auth:oauth2:habr:state:{state}"
         await self.redis.set(key, state, ex=120)
         return state
