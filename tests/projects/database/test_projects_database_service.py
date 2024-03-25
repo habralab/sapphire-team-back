@@ -114,7 +114,7 @@ async def test_get_projects_with_all_query_params(service: Service):
     startline_le = datetime.now(tz=timezone.utc) + timedelta(days=30)
     deadline_ge = datetime.now(tz=timezone.utc) - timedelta(days=30)
     deadline_le = datetime.now(tz=timezone.utc) + timedelta(days=30)
-    query_text = "query_text"
+    query = "query"
     position_skill_ids = [uuid.uuid4(), uuid.uuid4()]
     position_specialization_ids = [uuid.uuid4(), uuid.uuid4()]
     expected_projects = [Project(id=project_id, name="test", owner_id=owner_id)]
@@ -124,7 +124,7 @@ async def test_get_projects_with_all_query_params(service: Service):
 
     projects = await service.get_projects(
         session=session,
-        query_text=query_text,
+        query=query,
         owner_id=owner_id,
         deadline_ge=deadline_ge,
         deadline_le=deadline_le,

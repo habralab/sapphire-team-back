@@ -17,6 +17,8 @@ from sapphire.database.models import (
     ProjectHistory,
     ProjectStatusEnum,
     Review,
+    Skill,
+    Specialization,
     User,
 )
 
@@ -88,8 +90,8 @@ class Service(BaseDatabaseService):  # pylint: disable=abstract-method
             avatar: str | None | Type[Empty] = Empty,
             status: ProjectStatusEnum | None | Type[Empty] = Empty,
     ) -> Project:
-        query = select(Project).where(Project.id == project.id)
-        result = await session.execute(query)
+        statement = select(Project).where(Project.id == project.id)
+        result = await session.execute(statement)
         project = result.unique().scalar_one()
 
         if name is not Empty:
@@ -137,7 +139,7 @@ class Service(BaseDatabaseService):  # pylint: disable=abstract-method
             specialization_ids: list[uuid.UUID] | Type[Empty] = Empty,
             skill_ids: list[uuid.UUID] | Type[Empty] = Empty,
             joined_user_id: uuid.UUID | Type[Empty] = Empty,
-            project_query_text: str | Type[Empty] = Empty,
+            query: str | Type[Empty] = Empty,
             project_startline_ge: datetime | Type[Empty] = Empty,
             project_startline_le: datetime | Type[Empty] = Empty,
             project_deadline_ge: datetime | Type[Empty] = Empty,
@@ -167,10 +169,21 @@ class Service(BaseDatabaseService):  # pylint: disable=abstract-method
                 ))
             ))
 
-        if project_query_text is not Empty:
-            project_filters.append(or_(
-                Project.name.icontains(project_query_text),
-                Project.description.icontains(project_query_text),
+        if query is not Empty:
+            filters.append(or_(
+                Position.project_id.in_(select(Project.id).where(or_(
+                    Project.name.icontains(query),
+                    Project.description.icontains(query),
+                ))),
+                Position.specialization_id.in_(select(Specialization.id).where(or_(
+                    Specialization.name.icontains(query),
+                    Specialization.name_en.icontains(query),
+                ))),
+                Position.id.in_(select(PositionSkill.position_id).where(
+                    PositionSkill.skill_id.in_(select(Skill.id).where(
+                        Skill.name.icontains(query),
+                    )),
+                )),
             ))
         if project_startline_ge is not Empty:
             project_filters.append(Project.startline >= project_startline_ge)
@@ -181,15 +194,15 @@ class Service(BaseDatabaseService):  # pylint: disable=abstract-method
         if project_deadline_le is not Empty:
             project_filters.append(Project.deadline <= project_deadline_le)
         if project_statuses is not Empty:
-            history_query = (
+            history_statement = (
                 select(ProjectHistory)
                 .distinct(ProjectHistory.project_id)
                 .order_by(ProjectHistory.project_id, desc(ProjectHistory.created_at))
                 .subquery()
             )
             project_filters.extend([
-                Project.id == history_query.c.project_id,
-                history_query.c.status.in_(project_statuses),
+                Project.id == history_statement.c.project_id,
+                history_statement.c.status.in_(project_statuses),
             ])
 
         if skill_filters:
@@ -210,7 +223,7 @@ class Service(BaseDatabaseService):  # pylint: disable=abstract-method
             specialization_ids: list[uuid.UUID] | Type[Empty] = Empty,
             skill_ids: list[uuid.UUID] | Type[Empty] = Empty,
             joined_user_id: uuid.UUID | Type[Empty] = Empty,
-            project_query_text: str | Type[Empty] = Empty,
+            query: str | Type[Empty] = Empty,
             project_startline_ge: datetime | Type[Empty] = Empty,
             project_startline_le: datetime | Type[Empty] = Empty,
             project_deadline_ge: datetime | Type[Empty] = Empty,
@@ -222,7 +235,7 @@ class Service(BaseDatabaseService):  # pylint: disable=abstract-method
             specialization_ids=specialization_ids,
             skill_ids=skill_ids,
             joined_user_id=joined_user_id,
-            project_query_text=project_query_text,
+            query=query,
             project_startline_ge=project_startline_ge,
             project_startline_le=project_startline_le,
             project_deadline_ge=project_deadline_ge,
@@ -241,7 +254,7 @@ class Service(BaseDatabaseService):  # pylint: disable=abstract-method
             specialization_ids: list[uuid.UUID] | Type[Empty] = Empty,
             skill_ids: list[uuid.UUID] | Type[Empty] = Empty,
             joined_user_id: uuid.UUID | Type[Empty] = Empty,
-            project_query_text: str | Type[Empty] = Empty,
+            query: str | Type[Empty] = Empty,
             project_startline_ge: datetime | Type[Empty] = Empty,
             project_startline_le: datetime | Type[Empty] = Empty,
             project_deadline_ge: datetime | Type[Empty] = Empty,
@@ -255,7 +268,7 @@ class Service(BaseDatabaseService):  # pylint: disable=abstract-method
             specialization_ids=specialization_ids,
             skill_ids=skill_ids,
             joined_user_id=joined_user_id,
-            project_query_text=project_query_text,
+            query=query,
             project_startline_ge=project_startline_ge,
             project_startline_le=project_startline_le,
             project_deadline_ge=project_deadline_ge,
@@ -375,12 +388,12 @@ class Service(BaseDatabaseService):  # pylint: disable=abstract-method
             updated_at_le=updated_at_le,
             updated_at_ge=updated_at_ge,
         )
-        query = select(Participant).where(*filters)
+        statement = select(Participant).where(*filters)
 
         offset = (page - 1) * per_page
-        query = query.limit(per_page).offset(offset)
+        statement = statement.limit(per_page).offset(offset)
 
-        result = await session.execute(query)
+        result = await session.execute(statement)
         return list(result.unique().scalars().all())
 
     async def _get_participants_filters(
@@ -403,8 +416,8 @@ class Service(BaseDatabaseService):  # pylint: disable=abstract-method
         if position_id is not Empty:
             filters.append(Participant.position_id == position_id)
         if project_id is not Empty:
-            position_query = select(Position.id).where(Position.project_id == project_id)
-            filters.append(Participant.position_id.in_(position_query))
+            position_statement = select(Position.id).where(Position.project_id == project_id)
+            filters.append(Participant.position_id.in_(position_statement))
         if status is not Empty:
             filters.append(Participant.status == status)
         if created_at_le is not Empty:
@@ -435,10 +448,8 @@ class Service(BaseDatabaseService):  # pylint: disable=abstract-method
         joined_at_ge: datetime | Type[Empty] = Empty,
         updated_at_le: datetime | Type[Empty] = Empty,
         updated_at_ge: datetime | Type[Empty] = Empty,
-        page: int = 1,
-        per_page: int = 10,
     ) -> int:
-        query = select(func.count(Participant.id))  # pylint: disable=not-callable
+        statement = select(func.count(Participant.id))  # pylint: disable=not-callable
         filters = await self._get_participants_filters(
             position_id=position_id,
             user_id=user_id,
@@ -451,9 +462,9 @@ class Service(BaseDatabaseService):  # pylint: disable=abstract-method
             updated_at_le=updated_at_le,
             updated_at_ge=updated_at_ge,
         )
-        query = query.where(*filters)
+        statement = statement.where(*filters)
 
-        result = await session.scalar(query)
+        result = await session.scalar(statement)
         return result
 
     async def create_participant(
@@ -486,7 +497,7 @@ class Service(BaseDatabaseService):  # pylint: disable=abstract-method
 
     async def _get_projects_filters(
             self,
-            query_text: str | Type[Empty] = Empty,
+            query: str | Type[Empty] = Empty,
             owner_id: uuid.UUID | Type[Empty] = Empty,
             user_id: uuid.UUID | Type[Empty] = Empty,
             startline_le: datetime | Type[Empty] = Empty,
@@ -502,11 +513,11 @@ class Service(BaseDatabaseService):  # pylint: disable=abstract-method
         position_filters = []
         participant_filters = []
 
-        if query_text is not Empty:
+        if query is not Empty:
             filters.append(
                 or_(
-                    Project.name.icontains(query_text),
-                    Project.description.icontains(query_text),
+                    Project.name.icontains(query),
+                    Project.description.icontains(query),
                 )
             )
         if owner_id is not Empty:
@@ -530,15 +541,15 @@ class Service(BaseDatabaseService):  # pylint: disable=abstract-method
         if deadline_ge is not Empty:
             filters.append(Project.deadline >= deadline_ge)
         if statuses is not Empty:
-            history_query = (
+            history_statement = (
                 select(ProjectHistory)
                 .distinct(ProjectHistory.project_id)
                 .order_by(ProjectHistory.project_id, desc(ProjectHistory.created_at))
                 .subquery()
             )
             filters.extend([
-                Project.id == history_query.c.project_id,
-                history_query.c.status.in_(statuses),
+                Project.id == history_statement.c.project_id,
+                history_statement.c.status.in_(statuses),
             ])
 
         if position_specialization_ids is not Empty:
@@ -546,11 +557,11 @@ class Service(BaseDatabaseService):  # pylint: disable=abstract-method
                 Position.specialization_id.in_(position_specialization_ids)
             )
         if position_skill_ids is not Empty:
-            position_skill_query = (
+            position_skill_statement = (
                 select(PositionSkill.position_id)
                 .where(PositionSkill.skill_id.in_(position_skill_ids))
             )
-            position_filters.append(Position.id.in_(position_skill_query))
+            position_filters.append(Position.id.in_(position_skill_statement))
         if participant_user_ids is not Empty:
             participant_filters.append(Participant.user_id.in_(participant_user_ids))
 
@@ -568,7 +579,7 @@ class Service(BaseDatabaseService):  # pylint: disable=abstract-method
     async def get_projects_count(
         self,
         session: AsyncSession,
-        query_text: str | Type[Empty] = Empty,
+        query: str | Type[Empty] = Empty,
         owner_id: uuid.UUID | Type[Empty] = Empty,
         user_id: uuid.UUID | Type[Empty] = Empty,
         startline_le: datetime | Type[Empty] = Empty,
@@ -580,9 +591,9 @@ class Service(BaseDatabaseService):  # pylint: disable=abstract-method
         position_specialization_ids: list[uuid.UUID] | Type[Empty] = Empty,
         participant_user_ids: list[uuid.UUID] | Type[Empty] = Empty,
     ) -> int:
-        query = select(func.count(Project.id))  # pylint: disable=not-callable
+        statement = select(func.count(Project.id))  # pylint: disable=not-callable
         filters = await self._get_projects_filters(
-            query_text=query_text,
+            query=query,
             owner_id=owner_id,
             user_id=user_id,
             startline_le=startline_le,
@@ -594,15 +605,15 @@ class Service(BaseDatabaseService):  # pylint: disable=abstract-method
             position_specialization_ids=position_specialization_ids,
             participant_user_ids=participant_user_ids,
         )
-        query = query.where(*filters)
+        statement = statement.where(*filters)
 
-        result = await session.scalar(query)
+        result = await session.scalar(statement)
         return result
 
     async def get_projects(
         self,
         session: AsyncSession,
-        query_text: str | Type[Empty] = Empty,
+        query: str | Type[Empty] = Empty,
         owner_id: uuid.UUID | Type[Empty] = Empty,
         user_id: uuid.UUID | Type[Empty] = Empty,
         startline_le: datetime | Type[Empty] = Empty,
@@ -616,9 +627,9 @@ class Service(BaseDatabaseService):  # pylint: disable=abstract-method
         page: int = 1,
         per_page: int = 10,
     ) -> list[Project]:
-        query = select(Project).order_by(Project.created_at.desc())
+        statement = select(Project).order_by(Project.created_at.desc())
         filters = await self._get_projects_filters(
-            query_text=query_text,
+            query=query,
             owner_id=owner_id,
             user_id=user_id,
             startline_le=startline_le,
@@ -630,23 +641,23 @@ class Service(BaseDatabaseService):  # pylint: disable=abstract-method
             position_specialization_ids=position_specialization_ids,
             participant_user_ids=participant_user_ids,
         )
-        query = query.where(*filters)
+        statement = statement.where(*filters)
 
         offset = (page - 1) * per_page
-        query = query.limit(per_page).offset(offset)
+        statement = statement.limit(per_page).offset(offset)
 
-        result = await session.execute(query)
+        result = await session.execute(statement)
 
         return list(result.unique().scalars().all())
 
     async def get_project_history_count(
         self, session: AsyncSession, project_id: uuid.UUID
     ) -> int:
-        query = (
+        statement = (
             select(func.count(ProjectHistory.id)).where(ProjectHistory.project_id == project_id) # pylint: disable=not-callable
         )
 
-        result = await session.scalar(query)
+        result = await session.scalar(statement)
 
         return result
 
@@ -657,16 +668,16 @@ class Service(BaseDatabaseService):  # pylint: disable=abstract-method
         page: int = 1,
         per_page: int = 10,
     ) -> list[ProjectHistory]:
-        query = (
+        statement = (
             select(ProjectHistory)
             .where(ProjectHistory.project_id == project_id)
             .order_by(ProjectHistory.created_at.desc())
         )
 
         offset = (page - 1) * per_page
-        query = query.limit(per_page).offset(offset)
+        statement = statement.limit(per_page).offset(offset)
 
-        result = await session.execute(query)
+        result = await session.execute(statement)
 
         return list(result.unique().scalars().all())
 
@@ -683,11 +694,11 @@ class Service(BaseDatabaseService):  # pylint: disable=abstract-method
                 Participant.user_id == user_id, Participant.status == ParticipantStatusEnum.JOINED
             )
         )
-        stmt = (
+        statement = (
             select(func.count(distinct(Position.project_id)))  # pylint: disable=not-callable
             .where(Position.id.in_(stmt_position_ids))
         )
-        result = await session.execute(stmt)
+        result = await session.execute(statement)
         participant_projects_count = result.scalar_one()
 
         rate = 5.0
@@ -734,8 +745,8 @@ class Service(BaseDatabaseService):  # pylint: disable=abstract-method
         if to_user_id is not Empty:
             filters.append(Review.to_user_id == to_user_id)
 
-        query = select(Review).where(*filters)
-        result = await session.execute(query)
+        statement = select(Review).where(*filters)
+        result = await session.execute(statement)
 
         return result.unique().scalar_one_or_none()
 
