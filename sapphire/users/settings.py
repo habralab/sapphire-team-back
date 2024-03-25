@@ -8,6 +8,7 @@ from .api import Settings as APISettings
 from .cache import Settings as CacheSettings
 from .database import Settings as DatabaseSettings
 from .oauth2.habr import Settings as OAuth2HabrSettings
+from .broker import Settings as BrokerSettings
 
 
 class Settings(BaseModel):
@@ -18,3 +19,4 @@ class Settings(BaseModel):
     habr: HabrSettings = HabrSettings()
     habr_career: HabrCareerSettings = HabrCareerSettings()
     oauth2_habr: OAuth2HabrSettings = OAuth2HabrSettings()
+    broker: BrokerSettings = BrokerSettings()

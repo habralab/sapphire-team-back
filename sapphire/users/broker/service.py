@@ -6,7 +6,7 @@ from . import Settings
 
 
 class Service(BaseBrokerProducerService):
-    async def send_email_code(self, email: str, code: str, topic: str = "change_password"):
+    async def send_email_code(self, email: str, code: str, topic: str = "email"):
         await self.send(
             topic=topic,
             message=Email(
