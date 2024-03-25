@@ -1,7 +1,7 @@
 import enum
-import uuid
+from typing import Any
 
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 
 
 class EmailType(str, enum.Enum):
@@ -11,8 +11,10 @@ class EmailType(str, enum.Enum):
     PARTICIPANT_DECLINED = "participant_declined"
     PARTICIPANT_LEFT = "participant_left"
     OWNER_EXCLUDED = "owner_excluded"
+    RESET_PASSWORD = "reset_password"
 
 
 class Email(BaseModel):
     type: EmailType
-    to: list[uuid.UUID]
+    to: list[EmailStr]
+    data: dict[str, Any] = {}

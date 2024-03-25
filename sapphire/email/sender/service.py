@@ -1,10 +1,10 @@
 import asyncio
-import uuid
 from typing import Any, Iterable
 
 import aiosmtplib
 import backoff
 from facet import ServiceMixin
+from pydantic import EmailStr
 
 from .settings import Settings
 from .templates import Template
@@ -35,16 +35,10 @@ class Service(ServiceMixin):
     def templates(self) -> dict[str, Template]:
         return self._templates
 
-    async def _get_recipient_email(self, recipient: uuid.UUID) -> str:
-        # Issue: Write a function to get email from the users service using user_id
-
-        return "email@example.com"
-
-    async def send(self, template: Template, data: dict[str, Any], recipients: Iterable[uuid.UUID]):
+    async def send(self, template: Template, data: dict[str, Any], recipients: Iterable[EmailStr]):
         coroutines = []
         for recipient in recipients:
-            recipient_email = await self._get_recipient_email(recipient)
-            message = template.render(recipient=recipient_email, sender=self._sender, data=data)
+            message = template.render(recipient=recipient, sender=self._sender, data=data)
             coroutine = backoff.on_exception(backoff.expo, Exception, max_tries=3)(
                 self._client.send_message,
             )(message)

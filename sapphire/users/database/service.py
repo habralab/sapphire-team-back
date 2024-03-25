@@ -2,6 +2,7 @@ import uuid
 from typing import Set, Type
 
 import bcrypt
+from pydantic import EmailStr
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -26,7 +27,7 @@ class Service(BaseDatabaseService):  # pylint: disable=abstract-method
             self,
             session: AsyncSession,
             user_id: uuid.UUID | Type[Empty] = Empty,
-            email: str | Type[Empty] = Empty,
+            email: EmailStr | Type[Empty] = Empty,
     ) -> User | None:
         filters = []
         if user_id is not Empty:

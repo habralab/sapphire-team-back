@@ -23,7 +23,7 @@ async def authorize(
 
     cache_service: cache.Service = request.app.service.cache
 
-    state = await cache_service.set_state()
+    state = await cache_service.oauth_set_state()
 
     if redirect_url is None:
         redirect_url = oauth2_habr_callback_url
