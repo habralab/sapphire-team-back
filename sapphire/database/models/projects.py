@@ -42,16 +42,14 @@ class Project(Base):
     history: Mapped[list["ProjectHistory"]] = relationship(
         back_populates="project",
         order_by="desc(ProjectHistory.created_at)",
-        lazy=False,
     )
     last_history: Mapped["ProjectHistory"] = relationship(
         back_populates="project",
         order_by="desc(ProjectHistory.created_at)",
         lazy=False,
     )
-    positions: Mapped[list["Position"]] = relationship(back_populates="project", join_depth=2,
-                                                       lazy=False)
-    reviews: Mapped[list["Review"]] = relationship(back_populates="project", lazy=False)
+    positions: Mapped[list["Position"]] = relationship(back_populates="project")
+    reviews: Mapped[list["Review"]] = relationship(back_populates="project")
     owner: Mapped[User] = relationship(foreign_keys=[owner_id], lazy=False)
 
     __table_args__ = (
@@ -61,14 +59,6 @@ class Project(Base):
     @property
     def status(self) -> ProjectStatusEnum:
         return self.last_history.status
-
-    @property
-    def joined_participants(self) -> list["Participant"]:
-        return [
-            participant
-            for position in self.positions
-            for participant in position.joined_participants
-        ]
 
 
 class ProjectHistory(Base):

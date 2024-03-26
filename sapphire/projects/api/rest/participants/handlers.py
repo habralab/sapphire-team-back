@@ -66,8 +66,13 @@ async def create_participant(
         if participant_user is None:
             logger.error("Participant user not exist")
             raise HTTPInternalServerError()
+        project_joined_participants = await database_service.get_project_joined_participants(
+            session=session,
+            project=position.project,
+        )
         await broker_service.send_participant_requested(
             project=position.project,
+            project_joined_participants=project_joined_participants,
             participant=participant,
             participant_email=participant_user.email,
             owner_email=position.project.owner.email,
@@ -138,6 +143,10 @@ async def update_participant(
                 project=project,
             )
             raise HTTPInternalServerError()
+        project_joined_participants = await database_service.get_project_joined_participants(
+            session=session,
+            project=project,
+        )
 
         notification_send_map = {
             ParticipantStatusEnum.JOINED: {
@@ -159,6 +168,7 @@ async def update_participant(
         if participant_notification_send:
             await participant_notification_send(
                 project=project,
+                project_joined_participants=project_joined_participants,
                 participant=participant,
                 participant_email=participant_user.email,
                 owner_email=project.owner.email,

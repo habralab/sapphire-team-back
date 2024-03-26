@@ -127,7 +127,6 @@ class Service(BaseDatabaseService):  # pylint: disable=abstract-method
             status=status,
         )
         session.add(new_history_entry)
-        project.history.insert(0, new_history_entry)
         await nested_session.commit()
 
         await session.refresh(project)
@@ -297,6 +296,7 @@ class Service(BaseDatabaseService):  # pylint: disable=abstract-method
             filters.append(Position.id == position_id)
 
         statement = select(Position).where(*filters)
+
         result = await session.execute(statement)
 
         return result.unique().scalar_one_or_none()
@@ -676,6 +676,21 @@ class Service(BaseDatabaseService):  # pylint: disable=abstract-method
 
         offset = (page - 1) * per_page
         statement = statement.limit(per_page).offset(offset)
+
+        result = await session.execute(statement)
+
+        return list(result.unique().scalars().all())
+
+    async def get_project_joined_participants(
+            self,
+            session: AsyncSession,
+            project: Project,
+    ) -> list[Participant]:
+        statement = select(Participant).where(
+            Participant.status == ParticipantStatusEnum.JOINED,
+            Participant.position_id == Position.id,
+            Position.project_id == project.id,
+        )
 
         result = await session.execute(statement)
 
