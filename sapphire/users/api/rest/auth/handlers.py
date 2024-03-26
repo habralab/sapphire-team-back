@@ -30,6 +30,7 @@ async def sign_up(
         data: AuthorizeRequest,
 ) -> AuthorizeResponse:
     jwt_methods: JWTMethods = request.app.service.jwt_methods
+    broker_service: broker.Service = request.app.service.broker
     database_service: database.Service = request.app.service.database
 
     async with database_service.transaction() as session:
@@ -51,6 +52,7 @@ async def sign_up(
                 email=data.email,
                 password=data.password,
             )
+            await broker_service.send_registration_email(user=user)
 
     return generate_authorize_response(jwt_methods=jwt_methods, response=response, user=user)
 
@@ -85,7 +87,7 @@ async def reset_password_request(request: fastapi.Request, data: ResetPasswordRe
             raise HTTPNotFound()
 
     code = await cache_service.reset_password_set_code(email=data.email)
-    await broker_service.send_reset_password_email(email=data.email, code=code)
+    await broker_service.send_reset_password_email(user=user, code=code)
 
 
 async def change_password(request: fastapi.Request, data: ChangePasswordRequest):

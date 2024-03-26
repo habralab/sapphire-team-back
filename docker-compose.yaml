@@ -123,6 +123,13 @@ services:
     image: ${SAPPHIRE_IMAGE:-sapphire}
     environment:
       DATABASE__DSN: ${DATABASE__DSN:-postgresql+asyncpg://sapphire:P%40ssw0rd@database:5432/sapphire}
+      EMAIL__BROKER__SERVERS: '["kafka:9091"]'
+      EMAIL__SENDER__USERNAME: ${EMAIL__SENDER__USERNAME:-test@example.com}
+      EMAIL__SENDER__PASSWORD: ${EMAIL__SENDER__PASSWORD:-P@ssw0rd}
+      EMAIL__SENDER__HOST: ${EMAIL__SENDER__HOST:-smtp.example.com}
+      EMAIL__SENDER__PORT: ${EMAIL__SENDER__PORT:-587}
+      EMAIL__SENDER__START_TLS: ${EMAIL__SENDER__START_TLS:-true}
+      EMAIL__SENDER__TLS: ${EMAIL__SENDER__TLS:-false}
       MESSENGER__API__PORT: "8000"
       MESSENGER__API__ROOT_URL: ${MESSENGER__API__ROOT_URL:-http://localhost:3000}
       MESSENGER__API__ROOT_PATH: ${MESSENGER__API__ROOT_PATH:-/messenger}

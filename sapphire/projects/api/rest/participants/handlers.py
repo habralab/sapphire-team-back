@@ -74,8 +74,6 @@ async def create_participant(
             project=position.project,
             project_joined_participants=project_joined_participants,
             participant=participant,
-            participant_email=participant_user.email,
-            owner_email=position.project.owner.email,
         )
         await broker_service.send_create_chat(
             is_personal=True,
@@ -170,8 +168,6 @@ async def update_participant(
                 project=project,
                 project_joined_participants=project_joined_participants,
                 participant=participant,
-                participant_email=participant_user.email,
-                owner_email=project.owner.email,
             )
 
     return ParticipantResponse.model_validate(participant)
