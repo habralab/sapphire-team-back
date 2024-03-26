@@ -49,6 +49,7 @@ class Service(BaseDatabaseService):  # pylint: disable=abstract-method
             first_name: str | None | Type[Empty] = Empty,
             last_name: str | None | Type[Empty] = Empty,
             avatar: str | None | Type[Empty] = Empty,
+            telegram: str | None | Type[Empty] = Empty,
             about: str | None | Type[Empty] = Empty,
             main_specialization_id: uuid.UUID | None | Type[Empty] = Empty,
             secondary_specialization_id: uuid.UUID | None | Type[Empty] = Empty,
@@ -61,6 +62,8 @@ class Service(BaseDatabaseService):  # pylint: disable=abstract-method
             user.last_name = last_name
         if avatar is not Empty:
             user.avatar = avatar
+        if telegram is not Empty:
+            user.telegram = telegram
         if about is not Empty:
             user.profile.about = about
         if main_specialization_id is not Empty:

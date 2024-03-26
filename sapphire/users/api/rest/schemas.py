@@ -10,6 +10,7 @@ class UserResponse(BaseModel):
 
     id: uuid.UUID
     email: EmailStr | None
+    telegram: str | None
     first_name: str | None
     last_name: str | None
     is_activated: bool
@@ -25,6 +26,7 @@ class UserResponse(BaseModel):
         return cls(
             id=user.id,
             email=user.email if with_email else None,
+            telegram=user.telegram,
             first_name=user.first_name,
             last_name=user.last_name,
             is_activated=user.is_activated,

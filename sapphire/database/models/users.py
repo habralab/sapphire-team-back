@@ -19,6 +19,7 @@ class User(Base):
     first_name: Mapped[str | None]
     last_name: Mapped[str | None]
     avatar: Mapped[str | None] = mapped_column(unique=True)
+    telegram: Mapped[str | None] = mapped_column(unique=True)
     is_activated: Mapped[bool] = mapped_column(default=False)
 
     created_at: Mapped[datetime] = mapped_column(default=now)
@@ -33,7 +34,11 @@ class User(Base):
         return self.avatar is not None
 
     def activate(self) -> bool:
-        if (self.first_name or "").strip() and (self.last_name or "").strip():
+        if (
+                (self.first_name or "").strip() and
+                (self.last_name or "").strip() and
+                (self.telegram or "").strip()
+        ):
             self.is_activated = True
 
         return self.is_activated
