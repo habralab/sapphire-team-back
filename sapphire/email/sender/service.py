@@ -11,20 +11,25 @@ from .templates import Template
 
 
 class Service(ServiceMixin):
-    TEMPLATES = ()
+    TEMPLATES = (
+        Template.load("registration"),
+    )
 
     def __init__(
             self,
-            sender: str = "user@example.com",
-            hostname: str = "smtp.gmail.com",
+            username: str = "user@example.com",
+            password: str = "P@ssw0rd",
+            host: str = "smtp.gmail.com",
             port: int = 587,
             start_tls: bool = False,
             tls: bool = False,
     ):
-        self._sender = sender
+        self._username = username
         self._client = aiosmtplib.SMTP(
-            hostname=hostname,
+            hostname=host,
             port=port,
+            username=username,
+            password=password,
             start_tls=start_tls,
             use_tls=tls,
         )
@@ -38,7 +43,7 @@ class Service(ServiceMixin):
     async def send(self, template: Template, data: dict[str, Any], recipients: Iterable[EmailStr]):
         coroutines = []
         for recipient in recipients:
-            message = template.render(recipient=recipient, sender=self._sender, data=data)
+            message = template.render(recipient=recipient, sender=self._username, data=data)
             coroutine = backoff.on_exception(backoff.expo, Exception, max_tries=3)(
                 self._client.send_message,
             )(message)
@@ -50,9 +55,10 @@ class Service(ServiceMixin):
 
 def get_service(settings: Settings) -> Service:
     return Service(
-        sender=settings.email_sender,
-        hostname=settings.email_hostname,
-        port=settings.email_port,
-        start_tls=settings.email_start_tls,
-        tls=settings.email_tls,
+        username=settings.username,
+        password=settings.password,
+        host=settings.host,
+        port=settings.port,
+        start_tls=settings.start_tls,
+        tls=settings.tls,
     )

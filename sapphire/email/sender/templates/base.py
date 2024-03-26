@@ -42,13 +42,14 @@ class Template(BaseModel):
     subject: str
     body: list[TextBodyPart | HTMLBodyPart]
 
-    def __new__(cls, name: str):
+    @classmethod
+    def load(cls, name: str) -> "Template":
         filename = f"{name}.yaml"
         filepath = pathlib.Path(__file__).parent / filename
         with open(filepath, "rt", encoding="utf-8") as template_file:
             data = yaml.safe_load(template_file)
 
-        return super().__new__(**data)
+        return cls(**data)
 
     def render(self, recipient: str, sender: str, data: dict[str, Any]) -> MIMEMultipart:
         message = MIMEMultipart()
