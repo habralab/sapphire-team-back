@@ -1,5 +1,6 @@
 import asyncio
 import uuid
+from typing import Iterable
 
 from pydantic import BaseModel, EmailStr
 
@@ -20,6 +21,7 @@ class Service(BaseBrokerProducerService):
     async def send_participant_requested(
         self,
         project: Project,
+        project_joined_participants: Iterable[Participant],
         participant: Participant,
         participant_email: str,
         owner_email: str,
@@ -44,19 +46,20 @@ class Service(BaseBrokerProducerService):
     async def send_participant_joined(
             self,
             project: Project,
+            project_joined_participants: Iterable[Participant],
             participant: Participant,
             participant_email: str,
             owner_email: str,
     ) -> None:
         """RECIPIENTS: PARTICIPANTS"""
         await self._send_email(
-            recipients=[p.user.email for p in project.joined_participants],
+            recipients=[p.user.email for p in project_joined_participants],
             email_type=EmailType.PARTICIPANT_JOINED,
         )
 
         await self._send_notification_to_recipients(
             notification_type=ParticipantNotificationType.JOINED,
-            recipients=[p.user_id for p in project.joined_participants],
+            recipients=[p.user_id for p in project_joined_participants],
             notification_data=await self._create_participant_notification_data(
                 project=project,
                 participant=participant,
@@ -68,6 +71,7 @@ class Service(BaseBrokerProducerService):
     async def send_participant_declined(
             self,
             project: Project,
+            project_joined_participants: Iterable[Participant],
             participant: Participant,
             participant_email: str,
             owner_email: str,
@@ -91,6 +95,7 @@ class Service(BaseBrokerProducerService):
     async def send_owner_declined(
             self,
             project: Project,
+            project_joined_participants: Iterable[Participant],
             participant: Participant,
             participant_email: str,
             owner_email: str,
@@ -114,19 +119,20 @@ class Service(BaseBrokerProducerService):
     async def send_participant_left(
             self,
             project: Project,
+            project_joined_participants: Iterable[Participant],
             participant: Participant,
             participant_email: str,
             owner_email: str,
     ) -> None:
         """RECIPIENTS: PROJECT OWNER AND PARTICIPANTS"""
         await self._send_email(
-            recipients=[owner_email] + [p.user.email for p in project.joined_participants],
+            recipients=[owner_email] + [p.user.email for p in project_joined_participants],
             email_type=EmailType.PARTICIPANT_LEFT,
         )
 
         await self._send_notification_to_recipients(
             notification_type=ParticipantNotificationType.PARTICIPANT_LEFT,
-            recipients=[project.owner_id] + [p.user_id for p in project.joined_participants],
+            recipients=[project.owner_id] + [p.user_id for p in project_joined_participants],
             notification_data=await self._create_participant_notification_data(
                 project=project,
                 participant=participant,
@@ -138,19 +144,20 @@ class Service(BaseBrokerProducerService):
     async def send_owner_excluded(
             self,
             project: Project,
+            project_joined_participants: Iterable[Participant],
             participant: Participant,
             participant_email: str,
             owner_email: str,
     ) -> None:
         """RECIPIENTS: PROJECT OWNER AND PARTICIPANTS"""
         await self._send_email(
-            recipients=[owner_email] + [p.user.email for p in project.joined_participants],
+            recipients=[owner_email] + [p.user.email for p in project_joined_participants],
             email_type=EmailType.OWNER_EXCLUDED,
         )
 
         await self._send_notification_to_recipients(
             notification_type=ParticipantNotificationType.OWNER_EXCLUDED,
-            recipients=[project.owner_id] + [p.user_id for p in project.joined_participants],
+            recipients=[project.owner_id] + [p.user_id for p in project_joined_participants],
             notification_data=await self._create_participant_notification_data(
                 project=project,
                 participant=participant,
