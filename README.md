@@ -118,6 +118,8 @@ mkdir -p database_data
 mkdir -p broker_data/kafka/data
 mkdir -p broker_data/zookeeper/data
 mkdir -p broker_data/zookeeper/log
+mkdir -p prometheus_data
+mkdir -p grafana_data
 mkdir -p projects_data/media
 mkdir -p users_data/media
 ```

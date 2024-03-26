@@ -1,0 +1,11 @@
+global:
+  scrape_interval: 15s
+  scrape_timeout: 10s
+  evaluation_interval: 30s
+
+scrape_configs:
+- job_name: "node-exporter"
+  metrics_path: /metrics
+  static_configs:
+    - targets:
+      - prometheus-node-exporter:9100

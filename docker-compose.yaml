@@ -1,4 +1,4 @@
-version: "3"
+version: "3.8"
 services:
   database:
     image: postgres:16.0-bookworm
@@ -68,9 +68,55 @@ services:
       labels:
         - "traefik.enable=true"
         - "traefik.http.routers.kafka.rule=PathPrefix(`${KAFKA_UI_ROOT_PATH:-/kafka}`)"
-        - "traefik.http.routers.kafka.entrypoints=web" 
+        - "traefik.http.routers.kafka.entrypoints=web"
         - "traefik.http.routers.kafka.service=kafka"
         - "traefik.http.services.kafka.loadbalancer.server.port=8080"
+      replicas: 1
+
+  prometheus-node-exporter:
+    image: prom/node-exporter
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - "--path.procfs=/host/proc"
+      - "--path.rootfs=/rootfs"
+      - "--path.sysfs=/host/sys"
+      - "--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)"
+    deploy:
+      mode: global
+
+  prometheus:
+    image: prom/prometheus
+    user: "0:0"
+    volumes:
+      - ${PROMETHEUS_DIR:-./prometheus_data/}:/prometheus
+    configs:
+      - source: prometheus
+        target: /etc/prometheus/prometheus.yaml
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yaml"
+      - "--storage.tsdb.path=/prometheus"
+    deploy:
+      replicas: 1
+
+  grafana:
+    image: grafana/grafana
+    user: "0:0"
+    volumes:
+      - ${GRAFANA_DIR:-./grafana_data}:/var/lib/grafana
+    environment:
+      GF_SERVER_ROOT_URL: ${GRAFANA_ROOT_URL:-http://localhost:3000}${GRAFANA_ROOT_PATH:-/grafana}
+    deploy:
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.middlewares.grafana-stripprefix.stripprefix.prefixes=${GRAFANA_ROOT_PATH:-/grafana}"
+        - "traefik.http.routers.grafana.middlewares=grafana-stripprefix"
+        - "traefik.http.routers.grafana.rule=PathPrefix(`${GRAFANA_ROOT_PATH:-/grafana}`)"
+        - "traefik.http.routers.grafana.service=grafana"
+        - "traefik.http.routers.grafana.entrypoints=web"
+        - "traefik.http.services.grafana.loadbalancer.server.port=3000"
       replicas: 1
 
   sapphire:
@@ -78,33 +124,33 @@ services:
     environment:
       DATABASE__DSN: ${DATABASE__DSN:-postgresql+asyncpg://sapphire:P%40ssw0rd@database:5432/sapphire}
       MESSENGER__API__PORT: "8000"
-      MESSENGER__API__ROOT_URL: ${MESSENGER__API__ROOT_URL:-http://localhost:3000/messenger}
+      MESSENGER__API__ROOT_URL: ${MESSENGER__API__ROOT_URL:-http://localhost:3000}
       MESSENGER__API__ROOT_PATH: ${MESSENGER__API__ROOT_PATH:-/messenger}
       MESSENGER__API__ALLOWED_ORIGINS: ${MESSENGER__API__ALLOWED_ORIGINS:-["http://localhost:3000"]}
       MESSENGER__BROKER__SERVERS: '["kafka:9091"]'
       MESSENGER__BROKER__TOPICS: '["chats"]'
       MESSENGER__DATABASE__DSN: ${MESSENGER__DATABASE__DSN:-postgresql+asyncpg://sapphire:P%40ssw0rd@database:5432/sapphire}
       NOTIFICATIONS__API__PORT: "8010"
-      NOTIFICATIONS__API__ROOT_URL: ${NOTIFICATIONS__API__ROOT_URL:-http://localhost:3000/notifications}
+      NOTIFICATIONS__API__ROOT_URL: ${NOTIFICATIONS__API__ROOT_URL:-http://localhost:3000}
       NOTIFICATIONS__API__ROOT_PATH: ${NOTIFICATIONS__API__ROOT_PATH:-/notifications}
       NOTIFICATIONS__API__ALLOWED_ORIGINS: ${NOTIFICATIONS__API__ALLOWED_ORIGINS:-["http://localhost:3000"]}
       NOTIFICATIONS__BROKER__SERVERS: '["kafka:9091"]'
       NOTIFICATIONS__BROKER__TOPICS: '["notifications"]'
       NOTIFICATIONS__DATABASE__DSN: ${NOTIFICATIONS__DATABASE__DSN:-postgresql+asyncpg://sapphire:P%40ssw0rd@database:5432/sapphire}
       PROJECTS__API__PORT: "8020"
-      PROJECTS__API__ROOT_URL: ${PROJECTS__API__ROOT_URL:-http://localhost:3000/projects}
+      PROJECTS__API__ROOT_URL: ${PROJECTS__API__ROOT_URL:-http://localhost:3000}
       PROJECTS__API__ROOT_PATH: ${PROJECTS__API__ROOT_PATH:-/projects}
       PROJECTS__API__ALLOWED_ORIGINS: ${PROJECTS__API__ALLOWED_ORIGINS:-["http://localhost:3000"]}
       PROJECTS__API__MEDIA_DIR_PATH: "/projects/media"
       PROJECTS__BROKER__SERVERS: '["kafka:9091"]'
       PROJECTS__DATABASE__DSN: ${PROJECTS__DATABASE__DSN:-postgresql+asyncpg://sapphire:P%40ssw0rd@database:5432/sapphire}
       STORAGE__API__PORT: "8030"
-      STORAGE__API__ROOT_URL: ${STORAGE__API__ROOT_URL:-http://localhost:3000/storage}
+      STORAGE__API__ROOT_URL: ${STORAGE__API__ROOT_URL:-http://localhost:3000}
       STORAGE__API__ROOT_PATH: ${STORAGE__API__ROOT_PATH:-/storage}
       STORAGE__API__ALLOWED_ORIGINS: ${STORAGE__API__ALLOWED_ORIGINS:-["http://localhost:3000"]}
       STORAGE__DATABASE__DSN: ${STORAGE__DATABASE__DSN:-postgresql+asyncpg://sapphire:P%40ssw0rd@database:5432/sapphire}
       USERS__API__PORT: "8040"
-      USERS__API__ROOT_URL: ${USERS__API__ROOT_URL:-http://localhost:3000/users}
+      USERS__API__ROOT_URL: ${USERS__API__ROOT_URL:-http://localhost:3000}
       USERS__API__ROOT_PATH: ${USERS__API__ROOT_PATH:-/users}
       USERS__API__ALLOWED_ORIGINS: ${USERS__API__ALLOWED_ORIGINS:-["http://localhost:3000"]}
       USERS__API__OAUTH2_HABR_CALLBACK_URL: ${USERS__API__OAUTH2_HABR_CALLBACK_URL:-http://localhost:3000/users/api/rest/auth/oauth2/habr/callback}
@@ -215,23 +261,23 @@ services:
       URLS: >
         [
           {
-            "url": "${USERS__API__ROOT_URL:-http://localhost:3000/users}${USERS__API__ROOT_PATH}/openapi.json",
+            "url": "${USERS__API__ROOT_URL:-http://localhost:3000}${USERS__API__ROOT_PATH:-/users}/openapi.json",
             "name": "Users",
           },
           {
-            "url": "${STORAGE__API__ROOT_URL:-http://localhost:3000/storage}${STORAGE__API__ROOT_PATH}/openapi.json",
+            "url": "${STORAGE__API__ROOT_URL:-http://localhost:3000}${STORAGE__API__ROOT_PATH:-/storage}/openapi.json",
             "name": "Storage",
           },
           {
-            "url": "${PROJECTS__API__ROOT_URL:-http://localhost:3000/projects}${PROJECTS__API__ROOT_PATH}/openapi.json",
+            "url": "${PROJECTS__API__ROOT_URL:-http://localhost:3000}${PROJECTS__API__ROOT_PATH:-/projects}/openapi.json",
             "name": "Projects",
           },
           {
-            "url": "${NOTIFICATIONS__API__ROOT_URL:-http://localhost:3000/notifications}${NOTIFICATIONS__API__ROOT_PATH}/openapi.json",
+            "url": "${NOTIFICATIONS__API__ROOT_URL:-http://localhost:3000}${NOTIFICATIONS__API__ROOT_PATH:-/notifications}/openapi.json",
             "name": "Notifications",
           },
           {
-            "url": "${MESSENGER__API__ROOT_URL:-http://localhost:3000/messenger}${MESSENGER__API__ROOT_PATH}/openapi.json",
+            "url": "${MESSENGER__API__ROOT_URL:-http://localhost:3000}${MESSENGER__API__ROOT_PATH:-/messenger}/openapi.json",
             "name": "Messenger",
           },
         ]
@@ -267,6 +313,9 @@ services:
         order: start-first
       replicas: 1
 
+configs:
+  prometheus:
+    file: "prometheus.yaml"
 secrets:
   oauth2_habr_client_id:
     external: true
