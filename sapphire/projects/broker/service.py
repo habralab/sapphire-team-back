@@ -23,12 +23,10 @@ class Service(BaseBrokerProducerService):
         project: Project,
         project_joined_participants: Iterable[Participant],
         participant: Participant,
-        participant_email: str,
-        owner_email: str,
     ) -> None:
         """RECIPIENTS: ONLY OWNER"""
         await self._send_email(
-            recipients=[owner_email],
+            recipients=[project.owner.email],
             email_type=EmailType.PARTICIPANT_REQUESTED,
         )
 
@@ -38,8 +36,6 @@ class Service(BaseBrokerProducerService):
             notification_data=await self._create_participant_notification_data(
                 project=project,
                 participant=participant,
-                participant_email=participant_email,
-                owner_email=owner_email,
             ),
         )
 
@@ -48,8 +44,6 @@ class Service(BaseBrokerProducerService):
             project: Project,
             project_joined_participants: Iterable[Participant],
             participant: Participant,
-            participant_email: str,
-            owner_email: str,
     ) -> None:
         """RECIPIENTS: PARTICIPANTS"""
         await self._send_email(
@@ -63,8 +57,6 @@ class Service(BaseBrokerProducerService):
             notification_data=await self._create_participant_notification_data(
                 project=project,
                 participant=participant,
-                participant_email=participant_email,
-                owner_email=owner_email,
             ),
         )
 
@@ -73,12 +65,10 @@ class Service(BaseBrokerProducerService):
             project: Project,
             project_joined_participants: Iterable[Participant],
             participant: Participant,
-            participant_email: str,
-            owner_email: str,
     ) -> None:
         """RECIPIENTS: ONLY OWNER"""
         await self._send_email(
-            recipients=[owner_email], email_type=EmailType.PARTICIPANT_DECLINED
+            recipients=[project.owner.email], email_type=EmailType.PARTICIPANT_DECLINED
         )
 
         await self._send_notification_to_recipients(
@@ -87,8 +77,6 @@ class Service(BaseBrokerProducerService):
             notification_data=await self._create_participant_notification_data(
                 project=project,
                 participant=participant,
-                participant_email=participant_email,
-                owner_email=owner_email,
             ),
         )
 
@@ -97,8 +85,6 @@ class Service(BaseBrokerProducerService):
             project: Project,
             project_joined_participants: Iterable[Participant],
             participant: Participant,
-            participant_email: str,
-            owner_email: str,
     ) -> None:
         """RECIPIENTS: ONLY PARTICIPANT"""
         await self._send_email(
@@ -111,8 +97,6 @@ class Service(BaseBrokerProducerService):
             notification_data=await self._create_participant_notification_data(
                 project=project,
                 participant=participant,
-                participant_email=participant_email,
-                owner_email=owner_email,
             ),
         )
 
@@ -121,12 +105,10 @@ class Service(BaseBrokerProducerService):
             project: Project,
             project_joined_participants: Iterable[Participant],
             participant: Participant,
-            participant_email: str,
-            owner_email: str,
     ) -> None:
         """RECIPIENTS: PROJECT OWNER AND PARTICIPANTS"""
         await self._send_email(
-            recipients=[owner_email] + [p.user.email for p in project_joined_participants],
+            recipients=[project.owner.email] + [p.user.email for p in project_joined_participants],
             email_type=EmailType.PARTICIPANT_LEFT,
         )
 
@@ -136,8 +118,6 @@ class Service(BaseBrokerProducerService):
             notification_data=await self._create_participant_notification_data(
                 project=project,
                 participant=participant,
-                participant_email=participant_email,
-                owner_email=owner_email,
             ),
         )
 
@@ -146,12 +126,10 @@ class Service(BaseBrokerProducerService):
             project: Project,
             project_joined_participants: Iterable[Participant],
             participant: Participant,
-            participant_email: str,
-            owner_email: str,
     ) -> None:
         """RECIPIENTS: PROJECT OWNER AND PARTICIPANTS"""
         await self._send_email(
-            recipients=[owner_email] + [p.user.email for p in project_joined_participants],
+            recipients=[project.owner.email] + [p.user.email for p in project_joined_participants],
             email_type=EmailType.OWNER_EXCLUDED,
         )
 
@@ -161,8 +139,6 @@ class Service(BaseBrokerProducerService):
             notification_data=await self._create_participant_notification_data(
                 project=project,
                 participant=participant,
-                participant_email=participant_email,
-                owner_email=owner_email,
             ),
         )
 
@@ -191,17 +167,13 @@ class Service(BaseBrokerProducerService):
     async def _create_participant_notification_data(
         project: Project,
         participant: Participant,
-        participant_email: str,
-        owner_email: str,
     ) -> ParticipantNotificationData:
         return ParticipantNotificationData(
             project_id=project.id,
             project_name=project.name,
             position_id=participant.position_id,
             participant_id=participant.user_id,
-            participant_email=participant_email,
             owner_id=project.owner_id,
-            owner_email=owner_email,
         )
 
     async def send_create_chat(

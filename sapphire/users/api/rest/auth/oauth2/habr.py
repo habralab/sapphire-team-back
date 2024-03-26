@@ -6,7 +6,7 @@ from fastapi.responses import RedirectResponse
 from sapphire.common.habr import HabrClient
 from sapphire.common.habr_career import HabrCareerClient
 from sapphire.common.jwt import JWTMethods
-from sapphire.users import cache, database, oauth2
+from sapphire.users import broker, cache, database, oauth2
 from sapphire.users.api.rest.auth.schemas import AuthorizeResponse
 from sapphire.users.api.rest.auth.utils import generate_authorize_response
 
@@ -47,6 +47,7 @@ async def callback(
     oauth2_habr: oauth2.habr.Service = request.app.service.oauth2_habr
     jwt_methods: JWTMethods = request.app.service.jwt_methods
 
+    broker_service: broker.Service = request.app.service.broker
     database_service: database.Service = request.app.service.database
 
     token = await oauth2_habr.get_token(code=code)
@@ -86,5 +87,6 @@ async def callback(
                 last_name=last_name,
             )
             db_user.activate()
+            await broker_service.send_registration_email(user=db_user)
 
     return generate_authorize_response(jwt_methods=jwt_methods, response=response, user=db_user)
