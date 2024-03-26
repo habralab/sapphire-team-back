@@ -767,4 +767,8 @@ class Service(BaseDatabaseService):  # pylint: disable=abstract-method
 
 
 def get_service(settings: Settings) -> Service:
-    return Service(dsn=str(settings.dsn))
+    return Service(
+        dsn=str(settings.dsn),
+        pool_size=settings.pool_size,
+        pool_recycle=settings.pool_recycle,
+    )

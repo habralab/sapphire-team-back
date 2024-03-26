@@ -23,9 +23,6 @@ build:
 down:
 	docker stack rm sapphire || true
 
-up:
-	docker stack deploy -c docker-compose.yaml sapphire
-
 clean:
 	docker rmi sapphire --force
 
@@ -36,4 +33,7 @@ else
 	sleep 15
 endif
 
-restart: down clean build sleep up
+restart:
+	docker stack deploy -c docker-compose.yaml sapphire
+
+up: clean build down sleep restart

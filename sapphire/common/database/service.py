@@ -36,9 +36,13 @@ class BaseDatabaseService(ServiceMixin):
         FixtureFormatEnum.JSON: json.load,
     }
 
-    def __init__(self, dsn: str):
+    def __init__(self, dsn: str, pool_size: int = 5, pool_recycle: int = 60):
         self._dsn = dsn
-        self._engine = create_async_engine(self._dsn, pool_recycle=60)
+        engine_parameters = {"url": self._dsn, "pool_recycle": pool_recycle}
+        if not dsn.startswith("sqlite"):
+            engine_parameters["pool_size"] = pool_size
+
+        self._engine = create_async_engine(**engine_parameters)
         self._sessionmaker = async_sessionmaker(self._engine, expire_on_commit=False)
 
     def get_migrations_directory_path(self) -> pathlib.Path:
