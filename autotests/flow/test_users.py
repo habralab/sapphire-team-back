@@ -74,12 +74,14 @@ class TestUserUpdateFlow:
         first_name = "Not-Oleg"
         last_name = "Not-Yurchik"
         about = "New about"
+        telegram = "+79123456789"
 
         user = await oleg_users_rest_client.update_user(
             user_id=oleg_id,
             first_name=first_name,
             last_name=last_name,
             about=about,
+            telegram=telegram,
             main_specialization_id=backend_specialization_id,
             secondary_specialization_id=web_design_specialization_id,
         )
@@ -88,6 +90,7 @@ class TestUserUpdateFlow:
             "first_name": first_name,
             "last_name": last_name,
             "about": about,
+            "telegram": telegram,
             "main_specialization_id": backend_specialization_id,
             "secondary_specialization_id": web_design_specialization_id,
         })
@@ -97,6 +100,7 @@ class TestUserUpdateFlow:
         assert user.first_name == first_name
         assert user.last_name == last_name
         assert user.about == about
+        assert user.telegram == telegram
         assert user.main_specialization_id == backend_specialization_id
         assert user.secondary_specialization_id == web_design_specialization_id
 

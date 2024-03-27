@@ -49,11 +49,13 @@ def upgrade() -> None:
         sa.Column("first_name", sa.String(), nullable=True),
         sa.Column("last_name", sa.String(), nullable=True),
         sa.Column("avatar", sa.String(), nullable=True),
+        sa.Column("telegram", sa.String(), nullable=True),
         sa.Column("is_activated", sa.Boolean(), nullable=False),
         sa.Column("created_at", sa.DateTime(timezone=True), nullable=False),
         sa.Column("updated_at", sa.DateTime(timezone=True), nullable=False),
         sa.PrimaryKeyConstraint("id"),
         sa.UniqueConstraint("avatar"),
+        sa.UniqueConstraint("telegram"),
         sa.UniqueConstraint("email"),
     )
     op.create_table("chat_members",

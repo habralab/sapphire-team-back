@@ -75,6 +75,7 @@ class UsersRestClient(BaseRestClient):
             first_name: str,
             last_name: str,
             about: str | None = None,
+            telegram: str | None = None,
             main_specialization_id: uuid.UUID | None = None,
             secondary_specialization_id: uuid.UUID | None = None,
     ) -> UserResponse:
@@ -83,6 +84,7 @@ class UsersRestClient(BaseRestClient):
             first_name=first_name,
             last_name=last_name,
             about=about,
+            telegram=telegram,
             main_specialization_id=main_specialization_id,
             secondary_specialization_id=secondary_specialization_id,
         )

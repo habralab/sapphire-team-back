@@ -19,6 +19,7 @@ class JWTData(BaseModel):
 class UserResponse(BaseModel):
     id: uuid.UUID
     email: EmailStr | None
+    telegram: str | None
     first_name: str | None
     last_name: str | None
     is_activated: bool
@@ -34,6 +35,7 @@ class UserUpdateRequest(BaseModel):
     first_name: str
     last_name: str
     about: str | None
+    telegram: str | None
     main_specialization_id: uuid.UUID | None
     secondary_specialization_id: uuid.UUID | None
 
