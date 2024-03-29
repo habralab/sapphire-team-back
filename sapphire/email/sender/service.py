@@ -13,6 +13,7 @@ from .templates import Template
 class Service(ServiceMixin):
     TEMPLATES = (
         Template.load("registration"),
+        Template.load("change_email")
     )
 
     def __init__(
