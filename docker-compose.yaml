@@ -1,129 +1,129 @@
 version: "3.8"
 services:
-  database:
-    image: postgres:16.0-bookworm
-    user: 0:0
-    environment:
-      POSTGRES_USER: sapphire
-      POSTGRES_DB: sapphire
-      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:-P@ssw0rd}
-    volumes:
-      - ${DATABASE_DIR:-./database_data}:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready"]
-    deploy:
-      replicas: 1
-
-  redis:
+  # metrics-node-exporter:
+  #   image: prom/node-exporter
+  #   volumes:
+  #     - /proc:/host/proc:ro
+  #     - /sys:/host/sys:ro
+  #     - /:/rootfs:ro
+  #   command:
+  #     - "--path.procfs=/host/proc"
+  #     - "--path.rootfs=/rootfs"
+  #     - "--path.sysfs=/host/sys"
+  #     - "--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)"
+  #   deploy:
+  #     mode: global
+  #
+  # metrics:
+  #   image: prom/prometheus
+  #   user: "0:0"
+  #   volumes:
+  #     - metrics-data:/prometheus
+  #   configs:
+  #     - source: prometheus
+  #       target: /etc/prometheus/prometheus.yaml
+  #   command:
+  #     - "--config.file=/etc/prometheus/prometheus.yaml"
+  #     - "--storage.tsdb.path=/prometheus"
+  #   deploy:
+  #     replicas: 1
+  #
+  # metrics-ui:
+  #   image: grafana/grafana
+  #   user: "0:0"
+  #   volumes:
+  #     - metrics-ui-data:/var/lib/grafana
+  #   environment:
+  #     GF_SERVER_ROOT_URL: ${METRICS_UI_ROOT_URL:-http://localhost:3000}${METRICS_UI_ROOT_PATH:-/metrics}
+  #   deploy:
+  #     labels:
+  #       - "traefik.enable=true"
+  #       - "traefik.http.middlewares.metrics-ui-stripprefix.stripprefix.prefixes=${METRICS_UI_ROOT_PATH:-/metrics}"
+  #       - "traefik.http.routers.metrics-ui.middlewares=metrics-ui-stripprefix"
+  #       - "traefik.http.routers.metrics-ui.rule=PathPrefix(`${METRICS_UI_ROOT_PATH:-/metrics}`)"
+  #       - "traefik.http.routers.metrics-ui.service=metrics-ui"
+  #       - "traefik.http.routers.metrics-ui.entrypoints=web"
+  #       - "traefik.http.services.metrics-ui.loadbalancer.server.port=3000"
+  #     replicas: 1
+  
+  cache:
     image: redis:7.2.1-bookworm
     volumes:
-      - ${REDIS_DIR:-./redis_data}:/data
+      - cache-data:/data
     healthcheck:
       test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
     deploy:
       replicas: 1
 
-  zookeeper:
+  broker-manager:
     image: confluentinc/cp-zookeeper:7.5.0
     user: 0:0
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
     volumes:
-      - ${BROKER_DIR:-./broker_data}/zookeeper/data:/var/lib/zookeeper/data
-      - ${BROKER_DIR:-./broker_data}/zookeeper/log:/var/lib/zookeeper/log
+      - broker-manager-data:/var/lib/zookeeper/data
+      - broker-manager-log:/var/lib/zookeeper/log
     healthcheck:
       test: nc -z localhost 2181 || exit -1
     deploy:
       replicas: 1
 
-  kafka:
+  broker:
     image: confluentinc/cp-kafka:7.5.0
     user: 0:0
     environment:
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9091
+      KAFKA_ZOOKEEPER_CONNECT: broker-manager:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:9091
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     volumes:
-      - ${BROKER_DIR:-./broker_data}/kafka/data:/var/lib/kafka/data
+      - broker-data:/var/lib/kafka/data
     healthcheck:
       test: nc -z localhost 9091 || exit -1
     deploy:
       replicas: 1
 
-  kafka-ui:
+  broker-ui:
     image: provectuslabs/kafka-ui:latest
     environment:
       KAFKA_CLUSTERS_0_NAME: local
-      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9091
-      SERVER_SERVLET_CONTEXT_PATH: ${KAFKA_UI_ROOT_PATH:-/kafka}
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: broker:9091
+      SERVER_SERVLET_CONTEXT_PATH: ${BROKER_UI_ROOT_PATH:-/broker}
       AUTH_TYPE: LOGIN_FORM
       SPRING_SECURITY_USER_NAME: admin
-      SPRING_SECURITY_USER_PASSWORD: ${KAFKA_UI_PASSWORD:-admin}
+      SPRING_SECURITY_USER_PASSWORD: ${BROKER_UI_PASSWORD:-admin}
     healthcheck:
-      test: wget --spider -q http://localhost:8080${KAFKA_UI_ROOT_PATH:-/kafka}/actuator/health
+      test: wget --spider -q http://localhost:8080${BROKER_UI_ROOT_PATH:-/broker}/actuator/health
     deploy:
       labels:
         - "traefik.enable=true"
-        - "traefik.http.routers.kafka.rule=PathPrefix(`${KAFKA_UI_ROOT_PATH:-/kafka}`)"
-        - "traefik.http.routers.kafka.entrypoints=web"
-        - "traefik.http.routers.kafka.service=kafka"
-        - "traefik.http.services.kafka.loadbalancer.server.port=8080"
+        - "traefik.http.routers.broker-ui.rule=PathPrefix(`${BROKER_UI_ROOT_PATH:-/broker}`)"
+        - "traefik.http.routers.broker-ui.entrypoints=web"
+        - "traefik.http.routers.broker-ui.service=broker-ui"
+        - "traefik.http.services.broker-ui.loadbalancer.server.port=8080"
       replicas: 1
-
-  prometheus-node-exporter:
-    image: prom/node-exporter
-    volumes:
-      - /proc:/host/proc:ro
-      - /sys:/host/sys:ro
-      - /:/rootfs:ro
-    command:
-      - "--path.procfs=/host/proc"
-      - "--path.rootfs=/rootfs"
-      - "--path.sysfs=/host/sys"
-      - "--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)"
-    deploy:
-      mode: global
-
-  prometheus:
-    image: prom/prometheus
-    user: "0:0"
-    volumes:
-      - ${PROMETHEUS_DIR:-./prometheus_data/}:/prometheus
-    configs:
-      - source: prometheus
-        target: /etc/prometheus/prometheus.yaml
-    command:
-      - "--config.file=/etc/prometheus/prometheus.yaml"
-      - "--storage.tsdb.path=/prometheus"
-    deploy:
-      replicas: 1
-
-  grafana:
-    image: grafana/grafana
-    user: "0:0"
-    volumes:
-      - ${GRAFANA_DIR:-./grafana_data}:/var/lib/grafana
+  
+  app-database:
+    image: postgres:16.0-bookworm
+    user: 0:0
     environment:
-      GF_SERVER_ROOT_URL: ${GRAFANA_ROOT_URL:-http://localhost:3000}${GRAFANA_ROOT_PATH:-/grafana}
+      POSTGRES_USER: app
+      POSTGRES_DB: app
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:-P@ssw0rd}
+    volumes:
+      - app-database-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
     deploy:
-      labels:
-        - "traefik.enable=true"
-        - "traefik.http.middlewares.grafana-stripprefix.stripprefix.prefixes=${GRAFANA_ROOT_PATH:-/grafana}"
-        - "traefik.http.routers.grafana.middlewares=grafana-stripprefix"
-        - "traefik.http.routers.grafana.rule=PathPrefix(`${GRAFANA_ROOT_PATH:-/grafana}`)"
-        - "traefik.http.routers.grafana.service=grafana"
-        - "traefik.http.routers.grafana.entrypoints=web"
-        - "traefik.http.services.grafana.loadbalancer.server.port=3000"
       replicas: 1
 
-  sapphire:
-    image: ${SAPPHIRE_IMAGE:-sapphire}
+  app:
+    image: ${APP_IMAGE:-collabry}
     environment:
-      DATABASE__DSN: ${DATABASE__DSN:-postgresql+asyncpg://sapphire:P%40ssw0rd@database:5432/sapphire}
-      EMAIL__BROKER__SERVERS: '["kafka:9091"]'
+      DATABASE__DSN: ${DATABASE__DSN:-postgresql+asyncpg://app:P%40ssw0rd@app-database:5432/app}
+      EMAIL__BROKER__SERVERS: '["broker:9091"]'
       EMAIL__SENDER__USERNAME: ${EMAIL__SENDER__USERNAME:-test@example.com}
       EMAIL__SENDER__PASSWORD: ${EMAIL__SENDER__PASSWORD:-P@ssw0rd}
       EMAIL__SENDER__HOST: ${EMAIL__SENDER__HOST:-smtp.example.com}
@@ -134,37 +134,37 @@ services:
       MESSENGER__API__ROOT_URL: ${MESSENGER__API__ROOT_URL:-http://localhost:3000}
       MESSENGER__API__ROOT_PATH: ${MESSENGER__API__ROOT_PATH:-/messenger}
       MESSENGER__API__ALLOWED_ORIGINS: ${MESSENGER__API__ALLOWED_ORIGINS:-["http://localhost:3000"]}
-      MESSENGER__BROKER__SERVERS: '["kafka:9091"]'
+      MESSENGER__BROKER__SERVERS: '["broker:9091"]'
       MESSENGER__BROKER__TOPICS: '["chats"]'
-      MESSENGER__DATABASE__DSN: ${MESSENGER__DATABASE__DSN:-postgresql+asyncpg://sapphire:P%40ssw0rd@database:5432/sapphire}
+      MESSENGER__DATABASE__DSN: ${MESSENGER__DATABASE__DSN:-postgresql+asyncpg://app:P%40ssw0rd@app-database:5432/app}
       NOTIFICATIONS__API__PORT: "8010"
       NOTIFICATIONS__API__ROOT_URL: ${NOTIFICATIONS__API__ROOT_URL:-http://localhost:3000}
       NOTIFICATIONS__API__ROOT_PATH: ${NOTIFICATIONS__API__ROOT_PATH:-/notifications}
       NOTIFICATIONS__API__ALLOWED_ORIGINS: ${NOTIFICATIONS__API__ALLOWED_ORIGINS:-["http://localhost:3000"]}
-      NOTIFICATIONS__BROKER__SERVERS: '["kafka:9091"]'
+      NOTIFICATIONS__BROKER__SERVERS: '["broker:9091"]'
       NOTIFICATIONS__BROKER__TOPICS: '["notifications"]'
-      NOTIFICATIONS__DATABASE__DSN: ${NOTIFICATIONS__DATABASE__DSN:-postgresql+asyncpg://sapphire:P%40ssw0rd@database:5432/sapphire}
+      NOTIFICATIONS__DATABASE__DSN: ${NOTIFICATIONS__DATABASE__DSN:-postgresql+asyncpg://app:P%40ssw0rd@app-database:5432/app}
       PROJECTS__API__PORT: "8020"
       PROJECTS__API__ROOT_URL: ${PROJECTS__API__ROOT_URL:-http://localhost:3000}
       PROJECTS__API__ROOT_PATH: ${PROJECTS__API__ROOT_PATH:-/projects}
       PROJECTS__API__ALLOWED_ORIGINS: ${PROJECTS__API__ALLOWED_ORIGINS:-["http://localhost:3000"]}
       PROJECTS__API__MEDIA_DIR_PATH: "/projects/media"
-      PROJECTS__BROKER__SERVERS: '["kafka:9091"]'
-      PROJECTS__DATABASE__DSN: ${PROJECTS__DATABASE__DSN:-postgresql+asyncpg://sapphire:P%40ssw0rd@database:5432/sapphire}
+      PROJECTS__BROKER__SERVERS: '["broker:9091"]'
+      PROJECTS__DATABASE__DSN: ${PROJECTS__DATABASE__DSN:-postgresql+asyncpg://app:P%40ssw0rd@app-database:5432/app}
       STORAGE__API__PORT: "8030"
       STORAGE__API__ROOT_URL: ${STORAGE__API__ROOT_URL:-http://localhost:3000}
       STORAGE__API__ROOT_PATH: ${STORAGE__API__ROOT_PATH:-/storage}
       STORAGE__API__ALLOWED_ORIGINS: ${STORAGE__API__ALLOWED_ORIGINS:-["http://localhost:3000"]}
-      STORAGE__DATABASE__DSN: ${STORAGE__DATABASE__DSN:-postgresql+asyncpg://sapphire:P%40ssw0rd@database:5432/sapphire}
+      STORAGE__DATABASE__DSN: ${STORAGE__DATABASE__DSN:-postgresql+asyncpg://app:P%40ssw0rd@app-database:5432/app}
       USERS__API__PORT: "8040"
       USERS__API__ROOT_URL: ${USERS__API__ROOT_URL:-http://localhost:3000}
       USERS__API__ROOT_PATH: ${USERS__API__ROOT_PATH:-/users}
       USERS__API__ALLOWED_ORIGINS: ${USERS__API__ALLOWED_ORIGINS:-["http://localhost:3000"]}
       USERS__API__OAUTH2_HABR_CALLBACK_URL: ${USERS__API__OAUTH2_HABR_CALLBACK_URL:-http://localhost:3000/users/api/rest/auth/oauth2/habr/callback}
       USERS__API__MEDIA_DIR_PATH: "/users/media"
-      USERS__BROKER__SERVERS: '["kafka:9091"]'
-      USERS__CACHE__URL: "redis://redis:6379/0"
-      USERS__DATABASE__DSN: ${USERS__DATABASE__DSN:-postgresql+asyncpg://sapphire:P%40ssw0rd@database:5432/sapphire}
+      USERS__BROKER__SERVERS: '["broker:9091"]'
+      USERS__CACHE__URL: "redis://cache:6379/0"
+      USERS__DATABASE__DSN: ${USERS__DATABASE__DSN:-postgresql+asyncpg://app:P%40ssw0rd@app-database:5432/app}
     secrets:
       - target: users__habr__api_key
         source: habr_api_key
@@ -215,8 +215,8 @@ services:
       - target: messenger__jwt__refresh_token_private_key
         source: jwt_refresh_token_private_key
     volumes:
-      - ${PROJECTS_MEDIA_DIR_PATH:-./projects_data/media}:/projects/media
-      - ${USERS_MEDIA_DIR_PATH:-./users_data/media}:/users/media
+      - app-projects-media-data:/projects/media
+      - app-users-media-data:/users/media
     command: ["run"]
     healthcheck:
       test: >
@@ -320,9 +320,19 @@ services:
         order: start-first
       replicas: 1
 
-configs:
-  prometheus:
-    file: "prometheus.yaml"
+# configs:
+#   prometheus:
+#     file: "prometheus.yaml"
+volumes:
+  broker-manager-data:
+  broker-manager-log:
+  broker-data:
+  cache-data:
+  # metrics-data:
+  # metrics-ui-data:
+  app-database-data:
+  app-projects-media-data:
+  app-users-media-data:
 secrets:
   oauth2_habr_client_id:
     external: true

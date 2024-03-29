@@ -1,6 +1,6 @@
 import pytest
 
-from sapphire.common.database.service import BaseDatabaseService
+from collabry.common.database.service import BaseDatabaseService
 
 
 @pytest.fixture()

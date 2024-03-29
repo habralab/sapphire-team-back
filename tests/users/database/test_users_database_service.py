@@ -1,12 +1,10 @@
-import os
-import pathlib
 import uuid
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from sapphire.database.models import Profile, User, UserSkill
-from sapphire.users.database import Service
+from collabry.database.models import Profile, User, UserSkill
+from collabry.users.database import Service
 
 
 @pytest.mark.asyncio

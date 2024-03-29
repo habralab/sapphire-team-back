@@ -1,7 +1,7 @@
 import pytest
 
-from sapphire.common.jwt import JWTMethods, get_jwt_methods
-from sapphire.common.jwt.settings import JWTSettings
+from collabry.common.jwt import JWTMethods, get_jwt_methods
+from collabry.common.jwt.settings import JWTSettings
 
 
 @pytest.fixture()

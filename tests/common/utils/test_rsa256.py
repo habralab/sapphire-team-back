@@ -1,7 +1,7 @@
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric.padding import PKCS1v15
 
-from sapphire.common.utils.rsa256 import generate_rsa_keys
+from collabry.common.utils.rsa256 import generate_rsa_keys
 
 
 def test_generate_rsa_keys():

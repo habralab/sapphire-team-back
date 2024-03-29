@@ -2,7 +2,7 @@ from unittest.mock import Mock
 
 import pytest
 
-from sapphire.common.jwt.methods import JWTMethods
+from collabry.common.jwt.methods import JWTMethods
 
 
 @pytest.fixture()

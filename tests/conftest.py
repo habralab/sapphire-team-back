@@ -1,7 +1,7 @@
 import pytest
 
-from sapphire import Settings
-from sapphire.common.utils.settings import get_settings
+from collabry import Settings
+from collabry.common.utils.settings import get_settings
 
 
 @pytest.fixture(scope="session")

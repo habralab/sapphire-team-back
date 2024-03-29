@@ -2,7 +2,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from sapphire import database
+from collabry import database
 
 
 @pytest.mark.asyncio
@@ -21,7 +21,7 @@ async def test_transaction(database_service: database.Service):
     sessionmaker_mock_context.__aenter__.assert_called_once_with()
 
 
-@patch("sapphire.common.database.service.alembic_command")
+@patch("collabry.common.database.service.alembic_command")
 def test_create_migration(mock_alembic_command: MagicMock, database_service: database.Service):
     message = "Any message"
     config = MagicMock()
@@ -41,7 +41,7 @@ def test_create_migration(mock_alembic_command: MagicMock, database_service: dat
     )
 
 
-@patch("sapphire.common.database.service.alembic_command")
+@patch("collabry.common.database.service.alembic_command")
 def test_migrate(mock_alembic_command: MagicMock, database_service: database.Service):
     config = MagicMock()
 

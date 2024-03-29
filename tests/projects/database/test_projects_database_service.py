@@ -1,5 +1,3 @@
-import os
-import pathlib
 import uuid
 from datetime import datetime, timedelta, timezone
 from unittest.mock import AsyncMock, MagicMock
@@ -8,8 +6,8 @@ import pytest
 from sqlalchemy import desc
 from sqlalchemy.future import select
 
-from sapphire.database.models import Participant, ParticipantStatusEnum, Position, Project, Review
-from sapphire.projects.database import Service
+from collabry.database.models import Participant, ParticipantStatusEnum, Position, Project, Review
+from collabry.projects.database import Service
 
 # Project
 
