@@ -13,7 +13,7 @@ def callback(ctx: typer.Context):
     if settings := ctx.obj.get("settings"):
         settings = settings.database
     else:
-        settings = get_settings(Settings)
+        settings = get_settings(Settings, env_prefix="DATABASE__")
     database_service = get_service(settings=settings)
 
     ctx.obj["settings"] = settings

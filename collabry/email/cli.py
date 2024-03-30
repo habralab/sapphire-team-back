@@ -28,7 +28,7 @@ def callback(ctx: typer.Context):
     if settings := ctx.obj.get("settings"):
         ctx.obj["settings"] = settings.email
     else:
-        ctx.obj["settings"] = get_settings(Settings)
+        ctx.obj["settings"] = get_settings(Settings, env_prefix="EMAIL__")
 
 
 def get_cli() -> typer.Typer:

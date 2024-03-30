@@ -38,7 +38,7 @@ def callback(
     if settings := ctx.obj.get("settings"):
         ctx.obj["settings"] = settings.collabry
     else:
-        ctx.obj["settings"] = get_settings(Settings, env_file=env)
+        ctx.obj["settings"] = get_settings(Settings, env_file=env, env_prefix="COLLABRY__")
 
 
 def get_cli() -> typer.Typer:

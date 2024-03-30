@@ -5,7 +5,6 @@ from loguru import logger
 
 from collabry.common.utils.settings import get_settings
 
-from . import database
 from .service import get_service
 from .settings import Settings
 
@@ -29,7 +28,7 @@ def callback(ctx: typer.Context):
     if settings := ctx.obj.get("settings"):
         ctx.obj["settings"] = settings.storage
     else:
-        ctx.obj["settings"] = get_settings(Settings)
+        ctx.obj["settings"] = get_settings(Settings, env_prefix="STORAGE__")
 
 
 def get_cli() -> typer.Typer:
@@ -37,6 +36,5 @@ def get_cli() -> typer.Typer:
 
     cli.callback()(callback)
     cli.command(name="run")(run)
-    cli.add_typer(database.get_cli(), name="database")
 
     return cli

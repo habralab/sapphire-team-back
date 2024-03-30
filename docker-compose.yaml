@@ -1,6 +1,6 @@
 version: "3.8"
 services:
-  # metrics-node-exporter:
+  # prometheus-node-exporter:
   #   image: prom/node-exporter
   #   volumes:
   #     - /proc:/host/proc:ro
@@ -13,12 +13,12 @@ services:
   #     - "--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)"
   #   deploy:
   #     mode: global
-  #
-  # metrics:
+
+  # prometheus:
   #   image: prom/prometheus
   #   user: "0:0"
   #   volumes:
-  #     - metrics-data:/prometheus
+  #     - prometheus-data:/prometheus
   #   configs:
   #     - source: prometheus
   #       target: /etc/prometheus/prometheus.yaml
@@ -27,196 +27,196 @@ services:
   #     - "--storage.tsdb.path=/prometheus"
   #   deploy:
   #     replicas: 1
-  #
-  # metrics-ui:
+
+  # grafana:
   #   image: grafana/grafana
   #   user: "0:0"
   #   volumes:
-  #     - metrics-ui-data:/var/lib/grafana
+  #     - grafana-data:/var/lib/grafana
   #   environment:
-  #     GF_SERVER_ROOT_URL: ${METRICS_UI_ROOT_URL:-http://localhost:3000}${METRICS_UI_ROOT_PATH:-/metrics}
+  #     GF_SERVER_ROOT_URL: ${GRAFANA__ROOT_URL:-http://localhost:3000}${GRAFANA__ROOT_PATH:-/grafana}
   #   deploy:
   #     labels:
   #       - "traefik.enable=true"
-  #       - "traefik.http.middlewares.metrics-ui-stripprefix.stripprefix.prefixes=${METRICS_UI_ROOT_PATH:-/metrics}"
-  #       - "traefik.http.routers.metrics-ui.middlewares=metrics-ui-stripprefix"
-  #       - "traefik.http.routers.metrics-ui.rule=PathPrefix(`${METRICS_UI_ROOT_PATH:-/metrics}`)"
-  #       - "traefik.http.routers.metrics-ui.service=metrics-ui"
-  #       - "traefik.http.routers.metrics-ui.entrypoints=web"
-  #       - "traefik.http.services.metrics-ui.loadbalancer.server.port=3000"
+  #       - "traefik.http.middlewares.grafana-stripprefix.stripprefix.prefixes=${GRAFANA__ROOT_PATH:-/grafana}"
+  #       - "traefik.http.routers.grafana.middlewares=-stripprefix"
+  #       - "traefik.http.routers.grafana.rule=PathPrefix(`${GRAFANA__ROOT_PATH:-/prometheus}`)"
+  #       - "traefik.http.routers.grafana.service=grafana"
+  #       - "traefik.http.routers.grafana.entrypoints=web"
+  #       - "traefik.http.services.grafana.loadbalancer.server.port=3000"
   #     replicas: 1
-  
-  cache:
+
+  redis:
     image: redis:7.2.1-bookworm
     volumes:
-      - cache-data:/data
+      - redis-data:/data
     healthcheck:
       test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
     deploy:
       replicas: 1
 
-  broker-manager:
+  zookeeper:
     image: confluentinc/cp-zookeeper:7.5.0
     user: 0:0
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
     volumes:
-      - broker-manager-data:/var/lib/zookeeper/data
-      - broker-manager-log:/var/lib/zookeeper/log
+      - zookeeper-data:/var/lib/zookeeper/data
+      - zookeeper-log:/var/lib/zookeeper/log
     healthcheck:
       test: nc -z localhost 2181 || exit -1
     deploy:
       replicas: 1
 
-  broker:
+  kafka:
     image: confluentinc/cp-kafka:7.5.0
     user: 0:0
     environment:
-      KAFKA_ZOOKEEPER_CONNECT: broker-manager:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:9091
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9091
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_INTER_kafka_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     volumes:
-      - broker-data:/var/lib/kafka/data
+      - kafka-data:/var/lib/kafka/data
     healthcheck:
       test: nc -z localhost 9091 || exit -1
     deploy:
       replicas: 1
 
-  broker-ui:
+  kafka-ui:
     image: provectuslabs/kafka-ui:latest
     environment:
       KAFKA_CLUSTERS_0_NAME: local
-      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: broker:9091
-      SERVER_SERVLET_CONTEXT_PATH: ${BROKER_UI_ROOT_PATH:-/broker}
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9091
+      SERVER_SERVLET_CONTEXT_PATH: ${KAFKA_UI__ROOT_PATH:-/kafka}
       AUTH_TYPE: LOGIN_FORM
       SPRING_SECURITY_USER_NAME: admin
-      SPRING_SECURITY_USER_PASSWORD: ${BROKER_UI_PASSWORD:-admin}
+      SPRING_SECURITY_USER_PASSWORD: ${KAFKA_UI__PASSWORD:-admin}
     healthcheck:
-      test: wget --spider -q http://localhost:8080${BROKER_UI_ROOT_PATH:-/broker}/actuator/health
+      test: wget --spider -q http://localhost:8080${KAFKA_UI__ROOT_PATH:-/kafka}/actuator/health
     deploy:
       labels:
         - "traefik.enable=true"
-        - "traefik.http.routers.broker-ui.rule=PathPrefix(`${BROKER_UI_ROOT_PATH:-/broker}`)"
-        - "traefik.http.routers.broker-ui.entrypoints=web"
-        - "traefik.http.routers.broker-ui.service=broker-ui"
-        - "traefik.http.services.broker-ui.loadbalancer.server.port=8080"
+        - "traefik.http.routers.kafka-ui.rule=PathPrefix(`${KAFKA_UI__ROOT_PATH:-/kafka}`)"
+        - "traefik.http.routers.kafka-ui.entrypoints=web"
+        - "traefik.http.routers.kafka-ui.service=kafka-ui"
+        - "traefik.http.services.kafka-ui.loadbalancer.server.port=8080"
       replicas: 1
   
-  app-database:
+  postgres:
     image: postgres:16.0-bookworm
     user: 0:0
     environment:
-      POSTGRES_USER: app
-      POSTGRES_DB: app
-      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:-P@ssw0rd}
+      POSTGRES_USER: collabry
+      POSTGRES_DB: collabry
+      POSTGRES_PASSWORD: ${POSTGRES__PASSWORD:-P@ssw0rd}
     volumes:
-      - app-database-data:/var/lib/postgresql/data
+      - postgres-data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready"]
     deploy:
       replicas: 1
 
-  app:
-    image: ${APP_IMAGE:-collabry}
+  collabry:
+    image: ${COLLABRY__IMAGE:-collabry}
     environment:
-      DATABASE__DSN: ${DATABASE__DSN:-postgresql+asyncpg://app:P%40ssw0rd@app-database:5432/app}
-      EMAIL__BROKER__SERVERS: '["broker:9091"]'
-      EMAIL__SENDER__USERNAME: ${EMAIL__SENDER__USERNAME:-test@example.com}
-      EMAIL__SENDER__PASSWORD: ${EMAIL__SENDER__PASSWORD:-P@ssw0rd}
-      EMAIL__SENDER__HOST: ${EMAIL__SENDER__HOST:-smtp.example.com}
-      EMAIL__SENDER__PORT: ${EMAIL__SENDER__PORT:-587}
-      EMAIL__SENDER__START_TLS: ${EMAIL__SENDER__START_TLS:-true}
-      EMAIL__SENDER__TLS: ${EMAIL__SENDER__TLS:-false}
-      MESSENGER__API__PORT: "8000"
-      MESSENGER__API__ROOT_URL: ${MESSENGER__API__ROOT_URL:-http://localhost:3000}
-      MESSENGER__API__ROOT_PATH: ${MESSENGER__API__ROOT_PATH:-/messenger}
-      MESSENGER__API__ALLOWED_ORIGINS: ${MESSENGER__API__ALLOWED_ORIGINS:-["http://localhost:3000"]}
-      MESSENGER__BROKER__SERVERS: '["broker:9091"]'
-      MESSENGER__BROKER__TOPICS: '["chats"]'
-      MESSENGER__DATABASE__DSN: ${MESSENGER__DATABASE__DSN:-postgresql+asyncpg://app:P%40ssw0rd@app-database:5432/app}
-      NOTIFICATIONS__API__PORT: "8010"
-      NOTIFICATIONS__API__ROOT_URL: ${NOTIFICATIONS__API__ROOT_URL:-http://localhost:3000}
-      NOTIFICATIONS__API__ROOT_PATH: ${NOTIFICATIONS__API__ROOT_PATH:-/notifications}
-      NOTIFICATIONS__API__ALLOWED_ORIGINS: ${NOTIFICATIONS__API__ALLOWED_ORIGINS:-["http://localhost:3000"]}
-      NOTIFICATIONS__BROKER__SERVERS: '["broker:9091"]'
-      NOTIFICATIONS__BROKER__TOPICS: '["notifications"]'
-      NOTIFICATIONS__DATABASE__DSN: ${NOTIFICATIONS__DATABASE__DSN:-postgresql+asyncpg://app:P%40ssw0rd@app-database:5432/app}
-      PROJECTS__API__PORT: "8020"
-      PROJECTS__API__ROOT_URL: ${PROJECTS__API__ROOT_URL:-http://localhost:3000}
-      PROJECTS__API__ROOT_PATH: ${PROJECTS__API__ROOT_PATH:-/projects}
-      PROJECTS__API__ALLOWED_ORIGINS: ${PROJECTS__API__ALLOWED_ORIGINS:-["http://localhost:3000"]}
-      PROJECTS__API__MEDIA_DIR_PATH: "/projects/media"
-      PROJECTS__BROKER__SERVERS: '["broker:9091"]'
-      PROJECTS__DATABASE__DSN: ${PROJECTS__DATABASE__DSN:-postgresql+asyncpg://app:P%40ssw0rd@app-database:5432/app}
-      STORAGE__API__PORT: "8030"
-      STORAGE__API__ROOT_URL: ${STORAGE__API__ROOT_URL:-http://localhost:3000}
-      STORAGE__API__ROOT_PATH: ${STORAGE__API__ROOT_PATH:-/storage}
-      STORAGE__API__ALLOWED_ORIGINS: ${STORAGE__API__ALLOWED_ORIGINS:-["http://localhost:3000"]}
-      STORAGE__DATABASE__DSN: ${STORAGE__DATABASE__DSN:-postgresql+asyncpg://app:P%40ssw0rd@app-database:5432/app}
-      USERS__API__PORT: "8040"
-      USERS__API__ROOT_URL: ${USERS__API__ROOT_URL:-http://localhost:3000}
-      USERS__API__ROOT_PATH: ${USERS__API__ROOT_PATH:-/users}
-      USERS__API__ALLOWED_ORIGINS: ${USERS__API__ALLOWED_ORIGINS:-["http://localhost:3000"]}
-      USERS__API__OAUTH2_HABR_CALLBACK_URL: ${USERS__API__OAUTH2_HABR_CALLBACK_URL:-http://localhost:3000/users/api/rest/auth/oauth2/habr/callback}
-      USERS__API__MEDIA_DIR_PATH: "/users/media"
-      USERS__BROKER__SERVERS: '["broker:9091"]'
-      USERS__CACHE__URL: "redis://cache:6379/0"
-      USERS__DATABASE__DSN: ${USERS__DATABASE__DSN:-postgresql+asyncpg://app:P%40ssw0rd@app-database:5432/app}
+      COLLABRY__DATABASE__DSN: ${COLLABRY__DATABASE__DSN:-postgresql+asyncpg://collabry:P%40ssw0rd@postgres:5432/collabry}
+      COLLABRY__EMAIL__BROKER__SERVERS: '["kafka:9091"]'
+      COLLABRY__EMAIL__SENDER__USERNAME: ${COLLABRY__EMAIL__SENDER__USERNAME:-test@example.com}
+      COLLABRY__EMAIL__SENDER__PASSWORD: ${COLLABRY__EMAIL__SENDER__PASSWORD:-P@ssw0rd}
+      COLLABRY__EMAIL__SENDER__HOST: ${COLLABRY__EMAIL__SENDER__HOST:-smtp.example.com}
+      COLLABRY__EMAIL__SENDER__PORT: ${COLLABRY__EMAIL__SENDER__PORT:-587}
+      COLLABRY__EMAIL__SENDER__START_TLS: ${COLLABRY__EMAIL__SENDER__START_TLS:-true}
+      COLLABRY__EMAIL__SENDER__TLS: ${COLLABRY__EMAIL__SENDER__TLS:-false}
+      COLLABRY__MESSENGER__API__PORT: "8000"
+      COLLABRY__MESSENGER__API__ROOT_URL: ${COLLABRY__MESSENGER__API__ROOT_URL:-http://localhost:3000}
+      COLLABRY__MESSENGER__API__ROOT_PATH: ${COLLABRY__MESSENGER__API__ROOT_PATH:-/messenger}
+      COLLABRY__MESSENGER__API__ALLOWED_ORIGINS: ${COLLABRY__MESSENGER__API__ALLOWED_ORIGINS:-["http://localhost:3000"]}
+      COLLABRY__MESSENGER__BROKER__SERVERS: '["kafka:9091"]'
+      COLLABRY__MESSENGER__BROKER__TOPICS: '["chats"]'
+      COLLABRY__MESSENGER__DATABASE__DSN: ${COLLABRY__MESSENGER__DATABASE__DSN:-postgresql+asyncpg://collabry:P%40ssw0rd@postgres:5432/collabry}
+      COLLABRY__NOTIFICATIONS__API__PORT: "8010"
+      COLLABRY__NOTIFICATIONS__API__ROOT_URL: ${COLLABRY__NOTIFICATIONS__API__ROOT_URL:-http://localhost:3000}
+      COLLABRY__NOTIFICATIONS__API__ROOT_PATH: ${COLLABRY__NOTIFICATIONS__API__ROOT_PATH:-/notifications}
+      COLLABRY__NOTIFICATIONS__API__ALLOWED_ORIGINS: ${COLLABRY__NOTIFICATIONS__API__ALLOWED_ORIGINS:-["http://localhost:3000"]}
+      COLLABRY__NOTIFICATIONS__kafka__SERVERS: '["kafka:9091"]'
+      COLLABRY__NOTIFICATIONS__kafka__TOPICS: '["notifications"]'
+      COLLABRY__NOTIFICATIONS__DATABASE__DSN: ${COLLABRY__NOTIFICATIONS__DATABASE__DSN:-postgresql+asyncpg://collabry:P%40ssw0rd@postgres:5432/collabry}
+      COLLABRY__PROJECTS__API__PORT: "8020"
+      COLLABRY__PROJECTS__API__ROOT_URL: ${COLLABRY__PROJECTS__API__ROOT_URL:-http://localhost:3000}
+      COLLABRY__PROJECTS__API__ROOT_PATH: ${COLLABRY__PROJECTS__API__ROOT_PATH:-/projects}
+      COLLABRY__PROJECTS__API__ALLOWED_ORIGINS: ${COLLABRY__PROJECTS__API__ALLOWED_ORIGINS:-["http://localhost:3000"]}
+      COLLABRY__PROJECTS__API__MEDIA_DIR_PATH: "/projects/media"
+      COLLABRY__PROJECTS__BROKER__SERVERS: '["kafka:9091"]'
+      COLLABRY__PROJECTS__DATABASE__DSN: ${COLLABRY__PROJECTS__DATABASE__DSN:-postgresql+asyncpg://collabry:P%40ssw0rd@postgres:5432/collabry}
+      COLLABRY__STORAGE__API__PORT: "8030"
+      COLLABRY__STORAGE__API__ROOT_URL: ${COLLABRY__STORAGE__API__ROOT_URL:-http://localhost:3000}
+      COLLABRY__STORAGE__API__ROOT_PATH: ${COLLABRY__STORAGE__API__ROOT_PATH:-/storage}
+      COLLABRY__STORAGE__API__ALLOWED_ORIGINS: ${COLLABRY__STORAGE__API__ALLOWED_ORIGINS:-["http://localhost:3000"]}
+      COLLABRY__STORAGE__DATABASE__DSN: ${COLLABRY__STORAGE__DATABASE__DSN:-postgresql+asyncpg://collabry:P%40ssw0rd@postgres:5432/collabry}
+      COLLABRY__USERS__API__PORT: "8040"
+      COLLABRY__USERS__API__ROOT_URL: ${COLLABRY__USERS__API__ROOT_URL:-http://localhost:3000}
+      COLLABRY__USERS__API__ROOT_PATH: ${COLLABRY__USERS__API__ROOT_PATH:-/users}
+      COLLABRY__USERS__API__ALLOWED_ORIGINS: ${COLLABRY__USERS__API__ALLOWED_ORIGINS:-["http://localhost:3000"]}
+      COLLABRY__USERS__API__OAUTH2_HABR_CALLBACK_URL: ${COLLABRY__USERS__API__OAUTH2_HABR_CALLBACK_URL:-http://localhost:3000/users/api/rest/auth/oauth2/habr/callback}
+      COLLABRY__USERS__API__MEDIA_DIR_PATH: "/users/media"
+      COLLABRY__USERS__BROKER__SERVERS: '["kafka:9091"]'
+      COLLABRY__USERS__CACHE__URL: "redis://redis:6379/0"
+      COLLABRY__USERS__DATABASE__DSN: ${COLLABRY__USERS__DATABASE__DSN:-postgresql+asyncpg://collabry:P%40ssw0rd@postgres:5432/collabry}
     secrets:
-      - target: users__habr__api_key
+      - target: collabry__users__habr__api_key
         source: habr_api_key
-      - target: users__habr_career__api_key
+      - target: collabry__users__habr_career__api_key
         source: habr_career_api_key
-      - target: users__jwt__access_token_public_key
+      - target: collabry__users__jwt__access_token_public_key
         source: jwt_access_token_public_key
-      - target: users__jwt__access_token_private_key
+      - target: collabry__users__jwt__access_token_private_key
         source: jwt_access_token_private_key
-      - target: users__jwt__refresh_token_public_key
+      - target: collabry__users__jwt__refresh_token_public_key
         source: jwt_refresh_token_public_key
-      - target: users__jwt__refresh_token_private_key
+      - target: collabry__users__jwt__refresh_token_private_key
         source: jwt_refresh_token_private_key
-      - target: users__oauth2_habr__client_id
+      - target: collabry__users__oauth2_habr__client_id
         source: oauth2_habr_client_id
-      - target: users__oauth2_habr__client_secret
+      - target: collabry__users__oauth2_habr__client_secret
         source: oauth2_habr_client_secret
-      - target: storage__jwt__access_token_public_key
+      - target: collabry__storage__jwt__access_token_public_key
         source: jwt_access_token_public_key
-      - target: storage__jwt__access_token_private_key
+      - target: collabry__storage__jwt__access_token_private_key
         source: jwt_access_token_private_key
-      - target: storage__jwt__refresh_token_public_key
+      - target: collabry__storage__jwt__refresh_token_public_key
         source: jwt_refresh_token_public_key
-      - target: storage__jwt__refresh_token_private_key
+      - target: collabry__storage__jwt__refresh_token_private_key
         source: jwt_refresh_token_private_key
-      - target: projects__jwt__access_token_public_key
+      - target: collabry__projects__jwt__access_token_public_key
         source: jwt_access_token_public_key
-      - target: projects__jwt__access_token_private_key
+      - target: collabry__projects__jwt__access_token_private_key
         source: jwt_access_token_private_key
-      - target: projects__jwt__refresh_token_public_key
+      - target: collabry__projects__jwt__refresh_token_public_key
         source: jwt_refresh_token_public_key
-      - target: projects__jwt__refresh_token_private_key
+      - target: collabry__projects__jwt__refresh_token_private_key
         source: jwt_refresh_token_private_key
-      - target: notifications__jwt__access_token_public_key
+      - target: collabry__notifications__jwt__access_token_public_key
         source: jwt_access_token_public_key
-      - target: notifications__jwt__access_token_private_key
+      - target: collabry__notifications__jwt__access_token_private_key
         source: jwt_access_token_private_key
-      - target: notifications__jwt__refresh_token_public_key
+      - target: collabry__notifications__jwt__refresh_token_public_key
         source: jwt_refresh_token_public_key
-      - target: notifications__jwt__refresh_token_private_key
+      - target: collabry__notifications__jwt__refresh_token_private_key
         source: jwt_refresh_token_private_key
-      - target: messenger__jwt__access_token_public_key
+      - target: collabry__messenger__jwt__access_token_public_key
         source: jwt_access_token_public_key
-      - target: messenger__jwt__access_token_private_key
+      - target: collabry__messenger__jwt__access_token_private_key
         source: jwt_access_token_private_key
-      - target: messenger__jwt__refresh_token_public_key
+      - target: collabry__messenger__jwt__refresh_token_public_key
         source: jwt_refresh_token_public_key
-      - target: messenger__jwt__refresh_token_private_key
+      - target: collabry__messenger__jwt__refresh_token_private_key
         source: jwt_refresh_token_private_key
     volumes:
-      - app-projects-media-data:/projects/media
-      - app-users-media-data:/users/media
+      - collabry-projects-media-data:/projects/media
+      - collabry-users-media-data:/users/media
     command: ["run"]
     healthcheck:
       test: >
@@ -228,33 +228,33 @@ services:
     deploy:
       labels:
         - "traefik.enable=true"
-        - "traefik.http.middlewares.messenger-stripprefix.stripprefix.prefixes=${MESSENGER__API__ROOT_PATH:-/messenger}"
+        - "traefik.http.middlewares.messenger-stripprefix.stripprefix.prefixes=${COLLABRY__MESSENGER__API__ROOT_PATH:-/messenger}"
         - "traefik.http.routers.messenger.middlewares=messenger-stripprefix"
-        - "traefik.http.routers.messenger.rule=PathPrefix(`${MESSENGER__API__ROOT_PATH:-/messenger}`)"
+        - "traefik.http.routers.messenger.rule=PathPrefix(`${COLLABRY__MESSENGER__API__ROOT_PATH:-/messenger}`)"
         - "traefik.http.routers.messenger.service=messenger"
         - "traefik.http.routers.messenger.entrypoints=web" 
         - "traefik.http.services.messenger.loadbalancer.server.port=8000"
-        - "traefik.http.middlewares.notifications-stripprefix.stripprefix.prefixes=${NOTIFICATIONS__API__ROOT_PATH:-/notifications}"
+        - "traefik.http.middlewares.notifications-stripprefix.stripprefix.prefixes=${COLLABRY__NOTIFICATIONS__API__ROOT_PATH:-/notifications}"
         - "traefik.http.routers.notifications.middlewares=notifications-stripprefix"
-        - "traefik.http.routers.notifications.rule=PathPrefix(`${NOTIFICATIONS__API__ROOT_PATH:-/notifications}`)"
+        - "traefik.http.routers.notifications.rule=PathPrefix(`${COLLABRY__NOTIFICATIONS__API__ROOT_PATH:-/notifications}`)"
         - "traefik.http.routers.notifications.service=notifications"
         - "traefik.http.routers.notifications.entrypoints=web" 
         - "traefik.http.services.notifications.loadbalancer.server.port=8010"
-        - "traefik.http.middlewares.projects-stripprefix.stripprefix.prefixes=${PROJECTS__API__ROOT_PATH:-/projects}"
+        - "traefik.http.middlewares.projects-stripprefix.stripprefix.prefixes=${COLLABRY__PROJECTS__API__ROOT_PATH:-/projects}"
         - "traefik.http.routers.projects.middlewares=projects-stripprefix"
-        - "traefik.http.routers.projects.rule=PathPrefix(`${PROJECTS__API__ROOT_PATH:-/projects}`)"
+        - "traefik.http.routers.projects.rule=PathPrefix(`${COLLABRY__PROJECTS__API__ROOT_PATH:-/projects}`)"
         - "traefik.http.routers.projects.service=projects"
         - "traefik.http.routers.projects.entrypoints=web" 
         - "traefik.http.services.projects.loadbalancer.server.port=8020"
-        - "traefik.http.middlewares.storage-stripprefix.stripprefix.prefixes=${STORAGE__API__ROOT_PATH:-/storage}"
+        - "traefik.http.middlewares.storage-stripprefix.stripprefix.prefixes=${COLLABRY__STORAGE__API__ROOT_PATH:-/storage}"
         - "traefik.http.routers.storage.middlewares=storage-stripprefix"
-        - "traefik.http.routers.storage.rule=PathPrefix(`${STORAGE__API__ROOT_PATH:-/storage}`)"
+        - "traefik.http.routers.storage.rule=PathPrefix(`${COLALBRY__STORAGE__API__ROOT_PATH:-/storage}`)"
         - "traefik.http.routers.storage.service=storage"
         - "traefik.http.routers.storage.entrypoints=web"
         - "traefik.http.services.storage.loadbalancer.server.port=8030"
-        - "traefik.http.middlewares.users-stripprefix.stripprefix.prefixes=${USERS__API__ROOT_PATH:-/users}"
+        - "traefik.http.middlewares.users-stripprefix.stripprefix.prefixes=${COLLABRY__USERS__API__ROOT_PATH:-/users}"
         - "traefik.http.routers.users.middlewares=users-stripprefix"
-        - "traefik.http.routers.users.rule=PathPrefix(`${USERS__API__ROOT_PATH:-/users}`)"
+        - "traefik.http.routers.users.rule=PathPrefix(`${COLLABRY__USERS__API__ROOT_PATH:-/users}`)"
         - "traefik.http.routers.users.service=users"
         - "traefik.http.routers.users.entrypoints=web"
         - "traefik.http.services.users.loadbalancer.server.port=8040"
@@ -268,46 +268,46 @@ services:
       URLS: >
         [
           {
-            "url": "${USERS__API__ROOT_URL:-http://localhost:3000}${USERS__API__ROOT_PATH:-/users}/openapi.json",
+            "url": "${COLLABRY__USERS__API__ROOT_URL:-http://localhost:3000}${COLLABRY__USERS__API__ROOT_PATH:-/users}/openapi.json",
             "name": "Users",
           },
           {
-            "url": "${STORAGE__API__ROOT_URL:-http://localhost:3000}${STORAGE__API__ROOT_PATH:-/storage}/openapi.json",
+            "url": "${COLLABRY__STORAGE__API__ROOT_URL:-http://localhost:3000}${COLLABRY__STORAGE__API__ROOT_PATH:-/storage}/openapi.json",
             "name": "Storage",
           },
           {
-            "url": "${PROJECTS__API__ROOT_URL:-http://localhost:3000}${PROJECTS__API__ROOT_PATH:-/projects}/openapi.json",
+            "url": "${COLLABRY__PROJECTS__API__ROOT_URL:-http://localhost:3000}${COLLABRY__PROJECTS__API__ROOT_PATH:-/projects}/openapi.json",
             "name": "Projects",
           },
           {
-            "url": "${NOTIFICATIONS__API__ROOT_URL:-http://localhost:3000}${NOTIFICATIONS__API__ROOT_PATH:-/notifications}/openapi.json",
+            "url": "${COLLABRY__NOTIFICATIONS__API__ROOT_URL:-http://localhost:3000}${COLLABRY__NOTIFICATIONS__API__ROOT_PATH:-/notifications}/openapi.json",
             "name": "Notifications",
           },
           {
-            "url": "${MESSENGER__API__ROOT_URL:-http://localhost:3000}${MESSENGER__API__ROOT_PATH:-/messenger}/openapi.json",
+            "url": "${COLLABRY__MESSENGER__API__ROOT_URL:-http://localhost:3000}${COLLABRY__MESSENGER__API__ROOT_PATH:-/messenger}/openapi.json",
             "name": "Messenger",
           },
         ]
-      BASE_URL: ${SWAGGER_ROOT_PATH:-/swagger}
+      BASE_URL: ${SWAGGER__ROOT_PATH:-/swagger}
     healthcheck:
-      test: curl --fail http://localhost:8080${SWAGGER_ROOT_PATH:-/swagger}
+      test: curl --fail http://localhost:8080${SWAGGER__ROOT_PATH:-/swagger}
     deploy:
       labels:
         - "traefik.enable=true"
-        - "traefik.http.routers.swagger.rule=PathPrefix(`${SWAGGER_ROOT_PATH:-/swagger}`)"
+        - "traefik.http.routers.swagger.rule=PathPrefix(`${SWAGGER__ROOT_PATH:-/swagger}`)"
         - "traefik.http.routers.swagger.entrypoints=web" 
         - "traefik.http.services.swagger.loadbalancer.server.port=8080"
       update_config:
         order: start-first
       replicas: 1
 
-  proxy:
+  traefik:
     image: traefik:v2.10
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     ports:
       - target: 80
-        published: ${PORT:-3000}
+        published: ${TRAEFIK__PORT:-3000}
         mode: host
     command:
       - "--log.level=DEBUG"
@@ -324,37 +324,37 @@ services:
 #   prometheus:
 #     file: "prometheus.yaml"
 volumes:
-  broker-manager-data:
-  broker-manager-log:
-  broker-data:
-  cache-data:
-  # metrics-data:
-  # metrics-ui-data:
-  app-database-data:
-  app-projects-media-data:
-  app-users-media-data:
+  zookeeper-data:
+  zookeeper-log:
+  kafka-data:
+  redis-data:
+  # prometheus-data:
+  # grafana-data:
+  postgres-data:
+  collabry-projects-media-data:
+  collabry-users-media-data:
 secrets:
   oauth2_habr_client_id:
     external: true
-    name: ${OAUTH2_HABR_CLIENT_ID_NAME:-oauth2_habr_client_id}
+    name: ${SECRETS__OAUTH2_HABR_CLIENT_ID_NAME:-oauth2_habr_client_id}
   oauth2_habr_client_secret:
     external: true
-    name: ${OAUTH2_HABR_CLIENT_SECRET_NAME:-oauth2_habr_client_secret}
+    name: ${SECRETS__OAUTH2_HABR_CLIENT_SECRET_NAME:-oauth2_habr_client_secret}
   habr_api_key:
     external: true
-    name: ${HABR_API_KEY_NAME:-habr_api_key}
+    name: ${SECRETS__HABR_API_KEY_NAME:-habr_api_key}
   habr_career_api_key:
     external: true
-    name: ${HABR_CAREER_API_KEY_NAME:-habr_career_api_key}
+    name: ${SECRETS__HABR_CAREER_API_KEY_NAME:-habr_career_api_key}
   jwt_access_token_private_key:
     external: true
-    name: ${JWT_ACCESS_TOKEN_PRIVATE_KEY_NAME:-jwt_access_token_private_key}
+    name: ${SECRETS__JWT_ACCESS_TOKEN_PRIVATE_KEY_NAME:-jwt_access_token_private_key}
   jwt_access_token_public_key:
     external: true
-    name: ${JWT_ACCESS_TOKEN_PUBLIC_KEY_NAME:-jwt_access_token_public_key}
+    name: ${SECRETS__JWT_ACCESS_TOKEN_PUBLIC_KEY_NAME:-jwt_access_token_public_key}
   jwt_refresh_token_private_key:
     external: true
-    name: ${JWT_REFRESH_TOKEN_PRIVATE_KEY_NAME:-jwt_refresh_token_private_key}
+    name: ${SECRETS__JWT_REFRESH_TOKEN_PRIVATE_KEY_NAME:-jwt_refresh_token_private_key}
   jwt_refresh_token_public_key:
     external: true
-    name: ${JWT_REFRESH_TOKEN_PUBLIC_KEY_NAME:-jwt_refresh_token_public_key}
+    name: ${SECRETS__JWT_REFRESH_TOKEN_PUBLIC_KEY_NAME:-jwt_refresh_token_public_key}
