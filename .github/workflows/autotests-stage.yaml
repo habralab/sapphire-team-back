@@ -12,7 +12,7 @@ jobs:
         with:
           ref: main
       - name: Build
-        run: docker build -t sapphire:test-${{ github.sha }} --target full .
+        run: docker build -t collabry:test-${{ github.sha }} --target full .
   test:
     needs: [build]
     runs-on: self-hosted
@@ -30,8 +30,8 @@ jobs:
           -e "OLEG_EMAIL_PASSWORD=${OLEG_EMAIL_PASSWORD}"
           -e "MATVEY_EMAIL=${MATVEY_EMAIL}"
           -e "MATVEY_EMAIL_PASSWORD=${MATVEY_EMAIL_PASSWORD}"
-          -v /sapphire/stage/secrets:/run/secrets
-          sapphire:test-${{ github.sha }} pytest autotests
+          -v /collabry/stage/secrets:/run/secrets
+          collabry:test-${{ github.sha }} pytest autotests
       - name: Notification
         if: failure()
         uses: appleboy/telegram-action@master

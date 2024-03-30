@@ -248,7 +248,7 @@ services:
         - "traefik.http.services.projects.loadbalancer.server.port=8020"
         - "traefik.http.middlewares.storage-stripprefix.stripprefix.prefixes=${COLLABRY__STORAGE__API__ROOT_PATH:-/storage}"
         - "traefik.http.routers.storage.middlewares=storage-stripprefix"
-        - "traefik.http.routers.storage.rule=PathPrefix(`${COLALBRY__STORAGE__API__ROOT_PATH:-/storage}`)"
+        - "traefik.http.routers.storage.rule=PathPrefix(`${COLLABRY__STORAGE__API__ROOT_PATH:-/storage}`)"
         - "traefik.http.routers.storage.service=storage"
         - "traefik.http.routers.storage.entrypoints=web"
         - "traefik.http.services.storage.loadbalancer.server.port=8030"
