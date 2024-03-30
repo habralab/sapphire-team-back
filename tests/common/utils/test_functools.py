@@ -1,9 +1,8 @@
-from contextvars import ContextVar
-from typing import Sequence, Type
+from typing import Sequence
 
 import pytest
 
-from sapphire.common.utils.functools import get_nested
+from collabry.common.utils.functools import get_nested
 
 
 @pytest.mark.parametrize(("structure", "key", "expected_result"), (

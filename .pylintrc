@@ -8,7 +8,7 @@ ignore-patterns=.lock,
                 .md,
 jobs=1
 limit-inference-results=100
-load-plugins=pylint_quotes
+load-plugins=
 persistent=yes
 py-version=3.10
 suggestion-mode=yes

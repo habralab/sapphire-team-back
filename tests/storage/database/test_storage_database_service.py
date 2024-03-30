@@ -3,8 +3,8 @@ from unittest.mock import AsyncMock, MagicMock
 import pytest
 from sqlalchemy import desc, or_, select
 
-from sapphire.database.models import SpecializationGroup
-from sapphire.storage.database import Service
+from collabry.database.models import SpecializationGroup
+from collabry.storage.database import Service
 
 
 @pytest.mark.asyncio

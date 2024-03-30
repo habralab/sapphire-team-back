@@ -3,8 +3,8 @@ from unittest.mock import Mock
 
 import pytest
 
-from sapphire.common.jwt import JWTMethods
-from sapphire.common.jwt.dependencies.rest import get_jwt_data
+from collabry.common.jwt import JWTMethods
+from collabry.common.jwt.dependencies.rest import get_jwt_data
 
 
 @pytest.mark.asyncio

@@ -1,5 +1,5 @@
 # Install requirements
-FROM python:3.11-slim as core
+FROM python:3.12-slim as core
 
 WORKDIR /app
 
@@ -12,7 +12,7 @@ FROM core as full
 
 RUN poetry install --with dev --all-extras
 COPY ./.pylintrc /app/.pylintrc
-COPY ./sapphire /app/sapphire
+COPY ./collabry /app/collabry
 COPY ./autotests /app/autotests
 COPY ./tests /app/tests
 ENTRYPOINT ["poetry", "run"]
@@ -23,5 +23,5 @@ FROM core as slim
 RUN apt update -y && apt install -y curl
 
 RUN poetry install --only main --all-extras
-COPY ./sapphire /app/sapphire
-ENTRYPOINT ["poetry", "run", "python", "-m", "sapphire"]
+COPY ./collabry /app/collabry
+ENTRYPOINT ["poetry", "run", "python", "-m", "collabry"]

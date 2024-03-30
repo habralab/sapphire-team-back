@@ -9,7 +9,7 @@ isort:
 	isort --check .
 
 lint:
-	pylint autotests sapphire tests
+	pylint autotests collabry tests
 
 test:
 	pytest tests
@@ -18,13 +18,13 @@ autotests:
 	pytest autotests
 
 build:
-	docker build -t sapphire --target slim .
+	docker build -t collabry --target slim .
 
 down:
-	docker stack rm sapphire || true
+	docker stack rm collabry || true
 
 clean:
-	docker rmi sapphire --force
+	docker rmi collabry --force
 
 sleep:
 ifeq ($(OSFLAG),WIN)
@@ -34,6 +34,6 @@ else
 endif
 
 restart:
-	docker stack deploy -c docker-compose.yaml sapphire
+	docker stack deploy -c docker-compose.yaml collabry
 
 up: clean build down sleep restart

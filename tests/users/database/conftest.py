@@ -1,7 +1,7 @@
 import pytest
 
-from sapphire.common.utils.settings import get_settings
-from sapphire.users.database import Service, Settings
+from collabry.common.utils.settings import get_settings
+from collabry.users.database import Service, Settings
 
 
 @pytest.fixture()

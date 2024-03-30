@@ -1,4 +1,4 @@
-# Sapphire Backend
+# Collabry Backend
 
 ![Stage Autotests Status](https://github.com/habralab/sapphire-team-back/actions/workflows/autotests-stage.yaml/badge.svg)
 
@@ -22,11 +22,11 @@ For running or testing all services you can use `Python` environment. You can in
 your local machine directly (see [here](https://www.python.org/downloads/)) or use any wrappers
 (`venv`, `pyenv`, `pipenv`, etc.).
 
-**Python version: `3.11` or higher**
+**Python version: `3.12` or higher**
 
-After installation Python you need install `poetry` (v1.6.1):
+After installation Python you need install `poetry` (v1.8.2):
 ```shell
-pip install poetry==1.6.1
+pip install poetry==1.8.2
 ```
 And install all Python requirements:
 ```shell
@@ -40,34 +40,34 @@ poetry install --all-extras
 For testing you should build full image
 
 ```shell
-docker build -t sapphire --target full . 
+docker build -t collabry --target full . 
 ```
 
 **Lint**
 ```shell
-docker run sapphire pylint sapphire autotests tests
+docker run collabry pylint collabry autotests tests
 ```
 
 **Isort**
 ```shell
-docker run sapphire isort .
+docker run collabry isort .
 ```
 
 **Unit tests**
 ```shell
-docker run sapphire pytest tests
+docker run collabry pytest tests
 ```
 
 **Autotests**
 ```shell
-docker run sapphire pytest autotests
+docker run collabry pytest autotests
 ```
 
 ### Test: Python
 
 **Lint**
 ```shell
-pylint sapphire autotests tests
+pylint collabry autotests tests
 ```
 
 **Isort**
@@ -96,7 +96,7 @@ cp .env.example .env
 
 For running you should build app image
 ```shell
-docker build -t sapphire --target slim .
+docker build -t collabry --target slim .
 ```
 
 Create secrets (you can get any values from `.env.example`)
@@ -111,37 +111,24 @@ echo "any_refresh_private_key" | docker secret create jwt_refresh_token_private_
 echo "any_refresh_public_key" | docker secret create jwt_refresh_token_public_key -
 ```
 
-Prepare storages
-```shell
-mkdir -p redis_data
-mkdir -p database_data
-mkdir -p broker_data/kafka/data
-mkdir -p broker_data/zookeeper/data
-mkdir -p broker_data/zookeeper/log
-mkdir -p prometheus_data
-mkdir -p grafana_data
-mkdir -p projects_data/media
-mkdir -p users_data/media
-```
-
 And run
 ```shell
-docker stack deploy -c docker-compose.yaml sapphire
+docker stack deploy -c docker-compose.yaml collabry
 ```
 
 Wait when all services will be running, you can check it by `docker service ls`.
 
-Join to sapphire service
+Join to collabry service
 ```shell
-docker exec -it $(docker ps -q -f name=sapphire_sapphire) bash
+docker exec -it $(docker ps -q -f name=collabry_app) bash
 ```
 
 Apply migrations
 ```shell
-poetry run python -m sapphire database migrations apply
+poetry run python -m collabry database migrations apply
 ```
 
 Apply fixtures
 ```shell
-poetry run python -m sapphire database fixtures apply storage autotests
+poetry run python -m collabry database fixtures apply storage autotests
 ```

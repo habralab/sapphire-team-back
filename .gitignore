@@ -7,11 +7,4 @@
 .venv
 .vscode
 __pycache__
-broker_data
-database_data
-grafana_data
-redis_data
-projects_data
-prometheus_data
 pyrightconfig.json
-users_data

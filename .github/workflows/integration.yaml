@@ -7,23 +7,23 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Build
-        run: docker build -t sapphire:test-${{ github.sha }} --target full .
+        run: docker build -t collabry:test-${{ github.sha }} --target full .
   lint:
     needs: [build]
     runs-on: self-hosted
     steps:
       - name: Lint
         run: >
-          docker run --rm sapphire:test-${{ github.sha }} pylint sapphire autotests tests
+          docker run --rm collabry:test-${{ github.sha }} pylint collabry autotests tests
   isort:
     needs: [build]
     runs-on: self-hosted
     steps:
       - name: Isort
-        run: docker run --rm sapphire:test-${{ github.sha }} isort --check .
+        run: docker run --rm collabry:test-${{ github.sha }} isort --check .
   test:
     needs: [build]
     runs-on: self-hosted
     steps:
       - name: Test
-        run: docker run --rm sapphire:test-${{ github.sha }} pytest tests
+        run: docker run --rm collabry:test-${{ github.sha }} pytest tests
